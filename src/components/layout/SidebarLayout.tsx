@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -35,6 +35,7 @@ import { cn } from '@/lib/utils';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
+  headerActions?: ReactNode;
 }
 
 interface NotificationItem {
@@ -54,7 +55,7 @@ interface RecentActivity {
   color: string;
 }
 
-const SidebarLayout = ({ children }: SidebarLayoutProps) => {
+const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
   const { user, userRole, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -416,19 +417,21 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                 </div>
             </div>
             
-            {/* Header Actions */}
-            {location.pathname === '/blogs' && (
-              <Button 
-                onClick={() => {
-                  const event = new CustomEvent('openCreateBlogModal');
-                  window.dispatchEvent(event);
-                }}
-                className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg text-white rounded-full px-4"
-              >
-                <PlusCircle className="h-5 w-5" />
-                Create Post
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              {headerActions}
+              {location.pathname === '/blogs' && (
+                <Button 
+                  onClick={() => {
+                    const event = new CustomEvent('openCreateBlogModal');
+                    window.dispatchEvent(event);
+                  }}
+                  className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg text-white rounded-full px-4"
+                >
+                  <PlusCircle className="h-5 w-5" />
+                  Create Post
+                </Button>
+              )}
+            </div>
           </div>
         </header>
 

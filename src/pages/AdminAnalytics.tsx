@@ -1,15 +1,13 @@
 // @ts-nocheck
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import SidebarLayout from '@/components/layout/SidebarLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   BarChart,
   Bar,
@@ -36,9 +34,6 @@ import {
   Globe,
   Building2,
   BarChart3,
-  MessageSquare,
-  Send,
-  Bot,
   RefreshCw,
   Download,
   Activity,
@@ -57,16 +52,18 @@ const CHART_COLORS = [
   'hsl(280.7 83.3% 50%)', // violet
 ];
 
+const AVAILABLE_YEARS = [2021, 2022, 2023, 2024] as const;
+
 // Section configurations for each year
 const SURVEY_SECTIONS = {
   2021: [
-    { id: 1, title: 'Background Information', fields: ['email_address', 'firm_name', 'participant_name', 'role_title', 'team_based', 'geographic_focus', 'fund_stage'] },
+    { id: 1, title: 'Background Information', fields: ['role_title', 'team_based', 'geographic_focus', 'fund_stage'] },
     { id: 2, title: 'Investment Thesis & Capital', fields: ['investment_vehicle_type', 'current_fund_size', 'target_fund_size', 'investment_timeframe'] },
     { id: 3, title: 'Portfolio & Team', fields: ['investment_forms', 'target_sectors', 'carried_interest_principals', 'current_ftes'] },
     { id: 4, title: 'Portfolio Development', fields: ['investment_monetization', 'exits_achieved'] },
     { id: 5, title: 'COVID-19 Impact', fields: ['covid_impact_aggregate', 'covid_government_support'] },
     { id: 6, title: 'Network Feedback', fields: ['network_value_rating', 'communication_platform'] },
-    { id: 7, title: 'Convening Objectives', fields: ['participate_mentoring_program', 'additional_comments'] },
+    { id: 7, title: 'Convening Objectives', fields: ['participate_mentoring_program'] },
   ],
   2022: [
     { id: 1, title: 'Organization Details', fields: ['name', 'organisation', 'email', 'role_title'] },
@@ -97,25 +94,41 @@ const SURVEY_SECTIONS = {
 export default function AdminAnalytics() {
   const { userRole } = useAuth();
   const { toast } = useToast();
-  const [selectedYear, setSelectedYear] = useState(2024);
+  const [selectedYear, setSelectedYear] = useState(2021);
   const [selectedSection, setSelectedSection] = useState(1);
   const [surveyData, setSurveyData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [chatMessages, setChatMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
-  const [chatInput, setChatInput] = useState('');
-  const [chatLoading, setChatLoading] = useState(false);
 
-  useEffect(() => {
-    fetchSurveyData();
-  }, [selectedYear]);
+  const yearSelectionActions = (
+    <div className="flex items-center gap-2">
+      {AVAILABLE_YEARS.map((year) => {
+        const isActive = selectedYear === year;
+        return (
+          <Button
+            key={year}
+            variant={isActive ? 'default' : 'secondary'}
+            className={`h-8 px-3 text-xs ${
+              isActive ? 'shadow-md' : 'opacity-80 hover:opacity-100'
+            }`}
+            onClick={() => setSelectedYear(year)}
+            aria-pressed={isActive}
+          >
+            {year}
+          </Button>
+        );
+      })}
+    </div>
+  );
 
-  const fetchSurveyData = async () => {
+  const fetchSurveyData = useCallback(async () => {
     try {
       setLoading(true);
+      // Optimize query with limit and only fetch completed submissions
       const { data, error } = await supabase
         .from(`survey_responses_${selectedYear}` as any)
         .select('*')
-        .eq('submission_status', 'completed');
+        .eq('submission_status', 'completed')
+        .limit(500); // Limit to improve performance
 
       if (error) throw error;
       setSurveyData(data || []);
@@ -129,9 +142,13 @@ export default function AdminAnalytics() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedYear, toast]);
 
-  const calculateDistribution = (fieldName: string) => {
+  useEffect(() => {
+    fetchSurveyData();
+  }, [fetchSurveyData]);
+
+  const calculateDistribution = useCallback((fieldName: string) => {
     const distribution: Record<string, number> = {};
     let totalCount = 0;
 
@@ -159,9 +176,9 @@ export default function AdminAnalytics() {
       }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 10);
-  };
+  }, [surveyData]);
 
-  const calculateNumericStats = (fieldName: string) => {
+  const calculateNumericStats = useCallback((fieldName: string) => {
     const values = surveyData
       .map(r => {
         const val = r[fieldName];
@@ -190,50 +207,13 @@ export default function AdminAnalytics() {
       total: sum,
       count: values.length
     };
-  };
+  }, [surveyData]);
 
   const formatFieldName = (field: string): string => {
     return field
       .split('_')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
-  };
-
-  const sendChatMessage = async () => {
-    if (!chatInput.trim()) return;
-
-    const userMessage = chatInput.trim();
-    setChatInput('');
-    setChatMessages(prev => [...prev, { role: 'user', content: userMessage }]);
-    setChatLoading(true);
-
-    try {
-      const { data, error } = await supabase.functions.invoke('ai-chat', {
-        body: {
-          messages: [
-            {
-              role: 'system',
-              content: `You are an analytics assistant helping with survey data analysis. Current context: Year ${selectedYear}, Section ${selectedSection} (${SURVEY_SECTIONS[selectedYear as keyof typeof SURVEY_SECTIONS]?.[selectedSection - 1]?.title}). Total responses: ${surveyData.length}. Provide insights, trends, and answer questions about the survey data.`
-            },
-            ...chatMessages,
-            { role: 'user', content: userMessage }
-          ]
-        }
-      });
-
-      if (error) throw error;
-
-      setChatMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
-    } catch (error) {
-      console.error('AI chat error:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to get AI response',
-        variant: 'destructive'
-      });
-    } finally {
-      setChatLoading(false);
-    }
   };
 
   const renderSectionAnalytics = () => {
@@ -319,7 +299,11 @@ export default function AdminAnalytics() {
           {currentSection.fields.map((field, idx) => {
             const distribution = calculateDistribution(field);
             const stats = calculateNumericStats(field);
-            const hasNumericData = stats !== null && stats.count > 0;
+            const shouldHideNumericSummary = (
+              (field === 'fund_stage' && selectedYear === 2021 && selectedSection === 1) ||
+              (field === 'current_fund_size' && selectedYear === 2021 && selectedSection === 2)
+            );
+            const hasNumericData = stats !== null && stats.count > 0 && !shouldHideNumericSummary;
 
             return (
               <Card key={field} className="hover-lift">
@@ -339,24 +323,26 @@ export default function AdminAnalytics() {
                 <CardContent>
                   {hasNumericData ? (
                     <div className="space-y-4">
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div className="p-3 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900">
-                          <p className="text-xs font-medium text-muted-foreground mb-1">Average</p>
-                          <p className="text-xl font-bold">{stats.avg.toLocaleString(undefined, { maximumFractionDigits: 1 })}</p>
+                      {!shouldHideNumericSummary && (
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                          <div className="p-3 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900">
+                            <p className="text-xs font-medium text-muted-foreground mb-1">Average</p>
+                            <p className="text-xl font-bold">{stats.avg.toLocaleString(undefined, { maximumFractionDigits: 1 })}</p>
+                          </div>
+                          <div className="p-3 rounded-lg bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
+                            <p className="text-xs font-medium text-muted-foreground mb-1">Median</p>
+                            <p className="text-xl font-bold">{stats.median.toLocaleString(undefined, { maximumFractionDigits: 1 })}</p>
+                          </div>
+                          <div className="p-3 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950 dark:to-orange-900">
+                            <p className="text-xs font-medium text-muted-foreground mb-1">Min</p>
+                            <p className="text-xl font-bold">{stats.min.toLocaleString()}</p>
+                          </div>
+                          <div className="p-3 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900">
+                            <p className="text-xs font-medium text-muted-foreground mb-1">Max</p>
+                            <p className="text-xl font-bold">{stats.max.toLocaleString()}</p>
+                          </div>
                         </div>
-                        <div className="p-3 rounded-lg bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
-                          <p className="text-xs font-medium text-muted-foreground mb-1">Median</p>
-                          <p className="text-xl font-bold">{stats.median.toLocaleString(undefined, { maximumFractionDigits: 1 })}</p>
-                        </div>
-                        <div className="p-3 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950 dark:to-orange-900">
-                          <p className="text-xs font-medium text-muted-foreground mb-1">Min</p>
-                          <p className="text-xl font-bold">{stats.min.toLocaleString()}</p>
-                        </div>
-                        <div className="p-3 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900">
-                          <p className="text-xs font-medium text-muted-foreground mb-1">Max</p>
-                          <p className="text-xl font-bold">{stats.max.toLocaleString()}</p>
-                        </div>
-                      </div>
+                      )}
                       {distribution.length > 0 && (
                         <ResponsiveContainer width="100%" height={200}>
                           <BarChart data={distribution}>
@@ -471,157 +457,114 @@ export default function AdminAnalytics() {
     );
   }
 
-  if (loading) {
-    return (
-      <SidebarLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+  const renderLoadingSkeleton = () => (
+    <SidebarLayout headerActions={yearSelectionActions}>
+      <div className="container mx-auto p-6 space-y-6">
+        <div className="rounded-2xl border border-blue-900/15 bg-white shadow-md p-5 space-y-3">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <Skeleton className="h-3 w-32 rounded-full" />
+            <Skeleton className="h-2.5 w-44 rounded-full" />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {[...Array(6)].map((_, i) => (
+              <Skeleton key={i} className="h-9 w-36 rounded-full" />
+            ))}
+          </div>
         </div>
-      </SidebarLayout>
-    );
+
+        {/* Analytics Content Skeleton */}
+        <div className="space-y-6">
+          {/* Summary Cards Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <Card key={i} className="relative overflow-hidden border-none">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-5 w-5 rounded" />
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-8 w-16 mb-2" />
+                  <Skeleton className="h-3 w-20" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Field Analytics Skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <Card key={i} className="hover-lift">
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-6 w-48" />
+                      <Skeleton className="h-4 w-32" />
+                    </div>
+                    <Skeleton className="h-6 w-20 rounded-full" />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {[...Array(4)].map((_, j) => (
+                        <Skeleton key={j} className="h-20 w-full rounded-lg" />
+                      ))}
+                    </div>
+                    <Skeleton className="h-64 w-full rounded" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    </SidebarLayout>
+  );
+
+  if (loading) {
+    return renderLoadingSkeleton();
   }
 
   const sections = SURVEY_SECTIONS[selectedYear as keyof typeof SURVEY_SECTIONS] || [];
 
   return (
-    <SidebarLayout>
+    <SidebarLayout headerActions={yearSelectionActions}>
       <div className="container mx-auto p-6 space-y-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-purple-600 to-primary bg-clip-text text-transparent">
-              Survey Analytics Dashboard
-            </h1>
-            <p className="text-muted-foreground mt-2">Comprehensive insights and data visualization</p>
+        <div className="rounded-2xl border border-blue-900/15 bg-white shadow-md p-5">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-2">
+            <div className="flex items-center gap-2">
+              <Briefcase className="h-4 w-4 text-blue-900" />
+              <span className="text-xs font-semibold text-blue-900 uppercase tracking-[0.18em]">Survey Sections</span>
+            </div>
+            <span className="text-[11px] text-slate-500">Choose a focus area to explore metrics</span>
           </div>
-          <Button variant="default" className="gap-2">
-            <Download className="h-4 w-4" />
-            Export Report
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            {sections.map((section) => {
+              const isActive = selectedSection === section.id;
+              return (
+                <Button
+                  key={section.id}
+                  size="sm"
+                  variant="ghost"
+                  className={`h-9 px-4 text-[11px] font-medium tracking-wide transition-all rounded-full ${
+                    isActive
+                      ? 'bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white shadow-md hover:brightness-110'
+                      : 'bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100'
+                  }`}
+                  onClick={() => setSelectedSection(section.id)}
+                  aria-pressed={isActive}
+                >
+                  <span className="mr-2 font-semibold">{section.id}.</span>
+                  <span className="truncate max-w-[140px]">{section.title}</span>
+                </Button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Year Selection */}
-        <Card className="border-none shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-primary" />
-              Select Survey Year
-            </CardTitle>
-            <CardDescription>Choose which year's survey data to analyze</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs value={String(selectedYear)} onValueChange={(v) => setSelectedYear(Number(v))}>
-              <TabsList className="grid w-full grid-cols-4 h-12">
-                <TabsTrigger value="2021" className="text-base">2021</TabsTrigger>
-                <TabsTrigger value="2022" className="text-base">2022</TabsTrigger>
-                <TabsTrigger value="2023" className="text-base">2023</TabsTrigger>
-                <TabsTrigger value="2024" className="text-base">2024</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Section Navigation */}
-          <Card className="lg:col-span-1 border-none shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Briefcase className="h-5 w-5 text-primary" />
-                Survey Sections
-              </CardTitle>
-              <CardDescription>Navigate through sections</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[600px] pr-4">
-                <div className="space-y-2">
-                  {sections.map((section) => (
-                    <Button
-                      key={section.id}
-                      variant={selectedSection === section.id ? 'default' : 'ghost'}
-                      className={`w-full justify-start transition-all ${
-                        selectedSection === section.id 
-                          ? 'shadow-md' 
-                          : 'hover:bg-accent'
-                      }`}
-                      onClick={() => setSelectedSection(section.id)}
-                    >
-                      <span className="font-bold mr-3 text-primary">{section.id}.</span>
-                      {section.title}
-                    </Button>
-                  ))}
-                </div>
-              </ScrollArea>
-            </CardContent>
-          </Card>
-
-          {/* Analytics Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {renderSectionAnalytics()}
-          </div>
-
-          {/* AI Assistant */}
-          <Card className="lg:col-span-1 border-none shadow-lg relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-full -mr-16 -mt-16" />
-            <CardHeader className="relative">
-              <CardTitle className="flex items-center gap-2">
-                <Bot className="h-5 w-5 text-primary" />
-                AI Assistant
-              </CardTitle>
-              <CardDescription>Get insights from your data</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[400px] mb-4 pr-4">
-                <div className="space-y-4">
-                  {chatMessages.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <MessageSquare className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">Ask me anything about the survey data!</p>
-                    </div>
-                  ) : (
-                    chatMessages.map((msg, idx) => (
-                      <div
-                        key={idx}
-                        className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div
-                          className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                            msg.role === 'user'
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-muted text-foreground'
-                          }`}
-                        >
-                          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                  {chatLoading && (
-                    <div className="flex justify-start">
-                      <div className="bg-muted rounded-lg px-4 py-2">
-                        <div className="flex space-x-2">
-                          <div className="w-2 h-2 bg-foreground rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-foreground rounded-full animate-bounce delay-100"></div>
-                          <div className="w-2 h-2 bg-foreground rounded-full animate-bounce delay-200"></div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </ScrollArea>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Ask about trends, insights..."
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && sendChatMessage()}
-                  disabled={chatLoading}
-                />
-                <Button onClick={sendChatMessage} disabled={chatLoading} size="icon">
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Analytics Content */}
+        <div className="space-y-6">
+          {renderSectionAnalytics()}
         </div>
       </div>
     </SidebarLayout>

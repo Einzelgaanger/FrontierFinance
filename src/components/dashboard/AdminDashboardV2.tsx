@@ -136,7 +136,35 @@ const AdminDashboardV2 = () => {
       setLoading(true);
       console.log('AdminDashboardV2 - Fetching all data...');
       
-      // Fetch comprehensive data from all available tables
+      // Fetch data with individual error handling to prevent one failure from breaking all queries
+      const fetchWithErrorHandling = async (query: Promise<any>, tableName: string) => {
+        try {
+          const result = await query;
+          if (result.error) {
+            // Check for table not found errors (PostgreSQL code 42P01, PostgREST code PGRST116, or 404)
+            const isTableNotFound = 
+              result.error.code === 'PGRST116' || 
+              result.error.code === '42P01' ||
+              result.error.message?.includes('404') ||
+              result.error.message?.includes('does not exist') ||
+              result.error.message?.includes('relation') && result.error.message?.includes('does not exist');
+            
+            if (isTableNotFound) {
+              // Silently handle missing tables - this is expected in some deployments
+              return { data: [], error: null };
+            }
+            // Only log actual errors (not missing tables)
+            console.error(`Error fetching ${tableName}:`, result.error);
+            return { data: [], error: result.error };
+          }
+          return result;
+        } catch (err) {
+          // Silently handle exceptions for missing tables
+          return { data: [], error: null };
+        }
+      };
+
+      // Fetch comprehensive data from all available tables with error handling
       const [
         survey2021Result, 
         survey2022Result,
@@ -148,27 +176,43 @@ const AdminDashboardV2 = () => {
         userProfilesResult,
         networkUsersResult
       ] = await Promise.all([
-        supabase.from('survey_responses_2021').select('id, user_id, created_at, firm_name, participant_name'),
-        supabase.from('survey_responses_2022').select('id, user_id, created_at'),
-        supabase.from('survey_responses_2023').select('id, user_id, created_at'),
-        supabase.from('survey_responses_2024').select('id, user_id, created_at'),
-        supabase.from('user_roles').select('user_id, role, created_at'),
-        supabase.from('membership_requests').select('id, status, created_at, vehicle_name'),
-        supabase.from('profiles').select('id, created_at'),
-        supabase.from('user_profiles').select('id, created_at, company_name'),
-        supabase.from('network_users').select('user_id, role, created_at')
+        fetchWithErrorHandling(
+          supabase.from('survey_responses_2021').select('id, user_id, created_at, firm_name, participant_name'),
+          'survey_responses_2021'
+        ),
+        fetchWithErrorHandling(
+          supabase.from('survey_responses_2022').select('id, user_id, created_at'),
+          'survey_responses_2022'
+        ),
+        fetchWithErrorHandling(
+          supabase.from('survey_responses_2023').select('id, user_id, created_at'),
+          'survey_responses_2023'
+        ),
+        fetchWithErrorHandling(
+          supabase.from('survey_responses_2024').select('id, user_id, created_at'),
+          'survey_responses_2024'
+        ),
+        fetchWithErrorHandling(
+          supabase.from('user_roles').select('user_id, role, created_at'),
+          'user_roles'
+        ),
+        fetchWithErrorHandling(
+          supabase.from('membership_requests').select('id, status, created_at, vehicle_name'),
+          'membership_requests'
+        ),
+        fetchWithErrorHandling(
+          supabase.from('profiles').select('id, created_at'),
+          'profiles'
+        ),
+        fetchWithErrorHandling(
+          supabase.from('user_profiles').select('id, created_at, company_name'),
+          'user_profiles'
+        ),
+        fetchWithErrorHandling(
+          supabase.from('network_users').select('user_id, role, created_at'),
+          'network_users'
+        )
       ]);
-
-      // Handle errors gracefully and log them
-      if (survey2021Result.error) console.error('Error fetching survey 2021:', survey2021Result.error);
-      if (survey2022Result.error) console.error('Error fetching survey 2022:', survey2022Result.error);
-      if (survey2023Result.error) console.error('Error fetching survey 2023:', survey2023Result.error);
-      if (survey2024Result.error) console.error('Error fetching survey 2024:', survey2024Result.error);
-      if (userRolesResult.error) console.error('Error fetching user_roles:', userRolesResult.error);
-      if (applicationsResult.error) console.error('Error fetching membership_requests:', applicationsResult.error);
-      if (profilesResult.error) console.error('Error fetching profiles:', profilesResult.error);
-      if (userProfilesResult.error) console.error('Error fetching user_profiles:', userProfilesResult.error);
-      if (networkUsersResult.error) console.error('Error fetching network_users:', networkUsersResult.error);
 
       const survey2021Users = survey2021Result.data || [];
       const survey2022Users = survey2022Result.data || [];
