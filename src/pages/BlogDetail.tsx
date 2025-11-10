@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
-import { Image, Video, FileText, Heart, ArrowLeft, Loader2 } from "lucide-react";
+import { Image, Video, FileText, Heart, ArrowLeft, Loader2, Share2, Bookmark } from "lucide-react";
 import { BlogCommentSection } from "@/components/blogs/BlogCommentSection";
 import { getBadge } from "@/utils/badgeSystem";
 import { useAuth } from "@/hooks/useAuth";
@@ -154,7 +154,7 @@ export default function BlogDetail() {
   if (loading) {
     return (
       <SidebarLayout>
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-screen bg-slate-50">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
       </SidebarLayout>
@@ -164,10 +164,12 @@ export default function BlogDetail() {
   if (!blog) {
     return (
       <SidebarLayout>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Blog not found</h1>
-            <Button onClick={() => navigate('/blogs')}>Back to Blogs</Button>
+        <div className="flex items-center justify-center min-h-screen bg-slate-50">
+          <div className="text-center space-y-4">
+            <h1 className="text-xl font-semibold text-slate-800">We couldn&apos;t find that post</h1>
+            <Button size="sm" onClick={() => navigate('/blogs')}>
+              Back to Blogs
+            </Button>
           </div>
         </div>
       </SidebarLayout>
@@ -176,107 +178,130 @@ export default function BlogDetail() {
 
   return (
     <SidebarLayout>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          {/* Back Button */}
-          <div className="mb-6">
+      <div className="min-h-screen bg-slate-50">
+        <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
             <Button
-              variant="outline"
+              variant="ghost"
+              size="sm"
               onClick={() => navigate('/blogs')}
-              className="flex items-center gap-2"
+              className="inline-flex items-center gap-2 rounded-md border border-transparent px-3 py-1 text-sm text-slate-600 hover:border-slate-200 hover:bg-white"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Blogs
+              <ArrowLeft className="h-4 w-4" />
+              Back to feed
             </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="rounded-md border border-slate-200 px-3 py-1 text-sm text-slate-600 hover:bg-white"
+              >
+                <Share2 className="h-4 w-4" />
+                Share
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="rounded-md border border-slate-200 px-3 py-1 text-sm text-slate-600 hover:bg-white"
+              >
+                <Bookmark className="h-4 w-4" />
+                Save
+              </Button>
+            </div>
           </div>
 
-          {/* Blog Content */}
-          <Card className="shadow-xl border-2 border-blue-100 bg-white/90 backdrop-blur-sm overflow-hidden">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-b p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-16 w-16 ring-2 ring-blue-200">
+          <Card className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5">
+            <div className="border-b border-slate-100 bg-slate-900 text-slate-100">
+              <div className="flex flex-col gap-6 p-6 md:flex-row md:items-center md:justify-between">
+                <div className="flex items-start gap-4">
+                  <Avatar className="h-14 w-14 border border-white/40">
                     <AvatarImage src={blog.author?.profile_picture_url || ""} />
-                    <AvatarFallback className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xl">
+                    <AvatarFallback className="bg-blue-600 text-white text-lg">
                       {blog.author?.full_name?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
+                  <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-bold text-gray-800">
+                      <h3 className="text-lg font-semibold">
                         {blog.author?.full_name || "Unknown"}
                       </h3>
                       {blog.author?.total_points !== undefined && (
-                        <span className="text-2xl">
+                        <span className="text-xl">
                           {getBadge(blog.author.total_points).icon}
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600">{blog.author?.company_name}</p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {format(new Date(blog.created_at), "MMMM d, yyyy 'at' h:mm a")}
+                    <p className="text-sm text-slate-300">{blog.author?.company_name || 'Community member'}</p>
+                    <p className="text-xs text-slate-400">
+                      {format(new Date(blog.created_at), "MMM d, yyyy · h:mm a")}
                     </p>
                   </div>
                 </div>
-                <Badge 
-                  variant="secondary" 
-                  className="gap-1 bg-blue-100/80 text-blue-700 border-blue-300 backdrop-blur-sm"
-                >
+                <Badge className="flex items-center gap-1 rounded-md border border-blue-300/30 bg-blue-500/20 text-blue-100">
                   {getMediaIcon(blog.media_type)}
                   {blog.media_type || "text"}
                 </Badge>
               </div>
             </div>
 
-            {/* Content */}
-            <div className="p-6 space-y-6">
-              <h1 className="text-3xl font-bold text-gray-900 leading-tight">{blog.title}</h1>
+            <div className="space-y-6 p-6 sm:p-8">
+              <div className="space-y-2">
+                <span className="text-xs font-medium uppercase tracking-[0.3em] text-blue-500/80">
+                  FEATURED STORY
+                </span>
+                <h1 className="text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl">
+                  {blog.title}
+                </h1>
+              </div>
 
-              {blog.media_type === "image" && blog.media_url && (
-                <div className="rounded-xl overflow-hidden shadow-lg">
-                  <img 
-                    src={blog.media_url} 
-                    alt={blog.title}
-                    className="w-full max-h-[600px] object-contain bg-gradient-to-br from-gray-50 to-gray-100"
-                  />
+              {(blog.media_type === "image" || blog.media_type === "video") && blog.media_url && (
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-2">
+                  {blog.media_type === "image" ? (
+                    <img
+                      src={blog.media_url}
+                      alt={blog.title}
+                      className="max-h-[520px] w-full rounded-lg object-cover"
+                    />
+                  ) : (
+                    <video
+                      src={blog.media_url}
+                      controls
+                      className="w-full rounded-lg"
+                    />
+                  )}
                 </div>
-              )}
-
-              {blog.media_type === "video" && blog.media_url && (
-                <video 
-                  src={blog.media_url}
-                  controls
-                  className="w-full max-h-[600px] rounded-xl shadow-lg"
-                />
               )}
 
               {blog.caption && (
-                <p className="text-lg text-gray-600 italic border-l-4 border-blue-400 pl-4 py-2 bg-blue-50/50 rounded-r-lg">
+                <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm italic text-blue-800">
                   {blog.caption}
-                </p>
-              )}
-
-              {blog.content && (
-                <div className="prose prose-lg max-w-none">
-                  <p className="whitespace-pre-wrap text-gray-800 leading-relaxed">{blog.content}</p>
                 </div>
               )}
 
-              <div className="flex items-center gap-6 pt-4 border-t border-gray-200">
+              {blog.content && (
+                <article className="prose prose-slate max-w-none">
+                  <p className="whitespace-pre-wrap text-slate-700 leading-relaxed">{blog.content}</p>
+                </article>
+              )}
+
+              <div className="flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
                 <button
                   onClick={() => toggleLike(blog.id, blog.is_liked || false)}
-                  className="flex items-center gap-2 hover:text-pink-600 transition-colors group/like"
+                  className="inline-flex items-center gap-2 rounded-md px-3 py-1.5 transition-colors hover:bg-white hover:text-rose-500"
                 >
-                  <Heart className={`w-6 h-6 transition-all ${blog.is_liked ? 'fill-pink-500 text-pink-500 scale-110' : 'group-hover/like:scale-110'}`} />
-                  <span className="font-semibold text-lg">{blog.like_count} likes</span>
+                  <Heart className={`h-5 w-5 transition ${blog.is_liked ? 'fill-rose-500 text-rose-500' : ''}`} />
+                  <span>{blog.like_count} {blog.like_count === 1 ? 'like' : 'likes'}</span>
                 </button>
+                <span className="inline-flex items-center gap-2 rounded-md px-3 py-1.5">
+                  Comments · {blog.comment_count}
+                </span>
               </div>
             </div>
 
-            {/* Comments Section */}
-            <div className="border-t bg-gray-50/50 p-6">
-              <h3 className="font-bold text-xl mb-4 text-gray-800">Comments</h3>
+            <div className="border-t border-slate-100 bg-slate-50 p-6 sm:p-8">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-slate-800">Comments</h3>
+              </div>
               <BlogCommentSection blogId={blog.id} />
             </div>
           </Card>
