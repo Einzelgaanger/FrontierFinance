@@ -708,53 +708,72 @@ const ViewerDashboardV2 = () => {
             {/* Application Preview - Left Side */}
             <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-orange-50 to-amber-50 border-2 border-orange-200 hover:border-orange-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-100/0 to-amber-100/0 group-hover:from-orange-100/30 group-hover:to-amber-100/40 transition-all duration-500"></div>
-            <div className="relative p-10 md:p-12">
-              <div className="text-center mb-10">
-                <div className="inline-block mb-4">
-                  <span className="px-5 py-2.5 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full text-orange-700 text-base font-semibold">
+            <div className="relative p-8">
+              {/* Header Section */}
+              <div className="text-center mb-8">
+                <div className="inline-block mb-3">
+                  <span className="px-4 py-2 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full text-orange-700 text-sm font-semibold">
                     Ready to Join? 🚀
                   </span>
                 </div>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-orange-600 via-orange-700 to-amber-600 bg-clip-text text-transparent mb-4">
+                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-orange-600 via-orange-700 to-amber-600 bg-clip-text text-transparent mb-3">
                   Become a Member Today!
                 </h2>
-                <p className="text-base md:text-lg text-gray-700 mb-8 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-sm md:text-base text-gray-700 mb-6 max-w-2xl mx-auto">
                   Join our vibrant community in just 4 simple steps. It's quick, easy, and takes about 10-15 minutes!
                 </p>
               </div>
 
-              {/* Application Steps Preview */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
-                <div className="text-center group/step">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-2xl">1</span>
+              {/* Application Steps Preview - Reorganized as 2x2 grid */}
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="text-center group/step bg-white/60 rounded-xl p-4 border border-orange-100 hover:border-orange-300 transition-all">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
+                    <span className="text-white font-bold text-lg">1</span>
                   </div>
-                  <h3 className="font-bold text-gray-800 mb-2 group-hover/step:text-blue-600 transition-colors duration-300 text-base">Tell Us About You</h3>
-                  <p className="text-sm text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Your organization</p>
+                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-blue-600 transition-colors duration-300 text-sm">Tell Us About You</h3>
+                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Your organization</p>
                 </div>
                 
-                <div className="text-center group/step">
-                  <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-2xl">2</span>
+                <div className="text-center group/step bg-white/60 rounded-xl p-4 border border-orange-100 hover:border-orange-300 transition-all">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
+                    <span className="text-white font-bold text-lg">2</span>
                   </div>
-                  <h3 className="font-bold text-gray-800 mb-2 group-hover/step:text-green-600 transition-colors duration-300 text-base">Your Team</h3>
-                  <p className="text-sm text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Team details</p>
+                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-green-600 transition-colors duration-300 text-sm">Your Team</h3>
+                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Team details</p>
                 </div>
                 
-                <div className="text-center group/step">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-2xl">3</span>
+                <div className="text-center group/step bg-white/60 rounded-xl p-4 border border-orange-100 hover:border-orange-300 transition-all">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
+                    <span className="text-white font-bold text-lg">3</span>
                   </div>
-                  <h3 className="font-bold text-gray-800 mb-2 group-hover/step:text-purple-600 transition-colors duration-300 text-base">Investment Strategy</h3>
-                  <p className="text-sm text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Your focus areas</p>
+                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-purple-600 transition-colors duration-300 text-sm">Investment Strategy</h3>
+                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Your focus areas</p>
                 </div>
                 
-                <div className="text-center group/step">
-                  <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-2xl">4</span>
+                <div className="text-center group/step bg-white/60 rounded-xl p-4 border border-orange-100 hover:border-orange-300 transition-all">
+                  <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
+                    <span className="text-white font-bold text-lg">4</span>
                   </div>
-                  <h3 className="font-bold text-gray-800 mb-2 group-hover/step:text-orange-600 transition-colors duration-300 text-base">Your Goals</h3>
-                  <p className="text-sm text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">What you're looking for</p>
+                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-orange-600 transition-colors duration-300 text-sm">Your Goals</h3>
+                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">What you're looking for</p>
+                </div>
+              </div>
+
+              {/* Benefits Section */}
+              <div className="bg-white/40 rounded-xl p-6 mb-8 border border-orange-100">
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <div className="text-2xl font-bold text-orange-600 mb-1">4</div>
+                    <div className="text-xs text-gray-600">Simple Steps</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-orange-600 mb-1">10-15</div>
+                    <div className="text-xs text-gray-600">Minutes</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-orange-600 mb-1">200+</div>
+                    <div className="text-xs text-gray-600">Members</div>
+                  </div>
                 </div>
               </div>
 
@@ -762,16 +781,16 @@ const ViewerDashboardV2 = () => {
               <div className="text-center">
                 <Button
                   onClick={() => setShowApplicationForm(true)}
-                  className="group bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 hover:from-orange-600 hover:via-orange-700 hover:to-amber-700 text-white px-10 py-7 text-lg font-bold shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full"
+                  className="group bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 hover:from-orange-600 hover:via-orange-700 hover:to-amber-700 text-white px-8 py-6 text-base font-bold shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full w-full"
                   size="lg"
                 >
-                  <div className="flex items-center space-x-3">
-                    <Users className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
+                  <div className="flex items-center justify-center space-x-3">
+                    <Users className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                     <span>Start Your Application</span>
-                    <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                   </div>
                 </Button>
-                <p className="text-base text-gray-600 mt-5 font-medium">
+                <p className="text-sm text-gray-600 mt-4 font-medium">
                   ⏱️ Takes approximately 10-15 minutes to complete
                 </p>
               </div>
