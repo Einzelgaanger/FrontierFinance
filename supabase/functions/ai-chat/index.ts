@@ -93,7 +93,8 @@ Deno.serve(async (req) => {
       const { data, error } = await supabaseClient
         .from(`survey_responses_${year}`)
         .select(fieldsToSelect)
-        .eq('submission_status', 'completed')
+        .or('completed_at.not.is.null,submission_status.eq.completed')
+
 
       if (!error && data && data.length > 0) {
         // Store full data for detailed queries
