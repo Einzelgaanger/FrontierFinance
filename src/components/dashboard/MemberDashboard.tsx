@@ -13,6 +13,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Leaderboard } from './Leaderboard';
+import AIAssistant from './AIAssistant';
 
 const MemberDashboard = () => {
   const { user } = useAuth();
@@ -232,7 +233,10 @@ const MemberDashboard = () => {
           </div>
         </div>
 
-        {/* AI Assistant Section - Removed, now available in dedicated PortIQ page */}
+        {/* AI Assistant Section */}
+        <div className="mt-6">
+          <AIAssistant />
+        </div>
       </div>
     </div>
   );
