@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { FileText, Upload, Link, Plus, CheckCircle, Users, ArrowRight, Rocket, BarChart3 } from 'lucide-react';
 import { CountrySelector } from '@/components/survey/CountrySelector';
-import AIAssistant from './AIAssistant';
 
 const ViewerDashboardV2 = () => {
   const { user } = useAuth();
@@ -181,13 +180,6 @@ const ViewerDashboardV2 = () => {
     }));
   };
 
-  // Prevent body scrolling like the AI page
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, []);
 
   const validateSection = (section: number): boolean => {
     switch (section) {
@@ -280,8 +272,13 @@ const ViewerDashboardV2 = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Background Information</h3>
-              <p className="text-gray-600 mb-6">Tell us about yourself and your organization.</p>
+              <div className="inline-block mb-3">
+                <span className="px-3 py-1 bg-gradient-to-r from-blue-100 to-blue-200 rounded-full text-blue-700 text-xs font-semibold">
+                  Step 1 of 4
+                </span>
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-3">Tell Us About You! 👋</h3>
+              <p className="text-gray-700 mb-6 text-base">Let's start with the basics - who you are and what your organization does.</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -347,31 +344,36 @@ const ViewerDashboardV2 = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h3 className="text-2xl font-bold text-white mb-4">Team Information</h3>
-              <p className="text-white/90 mb-6">Tell us about your team and your role.</p>
+              <div className="inline-block mb-3">
+                <span className="px-3 py-1 bg-gradient-to-r from-green-100 to-green-200 rounded-full text-green-700 text-xs font-semibold">
+                  Step 2 of 4
+                </span>
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent mb-3">Your Amazing Team! 👥</h3>
+              <p className="text-gray-700 mb-6 text-base">We'd love to know more about your team and your role in the organization.</p>
             </div>
             
             <div className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="role_job_title" className="text-white font-medium">Your Role/Job Title *</Label>
+                <Label htmlFor="role_job_title" className="text-gray-700 font-semibold">Your Role/Job Title *</Label>
                 <Input
                   id="role_job_title"
                   value={formData.role_job_title}
                   onChange={(e) => setFormData(prev => ({ ...prev, role_job_title: e.target.value }))}
                   placeholder="e.g., Managing Partner, Investment Director"
-                  className="bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:border-blue-400 focus:ring-blue-400/20"
+                  className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 focus:border-green-500 focus:ring-green-500/20 shadow-sm"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="team_overview" className="text-white font-medium">Team Overview *</Label>
+                <Label htmlFor="team_overview" className="text-gray-700 font-semibold">Team Overview *</Label>
                 <Textarea
                   id="team_overview"
                   value={formData.team_overview}
                   onChange={(e) => setFormData(prev => ({ ...prev, team_overview: e.target.value }))}
                   placeholder="Describe your team structure, key members, and their backgrounds"
                   rows={4}
-                  className="bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:border-blue-400 focus:ring-blue-400/20"
+                  className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 focus:border-green-500 focus:ring-green-500/20 shadow-sm"
                 />
               </div>
             </div>
@@ -382,91 +384,96 @@ const ViewerDashboardV2 = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h3 className="text-2xl font-bold text-white mb-4">Vehicle Information</h3>
-              <p className="text-white/90 mb-6">Tell us about your investment vehicle and strategy.</p>
+              <div className="inline-block mb-3">
+                <span className="px-3 py-1 bg-gradient-to-r from-purple-100 to-purple-200 rounded-full text-purple-700 text-xs font-semibold">
+                  Step 3 of 4
+                </span>
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent mb-3">Your Investment Strategy! 💼</h3>
+              <p className="text-gray-700 mb-6 text-base">Share details about your investment vehicle and what makes your approach unique.</p>
             </div>
             
             <div className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="investment_thesis" className="text-white font-medium">Investment Thesis *</Label>
+                <Label htmlFor="investment_thesis" className="text-gray-700 font-semibold">Investment Thesis *</Label>
                 <Textarea
                   id="investment_thesis"
                   value={formData.investment_thesis}
                   onChange={(e) => setFormData(prev => ({ ...prev, investment_thesis: e.target.value }))}
                   placeholder="Describe your investment strategy, focus areas, and approach"
                   rows={4}
-                  className="bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:border-blue-400 focus:ring-blue-400/20"
+                  className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 focus:border-purple-500 focus:ring-purple-500/20 shadow-sm"
                 />
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="typical_check_size" className="text-white font-medium">Typical Check Size *</Label>
+                  <Label htmlFor="typical_check_size" className="text-gray-700 font-semibold">Typical Check Size *</Label>
                   <Select
                     value={formData.typical_check_size}
                     onValueChange={(value) => setFormData(prev => ({ ...prev, typical_check_size: value }))}
                   >
-                    <SelectTrigger className="bg-white/10 border-white/30 text-white focus:border-blue-400 focus:ring-blue-400/20">
+                    <SelectTrigger className="bg-white border-gray-300 text-gray-900 focus:border-purple-500 focus:ring-purple-500/20 shadow-sm">
                       <SelectValue placeholder="Select check size range" />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      <SelectItem value="under-100k" className="text-white hover:bg-slate-700">Under $100K</SelectItem>
-                      <SelectItem value="100k-500k" className="text-white hover:bg-slate-700">$100K - $500K</SelectItem>
-                      <SelectItem value="500k-1m" className="text-white hover:bg-slate-700">$500K - $1M</SelectItem>
-                      <SelectItem value="1m-5m" className="text-white hover:bg-slate-700">$1M - $5M</SelectItem>
-                      <SelectItem value="5m-10m" className="text-white hover:bg-slate-700">$5M - $10M</SelectItem>
-                      <SelectItem value="over-10m" className="text-white hover:bg-slate-700">Over $10M</SelectItem>
+                    <SelectContent className="bg-white border-gray-200">
+                      <SelectItem value="under-100k" className="hover:bg-purple-50">Under $100K</SelectItem>
+                      <SelectItem value="100k-500k" className="hover:bg-purple-50">$100K - $500K</SelectItem>
+                      <SelectItem value="500k-1m" className="hover:bg-purple-50">$500K - $1M</SelectItem>
+                      <SelectItem value="1m-5m" className="hover:bg-purple-50">$1M - $5M</SelectItem>
+                      <SelectItem value="5m-10m" className="hover:bg-purple-50">$5M - $10M</SelectItem>
+                      <SelectItem value="over-10m" className="hover:bg-purple-50">Over $10M</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="number_of_investments" className="text-white font-medium">Number of Investments *</Label>
+                  <Label htmlFor="number_of_investments" className="text-gray-700 font-semibold">Number of Investments *</Label>
                   <Select
                     value={formData.number_of_investments}
                     onValueChange={(value) => setFormData(prev => ({ ...prev, number_of_investments: value }))}
                   >
-                    <SelectTrigger className="bg-white/10 border-white/30 text-white focus:border-blue-400 focus:ring-blue-400/20">
+                    <SelectTrigger className="bg-white border-gray-300 text-gray-900 focus:border-purple-500 focus:ring-purple-500/20 shadow-sm">
                       <SelectValue placeholder="Select number of investments" />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      <SelectItem value="1-5" className="text-white hover:bg-slate-700">1-5</SelectItem>
-                      <SelectItem value="6-10" className="text-white hover:bg-slate-700">6-10</SelectItem>
-                      <SelectItem value="11-20" className="text-white hover:bg-slate-700">11-20</SelectItem>
-                      <SelectItem value="21-50" className="text-white hover:bg-slate-700">21-50</SelectItem>
-                      <SelectItem value="over-50" className="text-white hover:bg-slate-700">Over 50</SelectItem>
+                    <SelectContent className="bg-white border-gray-200">
+                      <SelectItem value="1-5" className="hover:bg-purple-50">1-5</SelectItem>
+                      <SelectItem value="6-10" className="hover:bg-purple-50">6-10</SelectItem>
+                      <SelectItem value="11-20" className="hover:bg-purple-50">11-20</SelectItem>
+                      <SelectItem value="21-50" className="hover:bg-purple-50">21-50</SelectItem>
+                      <SelectItem value="over-50" className="hover:bg-purple-50">Over 50</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="amount_raised_to_date" className="text-white font-medium">Amount Raised to Date *</Label>
+                <Label htmlFor="amount_raised_to_date" className="text-gray-700 font-semibold">Amount Raised to Date *</Label>
                 <Select
                   value={formData.amount_raised_to_date}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, amount_raised_to_date: value }))}
                 >
-                  <SelectTrigger className="bg-white/10 border-white/30 text-white focus:border-blue-400 focus:ring-blue-400/20">
+                  <SelectTrigger className="bg-white border-gray-300 text-gray-900 focus:border-purple-500 focus:ring-purple-500/20 shadow-sm">
                     <SelectValue placeholder="Select amount raised" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-800 border-slate-700">
-                    <SelectItem value="under-10m" className="text-white hover:bg-slate-700">Under $10M</SelectItem>
-                    <SelectItem value="10m-25m" className="text-white hover:bg-slate-700">$10M - $25M</SelectItem>
-                    <SelectItem value="25m-50m" className="text-white hover:bg-slate-700">$25M - $50M</SelectItem>
-                    <SelectItem value="50m-100m" className="text-white hover:bg-slate-700">$50M - $100M</SelectItem>
-                    <SelectItem value="100m-250m" className="text-white hover:bg-slate-700">$100M - $250M</SelectItem>
-                    <SelectItem value="over-250m" className="text-white hover:bg-slate-700">Over $250M</SelectItem>
+                  <SelectContent className="bg-white border-gray-200">
+                    <SelectItem value="under-10m" className="hover:bg-purple-50">Under $10M</SelectItem>
+                    <SelectItem value="10m-25m" className="hover:bg-purple-50">$10M - $25M</SelectItem>
+                    <SelectItem value="25m-50m" className="hover:bg-purple-50">$25M - $50M</SelectItem>
+                    <SelectItem value="50m-100m" className="hover:bg-purple-50">$50M - $100M</SelectItem>
+                    <SelectItem value="100m-250m" className="hover:bg-purple-50">$100M - $250M</SelectItem>
+                    <SelectItem value="over-250m" className="hover:bg-purple-50">Over $250M</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               
               {/* Supporting Documents */}
               <div className="space-y-4">
-                <Label className="text-white font-medium">Supporting Documents</Label>
-                <div className="border-2 border-dashed border-white/30 rounded-lg p-6 bg-white/5">
+                <Label className="text-gray-700 font-semibold">Supporting Documents</Label>
+                <div className="border-2 border-dashed border-purple-200 rounded-xl p-6 bg-purple-50/50 hover:bg-purple-50 transition-colors">
                   <div className="text-center">
-                    <Upload className="w-12 h-12 text-white/60 mx-auto mb-4" />
-                    <p className="text-sm text-white/80 mb-4">
+                    <Upload className="w-12 h-12 text-purple-500 mx-auto mb-4" />
+                    <p className="text-sm text-gray-700 mb-4 font-medium">
                       Upload supporting documents (pitch decks, financials, etc.)
                     </p>
                     <input
@@ -483,23 +490,23 @@ const ViewerDashboardV2 = () => {
                       variant="outline"
                       onClick={() => document.getElementById('file-upload')?.click()}
                       disabled={uploading}
-                      className="border-white/30 text-white hover:bg-white/20 bg-white/5 backdrop-blur-md"
+                      className="border-purple-300 text-purple-700 hover:bg-purple-100 bg-white shadow-sm hover:shadow-md"
                     >
                       <Upload className="w-4 h-4 mr-2" />
                       {uploading ? 'Uploading...' : 'Choose Files'}
                     </Button>
-                    <p className="text-xs text-white/60 mt-2">Max 5 files, 10MB each</p>
+                    <p className="text-xs text-gray-500 mt-2">Max 5 files, 10MB each</p>
                   </div>
                   
                   {/* Display uploaded files */}
                   {formData.supporting_documents.length > 0 && (
                     <div className="mt-4 space-y-2">
-                      <p className="text-sm font-medium text-white">Uploaded Files:</p>
+                      <p className="text-sm font-semibold text-gray-700">Uploaded Files:</p>
                       {formData.supporting_documents.map((fileData, index) => {
                         const parsedData = JSON.parse(fileData);
                         return (
-                          <div key={index} className="flex items-center text-xs text-white/80">
-                            <FileText className="w-3 h-3 mr-2" />
+                          <div key={index} className="flex items-center text-xs text-gray-600 bg-white px-3 py-2 rounded-lg">
+                            <FileText className="w-3 h-3 mr-2 text-purple-500" />
                             <span className="truncate">{parsedData.fileName}</span>
                           </div>
                         );
@@ -510,7 +517,7 @@ const ViewerDashboardV2 = () => {
                 
                 {/* Document Links */}
                 <div className="space-y-2">
-                  <Label className="text-white font-medium">Document Links (Optional)</Label>
+                  <Label className="text-gray-700 font-semibold">Document Links (Optional)</Label>
                   <div className="flex gap-2">
                     <Input
                       placeholder="Paste document links here"
@@ -520,7 +527,7 @@ const ViewerDashboardV2 = () => {
                           e.currentTarget.value = '';
                         }
                       }}
-                      className="bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:border-blue-400 focus:ring-blue-400/20"
+                      className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 focus:border-purple-500 focus:ring-purple-500/20 shadow-sm"
                     />
                     <Button
                       type="button"
@@ -532,7 +539,7 @@ const ViewerDashboardV2 = () => {
                           input.value = '';
                         }
                       }}
-                      className="border-white/30 text-white hover:bg-white/20 bg-white/5 backdrop-blur-md"
+                      className="border-purple-300 text-purple-700 hover:bg-purple-100 bg-white shadow-sm"
                     >
                       <Plus className="w-4 h-4" />
                     </Button>
@@ -544,8 +551,8 @@ const ViewerDashboardV2 = () => {
                       {formData.supporting_document_links.map((linkData, index) => {
                         const parsedData = JSON.parse(linkData);
                         return (
-                          <div key={index} className="flex items-center text-xs text-white/80">
-                            <Link className="w-3 h-3 mr-2" />
+                          <div key={index} className="flex items-center text-xs text-gray-600 bg-white px-3 py-2 rounded-lg">
+                            <Link className="w-3 h-3 mr-2 text-purple-500" />
                             <span className="truncate">{parsedData.fileName}</span>
                           </div>
                         );
@@ -562,47 +569,52 @@ const ViewerDashboardV2 = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h3 className="text-2xl font-bold text-white mb-4">Network Expectations</h3>
-              <p className="text-white/90 mb-6">Tell us about your expectations from the CFF Network.</p>
+              <div className="inline-block mb-3">
+                <span className="px-3 py-1 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full text-orange-700 text-xs font-semibold">
+                  Step 4 of 4
+                </span>
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent mb-3">What Are You Looking For? 🎯</h3>
+              <p className="text-gray-700 mb-6 text-base">Help us understand how we can best support you and what brought you here.</p>
             </div>
             
             <div className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="expectations_from_network" className="text-white font-medium">What do you expect from the CFF Network? *</Label>
+                <Label htmlFor="expectations_from_network" className="text-gray-700 font-semibold">What do you expect from the CFF Network? *</Label>
                 <Textarea
                   id="expectations_from_network"
                   value={formData.expectations_from_network}
                   onChange={(e) => setFormData(prev => ({ ...prev, expectations_from_network: e.target.value }))}
                   placeholder="Describe how you plan to use the network and what value you hope to gain"
                   rows={4}
-                  className="bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:border-blue-400 focus:ring-blue-400/20"
+                  className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 focus:border-orange-500 focus:ring-orange-500/20 shadow-sm"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="how_heard_about_network" className="text-white font-medium">How did you hear about the CFF Network? *</Label>
+                <Label htmlFor="how_heard_about_network" className="text-gray-700 font-semibold">How did you hear about the CFF Network? *</Label>
                 <Textarea
                   id="how_heard_about_network"
                   value={formData.how_heard_about_network}
                   onChange={(e) => setFormData(prev => ({ ...prev, how_heard_about_network: e.target.value }))}
                   placeholder="Tell us how you discovered the CFF Network"
                   rows={3}
-                  className="bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:border-blue-400 focus:ring-blue-400/20"
+                  className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 focus:border-orange-500 focus:ring-orange-500/20 shadow-sm"
                 />
               </div>
               
               <div className="space-y-4">
-                <Label className="text-white font-medium">Topics of Interest (Select all that apply)</Label>
+                <Label className="text-gray-700 font-semibold">Topics of Interest (Select all that apply)</Label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {topics.map((topic) => (
-                    <div key={topic} className="flex items-center space-x-2">
+                    <div key={topic} className="flex items-center space-x-2 bg-white p-3 rounded-lg border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all">
                       <Checkbox
                         id={topic}
                         checked={formData.topics_of_interest.includes(topic)}
                         onCheckedChange={() => handleTopicToggle(topic)}
-                        className="border-white/30 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                        className="border-gray-300 data-[state=checked]:bg-orange-600 data-[state=checked]:border-orange-600"
                       />
-                      <Label htmlFor={topic} className="text-sm font-normal text-white/90">
+                      <Label htmlFor={topic} className="text-sm font-normal text-gray-700 cursor-pointer">
                         {topic}
                       </Label>
                     </div>
@@ -620,16 +632,28 @@ const ViewerDashboardV2 = () => {
 
   if (showSuccessMessage) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center py-12">
-            <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
-              <CheckCircle className="w-12 h-12 text-white" />
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-blue-50 relative">
+        {/* Decorative floating orbs */}
+        <div className="hidden md:block absolute top-20 left-10 w-72 h-72 bg-green-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="hidden md:block absolute top-40 right-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        
+        <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center">
+            <div className="w-32 h-32 bg-gradient-to-br from-green-400 via-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl transform hover:scale-110 transition-transform duration-300">
+              <CheckCircle className="w-16 h-16 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-4">Application Submitted Successfully!</h1>
-            <p className="text-lg text-white/90 mb-8">
-              Thank you for your interest in joining the CFF Network. Your application has been submitted for review.
-              We'll get back to you within 5-7 business days.
+            <div className="inline-block mb-4">
+              <span className="px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-full text-green-700 text-sm font-semibold">
+                You're All Set! 🎉
+              </span>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent mb-4">
+              Application Submitted Successfully!
+            </h1>
+            <p className="text-lg text-gray-700 mb-8 max-w-xl mx-auto leading-relaxed">
+              Awesome! 🚀 Thank you for your interest in joining the CFF Network. Your application has been submitted for review.
+              <br /><br />
+              We'll get back to you within <span className="font-bold text-green-600">5-7 business days</span>. We're excited to have you join our community!
             </p>
             <Button
               onClick={() => {
@@ -655,9 +679,13 @@ const ViewerDashboardV2 = () => {
                   topics_of_interest: [],
                 });
               }}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 text-lg font-semibold shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+              className="group bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-6 text-lg font-bold shadow-2xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full"
             >
-              Submit Another Application
+              <div className="flex items-center space-x-2">
+                <Users className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                <span>Submit Another Application</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </div>
             </Button>
           </div>
         </div>
@@ -668,165 +696,65 @@ const ViewerDashboardV2 = () => {
   // Preview/Landing Page
   if (!showApplicationForm) {
     return (
-      <div className="min-h-screen overflow-y-auto bg-gradient-to-br from-amber-50 via-white to-blue-50 relative">
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-blue-50 relative">
         {/* Decorative floating orbs */}
         <div className="hidden md:block absolute top-20 left-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
         <div className="hidden md:block absolute top-40 right-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
         <div className="hidden md:block absolute bottom-20 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
 
-        {/* Welcome Header */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-6">
-          <div className="text-center mb-8">
-            <div className="inline-block mb-3">
-              <span className="px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full text-blue-700 text-sm font-semibold">
-                Welcome to CFF Network! 👋
-              </span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-3">
-              Your Gateway to Frontier Finance
-            </h1>
-            <p className="text-base sm:text-lg text-gray-700 max-w-2xl mx-auto">
-              Explore insights, connect with peers, and discover opportunities in emerging markets
-            </p>
-          </div>
-        </div>
-
         {/* Preview Cards */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {/* Network Benefits */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-blue-50 border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-100/0 to-blue-200/0 group-hover:from-blue-100/20 group-hover:to-blue-200/30 transition-all duration-500"></div>
-              <div className="relative p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Users className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300">
-                    Connect & Network
-                  </h3>
-                </div>
-                <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
-                  Join 200+ fund managers across 25+ countries and build meaningful connections in emerging markets.
-                </p>
-                <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full">200+ Managers</span>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full">25+ Countries</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Survey Access with Year Buttons */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-green-50 border-2 border-green-200 hover:border-green-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-green-100/0 to-green-200/0 group-hover:from-green-100/20 group-hover:to-green-200/30 transition-all duration-500"></div>
-              <div className="relative p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <BarChart3 className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent group-hover:from-green-700 group-hover:to-green-900 transition-all duration-300">
-                    Market Insights
-                  </h3>
-                </div>
-                <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
-                  Dive into comprehensive survey data and market intelligence from 2021-2024. Discover trends, patterns, and opportunities.
-                </p>
-                
-                {/* Survey Year Buttons */}
-                <div className="grid grid-cols-4 gap-2 mb-3">
-                  {surveyYears.map((survey) => (
-                    <Button
-                      key={survey.year}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(survey.path)}
-                      className="h-9 text-xs font-semibold bg-white/90 hover:bg-green-100 hover:text-green-700 hover:border-green-400 border-green-200 text-green-700 transition-all transform hover:scale-105 rounded-lg"
-                    >
-                      {survey.year}
-                    </Button>
-                  ))}
-                </div>
-                
-                <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full">4 Years Data</span>
-                  <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full">Trend Analysis</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Professional Development */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-purple-50 border-2 border-purple-200 hover:border-purple-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-100/0 to-purple-200/0 group-hover:from-purple-100/20 group-hover:to-purple-200/30 transition-all duration-500"></div>
-              <div className="relative p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Rocket className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent group-hover:from-purple-700 group-hover:to-purple-900 transition-all duration-300">
-                    Grow & Learn
-                  </h3>
-                </div>
-                <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
-                  Level up your skills with exclusive webinars, workshops, and resources designed for fund managers.
-                </p>
-                <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full">Webinars</span>
-                  <span className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full">Workshops</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Application Preview */}
-          <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-orange-50 to-amber-50 border-2 border-orange-200 hover:border-orange-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Application Preview - Left Side */}
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-orange-50 to-amber-50 border-2 border-orange-200 hover:border-orange-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-100/0 to-amber-100/0 group-hover:from-orange-100/30 group-hover:to-amber-100/40 transition-all duration-500"></div>
-            <div className="relative p-8">
-              <div className="text-center mb-6">
-                <div className="inline-block mb-3">
-                  <span className="px-4 py-2 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full text-orange-700 text-sm font-semibold">
+            <div className="relative p-10 md:p-12">
+              <div className="text-center mb-10">
+                <div className="inline-block mb-4">
+                  <span className="px-5 py-2.5 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full text-orange-700 text-base font-semibold">
                     Ready to Join? 🚀
                   </span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-orange-600 via-orange-700 to-amber-600 bg-clip-text text-transparent mb-3">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-orange-600 via-orange-700 to-amber-600 bg-clip-text text-transparent mb-4">
                   Become a Member Today!
                 </h2>
-                <p className="text-sm md:text-base text-gray-700 mb-6 max-w-2xl mx-auto">
+                <p className="text-base md:text-lg text-gray-700 mb-8 max-w-2xl mx-auto leading-relaxed">
                   Join our vibrant community in just 4 simple steps. It's quick, easy, and takes about 10-15 minutes!
                 </p>
               </div>
 
               {/* Application Steps Preview */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
                 <div className="text-center group/step">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-lg">1</span>
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
+                    <span className="text-white font-bold text-2xl">1</span>
                   </div>
-                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-blue-600 transition-colors duration-300 text-sm">Tell Us About You</h3>
-                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Your organization</p>
+                  <h3 className="font-bold text-gray-800 mb-2 group-hover/step:text-blue-600 transition-colors duration-300 text-base">Tell Us About You</h3>
+                  <p className="text-sm text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Your organization</p>
                 </div>
                 
                 <div className="text-center group/step">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-lg">2</span>
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
+                    <span className="text-white font-bold text-2xl">2</span>
                   </div>
-                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-green-600 transition-colors duration-300 text-sm">Your Team</h3>
-                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Team details</p>
+                  <h3 className="font-bold text-gray-800 mb-2 group-hover/step:text-green-600 transition-colors duration-300 text-base">Your Team</h3>
+                  <p className="text-sm text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Team details</p>
                 </div>
                 
                 <div className="text-center group/step">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-lg">3</span>
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
+                    <span className="text-white font-bold text-2xl">3</span>
                   </div>
-                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-purple-600 transition-colors duration-300 text-sm">Investment Strategy</h3>
-                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Your focus areas</p>
+                  <h3 className="font-bold text-gray-800 mb-2 group-hover/step:text-purple-600 transition-colors duration-300 text-base">Investment Strategy</h3>
+                  <p className="text-sm text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Your focus areas</p>
                 </div>
                 
                 <div className="text-center group/step">
-                  <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-lg">4</span>
+                  <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
+                    <span className="text-white font-bold text-2xl">4</span>
                   </div>
-                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-orange-600 transition-colors duration-300 text-sm">Your Goals</h3>
-                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">What you're looking for</p>
+                  <h3 className="font-bold text-gray-800 mb-2 group-hover/step:text-orange-600 transition-colors duration-300 text-base">Your Goals</h3>
+                  <p className="text-sm text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">What you're looking for</p>
                 </div>
               </div>
 
@@ -834,18 +762,104 @@ const ViewerDashboardV2 = () => {
               <div className="text-center">
                 <Button
                   onClick={() => setShowApplicationForm(true)}
-                  className="group bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 hover:from-orange-600 hover:via-orange-700 hover:to-amber-700 text-white px-8 py-6 text-base font-bold shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full"
+                  className="group bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 hover:from-orange-600 hover:via-orange-700 hover:to-amber-700 text-white px-10 py-7 text-lg font-bold shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full"
                   size="lg"
                 >
                   <div className="flex items-center space-x-3">
-                    <Users className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                    <Users className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
                     <span>Start Your Application</span>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                    <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
                   </div>
                 </Button>
-                <p className="text-sm text-gray-600 mt-4 font-medium">
+                <p className="text-base text-gray-600 mt-5 font-medium">
                   ⏱️ Takes approximately 10-15 minutes to complete
                 </p>
+              </div>
+            </div>
+          </div>
+
+            {/* Three Cards - Right Side */}
+            <div className="flex flex-col gap-6">
+              {/* Network Benefits */}
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-blue-50 border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100/0 to-blue-200/0 group-hover:from-blue-100/20 group-hover:to-blue-200/30 transition-all duration-500"></div>
+                <div className="relative p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                      <Users className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300">
+                      Connect & Network
+                    </h3>
+                  </div>
+                  <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
+                    Join 200+ fund managers across 25+ countries and build meaningful connections in emerging markets.
+                  </p>
+                  <div className="flex items-center justify-between text-xs font-semibold">
+                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full">200+ Managers</span>
+                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full">25+ Countries</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Survey Access with Year Buttons */}
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-green-50 border-2 border-green-200 hover:border-green-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-100/0 to-green-200/0 group-hover:from-green-100/20 group-hover:to-green-200/30 transition-all duration-500"></div>
+                <div className="relative p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                      <BarChart3 className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-lg font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent group-hover:from-green-700 group-hover:to-green-900 transition-all duration-300">
+                      Market Insights
+                    </h3>
+                  </div>
+                  <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
+                    Dive into comprehensive survey data and market intelligence from 2021-2024. Discover trends, patterns, and opportunities.
+                  </p>
+                  
+                  {/* Survey Year Buttons */}
+                  <div className="grid grid-cols-4 gap-2 mb-3">
+                    {surveyYears.map((survey) => (
+                      <Button
+                        key={survey.year}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate(survey.path)}
+                        className="h-9 text-xs font-semibold bg-white/90 hover:bg-green-100 hover:text-green-700 hover:border-green-400 border-green-200 text-green-700 transition-all transform hover:scale-105 rounded-lg"
+                      >
+                        {survey.year}
+                      </Button>
+                    ))}
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-xs font-semibold">
+                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full">4 Years Data</span>
+                    <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full">Trend Analysis</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Professional Development */}
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-purple-50 border-2 border-purple-200 hover:border-purple-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-100/0 to-purple-200/0 group-hover:from-purple-100/20 group-hover:to-purple-200/30 transition-all duration-500"></div>
+                <div className="relative p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                      <Rocket className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-lg font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent group-hover:from-purple-700 group-hover:to-purple-900 transition-all duration-300">
+                      Grow & Learn
+                    </h3>
+                  </div>
+                  <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
+                    Level up your skills with exclusive webinars, workshops, and resources designed for fund managers.
+                  </p>
+                  <div className="flex items-center justify-between text-xs font-semibold">
+                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full">Webinars</span>
+                    <span className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full">Workshops</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -877,58 +891,71 @@ const ViewerDashboardV2 = () => {
   }
 
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-blue-50 relative">
+      {/* Decorative floating orbs */}
+      <div className="hidden md:block absolute top-20 left-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+      <div className="hidden md:block absolute top-40 right-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+      
       {/* Header with Back Button */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
         <div className="flex items-center justify-between mb-4">
           <Button
             variant="outline"
             onClick={() => setShowApplicationForm(false)}
-            className="flex items-center border-white/30 text-white hover:bg-white/20 bg-white/5 backdrop-blur-md"
+            className="flex items-center border-blue-300 text-blue-700 hover:bg-blue-50 bg-white shadow-md hover:shadow-lg transition-all"
           >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
             Back to Overview
           </Button>
         </div>
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-2">
-            Application
+        <div className="text-center mb-6">
+          <div className="inline-block mb-3">
+            <span className="px-4 py-2 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full text-orange-700 text-sm font-semibold">
+              Let's Get Started! 🎯
+            </span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-600 via-orange-700 to-amber-600 bg-clip-text text-transparent mb-3">
+            Membership Application
           </h1>
-          <p className="text-sm text-white/90 mb-4">
-            Join the world's leading emerging market fund manager network
+          <p className="text-base text-gray-700 max-w-2xl mx-auto">
+            Join our vibrant community of fund managers. We're excited to have you! 🚀
           </p>
         </div>
       </div>
       
       {/* Application Form */}
-      <div className="h-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-        <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 shadow-lg hover:shadow-xl">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <div className="relative p-8">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-blue-50 to-purple-50 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 shadow-2xl hover:shadow-3xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-100/30 to-purple-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative p-8 md:p-10">
             <div className="space-y-6">
               {/* Progress Bar */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm text-gray-700 font-medium">
-                  <span>Step {currentSection} of 4</span>
-                  <span>{Math.round((currentSection / 4) * 100)}% Complete</span>
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm font-semibold">
+                  <span className="text-gray-700">Step {currentSection} of 4</span>
+                  <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{Math.round((currentSection / 4) * 100)}% Complete</span>
                 </div>
-                <Progress value={(currentSection / 4) * 100} className="w-full h-3 bg-blue-100" />
+                <div className="w-full h-4 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 rounded-full overflow-hidden shadow-inner">
+                  <div 
+                    className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-500 ease-out shadow-lg"
+                    style={{ width: `${(currentSection / 4) * 100}%` }}
+                  ></div>
+                </div>
               </div>
 
               {/* Form Content */}
               {renderSection(currentSection)}
 
               {/* Navigation Buttons */}
-              <div className="flex justify-between pt-6">
+              <div className="flex justify-between pt-8">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handlePrevious}
                   disabled={currentSection === 1}
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50 bg-white disabled:opacity-50 shadow-sm hover:shadow-md transition-all duration-300"
+                  className="border-blue-300 text-blue-700 hover:bg-blue-50 bg-white disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all duration-300 rounded-full px-6 py-3 font-semibold"
                 >
+                  <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
                   Previous
                 </Button>
                 
@@ -936,19 +963,30 @@ const ViewerDashboardV2 = () => {
                   type="button"
                   onClick={handleNext}
                   disabled={loading}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-2 shadow-lg hover:shadow-blue-500/25 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+                  className="group bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-8 py-3 shadow-2xl hover:shadow-purple-500/30 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full font-bold"
                 >
-                  {loading ? 'Submitting...' : currentSection === 4 ? 'Submit Application' : 'Next'}
+                  {loading ? (
+                    <span className="flex items-center">
+                      <span className="animate-spin mr-2">⏳</span>
+                      Submitting...
+                    </span>
+                  ) : currentSection === 4 ? (
+                    <span className="flex items-center">
+                      Submit Application 🚀
+                      <CheckCircle className="w-5 h-5 ml-2" />
+                    </span>
+                  ) : (
+                    <span className="flex items-center">
+                      Next
+                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                    </span>
+                  )}
                 </Button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* AI Assistant Section */}
-        <div className="mt-6">
-          <AIAssistant />
-        </div>
       </div>
     </div>
   );

@@ -337,11 +337,11 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                     </>
                   ) : location.pathname === '/dashboard' && userRole === 'viewer' ? (
                     <>
-                      <h2 className="text-2xl font-bold text-white transition-colors">
-                        Welcome
+                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
+                        Welcome to CFF Network
                       </h2>
-                      <p className="text-sm text-white/70 transition-colors">
-                        Your gateway to the global fund manager community and comprehensive market intelligence
+                      <p className="text-sm md:text-base text-white/90 transition-colors mt-1 font-medium">
+                        Connect with <span className="font-bold text-white">200+ fund managers</span> worldwide • Access <span className="font-bold text-white">4 years</span> of market insights • Join the <span className="font-bold text-white">frontier finance</span> revolution
                       </p>
                     </>
                   ) : location.pathname === '/dashboard' && userRole === 'member' ? (
