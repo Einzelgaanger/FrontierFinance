@@ -32,6 +32,7 @@ import {
   PlusCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
@@ -60,13 +61,26 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      if (!user?.id) return;
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('profile_picture_url')
+        .eq('id', user.id)
+        .single();
+      if (!error) setAvatarUrl(data?.profile_picture_url ?? null);
+    };
+    fetchAvatar();
+  }, [user?.id]);
 
 
   const handleNavigation = (to: string) => {
     navigate(to);
     setSidebarOpen(false);
   };
-
 
   const handleSignOut = async () => {
     await signOut();
@@ -289,9 +303,13 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
             
             {/* Profile Picture */}
             <div className="flex items-center gap-3 px-4">
+{avatarUrl ? (
+              <img src={avatarUrl} alt="Profile" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+            ) : (
               <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
                 {user?.email?.charAt(0).toUpperCase() || 'U'}
               </div>
+            )}
               <div>
                 <p className="text-sm font-medium text-white capitalize">
                   {userRole || 'Viewer'}
