@@ -21,6 +21,17 @@ interface Application {
   created_at: string;
   reviewed_at?: string;
   reviewed_by?: string;
+  applicant_name?: string;
+  vehicle_name?: string;
+  organization_website?: string;
+  role_job_title?: string;
+  team_overview?: string;
+  investment_thesis?: string;
+  typical_check_size?: string;
+  number_of_investments?: string;
+  amount_raised_to_date?: string;
+  expectations_from_network?: string;
+  how_heard_about_network?: string;
 }
 
 const ApplicationManagement = () => {
@@ -255,9 +266,17 @@ const ApplicationManagement = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label className="text-sm font-semibold text-gray-700">Application:</Label>
+                  <Label className="text-sm font-semibold text-gray-700">Applicant:</Label>
+                  <p className="text-sm text-gray-700 mt-1">{app.applicant_name || 'Not provided'}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700">Fund/Vehicle:</Label>
+                  <p className="text-sm text-gray-700 mt-1">{app.vehicle_name || 'Not provided'}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700">Investment Thesis:</Label>
                   <p className="text-sm text-gray-700 mt-1 whitespace-pre-wrap bg-white p-3 rounded-md border">
-                    {app.application_text}
+                    {app.investment_thesis || 'Not provided'}
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -336,8 +355,28 @@ const ApplicationManagement = () => {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
+                  <Label className="text-gray-600">Applicant Name:</Label>
+                  <p className="font-medium">{selectedApp.applicant_name || 'Not provided'}</p>
+                </div>
+                <div>
                   <Label className="text-gray-600">Email:</Label>
                   <p className="font-medium">{selectedApp.email}</p>
+                </div>
+                <div>
+                  <Label className="text-gray-600">Vehicle Name:</Label>
+                  <p className="font-medium">{selectedApp.vehicle_name || 'Not provided'}</p>
+                </div>
+                <div>
+                  <Label className="text-gray-600">Company:</Label>
+                  <p className="font-medium">{selectedApp.company_name}</p>
+                </div>
+                <div>
+                  <Label className="text-gray-600">Role/Title:</Label>
+                  <p className="font-medium">{selectedApp.role_job_title || 'Not provided'}</p>
+                </div>
+                <div>
+                  <Label className="text-gray-600">Website:</Label>
+                  <p className="font-medium">{selectedApp.organization_website || 'Not provided'}</p>
                 </div>
                 <div>
                   <Label className="text-gray-600">Submitted:</Label>
@@ -345,10 +384,48 @@ const ApplicationManagement = () => {
                 </div>
               </div>
 
-              <div>
-                <Label className="font-semibold">Application Text:</Label>
-                <div className="mt-2 p-4 bg-gray-50 rounded-md border text-sm whitespace-pre-wrap max-h-60 overflow-y-auto">
-                  {selectedApp.application_text}
+              <div className="space-y-4 border-t pt-4">
+                <div>
+                  <Label className="font-semibold">Team Overview:</Label>
+                  <div className="mt-2 p-3 bg-gray-50 rounded-md border text-sm">
+                    {selectedApp.team_overview || 'Not provided'}
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="font-semibold">Investment Thesis:</Label>
+                  <div className="mt-2 p-3 bg-gray-50 rounded-md border text-sm">
+                    {selectedApp.investment_thesis || 'Not provided'}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Label className="text-gray-600">Check Size:</Label>
+                    <p className="font-medium text-sm">{selectedApp.typical_check_size || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <Label className="text-gray-600">Investments:</Label>
+                    <p className="font-medium text-sm">{selectedApp.number_of_investments || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <Label className="text-gray-600">Amount Raised:</Label>
+                    <p className="font-medium text-sm">{selectedApp.amount_raised_to_date || 'Not provided'}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="font-semibold">Network Expectations:</Label>
+                  <div className="mt-2 p-3 bg-gray-50 rounded-md border text-sm">
+                    {selectedApp.expectations_from_network || 'Not provided'}
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="font-semibold">How They Heard About Us:</Label>
+                  <div className="mt-2 p-3 bg-gray-50 rounded-md border text-sm">
+                    {selectedApp.how_heard_about_network || 'Not provided'}
+                  </div>
                 </div>
               </div>
 
