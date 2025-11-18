@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SidebarLayout from "@/components/layout/SidebarLayout";
@@ -42,13 +42,7 @@ export default function BlogDetail() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
 
-  useEffect(() => {
-    if (id) {
-      fetchBlog();
-    }
-  }, [id]);
-
-  const fetchBlog = async () => {
+  const fetchBlog = useCallback(async () => {
     try {
       const { data: blogData, error: blogError } = await supabase
         .from("blogs")
@@ -118,7 +112,61 @@ export default function BlogDetail() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, user, navigate]);
+
+  useEffect(() => {
+    if (id) {
+      fetchBlog();
+    }
+
+    // Set up real-time subscriptions for live updates
+    const subscriptions: any[] = [];
+
+    // Subscribe to blog_likes table changes for this specific blog
+    const likesSubscription = supabase
+      .channel(`blog-likes-${id}`)
+      .on('postgres_changes',
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'blog_likes',
+          filter: `blog_id=eq.${id}`
+        },
+        (payload) => {
+          console.log('Blog like change detected:', payload);
+          // Refresh blog to get updated like count
+          fetchBlog();
+        }
+      )
+      .subscribe();
+
+    // Subscribe to blog_comments table changes for this specific blog
+    const commentsSubscription = supabase
+      .channel(`blog-comments-${id}`)
+      .on('postgres_changes',
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'blog_comments',
+          filter: `blog_id=eq.${id}`
+        },
+        (payload) => {
+          console.log('Blog comment change detected:', payload);
+          // Refresh blog to get updated comment count
+          fetchBlog();
+        }
+      )
+      .subscribe();
+
+    subscriptions.push(likesSubscription, commentsSubscription);
+
+    // Cleanup subscriptions on unmount
+    return () => {
+      subscriptions.forEach(sub => {
+        supabase.removeChannel(sub);
+      });
+    };
+  }, [id, fetchBlog]);
 
   const toggleLike = async (blogId: string, isLiked: boolean) => {
     if (!user) {

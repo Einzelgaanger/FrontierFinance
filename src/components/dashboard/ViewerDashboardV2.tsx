@@ -233,15 +233,29 @@ const ViewerDashboardV2 = () => {
 
     try {
       const applicationData = {
-        ...formData,
-        supporting_documents: formData.supporting_documents,
-        status: 'pending',
-        submitted_at: new Date().toISOString(),
-        user_id: user?.id
+        user_id: user?.id,
+        email: formData.email,
+        company_name: formData.vehicle_name, // Using vehicle_name as company_name for compatibility
+        applicant_name: formData.applicant_name,
+        vehicle_name: formData.vehicle_name,
+        organization_website: formData.organization_website,
+        domicile_countries: formData.domicile_countries || [],
+        role_job_title: formData.role_job_title,
+        team_overview: formData.team_overview,
+        investment_thesis: formData.investment_thesis,
+        typical_check_size: formData.typical_check_size,
+        number_of_investments: formData.number_of_investments,
+        amount_raised_to_date: formData.amount_raised_to_date,
+        supporting_documents: formData.supporting_documents || [],
+        supporting_document_links: formData.supporting_document_links || [],
+        expectations_from_network: formData.expectations_from_network,
+        how_heard_about_network: formData.how_heard_about_network,
+        topics_of_interest: formData.topics_of_interest || [],
+        status: 'pending'
       };
 
       const { error } = await supabase
-        .from('membership_requests')
+        .from('applications')
         .insert([applicationData]);
 
       if (error) {

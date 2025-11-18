@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import SidebarLayout from "@/components/layout/SidebarLayout";
@@ -61,12 +61,63 @@ export default function Blogs() {
     
     window.addEventListener('openCreateBlogModal', handleOpenModal);
     
+    // Set up real-time subscriptions for live updates
+    const subscriptions: any[] = [];
+
+    // Subscribe to blogs table changes
+    const blogsSubscription = supabase
+      .channel('blogs-live-updates')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'blogs' },
+        (payload) => {
+          console.log('Blog change detected:', payload);
+          // Refresh blogs when any change occurs
+          fetchBlogs();
+        }
+      )
+      .subscribe();
+
+    // Subscribe to blog_likes table changes
+    const likesSubscription = supabase
+      .channel('blog-likes-live-updates')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'blog_likes' },
+        (payload) => {
+          console.log('Blog like change detected:', payload);
+          // Update like counts in real-time
+          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
+            fetchBlogs(); // Refresh to get updated counts
+          }
+        }
+      )
+      .subscribe();
+
+    // Subscribe to blog_comments table changes
+    const commentsSubscription = supabase
+      .channel('blog-comments-live-updates')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'blog_comments' },
+        (payload) => {
+          console.log('Blog comment change detected:', payload);
+          // Update comment counts in real-time
+          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
+            fetchBlogs(); // Refresh to get updated counts
+          }
+        }
+      )
+      .subscribe();
+
+    subscriptions.push(blogsSubscription, likesSubscription, commentsSubscription);
+    
     return () => {
       window.removeEventListener('openCreateBlogModal', handleOpenModal);
+      subscriptions.forEach(sub => {
+        supabase.removeChannel(sub);
+      });
     };
-  }, [user]);
+  }, [user, fetchBlogs]);
 
-  const fetchBlogs = async () => {
+  const fetchBlogs = useCallback(async () => {
     try {
       const { data: blogsData, error: blogsError } = await supabase
         .from("blogs")
@@ -137,7 +188,7 @@ export default function Blogs() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   const stats = useMemo(() => {
     const uniqueAuthors = new Set(blogs.map((blog) => blog.user_id));

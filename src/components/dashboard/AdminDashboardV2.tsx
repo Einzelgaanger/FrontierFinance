@@ -172,9 +172,7 @@ const AdminDashboardV2 = () => {
         survey2024Result, 
         userRolesResult, 
         applicationsResult,
-        profilesResult,
-        userProfilesResult,
-        networkUsersResult
+        userProfilesResult
       ] = await Promise.all([
         fetchWithErrorHandling(
           supabase.from('survey_responses_2021').select('id, user_id, created_at, firm_name, participant_name'),
@@ -197,20 +195,12 @@ const AdminDashboardV2 = () => {
           'user_roles'
         ),
         fetchWithErrorHandling(
-          supabase.from('membership_requests').select('id, status, created_at, vehicle_name'),
-          'membership_requests'
-        ),
-        fetchWithErrorHandling(
-          supabase.from('profiles').select('id, created_at'),
-          'profiles'
+          supabase.from('applications').select('id, status, created_at, vehicle_name'),
+          'applications'
         ),
         fetchWithErrorHandling(
           supabase.from('user_profiles').select('id, created_at, company_name'),
           'user_profiles'
-        ),
-        fetchWithErrorHandling(
-          supabase.from('network_users').select('user_id, role, created_at'),
-          'network_users'
         )
       ]);
 
@@ -219,9 +209,7 @@ const AdminDashboardV2 = () => {
       const survey2023Users = survey2023Result.data || [];
       const survey2024Users = survey2024Result.data || [];
       const userRoles = userRolesResult.data || [];
-      const profiles = profilesResult.data || [];
       const userProfiles = userProfilesResult.data || [];
-      const networkUsers = networkUsersResult.data || [];
       const membershipRequests = applicationsResult.data || [];
 
       // Log data counts for debugging
@@ -231,14 +219,14 @@ const AdminDashboardV2 = () => {
         survey2023Count: survey2023Users.length,
         survey2024Count: survey2024Users.length,
         userRolesCount: userRoles.length,
-        profilesCount: profiles.length,
-        membershipRequestsCount: membershipRequests.length
+        userProfilesCount: userProfiles.length,
+        applicationsCount: membershipRequests.length
       });
 
       // Calculate comprehensive metrics
-      // Note: If user_roles query fails due to RLS, use profiles as fallback for total count
-      // Then try to get role-specific counts from survey data or use profiles count
-      const totalUsers = userRoles.length > 0 ? userRoles.length : profiles.length;
+      // Note: If user_roles query fails due to RLS, use user_profiles as fallback for total count
+      // Then try to get role-specific counts from survey data or use user_profiles count
+      const totalUsers = userRoles.length > 0 ? userRoles.length : userProfiles.length;
       const activeMembers = userRoles.length > 0 
         ? userRoles.filter(ur => ur.role === 'member').length 
         : 0; // If we can't get user_roles, we can't determine members
@@ -249,9 +237,9 @@ const AdminDashboardV2 = () => {
         ? userRoles.filter(ur => ur.role === 'admin').length 
         : 0;
       
-      // If user_roles query returned empty but we have profiles, log a warning
-      if (userRoles.length === 0 && profiles.length > 0) {
-        console.warn('AdminDashboardV2 - user_roles query returned 0 results but profiles exist. This may be due to RLS policies. Using profiles count as fallback.');
+      // If user_roles query returned empty but we have user_profiles, log a warning
+      if (userRoles.length === 0 && userProfiles.length > 0) {
+        console.warn('AdminDashboardV2 - user_roles query returned 0 results but user_profiles exist. This may be due to RLS policies. Using user_profiles count as fallback.');
       }
       const totalSurveyResponses = survey2021Users.length + survey2022Users.length + survey2023Users.length + survey2024Users.length;
       const pendingApplications = membershipRequests.filter(app => app.status === 'pending').length;
@@ -559,7 +547,7 @@ const AdminDashboardV2 = () => {
       activities.push({
         id: 'network-1',
         type: 'system',
-        message: `Network users table updated - ${networkUsers.length} total network users across all roles`,
+        message: `User profiles updated - ${userProfiles.length} total user profiles in the system`,
         timestamp: '6 hours ago',
         icon: Network,
         color: 'text-blue-600',

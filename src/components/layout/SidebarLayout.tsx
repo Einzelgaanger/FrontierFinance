@@ -405,16 +405,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                         Share insights and connect with fellow fund managers
                       </p>
                     </>
-                  ) : location.pathname === '/profile' ? (
-                    <>
-                      <h2 className="text-2xl font-bold text-white transition-colors">
-                        Company Profile
-                      </h2>
-                      <p className="text-sm text-white/70 transition-colors">
-                        Update your company information
-                      </p>
-                    </>
-                  ) : (
+                  ) : location.pathname === '/profile' ? null : (
                     <>
                       <h2 className="text-2xl font-bold text-white transition-colors">
                         {location.pathname.startsWith('/survey') && 'Surveys'}

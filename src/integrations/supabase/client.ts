@@ -5,6 +5,43 @@ import type { Database } from './types';
 const SUPABASE_URL = "https://qiqxdivyyjcbegdlptuq.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpcXhkaXZ5eWpjYmVnZGxwdHVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5MjA4NDUsImV4cCI6MjA2NzQ5Njg0NX0.jkOmX28FJaWdMP2oFMflVwTpErCEU5WavvRzdnuyGRg";
 
+// Clear any stale Supabase auth data that might have the wrong URL
+// This fixes issues where localStorage has cached auth data from a different Supabase project
+if (typeof window !== 'undefined') {
+  try {
+    const currentProjectId = 'qiqxdivyyjcbegdlptuq';
+    const oldProjectId = 'fixysaskihumorizijuv';
+    const allKeys = Object.keys(localStorage);
+    
+    // Clear any Supabase auth data from the old project
+    allKeys.forEach(key => {
+      // Check for Supabase auth keys (format: sb-{project-id}-auth-token)
+      if (key.includes('sb-') && key.includes('-auth-token')) {
+        // If it's from the old project, remove it
+        if (key.includes(oldProjectId)) {
+          console.log('Clearing stale Supabase auth data from old project:', key);
+          localStorage.removeItem(key);
+        }
+      }
+      // Also check for any values that contain the old project URL
+      try {
+        const value = localStorage.getItem(key);
+        if (value && typeof value === 'string') {
+          if (value.includes(oldProjectId) || 
+              (value.includes('fixysaskihumorizijuv.supabase.co'))) {
+            console.log('Clearing localStorage item with old Supabase URL:', key);
+            localStorage.removeItem(key);
+          }
+        }
+      } catch (e) {
+        // Ignore errors when reading items
+      }
+    });
+  } catch (e) {
+    console.warn('Error clearing stale auth data:', e);
+  }
+}
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
