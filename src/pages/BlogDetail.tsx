@@ -249,9 +249,9 @@ export default function BlogDetail() {
             <div className="flex flex-col space-y-4">
               {/* Author Header */}
               <div className="flex items-start gap-3">
-                <Avatar className="h-12 w-12 border border-slate-200 flex-shrink-0">
+                <Avatar className="h-12 w-12 border-2 border-indigo-200 flex-shrink-0 shadow-sm">
                   <AvatarImage src={blog.author?.profile_picture_url || ""} />
-                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-semibold">
+                  <AvatarFallback className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold">
                     {blog.author?.full_name?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>
@@ -277,7 +277,7 @@ export default function BlogDetail() {
               </div>
 
               {/* Title */}
-              <h1 className="text-2xl font-bold text-slate-900 leading-tight">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent leading-tight">
                 {blog.title}
               </h1>
 
@@ -291,7 +291,7 @@ export default function BlogDetail() {
                     {blog.content.length > 300 && (
                       <button
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="mt-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                        className="mt-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
                       >
                         {isExpanded ? 'Read less' : 'Read more'}
                       </button>
@@ -312,33 +312,33 @@ export default function BlogDetail() {
                   onClick={() => toggleLike(blog.id, blog.is_liked || false)}
                   className="flex items-center gap-2 text-slate-500 hover:text-rose-500 transition-colors group/action"
                 >
-                  <div className={`p-2 rounded-full transition-colors ${blog.is_liked ? 'bg-rose-50' : 'group-hover/action:bg-rose-50'}`}>
+                  <div className={`p-2 rounded-full transition-colors ${blog.is_liked ? 'bg-rose-100 border border-rose-200' : 'group-hover/action:bg-rose-50 group-hover/action:border group-hover/action:border-rose-200'}`}>
                     <Heart className={`h-5 w-5 transition-all ${blog.is_liked ? 'fill-rose-500 text-rose-500' : ''}`} />
                   </div>
                   <span className="text-sm font-medium">{blog.like_count || 0}</span>
                 </button>
                 <button 
                   onClick={() => setIsCommentsOpen(!isCommentsOpen)}
-                  className={`flex items-center gap-2 transition-colors group/action ${isCommentsOpen ? 'text-blue-500' : 'text-slate-500 hover:text-blue-500'}`}
+                  className={`flex items-center gap-2 transition-colors group/action ${isCommentsOpen ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}
                 >
-                  <div className={`p-2 rounded-full transition-colors ${isCommentsOpen ? 'bg-blue-50' : 'group-hover/action:bg-blue-50'}`}>
+                  <div className={`p-2 rounded-full transition-colors ${isCommentsOpen ? 'bg-indigo-100 border border-indigo-200' : 'group-hover/action:bg-indigo-50 group-hover/action:border group-hover/action:border-indigo-200'}`}>
                     <MessageCircle className="h-5 w-5" />
                   </div>
                   <span className="text-sm font-medium">{blog.comment_count || 0}</span>
                 </button>
                 <button 
-                  className="flex items-center gap-2 text-slate-500 hover:text-blue-500 transition-colors group/action"
+                  className="flex items-center gap-2 text-slate-500 hover:text-emerald-600 transition-colors group/action"
                   aria-label="Share post"
                 >
-                  <div className="p-2 rounded-full transition-colors group-hover/action:bg-blue-50">
+                  <div className="p-2 rounded-full transition-colors group-hover/action:bg-emerald-50 group-hover/action:border group-hover/action:border-emerald-200">
                     <Share2 className="h-5 w-5" />
                   </div>
                 </button>
                 <button 
-                  className="flex items-center gap-2 text-slate-500 hover:text-blue-500 transition-colors group/action"
+                  className="flex items-center gap-2 text-slate-500 hover:text-amber-600 transition-colors group/action"
                   aria-label="Save post"
                 >
-                  <div className="p-2 rounded-full transition-colors group-hover/action:bg-blue-50">
+                  <div className="p-2 rounded-full transition-colors group-hover/action:bg-amber-50 group-hover/action:border group-hover/action:border-amber-200">
                     <Bookmark className="h-5 w-5" />
                   </div>
                 </button>
@@ -356,7 +356,11 @@ export default function BlogDetail() {
             {/* Right Column - Media */}
             {(blog.media_type === "image" || blog.media_type === "video") && blog.media_url && (
               <div className="sticky top-6 h-fit">
-                <div className="w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                <div className={`w-full overflow-hidden rounded-xl border-2 bg-slate-50 shadow-sm ${
+                  blog.media_type === "image" 
+                    ? 'border-purple-200' 
+                    : 'border-rose-200'
+                }`}>
                   {blog.media_type === "image" ? (
                     <img
                       src={blog.media_url}

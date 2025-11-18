@@ -137,15 +137,29 @@ export default function MyProfile() {
       setUploading(true);
       const fileName = `${user.id}/avatar.${uploadExt}`;
 
-      const { error: uploadError } = await supabase.storage
+      console.log('Uploading avatar:', { fileName, userId: user.id, contentType, fileSize: uploadBlob.size });
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from('profile-pictures')
         .upload(fileName, uploadBlob, { upsert: true, contentType, cacheControl: '3600' });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error details:', {
+          message: uploadError.message,
+          statusCode: uploadError.statusCode,
+          error: uploadError.error,
+          name: uploadError.name
+        });
+        throw new Error(uploadError.message || `Upload failed: ${uploadError.statusCode || 'Unknown error'}`);
+      }
+
+      console.log('Upload successful:', uploadData);
 
       const { data: { publicUrl } } = supabase.storage
         .from('profile-pictures')
         .getPublicUrl(fileName);
+
+      console.log('Public URL:', publicUrl);
 
       // Persist the new avatar URL immediately
       setProfile(prev => ({ ...prev, profile_picture_url: publicUrl }));
@@ -163,9 +177,14 @@ export default function MyProfile() {
         toast({ title: 'Success', description: 'Avatar uploaded and saved to your profile' });
       }
       e.currentTarget.value = '';
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading avatar:', error);
-      toast({ title: 'Upload failed', description: 'Could not upload avatar', variant: 'destructive' });
+      const errorMessage = error?.message || error?.error || 'Could not upload avatar';
+      toast({ 
+        title: 'Upload failed', 
+        description: errorMessage,
+        variant: 'destructive' 
+      });
     } finally {
       setUploading(false);
     }
@@ -210,12 +229,6 @@ export default function MyProfile() {
     <SidebarLayout>
       <div className="min-h-screen bg-white">
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="mb-8 border-b border-slate-200 pb-6">
-            <h1 className="text-2xl font-bold text-slate-900">Profile Settings</h1>
-            <p className="mt-1 text-sm text-slate-600">Manage your profile information and preferences</p>
-          </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Avatar Section */}
             <div className="lg:col-span-1">

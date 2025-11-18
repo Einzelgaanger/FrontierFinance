@@ -49,74 +49,6 @@ export default function Blogs() {
     }
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      fetchBlogs();
-    }
-    
-    // Listen for the create blog modal event from header
-    const handleOpenModal = () => {
-      setIsCreateModalOpen(true);
-    };
-    
-    window.addEventListener('openCreateBlogModal', handleOpenModal);
-    
-    // Set up real-time subscriptions for live updates
-    const subscriptions: any[] = [];
-
-    // Subscribe to blogs table changes
-    const blogsSubscription = supabase
-      .channel('blogs-live-updates')
-      .on('postgres_changes',
-        { event: '*', schema: 'public', table: 'blogs' },
-        (payload) => {
-          console.log('Blog change detected:', payload);
-          // Refresh blogs when any change occurs
-          fetchBlogs();
-        }
-      )
-      .subscribe();
-
-    // Subscribe to blog_likes table changes
-    const likesSubscription = supabase
-      .channel('blog-likes-live-updates')
-      .on('postgres_changes',
-        { event: '*', schema: 'public', table: 'blog_likes' },
-        (payload) => {
-          console.log('Blog like change detected:', payload);
-          // Update like counts in real-time
-          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
-            fetchBlogs(); // Refresh to get updated counts
-          }
-        }
-      )
-      .subscribe();
-
-    // Subscribe to blog_comments table changes
-    const commentsSubscription = supabase
-      .channel('blog-comments-live-updates')
-      .on('postgres_changes',
-        { event: '*', schema: 'public', table: 'blog_comments' },
-        (payload) => {
-          console.log('Blog comment change detected:', payload);
-          // Update comment counts in real-time
-          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
-            fetchBlogs(); // Refresh to get updated counts
-          }
-        }
-      )
-      .subscribe();
-
-    subscriptions.push(blogsSubscription, likesSubscription, commentsSubscription);
-    
-    return () => {
-      window.removeEventListener('openCreateBlogModal', handleOpenModal);
-      subscriptions.forEach(sub => {
-        supabase.removeChannel(sub);
-      });
-    };
-  }, [user, fetchBlogs]);
-
   const fetchBlogs = useCallback(async () => {
     try {
       const { data: blogsData, error: blogsError } = await supabase
@@ -190,6 +122,74 @@ export default function Blogs() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (user) {
+      fetchBlogs();
+    }
+    
+    // Listen for the create blog modal event from header
+    const handleOpenModal = () => {
+      setIsCreateModalOpen(true);
+    };
+    
+    window.addEventListener('openCreateBlogModal', handleOpenModal);
+    
+    // Set up real-time subscriptions for live updates
+    const subscriptions: any[] = [];
+
+    // Subscribe to blogs table changes
+    const blogsSubscription = supabase
+      .channel('blogs-live-updates')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'blogs' },
+        (payload) => {
+          console.log('Blog change detected:', payload);
+          // Refresh blogs when any change occurs
+          fetchBlogs();
+        }
+      )
+      .subscribe();
+
+    // Subscribe to blog_likes table changes
+    const likesSubscription = supabase
+      .channel('blog-likes-live-updates')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'blog_likes' },
+        (payload) => {
+          console.log('Blog like change detected:', payload);
+          // Update like counts in real-time
+          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
+            fetchBlogs(); // Refresh to get updated counts
+          }
+        }
+      )
+      .subscribe();
+
+    // Subscribe to blog_comments table changes
+    const commentsSubscription = supabase
+      .channel('blog-comments-live-updates')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'blog_comments' },
+        (payload) => {
+          console.log('Blog comment change detected:', payload);
+          // Update comment counts in real-time
+          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
+            fetchBlogs(); // Refresh to get updated counts
+          }
+        }
+      )
+      .subscribe();
+
+    subscriptions.push(blogsSubscription, likesSubscription, commentsSubscription);
+    
+    return () => {
+      window.removeEventListener('openCreateBlogModal', handleOpenModal);
+      subscriptions.forEach(sub => {
+        supabase.removeChannel(sub);
+      });
+    };
+  }, [user, fetchBlogs]);
+
   const stats = useMemo(() => {
     const uniqueAuthors = new Set(blogs.map((blog) => blog.user_id));
     const totalEngagement = blogs.reduce((acc, blog) => acc + (blog.like_count || 0) + (blog.comment_count || 0), 0);
@@ -250,31 +250,29 @@ export default function Blogs() {
 
   return (
     <SidebarLayout>
-      <div className="min-h-screen bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
-          {/* Header - Same style as blog detail page */}
-          <div className="mb-6 flex items-center gap-4">
-            <h2 className="text-lg font-bold text-slate-900">Blogs</h2>
-          </div>
-
+      <div className="min-h-screen relative bg-cover bg-center bg-no-repeat bg-[url('/blogsbackground.jpeg')]">
+        {/* Overlay for readability */}
+        <div className="absolute inset-0 bg-white/20 backdrop-blur-sm"></div>
+        
+        <div className="relative z-10 mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4">
             {/* Stats Section */}
             <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-md shadow-slate-900/5">
               <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-                  <p className="text-xs font-medium uppercase text-slate-500">Published</p>
-                  <p className="mt-1 text-xl font-semibold text-slate-900">{stats.totalPosts.toLocaleString()}</p>
-                  <p className="text-xs text-slate-500">Stories live on the feed</p>
+                <div className="rounded-lg border-l-4 border-l-blue-500 border border-slate-200 bg-blue-50/30 px-3 py-2">
+                  <p className="text-xs font-medium uppercase text-blue-600">Published</p>
+                  <p className="mt-1 text-xl font-semibold text-blue-900">{stats.totalPosts.toLocaleString()}</p>
+                  <p className="text-xs text-blue-600/70">Stories live on the feed</p>
                 </div>
-                <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-                  <p className="text-xs font-medium uppercase text-slate-500">Contributors</p>
-                  <p className="mt-1 text-xl font-semibold text-slate-900">{stats.totalAuthors.toLocaleString()}</p>
-                  <p className="text-xs text-slate-500">Members sharing updates</p>
+                <div className="rounded-lg border-l-4 border-l-purple-500 border border-slate-200 bg-purple-50/30 px-3 py-2">
+                  <p className="text-xs font-medium uppercase text-purple-600">Contributors</p>
+                  <p className="mt-1 text-xl font-semibold text-purple-900">{stats.totalAuthors.toLocaleString()}</p>
+                  <p className="text-xs text-purple-600/70">Members sharing updates</p>
                 </div>
-                <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-                  <p className="text-xs font-medium uppercase text-slate-500">Engagement</p>
-                  <p className="mt-1 text-xl font-semibold text-slate-900">{stats.totalEngagement.toLocaleString()}</p>
-                  <p className="text-xs text-slate-500">Likes and comments</p>
+                <div className="rounded-lg border-l-4 border-l-emerald-500 border border-slate-200 bg-emerald-50/30 px-3 py-2">
+                  <p className="text-xs font-medium uppercase text-emerald-600">Engagement</p>
+                  <p className="mt-1 text-xl font-semibold text-emerald-900">{stats.totalEngagement.toLocaleString()}</p>
+                  <p className="text-xs text-emerald-600/70">Likes and comments</p>
                 </div>
               </div>
             </section>
@@ -288,16 +286,18 @@ export default function Blogs() {
               <div className="flex flex-wrap gap-1.5">
                 {filterOptions.map((option) => {
                   const isActive = activeFilter === option.value;
+                  const colorClasses = {
+                    'all': isActive ? 'bg-blue-600 text-white hover:bg-blue-500 border-blue-600' : 'border-slate-200 text-slate-600 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50',
+                    'text': isActive ? 'bg-indigo-600 text-white hover:bg-indigo-500 border-indigo-600' : 'border-slate-200 text-slate-600 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50',
+                    'image': isActive ? 'bg-purple-600 text-white hover:bg-purple-500 border-purple-600' : 'border-slate-200 text-slate-600 hover:border-purple-400 hover:text-purple-600 hover:bg-purple-50',
+                    'video': isActive ? 'bg-rose-600 text-white hover:bg-rose-500 border-rose-600' : 'border-slate-200 text-slate-600 hover:border-rose-400 hover:text-rose-600 hover:bg-rose-50'
+                  };
                   return (
                     <Button
                       key={option.value}
                       size="sm"
                       variant={isActive ? 'default' : 'outline'}
-                      className={`rounded-md px-2.5 py-1 text-xs ${
-                        isActive
-                          ? 'bg-blue-600 text-white hover:bg-blue-500'
-                          : 'border-slate-200 text-slate-600 hover:border-blue-400 hover:text-blue-600'
-                      }`}
+                      className={`rounded-md px-2.5 py-1 text-xs transition-all ${colorClasses[option.value]}`}
                       onClick={() => setActiveFilter(option.value)}
                     >
                       {option.label}
@@ -358,7 +358,13 @@ export default function Blogs() {
                   <Card 
                     key={blog.id} 
                     onClick={() => navigate(`/blogs/${blog.id}`)}
-                    className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                    className={`group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border-2 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
+                      blog.media_type === 'image' 
+                        ? 'border-purple-200 hover:border-purple-300' 
+                        : blog.media_type === 'video'
+                        ? 'border-rose-200 hover:border-rose-300'
+                        : 'border-indigo-200 hover:border-indigo-300'
+                    }`}
                   >
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between gap-3">
@@ -383,7 +389,13 @@ export default function Blogs() {
                         </div>
                         <Badge 
                           variant="secondary" 
-                          className="flex items-center gap-1 rounded-md border border-blue-100 bg-blue-50 text-blue-700"
+                          className={`flex items-center gap-1 rounded-md border font-medium ${
+                            blog.media_type === 'image'
+                              ? 'border-purple-200 bg-purple-50 text-purple-700'
+                              : blog.media_type === 'video'
+                              ? 'border-rose-200 bg-rose-50 text-rose-700'
+                              : 'border-indigo-200 bg-indigo-50 text-indigo-700'
+                          }`}
                         >
                           {getMediaIcon(blog.media_type)}
                           {blog.media_type || "text"}
@@ -422,10 +434,22 @@ export default function Blogs() {
                         </div>
                       )}
                       <div className="space-y-2">
-                        <p className="text-xs font-medium uppercase tracking-[0.3em] text-blue-500/80">
+                        <p className={`text-xs font-medium uppercase tracking-[0.3em] ${
+                          blog.media_type === 'image'
+                            ? 'text-purple-600'
+                            : blog.media_type === 'video'
+                            ? 'text-rose-600'
+                            : 'text-indigo-600'
+                        }`}>
                           {format(new Date(blog.created_at), "MMM d, yyyy")}
                         </p>
-                        <h2 className="text-lg font-semibold leading-snug text-slate-900 transition-colors group-hover:text-blue-700 line-clamp-2">
+                        <h2 className={`text-lg font-semibold leading-snug text-slate-900 transition-colors line-clamp-2 ${
+                          blog.media_type === 'image'
+                            ? 'group-hover:text-purple-700'
+                            : blog.media_type === 'video'
+                            ? 'group-hover:text-rose-700'
+                            : 'group-hover:text-indigo-700'
+                        }`}>
                           {blog.title}
                         </h2>
                       {blog.caption && (
