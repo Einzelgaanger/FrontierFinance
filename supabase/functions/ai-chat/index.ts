@@ -339,7 +339,7 @@ Use sample_data above for structure reference. Full dataset has the counts shown
     'Counts available but detailed data may be limited by access level. Use counts for accurate totals.' : 
     'No survey data available.'}`
 
-ACCESSIBLE FIELDS (${userRole} role):
+# ACCESSIBLE FIELDS (${userRole} role):
 ${accessibleFields || 'No specific field restrictions documented.'}
 
 # COLUMN NAME GUIDE (Critical for accurate cross-year queries)
