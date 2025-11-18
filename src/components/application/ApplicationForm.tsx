@@ -17,7 +17,6 @@ const ApplicationForm = () => {
   const [checkingApplication, setCheckingApplication] = useState(true);
   const [existingApplication, setExistingApplication] = useState<any>(null);
   const [companyName, setCompanyName] = useState('');
-  const [applicationText, setApplicationText] = useState('');
 
   // Check for existing application and get company name
   useEffect(() => {
@@ -27,18 +26,18 @@ const ApplicationForm = () => {
       try {
         // Get user profile for company name
         const { data: profileData } = await supabase
-          .from('user_profiles' as any)
+          .from('user_profiles')
           .select('company_name')
           .eq('id', user.id)
           .single();
 
         if (profileData) {
-          setCompanyName((profileData as any).company_name || '');
+          setCompanyName(profileData.company_name || '');
         }
 
         // Check for existing application
         const { data, error } = await supabase
-          .from('applications' as any)
+          .from('applications')
           .select('*')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
@@ -47,7 +46,25 @@ const ApplicationForm = () => {
         if (error) throw error;
 
         if (data && data.length > 0) {
-          setExistingApplication(data[0]);
+          const app = data[0];
+          setExistingApplication(app);
+          // Pre-fill form if application exists and can be edited
+          if (app.status === 'rejected' || app.status === 'pending') {
+            setFormData({
+              applicant_name: app.applicant_name || '',
+              email: app.email || user?.email || '',
+              vehicle_name: app.vehicle_name || '',
+              organization_website: app.organization_website || '',
+              role_job_title: app.role_job_title || '',
+              team_overview: app.team_overview || '',
+              investment_thesis: app.investment_thesis || '',
+              typical_check_size: app.typical_check_size || '',
+              number_of_investments: app.number_of_investments || '',
+              amount_raised_to_date: app.amount_raised_to_date || '',
+              expectations_from_network: app.expectations_from_network || '',
+              how_heard_about_network: app.how_heard_about_network || '',
+            });
+          }
         }
       } catch (error) {
         console.error('Error checking existing application:', error);
@@ -62,7 +79,7 @@ const ApplicationForm = () => {
     };
 
     checkExistingApplication();
-  }, [user?.id, toast]);
+  }, [user?.id, toast, user?.email]);
 
   const [formData, setFormData] = useState({
     applicant_name: '',
@@ -81,45 +98,91 @@ const ApplicationForm = () => {
 
   // Wizard state
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 4; // A-D
+  const totalSteps = 4;
   const percentComplete = Math.round((currentStep / totalSteps) * 100);
 
-  const goNext = () => setCurrentStep((s) => Math.min(totalSteps, s + 1));
+  const updateField = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Validation for each step
+  const validateStep = (step: number): boolean => {
+    switch (step) {
+      case 1: // Basic Info
+        return !!(formData.applicant_name && formData.email && formData.vehicle_name && formData.role_job_title);
+      case 2: // Organization
+        return !!(formData.organization_website && formData.team_overview);
+      case 3: // Investment Details
+        return !!(formData.investment_thesis && formData.typical_check_size && formData.number_of_investments && formData.amount_raised_to_date);
+      case 4: // Network Expectations
+        return !!(formData.expectations_from_network && formData.how_heard_about_network);
+      default:
+        return false;
+    }
+  };
+
+  const goNext = () => {
+    if (!validateStep(currentStep)) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields before proceeding.",
+        variant: "destructive"
+      });
+      return;
+    }
+    setCurrentStep((s) => Math.min(totalSteps, s + 1));
+  };
+
   const goPrev = () => setCurrentStep((s) => Math.max(1, s - 1));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Allow partial submissions - no required field validation
+    // Validate all steps before submission
+    for (let i = 1; i <= totalSteps; i++) {
+      if (!validateStep(i)) {
+        toast({
+          title: "Incomplete Application",
+          description: `Please complete all required fields in Step ${i} before submitting.`,
+          variant: "destructive"
+        });
+        setCurrentStep(i);
+        return;
+      }
+    }
+
     setLoading(true);
 
     try {
-      // Check if application already exists
-      const { data: existing } = await supabase
-        .from('applications')
-        .select('id')
-        .eq('user_id', user?.id)
-        .maybeSingle();
-
       const applicationData = {
         user_id: user?.id,
-        email: user?.email,
+        email: formData.email,
         company_name: companyName || 'Not provided',
-        application_text: applicationText || '',
+        application_text: JSON.stringify(formData),
         status: 'pending',
-        ...formData
+        applicant_name: formData.applicant_name,
+        vehicle_name: formData.vehicle_name,
+        organization_website: formData.organization_website,
+        role_job_title: formData.role_job_title,
+        team_overview: formData.team_overview,
+        investment_thesis: formData.investment_thesis,
+        typical_check_size: formData.typical_check_size,
+        number_of_investments: formData.number_of_investments,
+        amount_raised_to_date: formData.amount_raised_to_date,
+        expectations_from_network: formData.expectations_from_network,
+        how_heard_about_network: formData.how_heard_about_network,
       };
 
       let error;
-      if (existing) {
+      if (existingApplication && (existingApplication.status === 'rejected' || existingApplication.status === 'pending')) {
         // Update existing application
         const { error: updateError } = await supabase
           .from('applications')
           .update(applicationData)
-          .eq('id', existing.id);
+          .eq('id', existingApplication.id);
         error = updateError;
       } else {
-        // Insert new application
+        // Create new application
         const { error: insertError } = await supabase
           .from('applications')
           .insert([applicationData]);
@@ -130,424 +193,396 @@ const ApplicationForm = () => {
 
       toast({
         title: "Application Submitted",
-        description: "Your application has been submitted successfully. We'll review it soon.",
+        description: "Your membership application has been submitted successfully. You will be notified via email once it's reviewed.",
       });
 
-      // Reload to show the new status
-      window.location.reload();
-    } catch (error: any) {
+      // Refresh the application status
+      const { data: newApp } = await supabase
+        .from('applications')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (newApp) {
+        setExistingApplication(newApp);
+      }
+
+    } catch (error) {
       console.error('Error submitting application:', error);
       toast({
-        title: "Submission Error",
-        description: error.message || "Failed to submit application. Please try again.",
-        variant: "destructive",
+        title: "Error",
+        description: "Failed to submit application. Please try again.",
+        variant: "destructive"
       });
     } finally {
       setLoading(false);
     }
   };
 
-  // Show loading state while checking application status
   if (checkingApplication) {
     return (
-      <div className="max-w-3xl mx-auto p-6">
+      <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Checking application status...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading application status...</p>
         </div>
       </div>
     );
   }
 
-  // Show pending application status
-  if (existingApplication && existingApplication.status === 'pending') {
-    return (
-      <div className="max-w-3xl mx-auto p-6">
-        <Card className="border-orange-200 bg-orange-50/50">
-          <CardHeader className="text-center">
-            <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Clock className="w-8 h-8 text-white" />
-            </div>
-            <CardTitle className="text-2xl">Application Pending Review</CardTitle>
-            <CardDescription>
-              Your membership application is currently under review
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="bg-white border border-orange-200 rounded-lg p-4">
-              <p className="text-sm text-gray-600 mb-2">
-                <strong>Application Details:</strong>
-              </p>
-              <div className="space-y-1 text-sm">
-                <p><strong>Submitted:</strong> {new Date(existingApplication.created_at).toLocaleDateString()}</p>
-                <p><strong>Company:</strong> {existingApplication.company_name}</p>
-                <p><strong>Status:</strong> <span className="text-orange-600 font-semibold">Pending Review</span></p>
-              </div>
-            </div>
-            <p className="text-sm text-gray-600 text-center">
-              Our team will review your application within 5-7 business days. You'll receive an email notification once a decision has been made.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // Show approved application status
+  // If application is approved, show success message
   if (existingApplication && existingApplication.status === 'approved') {
     return (
-      <div className="max-w-3xl mx-auto p-6">
-        <Card className="border-green-200 bg-green-50/50">
-          <CardHeader className="text-center">
-            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-8 h-8 text-white" />
-            </div>
-            <CardTitle className="text-2xl">Application Approved!</CardTitle>
-            <CardDescription>
-              Congratulations! You are now a CFF Network member
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="bg-white border border-green-200 rounded-lg p-4">
-              <p className="text-sm text-gray-600 mb-3">
-                <strong>You now have access to:</strong>
+      <Card className="max-w-2xl mx-auto">
+        <CardHeader>
+          <div className="flex items-center gap-2 text-green-600">
+            <CheckCircle className="w-6 h-6" />
+            <CardTitle>Application Approved</CardTitle>
+          </div>
+          <CardDescription>
+            Congratulations! Your membership application has been approved.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <p className="text-sm text-green-800">
+              You now have member access to the ESCP Network. You can access all member features including the full network directory and detailed survey data.
+            </p>
+          </div>
+          {existingApplication.admin_notes && (
+            <div>
+              <Label className="text-sm font-semibold">Admin Notes:</Label>
+              <p className="text-sm text-muted-foreground mt-1">
+                {existingApplication.admin_notes}
               </p>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>Complete survey questionnaires</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>Full network directory with detailed profiles</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>Industry analytics and insights</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>Member-only resources and events</span>
-                </li>
-              </ul>
             </div>
-            {existingApplication.admin_notes && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm text-gray-600 mb-2">
-                  <strong>Message from Admin:</strong>
-                </p>
-                <p className="text-sm text-gray-700">{existingApplication.admin_notes}</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+          )}
+          <div className="text-sm text-muted-foreground">
+            <p>Approved on: {new Date(existingApplication.reviewed_at).toLocaleDateString()}</p>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
-  // Show rejected application status
+  // If application is pending, show status
+  if (existingApplication && existingApplication.status === 'pending') {
+    return (
+      <Card className="max-w-2xl mx-auto">
+        <CardHeader>
+          <div className="flex items-center gap-2 text-orange-600">
+            <Clock className="w-6 h-6" />
+            <CardTitle>Application Under Review</CardTitle>
+          </div>
+          <CardDescription>
+            Your membership application is currently being reviewed by our team.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+            <p className="text-sm text-orange-800">
+              We'll notify you via email once your application has been reviewed. This typically takes 2-3 business days.
+            </p>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            <p>Submitted on: {new Date(existingApplication.created_at).toLocaleDateString()}</p>
+          </div>
+          <Button
+            onClick={() => setExistingApplication(null)}
+            variant="outline"
+            className="w-full"
+          >
+            Edit Application
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // If application is rejected, allow resubmission
   if (existingApplication && existingApplication.status === 'rejected') {
     return (
-      <div className="max-w-3xl mx-auto p-6">
-        <Card className="border-red-200 bg-red-50/50">
-          <CardHeader className="text-center">
-            <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <XCircle className="w-8 h-8 text-white" />
+      <div className="space-y-6">
+        <Card className="max-w-2xl mx-auto border-destructive">
+          <CardHeader>
+            <div className="flex items-center gap-2 text-destructive">
+              <XCircle className="w-6 h-6" />
+              <CardTitle>Application Not Approved</CardTitle>
             </div>
-            <CardTitle className="text-2xl">Application Not Approved</CardTitle>
             <CardDescription>
-              Your membership application was not approved at this time
+              Your previous application was not approved. You can submit a new application below.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {existingApplication.admin_notes && (
-              <div className="bg-white border border-red-200 rounded-lg p-4">
-                <p className="text-sm text-gray-600 mb-2">
-                  <strong>Admin Notes:</strong>
+              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+                <Label className="text-sm font-semibold">Feedback from Admin:</Label>
+                <p className="text-sm mt-1">
+                  {existingApplication.admin_notes}
                 </p>
-                <p className="text-sm text-gray-700">{existingApplication.admin_notes}</p>
               </div>
             )}
-            <p className="text-sm text-gray-600 text-center">
-              You can still access the network directory as a viewer. If you have any questions, please contact us.
-            </p>
+            <div className="text-sm text-muted-foreground">
+              <p>Previous application date: {new Date(existingApplication.created_at).toLocaleDateString()}</p>
+            </div>
           </CardContent>
         </Card>
+        {renderApplicationForm()}
       </div>
     );
   }
 
-  // Show application form (multi-step wizard)
-  return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
+  // Render application form
+  return renderApplicationForm();
 
+  function renderApplicationForm() {
+    return (
       <form onSubmit={handleSubmit} className="space-y-6">
-        {currentStep === 1 && (
-          <Card className="border-l-4 border-l-blue-500 shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
-              <CardTitle className="text-2xl text-blue-800 flex items-center gap-3">
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">A</div>
-                Background Information
-              </CardTitle>
-              <CardDescription className="text-blue-700">
-                Tell us about yourself and your organization
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="applicant_name" className="text-sm font-medium text-gray-700">
-                    Full Name
-                  </Label>
+        <Card className="max-w-3xl mx-auto">
+          <CardHeader>
+            <CardTitle className="text-2xl">Membership Application</CardTitle>
+            <CardDescription>
+              Complete all sections to apply for membership in the ESCP Network
+            </CardDescription>
+            <div className="mt-4">
+              <div className="flex justify-between text-sm text-muted-foreground mb-2">
+                <span>Step {currentStep} of {totalSteps}</span>
+                <span>{percentComplete}% Complete</span>
+              </div>
+              <Progress value={percentComplete} className="h-2" />
+            </div>
+          </CardHeader>
+
+          <CardContent className="space-y-6">
+            {/* Step 1: Basic Information */}
+            {currentStep === 1 && (
+              <div className="space-y-4">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold">A. Basic Information</h3>
+                  <p className="text-sm text-muted-foreground">Tell us about yourself</p>
+                </div>
+
+                <div>
+                  <Label htmlFor="applicant_name">Full Name <span className="text-destructive">*</span></Label>
                   <Input
                     id="applicant_name"
                     value={formData.applicant_name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, applicant_name: e.target.value }))}
-                    placeholder="Enter your full name"
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    onChange={(e) => updateField('applicant_name', e.target.value)}
+                    placeholder="Your full name"
+                    required
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                    Email Address
-                  </Label>
+                <div>
+                  <Label htmlFor="email">Email Address <span className="text-destructive">*</span></Label>
                   <Input
                     id="email"
                     type="email"
                     value={formData.email}
-                    disabled
-                    className="bg-gray-50 border-gray-300 text-gray-600"
+                    onChange={(e) => updateField('email', e.target.value)}
+                    placeholder="your.email@example.com"
+                    required
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="vehicle_name" className="text-sm font-medium text-gray-700">
-                    Fund/Vehicle Name
-                  </Label>
+                <div>
+                  <Label htmlFor="vehicle_name">Fund/Vehicle Name <span className="text-destructive">*</span></Label>
                   <Input
                     id="vehicle_name"
                     value={formData.vehicle_name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, vehicle_name: e.target.value }))}
-                    placeholder="Enter your fund or vehicle name"
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    onChange={(e) => updateField('vehicle_name', e.target.value)}
+                    placeholder="Name of your fund or investment vehicle"
+                    required
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="organization_website" className="text-sm font-medium text-gray-700">
-                    Website
-                  </Label>
+                <div>
+                  <Label htmlFor="role_job_title">Your Role/Job Title <span className="text-destructive">*</span></Label>
+                  <Input
+                    id="role_job_title"
+                    value={formData.role_job_title}
+                    onChange={(e) => updateField('role_job_title', e.target.value)}
+                    placeholder="e.g., Managing Partner, Investment Director"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Step 2: Organization Details */}
+            {currentStep === 2 && (
+              <div className="space-y-4">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold">B. Organization Details</h3>
+                  <p className="text-sm text-muted-foreground">Information about your organization</p>
+                </div>
+
+                <div>
+                  <Label htmlFor="organization_website">Organization Website <span className="text-destructive">*</span></Label>
                   <Input
                     id="organization_website"
                     type="url"
                     value={formData.organization_website}
-                    onChange={(e) => setFormData(prev => ({ ...prev, organization_website: e.target.value }))}
-                    placeholder="https://example.com"
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {currentStep === 2 && (
-          <Card className="border-l-4 border-l-green-500 shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-green-50 to-green-100">
-              <CardTitle className="text-2xl text-green-800 flex items-center gap-3">
-                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">B</div>
-                Team Information
-              </CardTitle>
-              <CardDescription className="text-green-700">
-                Share details about your team and experience
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="role_job_title" className="text-sm font-medium text-gray-700">
-                    Role & Relevant Experience
-                  </Label>
-                  <Textarea
-                    id="role_job_title"
-                    value={formData.role_job_title}
-                    onChange={(e) => setFormData(prev => ({ ...prev, role_job_title: e.target.value }))}
-                    rows={4}
-                    placeholder="Describe your role, responsibilities, and relevant experience in the investment space"
-                    className="border-gray-300 focus:border-green-500 focus:ring-green-500"
+                    onChange={(e) => updateField('organization_website', e.target.value)}
+                    placeholder="https://www.example.com"
+                    required
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="team_overview" className="text-sm font-medium text-gray-700">
-                    Team Structure & Co-founders
-                  </Label>
+                <div>
+                  <Label htmlFor="team_overview">Team Overview <span className="text-destructive">*</span></Label>
                   <Textarea
                     id="team_overview"
                     value={formData.team_overview}
-                    onChange={(e) => setFormData(prev => ({ ...prev, team_overview: e.target.value }))}
-                    rows={4}
-                    placeholder="Describe your team size, structure, key co-founders, and their backgrounds"
-                    className="border-gray-300 focus:border-green-500 focus:ring-green-500"
+                    onChange={(e) => updateField('team_overview', e.target.value)}
+                    placeholder="Describe your team's composition, size, and key members..."
+                    rows={5}
+                    required
                   />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Include information about team size, expertise, and key personnel
+                  </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        )}
+            )}
 
-        {currentStep === 3 && (
-          <Card className="border-l-4 border-l-purple-500 shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100">
-              <CardTitle className="text-2xl text-purple-800 flex items-center gap-3">
-                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">C</div>
-                Investment Vehicle Details
-              </CardTitle>
-              <CardDescription className="text-purple-700">
-                Tell us about your investment strategy and track record
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="investment_thesis" className="text-sm font-medium text-gray-700">
-                    Investment Thesis
-                  </Label>
+            {/* Step 3: Investment Details */}
+            {currentStep === 3 && (
+              <div className="space-y-4">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold">C. Investment Details</h3>
+                  <p className="text-sm text-muted-foreground">Your investment approach and track record</p>
+                </div>
+
+                <div>
+                  <Label htmlFor="investment_thesis">Investment Thesis <span className="text-destructive">*</span></Label>
                   <Textarea
                     id="investment_thesis"
                     value={formData.investment_thesis}
-                    onChange={(e) => setFormData(prev => ({ ...prev, investment_thesis: e.target.value }))}
+                    onChange={(e) => updateField('investment_thesis', e.target.value)}
+                    placeholder="Describe your investment thesis, focus areas, and approach..."
                     rows={5}
-                    placeholder="Describe your investment strategy, focus areas, target sectors, and investment criteria"
-                    className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                    required
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="typical_check_size" className="text-sm font-medium text-gray-700">
-                      Average Investment Size
-                    </Label>
-                    <Input
-                      id="typical_check_size"
-                      value={formData.typical_check_size}
-                      onChange={(e) => setFormData(prev => ({ ...prev, typical_check_size: e.target.value }))}
-                      placeholder="e.g., $100K - $500K"
-                      className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                    />
-                  </div>
+                <div>
+                  <Label htmlFor="typical_check_size">Typical Check Size <span className="text-destructive">*</span></Label>
+                  <Input
+                    id="typical_check_size"
+                    value={formData.typical_check_size}
+                    onChange={(e) => updateField('typical_check_size', e.target.value)}
+                    placeholder="e.g., $500K - $2M"
+                    required
+                  />
+                </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="number_of_investments" className="text-sm font-medium text-gray-700">
-                      Number of Investments
-                    </Label>
-                    <Input
-                      id="number_of_investments"
-                      value={formData.number_of_investments}
-                      onChange={(e) => setFormData(prev => ({ ...prev, number_of_investments: e.target.value }))}
-                      placeholder="e.g., 15"
-                      className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                    />
-                  </div>
+                <div>
+                  <Label htmlFor="number_of_investments">Number of Investments to Date <span className="text-destructive">*</span></Label>
+                  <Input
+                    id="number_of_investments"
+                    value={formData.number_of_investments}
+                    onChange={(e) => updateField('number_of_investments', e.target.value)}
+                    placeholder="e.g., 15-20 companies"
+                    required
+                  />
+                </div>
 
-                  <div className="md:col-span-2 space-y-2">
-                    <Label htmlFor="amount_raised_to_date" className="text-sm font-medium text-gray-700">
-                      Total Capital Raised
-                    </Label>
-                    <Input
-                      id="amount_raised_to_date"
-                      value={formData.amount_raised_to_date}
-                      onChange={(e) => setFormData(prev => ({ ...prev, amount_raised_to_date: e.target.value }))}
-                      placeholder="e.g., $5M (include soft + hard commitments and self-contribution)"
-                      className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                    />
-                  </div>
+                <div>
+                  <Label htmlFor="amount_raised_to_date">Amount Raised to Date <span className="text-destructive">*</span></Label>
+                  <Input
+                    id="amount_raised_to_date"
+                    value={formData.amount_raised_to_date}
+                    onChange={(e) => updateField('amount_raised_to_date', e.target.value)}
+                    placeholder="e.g., $25M"
+                    required
+                  />
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        )}
+            )}
 
-        {currentStep === 4 && (
-          <Card className="border-l-4 border-l-orange-500 shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-orange-50 to-orange-100">
-              <CardTitle className="text-2xl text-orange-800 flex items-center gap-3">
-                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">D</div>
-                Network Expectations
-              </CardTitle>
-              <CardDescription className="text-orange-700">
-                Share your goals and how you discovered our network
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="expectations_from_network" className="text-sm font-medium text-gray-700">
-                    What do you hope to gain from the CFF Network?
-                  </Label>
+            {/* Step 4: Network Expectations */}
+            {currentStep === 4 && (
+              <div className="space-y-4">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold">D. Network Expectations</h3>
+                  <p className="text-sm text-muted-foreground">How you plan to engage with the network</p>
+                </div>
+
+                <div>
+                  <Label htmlFor="expectations_from_network">What do you hope to gain from the ESCP Network? <span className="text-destructive">*</span></Label>
                   <Textarea
                     id="expectations_from_network"
                     value={formData.expectations_from_network}
-                    onChange={(e) => setFormData(prev => ({ ...prev, expectations_from_network: e.target.value }))}
+                    onChange={(e) => updateField('expectations_from_network', e.target.value)}
+                    placeholder="Describe your expectations and how you plan to engage with the network..."
                     rows={5}
-                    placeholder="Describe your expectations, goals, and what you hope to contribute to and gain from the network"
-                    className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                    required
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="how_heard_about_network" className="text-sm font-medium text-gray-700">
-                    How did you hear about the CFF Network?
-                  </Label>
+                <div>
+                  <Label htmlFor="how_heard_about_network">How did you hear about the ESCP Network? <span className="text-destructive">*</span></Label>
                   <Input
                     id="how_heard_about_network"
                     value={formData.how_heard_about_network}
-                    onChange={(e) => setFormData(prev => ({ ...prev, how_heard_about_network: e.target.value }))}
-                    placeholder="e.g., Referral from member, LinkedIn, Conference, Media, etc."
-                    className="border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                    onChange={(e) => updateField('how_heard_about_network', e.target.value)}
+                    placeholder="e.g., Referral, Event, Website"
+                    required
                   />
                 </div>
+
+                <div className="bg-muted/50 border rounded-lg p-4">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="w-5 h-5 text-primary mt-0.5" />
+                    <div className="text-sm">
+                      <p className="font-semibold mb-1">Ready to submit?</p>
+                      <p className="text-muted-foreground">
+                        Please review all your information before submitting. You'll receive an email notification once your application is reviewed.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        )}
+            )}
 
-        {/* Navigation */}
-        <div className="flex items-center justify-between pt-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={goPrev}
-            disabled={currentStep === 1 || loading}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" /> Previous
-          </Button>
+            {/* Navigation Buttons */}
+            <div className="flex justify-between pt-6 border-t">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={goPrev}
+                disabled={currentStep === 1}
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Previous
+              </Button>
 
-          {currentStep < totalSteps ? (
-            <Button
-              type="button"
-              onClick={goNext}
-              disabled={loading}
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
-            >
-              Next <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          ) : (
-            <Button
-              type="submit"
-              disabled={loading}
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
-            >
-              {loading ? 'Submitting…' : (
-                <span className="flex items-center"><Send className="w-4 h-4 mr-2" /> Submit Application</span>
+              {currentStep < totalSteps ? (
+                <Button type="button" onClick={goNext}>
+                  Next
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              ) : (
+                <Button type="submit" disabled={loading}>
+                  {loading ? (
+                    <>Submitting...</>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 mr-2" />
+                      Submit Application
+                    </>
+                  )}
+                </Button>
               )}
-            </Button>
-          )}
-        </div>
+            </div>
+          </CardContent>
+        </Card>
       </form>
-    </div>
-  );
+    );
+  }
 };
 
 export default ApplicationForm;
