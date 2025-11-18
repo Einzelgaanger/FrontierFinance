@@ -199,69 +199,42 @@ export default function Blogs() {
 
   return (
     <SidebarLayout>
-      <div className="relative min-h-screen bg-slate-50">
-        <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-slate-900 via-blue-900 to-transparent" />
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+          {/* Header - Same style as blog detail page */}
+          <div className="mb-6 flex items-center gap-4">
+            <h2 className="text-lg font-bold text-slate-900">Blogs</h2>
+          </div>
 
-        <div className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-900/10">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-              <div className="space-y-3 max-w-2xl">
-                <span className="inline-flex items-center gap-2 rounded-md bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
-                  <Sparkles className="h-4 w-4" />
-                  Community Stories
-                </span>
-                <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
-                  Fresh insights from across the Frontier Finance Network.
-                </h1>
-                <p className="text-sm text-slate-500">
-                  Catch up on what members are sharing today—and add your own update in just a few clicks.
-                </p>
+          <div className="flex flex-col gap-4">
+            {/* Stats Section */}
+            <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-md shadow-slate-900/5">
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                  <p className="text-xs font-medium uppercase text-slate-500">Published</p>
+                  <p className="mt-1 text-xl font-semibold text-slate-900">{stats.totalPosts.toLocaleString()}</p>
+                  <p className="text-xs text-slate-500">Stories live on the feed</p>
+                </div>
+                <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                  <p className="text-xs font-medium uppercase text-slate-500">Contributors</p>
+                  <p className="mt-1 text-xl font-semibold text-slate-900">{stats.totalAuthors.toLocaleString()}</p>
+                  <p className="text-xs text-slate-500">Members sharing updates</p>
+                </div>
+                <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                  <p className="text-xs font-medium uppercase text-slate-500">Engagement</p>
+                  <p className="mt-1 text-xl font-semibold text-slate-900">{stats.totalEngagement.toLocaleString()}</p>
+                  <p className="text-xs text-slate-500">Likes and comments</p>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  size="sm"
-                  className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white shadow-sm hover:bg-blue-500"
-                  onClick={() => setIsCreateModalOpen(true)}
-                >
-                  <PlusCircle className="h-4 w-4" />
-                  New post
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="rounded-md border-slate-200 px-4 py-2 text-slate-700 hover:bg-slate-100"
-                  onClick={() => window.scrollTo({ top: 420, behavior: 'smooth' })}
-                >
-                  Browse feed
-                </Button>
-              </div>
-            </div>
-            <div className="mt-5 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-xs font-medium uppercase text-slate-500">Published</p>
-                <p className="mt-2 text-2xl font-semibold text-slate-900">{stats.totalPosts.toLocaleString()}</p>
-                <p className="text-xs text-slate-500">Stories live on the feed</p>
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-xs font-medium uppercase text-slate-500">Contributors</p>
-                <p className="mt-2 text-2xl font-semibold text-slate-900">{stats.totalAuthors.toLocaleString()}</p>
-                <p className="text-xs text-slate-500">Members sharing updates</p>
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-xs font-medium uppercase text-slate-500">Engagement</p>
-                <p className="mt-2 text-2xl font-semibold text-slate-900">{stats.totalEngagement.toLocaleString()}</p>
-                <p className="text-xs text-slate-500">Likes and comments</p>
-              </div>
-            </div>
-          </section>
+            </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg shadow-slate-900/5">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-md shadow-slate-900/5">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-base font-semibold text-slate-900">Filter by format</h2>
+                <h2 className="text-sm font-semibold text-slate-900">Filter by format</h2>
                 <p className="text-xs text-slate-500">Quickly jump to the stories you want to see.</p>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {filterOptions.map((option) => {
                   const isActive = activeFilter === option.value;
                   return (
@@ -269,7 +242,7 @@ export default function Blogs() {
                       key={option.value}
                       size="sm"
                       variant={isActive ? 'default' : 'outline'}
-                      className={`rounded-md px-3 py-1 text-sm ${
+                      className={`rounded-md px-2.5 py-1 text-xs ${
                         isActive
                           ? 'bg-blue-600 text-white hover:bg-blue-500'
                           : 'border-slate-200 text-slate-600 hover:border-blue-400 hover:text-blue-600'
@@ -285,56 +258,56 @@ export default function Blogs() {
           </section>
 
           {loading ? (
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                 <Card
                   key={i}
-                  className="h-full rounded-xl border border-slate-200 bg-white shadow-sm animate-pulse"
+                  className="h-full rounded-lg border border-slate-200 bg-white shadow-sm animate-pulse"
                 >
-                  <CardHeader className="space-y-2">
-                    <div className="h-4 w-2/3 rounded bg-slate-100" />
-                    <div className="h-3 w-1/2 rounded bg-slate-100" />
+                  <CardHeader className="space-y-1.5 p-3">
+                    <div className="h-3 w-2/3 rounded bg-slate-100" />
+                    <div className="h-2.5 w-1/2 rounded bg-slate-100" />
                     </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="h-32 rounded-lg bg-slate-100" />
-                    <div className="space-y-1.5">
-                      <div className="h-3 rounded bg-slate-100" />
-                      <div className="h-3 w-2/3 rounded bg-slate-100" />
+                  <CardContent className="space-y-2 p-3">
+                    <div className="h-28 rounded-lg bg-slate-100" />
+                    <div className="space-y-1">
+                      <div className="h-2.5 rounded bg-slate-100" />
+                      <div className="h-2.5 w-2/3 rounded bg-slate-100" />
                       </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
           ) : filteredEmpty ? (
-            <Card className="rounded-xl border border-slate-200 bg-white py-14 text-center shadow-md">
-              <CardContent className="space-y-4">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                  <FileText className="h-7 w-7" />
+            <Card className="rounded-lg border border-slate-200 bg-white py-10 text-center shadow-md">
+              <CardContent className="space-y-3">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                  <FileText className="h-6 w-6" />
                   </div>
-                <h3 className="text-lg font-semibold text-slate-900">
+                <h3 className="text-base font-semibold text-slate-900">
                   {activeFilter === 'all' ? 'No stories yet' : `No ${activeFilter} stories yet`}
                 </h3>
-                <p className="text-sm text-slate-500 max-w-md mx-auto">
+                <p className="text-xs text-slate-500 max-w-md mx-auto">
                   {filterDescriptor}
                 </p>
                   <Button 
                     onClick={() => setIsCreateModalOpen(true)}
                   size="sm"
-                  className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-500"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs text-white hover:bg-blue-500"
                   >
-                  <PlusCircle className="h-4 w-4" />
+                  <PlusCircle className="h-3 w-3" />
                   Share a perspective
                   </Button>
                 </CardContent>
               </Card>
             ) : (
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {filteredBlogs.map((blog) => {
                 return (
                   <Card 
                     key={blog.id} 
                     onClick={() => navigate(`/blogs/${blog.id}`)}
-                    className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+                    className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                   >
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between gap-3">
@@ -405,8 +378,8 @@ export default function Blogs() {
                           {blog.title}
                         </h2>
                       {blog.caption && (
-                          <p className="text-sm italic text-slate-500 line-clamp-2">
-                            “{blog.caption}”
+                          <p className="text-xs italic text-slate-500 line-clamp-2">
+                            "{blog.caption}"
                         </p>
                       )}
                       {blog.content && (
@@ -445,6 +418,7 @@ export default function Blogs() {
             />
           </div>
         </div>
-      </SidebarLayout>
+      </div>
+    </SidebarLayout>
   );
 }

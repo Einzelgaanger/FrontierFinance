@@ -172,7 +172,11 @@ const PortIQ = () => {
         body: { messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }
       });
 
-      if (error) throw error;
+      if (error) {
+        // Try to extract error message from response
+        const errorMessage = (error as any)?.message || (data as any)?.error || error.toString();
+        throw new Error(errorMessage);
+      }
 
       const resText = (data as any)?.reply ?? (data as any)?.response;
       if (resText) {
@@ -204,9 +208,22 @@ const PortIQ = () => {
     } catch (error: any) {
       console.error('Error sending message:', error);
       setLoading(false);
+      
+      // Extract error message - check multiple possible locations
+      let errorMessage = "Failed to send message";
+      if (error?.message) {
+        errorMessage = error.message;
+      } else if (error?.error) {
+        errorMessage = error.error;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else if (error?.toString) {
+        errorMessage = error.toString();
+      }
+      
       toast({
         title: "Error",
-        description: error.message || "Failed to send message",
+        description: errorMessage,
         variant: "destructive"
       });
       // Remove optimistic user message on error

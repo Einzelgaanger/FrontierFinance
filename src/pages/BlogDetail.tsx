@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
-import { Image, Video, FileText, Heart, ArrowLeft, Loader2, Share2, Bookmark } from "lucide-react";
+import { Image, Video, FileText, Heart, ArrowLeft, Loader2, Share2, Bookmark, MessageCircle } from "lucide-react";
 import { BlogCommentSection } from "@/components/blogs/BlogCommentSection";
 import { getBadge } from "@/utils/badgeSystem";
 import { useAuth } from "@/hooks/useAuth";
@@ -39,6 +39,8 @@ export default function BlogDetail() {
   const { user } = useAuth();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -178,133 +180,152 @@ export default function BlogDetail() {
 
   return (
     <SidebarLayout>
-      <div className="min-h-screen bg-slate-50">
-        <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+          {/* Header with back button */}
+          <div className="mb-6 flex items-center gap-4">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/blogs')}
-              className="inline-flex items-center gap-2 rounded-md border border-transparent px-3 py-1 text-sm text-slate-600 hover:border-slate-200 hover:bg-white"
+              className="h-9 w-9 rounded-full p-0 hover:bg-slate-100"
             >
-              <ArrowLeft className="h-4 w-4" />
-              Back to feed
+              <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="rounded-md border border-slate-200 px-3 py-1 text-sm text-slate-600 hover:bg-white"
-              >
-                <Share2 className="h-4 w-4" />
-                Share
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="rounded-md border border-slate-200 px-3 py-1 text-sm text-slate-600 hover:bg-white"
-              >
-                <Bookmark className="h-4 w-4" />
-                Save
-              </Button>
-            </div>
+            <h2 className="text-lg font-bold text-slate-900">Post</h2>
           </div>
 
-          <Card className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5">
-            <div className="border-b border-slate-100 bg-slate-900 text-slate-100">
-              <div className="flex flex-col gap-6 p-6 md:flex-row md:items-center md:justify-between">
-                <div className="flex items-start gap-4">
-                  <Avatar className="h-14 w-14 border border-white/40">
-                    <AvatarImage src={blog.author?.profile_picture_url || ""} />
-                    <AvatarFallback className="bg-blue-600 text-white text-lg">
-                      {blog.author?.full_name?.charAt(0) || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-semibold">
-                        {blog.author?.full_name || "Unknown"}
-                      </h3>
-                      {blog.author?.total_points !== undefined && (
-                        <span className="text-xl">
-                          {getBadge(blog.author.total_points).icon}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-slate-300">{blog.author?.company_name || 'Community member'}</p>
-                    <p className="text-xs text-slate-400">
-                      {format(new Date(blog.created_at), "MMM d, yyyy · h:mm a")}
+          {/* Main Post - Two Column Layout */}
+          <article className="grid grid-cols-1 lg:grid-cols-2 gap-6 border-b border-slate-200 pb-6">
+            {/* Left Column - Content */}
+            <div className="flex flex-col space-y-4">
+              {/* Author Header */}
+              <div className="flex items-start gap-3">
+                <Avatar className="h-12 w-12 border border-slate-200 flex-shrink-0">
+                  <AvatarImage src={blog.author?.profile_picture_url || ""} />
+                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-semibold">
+                    {blog.author?.full_name?.charAt(0) || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-sm font-bold text-slate-900">
+                      {blog.author?.full_name || "Unknown"}
                     </p>
+                    {blog.author?.total_points !== undefined && (
+                      <span className="text-base">
+                        {getBadge(blog.author.total_points).icon}
+                      </span>
+                    )}
+                    <span className="text-sm text-slate-500">·</span>
+                    <span className="text-sm text-slate-500">
+                      {format(new Date(blog.created_at), "MMM d")}
+                    </span>
                   </div>
+                  <p className="text-sm text-slate-500 mt-0.5">
+                    {blog.author?.company_name || 'Community member'}
+                  </p>
                 </div>
-                <Badge className="flex items-center gap-1 rounded-md border border-blue-300/30 bg-blue-500/20 text-blue-100">
-                  {getMediaIcon(blog.media_type)}
-                  {blog.media_type || "text"}
-                </Badge>
               </div>
+
+              {/* Title */}
+              <h1 className="text-2xl font-bold text-slate-900 leading-tight">
+                {blog.title}
+              </h1>
+
+              {/* Content with Read More/Less */}
+              <div className="space-y-3">
+                {blog.content && (
+                  <div>
+                    <p className={`text-[15px] text-slate-900 leading-relaxed whitespace-pre-wrap ${!isExpanded ? 'line-clamp-6' : ''}`}>
+                      {blog.content}
+                    </p>
+                    {blog.content.length > 300 && (
+                      <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="mt-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                      >
+                        {isExpanded ? 'Read less' : 'Read more'}
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {blog.caption && (
+                  <p className="text-[15px] text-slate-600 italic leading-relaxed">
+                    "{blog.caption}"
+                  </p>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-6 pt-2">
+                <button
+                  onClick={() => toggleLike(blog.id, blog.is_liked || false)}
+                  className="flex items-center gap-2 text-slate-500 hover:text-rose-500 transition-colors group/action"
+                >
+                  <div className={`p-2 rounded-full transition-colors ${blog.is_liked ? 'bg-rose-50' : 'group-hover/action:bg-rose-50'}`}>
+                    <Heart className={`h-5 w-5 transition-all ${blog.is_liked ? 'fill-rose-500 text-rose-500' : ''}`} />
+                  </div>
+                  <span className="text-sm font-medium">{blog.like_count || 0}</span>
+                </button>
+                <button 
+                  onClick={() => setIsCommentsOpen(!isCommentsOpen)}
+                  className={`flex items-center gap-2 transition-colors group/action ${isCommentsOpen ? 'text-blue-500' : 'text-slate-500 hover:text-blue-500'}`}
+                >
+                  <div className={`p-2 rounded-full transition-colors ${isCommentsOpen ? 'bg-blue-50' : 'group-hover/action:bg-blue-50'}`}>
+                    <MessageCircle className="h-5 w-5" />
+                  </div>
+                  <span className="text-sm font-medium">{blog.comment_count || 0}</span>
+                </button>
+                <button 
+                  className="flex items-center gap-2 text-slate-500 hover:text-blue-500 transition-colors group/action"
+                  aria-label="Share post"
+                >
+                  <div className="p-2 rounded-full transition-colors group-hover/action:bg-blue-50">
+                    <Share2 className="h-5 w-5" />
+                  </div>
+                </button>
+                <button 
+                  className="flex items-center gap-2 text-slate-500 hover:text-blue-500 transition-colors group/action"
+                  aria-label="Save post"
+                >
+                  <div className="p-2 rounded-full transition-colors group-hover/action:bg-blue-50">
+                    <Bookmark className="h-5 w-5" />
+                  </div>
+                </button>
+              </div>
+
+              {/* Comments Section - Toggleable */}
+              {isCommentsOpen && (
+                <div className="pt-4 border-t border-slate-200 animate-in slide-in-from-top-2 duration-200">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">Comments ({blog.comment_count || 0})</h3>
+                  <BlogCommentSection blogId={blog.id} />
+                </div>
+              )}
             </div>
 
-            <div className="space-y-6 p-6 sm:p-8">
-              <div className="space-y-2">
-                <span className="text-xs font-medium uppercase tracking-[0.3em] text-blue-500/80">
-                  FEATURED STORY
-                </span>
-                <h1 className="text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl">
-                  {blog.title}
-                </h1>
-              </div>
-
-              {(blog.media_type === "image" || blog.media_type === "video") && blog.media_url && (
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-2">
+            {/* Right Column - Media */}
+            {(blog.media_type === "image" || blog.media_type === "video") && blog.media_url && (
+              <div className="sticky top-6 h-fit">
+                <div className="w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
                   {blog.media_type === "image" ? (
                     <img
                       src={blog.media_url}
                       alt={blog.title}
-                      className="max-h-[520px] w-full rounded-lg object-cover"
+                      className="w-full h-auto object-cover"
                     />
                   ) : (
                     <video
                       src={blog.media_url}
                       controls
-                      className="w-full rounded-lg"
+                      className="w-full h-auto"
                     />
                   )}
                 </div>
-              )}
-
-              {blog.caption && (
-                <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm italic text-blue-800">
-                  {blog.caption}
-                </div>
-              )}
-
-              {blog.content && (
-                <article className="prose prose-slate max-w-none">
-                  <p className="whitespace-pre-wrap text-slate-700 leading-relaxed">{blog.content}</p>
-                </article>
-              )}
-
-              <div className="flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                <button
-                  onClick={() => toggleLike(blog.id, blog.is_liked || false)}
-                  className="inline-flex items-center gap-2 rounded-md px-3 py-1.5 transition-colors hover:bg-white hover:text-rose-500"
-                >
-                  <Heart className={`h-5 w-5 transition ${blog.is_liked ? 'fill-rose-500 text-rose-500' : ''}`} />
-                  <span>{blog.like_count} {blog.like_count === 1 ? 'like' : 'likes'}</span>
-                </button>
-                <span className="inline-flex items-center gap-2 rounded-md px-3 py-1.5">
-                  Comments · {blog.comment_count}
-                </span>
               </div>
-            </div>
-
-            <div className="border-t border-slate-100 bg-slate-50 p-6 sm:p-8">
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-slate-800">Comments</h3>
-              </div>
-              <BlogCommentSection blogId={blog.id} />
-            </div>
-          </Card>
+            )}
+          </article>
         </div>
       </div>
     </SidebarLayout>

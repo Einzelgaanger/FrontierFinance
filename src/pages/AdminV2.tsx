@@ -271,43 +271,6 @@ const AdminV2 = () => {
   return (
     <SidebarLayout>
       <div className="min-h-screen bg-gray-50">
-        {/* Ultra-Professional Header */}
-        <div className="bg-white border-b border-gray-200 shadow-sm">
-          <div className="px-8 py-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <img 
-                  src="/CFF LOGO.png" 
-                  alt="CFF Logo" 
-                  className="h-12 w-auto object-contain"
-                />
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Admin Control Center</h1>
-                  <p className="text-gray-600 mt-1">Comprehensive network management and analytics</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <Button
-                  onClick={fetchAllData}
-                  disabled={loading}
-                  variant="outline"
-                  className="border-gray-300 hover:bg-gray-50"
-                >
-                  <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                  Refresh
-                </Button>
-                <div className="text-right">
-                  <p className="text-sm text-gray-500">Administrator</p>
-                  <p className="font-semibold text-gray-900">{user?.email}</p>
-                </div>
-                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                  <User className="w-5 h-5 text-blue-600" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Main Content */}
         <div className="p-8">
           {/* Key Metrics Grid */}

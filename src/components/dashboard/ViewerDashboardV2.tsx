@@ -799,92 +799,92 @@ const ViewerDashboardV2 = () => {
 
             {/* Three Cards - Right Side */}
             <div className="flex flex-col gap-6">
-              {/* Network Benefits */}
+            {/* Network Benefits */}
               <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-blue-50 border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-100/0 to-blue-200/0 group-hover:from-blue-100/20 group-hover:to-blue-200/30 transition-all duration-500"></div>
                 <div className="relative p-6">
                   <div className="flex items-center space-x-3 mb-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                       <Users className="w-6 h-6 text-white" />
-                    </div>
+                  </div>
                     <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300">
                       Connect & Network
                     </h3>
-                  </div>
+                </div>
                   <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
                     Join 200+ fund managers across 25+ countries and build meaningful connections in emerging markets.
                   </p>
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full">200+ Managers</span>
                     <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full">25+ Countries</span>
-                  </div>
                 </div>
               </div>
+            </div>
 
-              {/* Survey Access with Year Buttons */}
+            {/* Survey Access with Year Buttons */}
               <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-green-50 border-2 border-green-200 hover:border-green-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-green-100/0 to-green-200/0 group-hover:from-green-100/20 group-hover:to-green-200/30 transition-all duration-500"></div>
                 <div className="relative p-6">
                   <div className="flex items-center space-x-3 mb-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                       <BarChart3 className="w-6 h-6 text-white" />
-                    </div>
+                  </div>
                     <h3 className="text-lg font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent group-hover:from-green-700 group-hover:to-green-900 transition-all duration-300">
                       Market Insights
                     </h3>
-                  </div>
+                </div>
                   <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
                     Dive into comprehensive survey data and market intelligence from 2021-2024. Discover trends, patterns, and opportunities.
-                  </p>
-                  
-                  {/* Survey Year Buttons */}
+                </p>
+                
+                {/* Survey Year Buttons */}
                   <div className="grid grid-cols-4 gap-2 mb-3">
-                    {surveyYears.map((survey) => (
-                      <Button
-                        key={survey.year}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => navigate(survey.path)}
+                  {surveyYears.map((survey) => (
+                    <Button
+                      key={survey.year}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(survey.path)}
                         className="h-9 text-xs font-semibold bg-white/90 hover:bg-green-100 hover:text-green-700 hover:border-green-400 border-green-200 text-green-700 transition-all transform hover:scale-105 rounded-lg"
-                      >
-                        {survey.year}
-                      </Button>
-                    ))}
-                  </div>
-                  
+                    >
+                      {survey.year}
+                    </Button>
+                  ))}
+                </div>
+                
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full">4 Years Data</span>
                     <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full">Trend Analysis</span>
-                  </div>
                 </div>
               </div>
+            </div>
 
-              {/* Professional Development */}
+            {/* Professional Development */}
               <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-purple-50 border-2 border-purple-200 hover:border-purple-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-100/0 to-purple-200/0 group-hover:from-purple-100/20 group-hover:to-purple-200/30 transition-all duration-500"></div>
                 <div className="relative p-6">
                   <div className="flex items-center space-x-3 mb-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                       <Rocket className="w-6 h-6 text-white" />
-                    </div>
+                  </div>
                     <h3 className="text-lg font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent group-hover:from-purple-700 group-hover:to-purple-900 transition-all duration-300">
                       Grow & Learn
                     </h3>
-                  </div>
+                </div>
                   <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
                     Level up your skills with exclusive webinars, workshops, and resources designed for fund managers.
                   </p>
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full">Webinars</span>
                     <span className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full">Workshops</span>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
+              </div>
 
-        </div>
-
+                </div>
+                
         {/* Custom Animations CSS */}
         <style>{`
           @keyframes blob {
