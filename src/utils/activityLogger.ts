@@ -11,7 +11,7 @@ export interface ActivityLog {
 export const logActivity = async (action: string, details: Record<string, any>) => {
   try {
     const { error } = await supabase
-      .from('activity_logs')
+      .from('activity_log')
       .insert([{
         action,
         details,

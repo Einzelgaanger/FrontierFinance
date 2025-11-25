@@ -201,7 +201,7 @@ const Admin = () => {
         await new Promise(resolve => setTimeout(resolve, 100));
 
         const activityResult = await supabase
-          .from('activity_logs')
+          .from('activity_log')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(20);
@@ -556,7 +556,7 @@ const Admin = () => {
   const logActivity = async (action: string, details: ActivityLogDetails) => {
     try {
       const { error } = await supabase
-        .from('activity_logs')
+        .from('activity_log')
         .insert({
           user_id: user?.id,
           action,
