@@ -195,9 +195,9 @@ export default function MyProfile() {
               <div className="space-y-6">
                 {/* Avatar */}
                 <div className="flex flex-col items-center">
-                  <Avatar className="w-32 h-32 border-2 border-slate-200">
-                    <AvatarImage src={profile.profile_picture_url} />
-                    <AvatarFallback className="text-4xl bg-slate-100 text-slate-600">
+                  <Avatar className="w-48 h-48 rounded-2xl border-2 border-slate-200">
+                    <AvatarImage src={profile.profile_picture_url} className="object-cover" />
+                    <AvatarFallback className="text-5xl bg-slate-100 text-slate-600 rounded-2xl">
                       {profile.company_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
                     </AvatarFallback>
                   </Avatar>
