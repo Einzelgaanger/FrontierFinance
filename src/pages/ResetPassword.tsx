@@ -155,9 +155,13 @@ const ResetPassword = () => {
           <CardHeader className="text-center pb-4 sm:pb-6 pt-6 sm:pt-8">
             <div className="flex justify-center mb-3 sm:mb-4">
               <img 
-                src="/CFF LOGO.png" 
+                src="/CFF%20LOGO.png" 
                 alt="CFF Logo" 
                 className="h-12 sm:h-14 md:h-16 w-auto object-contain"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
               />
             </div>
             <CardTitle className="text-xl sm:text-2xl font-bold text-white">Password Updated!</CardTitle>
@@ -192,9 +196,13 @@ const ResetPassword = () => {
         <CardHeader className="text-center pb-4 sm:pb-6 pt-6 sm:pt-8">
           <div className="flex justify-center mb-3 sm:mb-4">
             <img 
-              src="/CFF LOGO.png" 
+              src="/CFF%20LOGO.png" 
               alt="CFF Logo" 
               className="h-12 sm:h-14 md:h-16 w-auto object-contain"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
             />
           </div>
                       <CardTitle className="text-xl sm:text-2xl font-bold text-white">Reset Your Password</CardTitle>

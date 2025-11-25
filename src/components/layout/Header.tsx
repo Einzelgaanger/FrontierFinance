@@ -117,9 +117,13 @@ const Header = ({ showNav = true }: HeaderProps) => {
           {/* Left side - CFF Logo */}
           <div className="flex items-center">
             <img 
-              src="/CFF LOGO.png" 
+              src="/CFF%20LOGO.png" 
               alt="CFF Logo" 
               className="h-12 w-auto object-contain"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
             />
             {userRole !== 'admin' && (
               <div className="ml-4 text-left">

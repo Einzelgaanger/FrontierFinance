@@ -861,9 +861,13 @@ const Admin = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <img 
-                src="/CFF LOGO.png" 
+                src="/CFF%20LOGO.png" 
                 alt="CFF Logo" 
                 className="h-10 w-auto object-contain"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
               />
               <div>
                 <h1 className="text-3xl font-bold text-slate-800 mb-2">Admin Dashboard</h1>

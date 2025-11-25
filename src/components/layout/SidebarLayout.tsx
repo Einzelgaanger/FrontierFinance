@@ -254,9 +254,13 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
           {/* CFF Logo at Top */}
           <div className="p-4 border-b border-slate-700/50">
             <img 
-              src="/CFF LOGO.png" 
+              src="/CFF%20LOGO.png" 
               alt="CFF Logo" 
               className="h-12 w-auto object-contain mx-auto"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
             />
           </div>
 
