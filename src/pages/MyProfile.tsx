@@ -144,13 +144,8 @@ export default function MyProfile() {
         .upload(fileName, uploadBlob, { upsert: true, contentType, cacheControl: '3600' });
 
       if (uploadError) {
-        console.error('Upload error details:', {
-          message: uploadError.message,
-          statusCode: uploadError.statusCode,
-          error: uploadError.error,
-          name: uploadError.name
-        });
-        throw new Error(uploadError.message || `Upload failed: ${uploadError.statusCode || 'Unknown error'}`);
+        console.error('Upload error details:', uploadError);
+        throw new Error(uploadError.message || 'Upload failed');
       }
 
       console.log('Upload successful:', uploadData);
