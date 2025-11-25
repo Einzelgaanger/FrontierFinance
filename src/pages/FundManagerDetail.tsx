@@ -33,6 +33,8 @@ import {
   BarChart3,
   ArrowLeft
 } from 'lucide-react';
+import { getSurveySections } from '@/utils/surveySectionMappings';
+import { getQuestionLabel } from '@/utils/surveyQuestionLabels';
 
 interface FundManager {
   id: string;
@@ -318,40 +320,34 @@ const FundManagerDetail = () => {
 
   const getSectionData = (surveyData: any, year: number) => {
     if (!surveyData) return [];
-    const fieldsByCategory: Record<string, string[]> = {};
-    Object.keys(surveyData).forEach(fieldName => {
-      if (['id', 'user_id', 'created_at', 'updated_at', 'submission_status', 'completed_at', 'form_data'].includes(fieldName)) {
-        return;
-      }
-      if (!isFieldVisible(fieldName, year)) {
-        return;
-      }
-      let category = 'Other Information';
-      if (fieldName.includes('email') || fieldName.includes('name') || fieldName.includes('organisation') || fieldName.includes('firm')) {
-        category = 'Contact & Organization';
-      } else if (fieldName.includes('fund') || fieldName.includes('capital') || fieldName.includes('raised') || fieldName.includes('target')) {
-        category = 'Fund Information';
-      } else if (fieldName.includes('investment') || fieldName.includes('sector') || fieldName.includes('stage') || fieldName.includes('instrument')) {
-        category = 'Investment Strategy';
-      } else if (fieldName.includes('team') || fieldName.includes('fte') || fieldName.includes('principal')) {
-        category = 'Team & Operations';
-      } else if (fieldName.includes('portfolio') || fieldName.includes('performance') || fieldName.includes('revenue') || fieldName.includes('jobs')) {
-        category = 'Performance & Impact';
-      }
-      if (!fieldsByCategory[category]) fieldsByCategory[category] = [];
-      fieldsByCategory[category].push(fieldName);
-    });
-    const order = [
-      'Contact & Organization',
-      'Fund Information',
-      'Investment Strategy',
-      'Team & Operations',
-      'Performance & Impact',
-      'Other Information'
-    ];
-    const sections = Object.entries(fieldsByCategory).map(([title, fields]) => ({ title, fields }));
-    sections.sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
-    return sections.map((s, idx) => ({ id: idx + 1, ...s }));
+    
+    // Get the proper sections for this year
+    const yearSections = getSurveySections(year);
+    if (!yearSections || yearSections.length === 0) return [];
+    
+    // Build sections with visible fields
+    const sections = yearSections.map(section => {
+      const visibleFields = section.fields.filter(fieldName => {
+        // Exclude metadata fields
+        if (['id', 'user_id', 'created_at', 'updated_at', 'submission_status', 'completed_at', 'form_data'].includes(fieldName)) {
+          return false;
+        }
+        // Check if field exists in survey data
+        if (!(fieldName in surveyData)) {
+          return false;
+        }
+        // Check visibility
+        return isFieldVisible(fieldName, year);
+      });
+      
+      return {
+        id: section.id,
+        title: section.title,
+        fields: visibleFields
+      };
+    }).filter(section => section.fields.length > 0); // Only return sections with visible fields
+    
+    return sections;
   };
 
   const isPlainObject = (val: unknown): val is Record<string, unknown> => {
@@ -551,18 +547,18 @@ const FundManagerDetail = () => {
                                          </CardTitle>
                                        </CardHeader>
                                        <CardContent className="pt-4">
-                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                           {section.fields.map((field: string) => (
-                                             <div key={field} className="rounded-lg border border-blue-200/60 bg-white p-4">
-                                               <p className="font-semibold text-[11px] uppercase tracking-wide text-gray-600 mb-2">
-                                                 {formatFieldName(field)}
-                                               </p>
-                                               <div className="text-sm whitespace-pre-wrap leading-relaxed text-gray-900">
-                                                 {formatFieldValue(surveyData?.[field])}
-                                               </div>
-                                             </div>
-                                           ))}
-                                         </div>
+                                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {section.fields.map((field: string) => (
+                                              <div key={field} className="rounded-lg border border-blue-200/60 bg-white p-4">
+                                                <p className="font-semibold text-[11px] uppercase tracking-wide text-gray-600 mb-2">
+                                                  {getQuestionLabel(field, selectedYear)}
+                                                </p>
+                                                <div className="text-sm whitespace-pre-wrap leading-relaxed text-gray-900">
+                                                  {formatFieldValue(surveyData?.[field])}
+                                                </div>
+                                              </div>
+                                            ))}
+                                          </div>
                                        </CardContent>
                                      </Card>
                                    </TabsContent>
