@@ -73,7 +73,7 @@ export default function MyProfile() {
         description: 'Please upload PNG, JPG, or WEBP images only', 
         variant: 'destructive' 
       });
-      e.currentTarget.value = '';
+      if (e.target) e.target.value = '';
       return;
     }
 
@@ -84,7 +84,7 @@ export default function MyProfile() {
         description: 'Please upload an image smaller than 2MB', 
         variant: 'destructive' 
       });
-      e.currentTarget.value = '';
+      if (e.target) e.target.value = '';
       return;
     }
 
@@ -136,7 +136,7 @@ export default function MyProfile() {
         description: 'Profile picture updated successfully' 
       });
 
-      e.currentTarget.value = '';
+      if (e.target) e.target.value = '';
     } catch (error: any) {
       console.error('Error uploading avatar:', error);
       toast({ 
@@ -144,6 +144,7 @@ export default function MyProfile() {
         description: error.message || 'Could not upload profile picture',
         variant: 'destructive' 
       });
+      if (e.target) e.target.value = '';
     } finally {
       setUploading(false);
     }
