@@ -93,56 +93,42 @@ export default function MyProfile() {
 
       // Determine file extension
       const ext = file.type === 'image/jpeg' ? 'jpg' : file.type.split('/')[1];
-      const fileName = `${user.id}/avatar.${ext}`;
       const timestamp = Date.now();
-      const fileNameWithCache = `${user.id}/avatar-${timestamp}.${ext}`;
+      const fileName = `${user.id}/avatar-${timestamp}.${ext}`;
 
-      // Delete old avatar if exists (optional cleanup)
-      const { data: existingFiles } = await supabase.storage
-        .from('profile-pictures')
-        .list(user.id);
-
-      if (existingFiles && existingFiles.length > 0) {
-        const filesToDelete = existingFiles.map(f => `${user.id}/${f.name}`);
-        await supabase.storage
-          .from('profile-pictures')
-          .remove(filesToDelete);
-      }
-
-      // Upload new avatar
+      // Upload new avatar with unique timestamp
       const { error: uploadError } = await supabase.storage
         .from('profile-pictures')
         .upload(fileName, file, { 
           cacheControl: '3600',
-          upsert: true,
           contentType: file.type
         });
 
       if (uploadError) {
+        console.error('Upload error:', uploadError);
         throw uploadError;
       }
 
-      // Get public URL with cache-busting timestamp
+      // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('profile-pictures')
         .getPublicUrl(fileName);
 
-      const publicUrlWithTimestamp = `${publicUrl}?t=${timestamp}`;
-
       // Update profile in database
       const { error: updateError } = await supabase
         .from('user_profiles')
-        .update({ profile_picture_url: publicUrlWithTimestamp })
+        .update({ profile_picture_url: publicUrl })
         .eq('id', user.id);
 
       if (updateError) {
+        console.error('DB update error:', updateError);
         throw updateError;
       }
 
       // Update local state
       setProfile(prev => ({ 
         ...prev, 
-        profile_picture_url: publicUrlWithTimestamp 
+        profile_picture_url: publicUrl 
       }));
 
       toast({ 
