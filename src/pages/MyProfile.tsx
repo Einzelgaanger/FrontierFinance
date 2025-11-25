@@ -73,7 +73,7 @@ export default function MyProfile() {
         description: 'Please upload PNG, JPG, or WEBP images only', 
         variant: 'destructive' 
       });
-      e.currentTarget.value = '';
+      if (e.target) e.target.value = '';
       return;
     }
 
@@ -84,7 +84,7 @@ export default function MyProfile() {
         description: 'Please upload an image smaller than 2MB', 
         variant: 'destructive' 
       });
-      e.currentTarget.value = '';
+      if (e.target) e.target.value = '';
       return;
     }
 
@@ -93,56 +93,42 @@ export default function MyProfile() {
 
       // Determine file extension
       const ext = file.type === 'image/jpeg' ? 'jpg' : file.type.split('/')[1];
-      const fileName = `${user.id}/avatar.${ext}`;
       const timestamp = Date.now();
-      const fileNameWithCache = `${user.id}/avatar-${timestamp}.${ext}`;
+      const fileName = `${user.id}/avatar-${timestamp}.${ext}`;
 
-      // Delete old avatar if exists (optional cleanup)
-      const { data: existingFiles } = await supabase.storage
-        .from('profile-pictures')
-        .list(user.id);
-
-      if (existingFiles && existingFiles.length > 0) {
-        const filesToDelete = existingFiles.map(f => `${user.id}/${f.name}`);
-        await supabase.storage
-          .from('profile-pictures')
-          .remove(filesToDelete);
-      }
-
-      // Upload new avatar
+      // Upload new avatar with unique timestamp
       const { error: uploadError } = await supabase.storage
         .from('profile-pictures')
         .upload(fileName, file, { 
           cacheControl: '3600',
-          upsert: true,
           contentType: file.type
         });
 
       if (uploadError) {
+        console.error('Upload error:', uploadError);
         throw uploadError;
       }
 
-      // Get public URL with cache-busting timestamp
+      // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('profile-pictures')
         .getPublicUrl(fileName);
 
-      const publicUrlWithTimestamp = `${publicUrl}?t=${timestamp}`;
-
       // Update profile in database
       const { error: updateError } = await supabase
         .from('user_profiles')
-        .update({ profile_picture_url: publicUrlWithTimestamp })
+        .update({ profile_picture_url: publicUrl })
         .eq('id', user.id);
 
       if (updateError) {
+        console.error('DB update error:', updateError);
         throw updateError;
       }
 
       // Update local state
       setProfile(prev => ({ 
         ...prev, 
-        profile_picture_url: publicUrlWithTimestamp 
+        profile_picture_url: publicUrl 
       }));
 
       toast({ 
@@ -150,7 +136,7 @@ export default function MyProfile() {
         description: 'Profile picture updated successfully' 
       });
 
-      e.currentTarget.value = '';
+      if (e.target) e.target.value = '';
     } catch (error: any) {
       console.error('Error uploading avatar:', error);
       toast({ 
@@ -158,6 +144,7 @@ export default function MyProfile() {
         description: error.message || 'Could not upload profile picture',
         variant: 'destructive' 
       });
+      if (e.target) e.target.value = '';
     } finally {
       setUploading(false);
     }
@@ -208,9 +195,9 @@ export default function MyProfile() {
               <div className="space-y-6">
                 {/* Avatar */}
                 <div className="flex flex-col items-center">
-                  <Avatar className="w-32 h-32 border-2 border-slate-200">
-                    <AvatarImage src={profile.profile_picture_url} />
-                    <AvatarFallback className="text-4xl bg-slate-100 text-slate-600">
+                  <Avatar className="w-48 h-48 rounded-2xl border-2 border-slate-200">
+                    <AvatarImage src={profile.profile_picture_url} className="object-cover" />
+                    <AvatarFallback className="text-5xl bg-slate-100 text-slate-600 rounded-2xl">
                       {profile.company_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
                     </AvatarFallback>
                   </Avatar>

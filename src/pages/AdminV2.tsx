@@ -150,7 +150,7 @@ const AdminV2 = () => {
       const [requestsResult, profilesResult, logsResult, blogsResult] = await Promise.all([
         supabase.from('applications').select('*').order('created_at', { ascending: false }),
         supabase.from('user_profiles').select('id, email, company_name, full_name, user_role, created_at, updated_at').order('created_at', { ascending: false }),
-        supabase.from('activity_logs').select('*').order('created_at', { ascending: false }).limit(100),
+        supabase.from('activity_log').select('*').order('created_at', { ascending: false }).limit(100),
         supabase.from('blogs').select('id', { count: 'exact', head: true })
       ]);
 
@@ -230,11 +230,11 @@ const AdminV2 = () => {
       )
       .subscribe();
 
-    // Subscribe to activity_logs table changes
+    // Subscribe to activity_log table changes
     const activityLogsSubscription = supabase
       .channel('activity-logs-changes')
       .on('postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'activity_logs' },
+        { event: 'INSERT', schema: 'public', table: 'activity_log' },
         (payload) => {
           console.log('New activity log:', payload);
           // Add new log to the list
@@ -437,7 +437,7 @@ const AdminV2 = () => {
       const { error: logError } = await supabase.from('activity_log').insert(activityData);
       if (logError) {
         // Try alternative table name
-        await supabase.from('activity_logs').insert({
+        await supabase.from('activity_log').insert({
           user_id: user?.id,
           action: `application_${status}`,
           details: {
