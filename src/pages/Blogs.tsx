@@ -352,64 +352,81 @@ export default function Blogs() {
                 </CardContent>
               </Card>
             ) : (
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {filteredBlogs.map((blog) => {
+                const cardColors = {
+                  'image': {
+                    border: 'border-purple-300 hover:border-purple-400',
+                    bg: 'bg-gradient-to-br from-purple-50/80 to-pink-50/80',
+                    accent: 'text-purple-600',
+                    hover: 'group-hover:text-purple-700',
+                    badge: 'border-purple-300 bg-purple-100 text-purple-700'
+                  },
+                  'video': {
+                    border: 'border-rose-300 hover:border-rose-400',
+                    bg: 'bg-gradient-to-br from-rose-50/80 to-orange-50/80',
+                    accent: 'text-rose-600',
+                    hover: 'group-hover:text-rose-700',
+                    badge: 'border-rose-300 bg-rose-100 text-rose-700'
+                  },
+                  'text': {
+                    border: 'border-indigo-300 hover:border-indigo-400',
+                    bg: 'bg-gradient-to-br from-indigo-50/80 to-blue-50/80',
+                    accent: 'text-indigo-600',
+                    hover: 'group-hover:text-indigo-700',
+                    badge: 'border-indigo-300 bg-indigo-100 text-indigo-700'
+                  }
+                };
+                const colors = cardColors[blog.media_type || 'text'];
+                
                 return (
                   <Card 
                     key={blog.id} 
                     onClick={() => navigate(`/blogs/${blog.id}`)}
-                    className={`group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border-2 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
-                      blog.media_type === 'image' 
-                        ? 'border-purple-200 hover:border-purple-300' 
-                        : blog.media_type === 'video'
-                        ? 'border-rose-200 hover:border-rose-300'
-                        : 'border-indigo-200 hover:border-indigo-300'
-                    }`}
+                    className={`group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border-2 ${colors.border} ${colors.bg} shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md`}
                   >
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-10 w-10 border border-slate-200">
+                    <CardHeader className="pb-2 p-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <Avatar className="h-8 w-8 border-2 border-white shadow-sm flex-shrink-0">
                             <AvatarImage src={blog.author?.profile_picture_url || ""} />
-                            <AvatarFallback className="bg-blue-600 text-white">
+                            <AvatarFallback className={`bg-gradient-to-br ${
+                              blog.media_type === 'image' ? 'from-purple-500 to-pink-500' :
+                              blog.media_type === 'video' ? 'from-rose-500 to-orange-500' :
+                              'from-indigo-500 to-blue-500'
+                            } text-white text-xs`}>
                               {blog.author?.full_name?.charAt(0) || "U"}
                             </AvatarFallback>
                           </Avatar>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <p className="text-sm font-semibold text-slate-900">{blog.author?.full_name || "Unknown"}</p>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5">
+                              <p className="text-xs font-semibold text-slate-900 truncate">{blog.author?.full_name || "Unknown"}</p>
                               {blog.author?.total_points !== undefined && (
-                                <span className="text-lg">
+                                <span className="text-sm flex-shrink-0">
                                   {getBadge(blog.author.total_points).icon}
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs text-slate-500">{blog.author?.company_name || 'Community member'}</p>
+                            <p className="text-[10px] text-slate-600 truncate">{blog.author?.company_name || 'Member'}</p>
                           </div>
                         </div>
                         <Badge 
                           variant="secondary" 
-                          className={`flex items-center gap-1 rounded-md border font-medium ${
-                            blog.media_type === 'image'
-                              ? 'border-purple-200 bg-purple-50 text-purple-700'
-                              : blog.media_type === 'video'
-                              ? 'border-rose-200 bg-rose-50 text-rose-700'
-                              : 'border-indigo-200 bg-indigo-50 text-indigo-700'
-                          }`}
+                          className={`flex items-center gap-1 rounded-md border text-[10px] px-1.5 py-0.5 font-medium flex-shrink-0 ${colors.badge}`}
                         >
                           {getMediaIcon(blog.media_type)}
-                          {blog.media_type || "text"}
+                          <span className="hidden sm:inline">{blog.media_type || "text"}</span>
                         </Badge>
                       </div>
                     </CardHeader>
-                    <CardContent className="flex flex-1 flex-col gap-3 pb-5">
+                    <CardContent className="flex flex-1 flex-col gap-2 p-3 pt-0">
                       {(blog.media_type === "image" || blog.media_type === "video") && blog.media_url && (
-                        <div className="relative h-44 overflow-hidden rounded-lg">
+                        <div className="relative h-32 overflow-hidden rounded-md border border-white/50">
                           {blog.media_type === "image" ? (
                           <img 
                             src={blog.media_url} 
                             alt={blog.title}
-                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                             />
                           ) : (
                           <video 
@@ -417,7 +434,7 @@ export default function Blogs() {
                             muted
                             loop
                             playsInline
-                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                             onMouseEnter={(e) => e.currentTarget.play()}
                             onMouseLeave={(e) => {
                               e.currentTarget.pause();
@@ -425,58 +442,41 @@ export default function Blogs() {
                             }}
                           />
                           )}
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/25 via-slate-900/5 to-transparent" />
-                          {blog.author?.company_name && (
-                            <Badge className="absolute left-3 top-3 rounded-md bg-white/90 text-blue-900 backdrop-blur">
-                              {blog.author.company_name}
-                            </Badge>
-                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                         </div>
                       )}
-                      <div className="space-y-2">
-                        <p className={`text-xs font-medium uppercase tracking-[0.3em] ${
-                          blog.media_type === 'image'
-                            ? 'text-purple-600'
-                            : blog.media_type === 'video'
-                            ? 'text-rose-600'
-                            : 'text-indigo-600'
-                        }`}>
+                      <div className="space-y-1.5">
+                        <p className={`text-[10px] font-medium uppercase tracking-wider ${colors.accent}`}>
                           {format(new Date(blog.created_at), "MMM d, yyyy")}
                         </p>
-                        <h2 className={`text-lg font-semibold leading-snug text-slate-900 transition-colors line-clamp-2 ${
-                          blog.media_type === 'image'
-                            ? 'group-hover:text-purple-700'
-                            : blog.media_type === 'video'
-                            ? 'group-hover:text-rose-700'
-                            : 'group-hover:text-indigo-700'
-                        }`}>
+                        <h2 className={`text-sm font-semibold leading-tight text-slate-900 transition-colors line-clamp-2 ${colors.hover}`}>
                           {blog.title}
                         </h2>
                       {blog.caption && (
-                          <p className="text-xs italic text-slate-500 line-clamp-2">
+                          <p className="text-[10px] italic text-slate-600 line-clamp-1">
                             "{blog.caption}"
                         </p>
                       )}
                       {blog.content && (
-                          <p className="text-sm text-slate-600 line-clamp-3">
+                          <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
                             {blog.content}
                           </p>
                       )}
                       </div>
-                      <div className="mt-auto flex items-center gap-4 border-t border-slate-200 pt-4 text-sm text-slate-500">
+                      <div className="mt-auto flex items-center gap-3 border-t border-white/50 pt-2.5 text-xs">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleLike(blog.id, blog.is_liked || false);
                           }}
-                          className="flex items-center gap-1.5 font-medium transition-colors hover:text-rose-500"
+                          className="flex items-center gap-1 font-medium transition-colors hover:text-rose-500"
                         >
-                          <Heart className={`h-4 w-4 transition-all ${blog.is_liked ? 'fill-rose-500 text-rose-500 scale-110' : 'group-hover:text-rose-400'}`} />
-                          {blog.like_count}
+                          <Heart className={`h-3.5 w-3.5 transition-all ${blog.is_liked ? 'fill-rose-500 text-rose-500 scale-110' : 'text-slate-500 group-hover:text-rose-400'}`} />
+                          <span className="text-[11px]">{blog.like_count}</span>
                         </button>
-                        <div className="flex items-center gap-1.5 font-medium">
-                          <MessageCircle className="h-4 w-4" />
-                          {blog.comment_count}
+                        <div className="flex items-center gap-1 font-medium text-slate-500">
+                          <MessageCircle className="h-3.5 w-3.5" />
+                          <span className="text-[11px]">{blog.comment_count}</span>
                         </div>
                       </div>
                     </CardContent>

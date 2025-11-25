@@ -228,7 +228,7 @@ export default function BlogDetail() {
 
   return (
     <SidebarLayout>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-slate-50">
         <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
           {/* Header with back button */}
           <div className="mb-6 flex items-center gap-4">
@@ -236,62 +236,69 @@ export default function BlogDetail() {
               variant="ghost"
               size="sm"
               onClick={() => navigate('/blogs')}
-              className="h-9 w-9 rounded-full p-0 hover:bg-slate-100"
+              className="h-9 w-9 rounded-full p-0 hover:bg-slate-100 border border-slate-200 transition-all"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h2 className="text-lg font-bold text-slate-900">Post</h2>
+            <div className="flex items-center gap-2">
+              <Badge className="bg-slate-100 text-slate-700 border border-slate-200 text-xs font-medium px-2.5 py-1">
+                {getMediaIcon(blog.media_type)}
+                <span className="ml-1.5 capitalize">{blog.media_type || "text"}</span>
+              </Badge>
+            </div>
           </div>
 
           {/* Main Post - Two Column Layout */}
-          <article className="grid grid-cols-1 lg:grid-cols-2 gap-6 border-b border-slate-200 pb-6">
+          <article className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-8">
             {/* Left Column - Content */}
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-5">
               {/* Author Header */}
-              <div className="flex items-start gap-3">
-                <Avatar className="h-12 w-12 border-2 border-indigo-200 flex-shrink-0 shadow-sm">
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-white border border-slate-200 shadow-sm">
+                <Avatar className="h-14 w-14 border-2 border-slate-200 shadow-sm flex-shrink-0">
                   <AvatarImage src={blog.author?.profile_picture_url || ""} />
-                  <AvatarFallback className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold">
+                  <AvatarFallback className="bg-slate-600 text-white font-semibold text-base">
                     {blog.author?.full_name?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-sm font-bold text-slate-900">
+                    <p className="text-base font-bold text-slate-900">
                       {blog.author?.full_name || "Unknown"}
                     </p>
                     {blog.author?.total_points !== undefined && (
-                      <span className="text-base">
+                      <span className="text-lg">
                         {getBadge(blog.author.total_points).icon}
                       </span>
                     )}
-                    <span className="text-sm text-slate-500">·</span>
-                    <span className="text-sm text-slate-500">
-                      {format(new Date(blog.created_at), "MMM d")}
+                    <span className="text-sm text-slate-400">·</span>
+                    <span className="text-sm text-slate-500 font-medium">
+                      {format(new Date(blog.created_at), "MMM d, yyyy")}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-500 mt-0.5">
+                  <p className="text-sm text-slate-600 mt-1 font-medium">
                     {blog.author?.company_name || 'Community member'}
                   </p>
                 </div>
               </div>
 
               {/* Title */}
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent leading-tight">
-                {blog.title}
-              </h1>
+              <div className="p-5 rounded-lg bg-white border border-slate-200 shadow-sm">
+                <h1 className="text-3xl font-bold text-slate-900 leading-tight">
+                  {blog.title}
+                </h1>
+              </div>
 
               {/* Content with Read More/Less */}
-              <div className="space-y-3">
+              <div className="p-5 rounded-lg bg-white border border-slate-200 shadow-sm space-y-4">
                 {blog.content && (
                   <div>
-                    <p className={`text-[15px] text-slate-900 leading-relaxed whitespace-pre-wrap ${!isExpanded ? 'line-clamp-6' : ''}`}>
+                    <p className={`text-base text-slate-800 leading-relaxed whitespace-pre-wrap ${!isExpanded ? 'line-clamp-6' : ''}`}>
                       {blog.content}
                     </p>
                     {blog.content.length > 300 && (
                       <button
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="mt-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
+                        className="mt-3 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors px-3 py-1.5 rounded-md border border-slate-200 hover:border-blue-300 bg-slate-50 hover:bg-blue-50"
                       >
                         {isExpanded ? 'Read less' : 'Read more'}
                       </button>
@@ -300,54 +307,60 @@ export default function BlogDetail() {
                 )}
 
                 {blog.caption && (
-                  <p className="text-[15px] text-slate-600 italic leading-relaxed">
-                    "{blog.caption}"
-                  </p>
+                  <div className="pt-3 border-t border-slate-200">
+                    <p className="text-base text-slate-600 italic leading-relaxed">
+                      "{blog.caption}"
+                    </p>
+                  </div>
                 )}
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-6 pt-2">
-                <button
-                  onClick={() => toggleLike(blog.id, blog.is_liked || false)}
-                  className="flex items-center gap-2 text-slate-500 hover:text-rose-500 transition-colors group/action"
-                >
-                  <div className={`p-2 rounded-full transition-colors ${blog.is_liked ? 'bg-rose-100 border border-rose-200' : 'group-hover/action:bg-rose-50 group-hover/action:border group-hover/action:border-rose-200'}`}>
-                    <Heart className={`h-5 w-5 transition-all ${blog.is_liked ? 'fill-rose-500 text-rose-500' : ''}`} />
-                  </div>
-                  <span className="text-sm font-medium">{blog.like_count || 0}</span>
-                </button>
-                <button 
-                  onClick={() => setIsCommentsOpen(!isCommentsOpen)}
-                  className={`flex items-center gap-2 transition-colors group/action ${isCommentsOpen ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}
-                >
-                  <div className={`p-2 rounded-full transition-colors ${isCommentsOpen ? 'bg-indigo-100 border border-indigo-200' : 'group-hover/action:bg-indigo-50 group-hover/action:border group-hover/action:border-indigo-200'}`}>
-                    <MessageCircle className="h-5 w-5" />
-                  </div>
-                  <span className="text-sm font-medium">{blog.comment_count || 0}</span>
-                </button>
-                <button 
-                  className="flex items-center gap-2 text-slate-500 hover:text-emerald-600 transition-colors group/action"
-                  aria-label="Share post"
-                >
-                  <div className="p-2 rounded-full transition-colors group-hover/action:bg-emerald-50 group-hover/action:border group-hover/action:border-emerald-200">
-                    <Share2 className="h-5 w-5" />
-                  </div>
-                </button>
-                <button 
-                  className="flex items-center gap-2 text-slate-500 hover:text-amber-600 transition-colors group/action"
-                  aria-label="Save post"
-                >
-                  <div className="p-2 rounded-full transition-colors group-hover/action:bg-amber-50 group-hover/action:border group-hover/action:border-amber-200">
-                    <Bookmark className="h-5 w-5" />
-                  </div>
-                </button>
+              <div className="p-4 rounded-lg bg-white border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => toggleLike(blog.id, blog.is_liked || false)}
+                    className="flex items-center gap-2 text-slate-600 hover:text-rose-600 transition-colors group/action"
+                  >
+                    <div className={`p-2 rounded-lg transition-colors ${blog.is_liked ? 'bg-rose-50 border border-rose-200' : 'border border-slate-200 group-hover/action:bg-slate-50 group-hover/action:border-slate-300'}`}>
+                      <Heart className={`h-5 w-5 transition-all ${blog.is_liked ? 'fill-rose-500 text-rose-500' : 'text-slate-500'}`} />
+                    </div>
+                    <span className="text-sm font-medium">{blog.like_count || 0}</span>
+                  </button>
+                  <button 
+                    onClick={() => setIsCommentsOpen(!isCommentsOpen)}
+                    className={`flex items-center gap-2 transition-colors group/action ${isCommentsOpen ? 'text-blue-600' : 'text-slate-600 hover:text-blue-600'}`}
+                  >
+                    <div className={`p-2 rounded-lg transition-colors border ${isCommentsOpen ? 'bg-blue-50 border-blue-200' : 'border-slate-200 group-hover/action:bg-slate-50 group-hover/action:border-slate-300'}`}>
+                      <MessageCircle className="h-5 w-5" />
+                    </div>
+                    <span className="text-sm font-medium">{blog.comment_count || 0}</span>
+                  </button>
+                  <button 
+                    className="flex items-center gap-2 text-slate-600 hover:text-slate-700 transition-colors group/action"
+                    aria-label="Share post"
+                  >
+                    <div className="p-2 rounded-lg transition-colors border border-slate-200 group-hover/action:bg-slate-50 group-hover/action:border-slate-300">
+                      <Share2 className="h-5 w-5" />
+                    </div>
+                  </button>
+                  <button 
+                    className="flex items-center gap-2 text-slate-600 hover:text-slate-700 transition-colors group/action"
+                    aria-label="Save post"
+                  >
+                    <div className="p-2 rounded-lg transition-colors border border-slate-200 group-hover/action:bg-slate-50 group-hover/action:border-slate-300">
+                      <Bookmark className="h-5 w-5" />
+                    </div>
+                  </button>
+                </div>
               </div>
 
               {/* Comments Section - Toggleable */}
               {isCommentsOpen && (
-                <div className="pt-4 border-t border-slate-200 animate-in slide-in-from-top-2 duration-200">
-                  <h3 className="text-lg font-bold text-slate-900 mb-4">Comments ({blog.comment_count || 0})</h3>
+                <div className="p-5 rounded-lg bg-white border border-slate-200 shadow-sm animate-in slide-in-from-top-2 duration-200">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4 pb-3 border-b border-slate-200">
+                    Comments ({blog.comment_count || 0})
+                  </h3>
                   <BlogCommentSection blogId={blog.id} />
                 </div>
               )}
@@ -356,25 +369,26 @@ export default function BlogDetail() {
             {/* Right Column - Media */}
             {(blog.media_type === "image" || blog.media_type === "video") && blog.media_url && (
               <div className="sticky top-6 h-fit">
-                <div className={`w-full overflow-hidden rounded-xl border-2 bg-slate-50 shadow-sm ${
-                  blog.media_type === "image" 
-                    ? 'border-purple-200' 
-                    : 'border-rose-200'
-                }`}>
+                <div className="w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-md p-2">
                   {blog.media_type === "image" ? (
                     <img
                       src={blog.media_url}
                       alt={blog.title}
-                      className="w-full h-auto object-cover"
+                      className="w-full h-auto object-cover rounded-md"
                     />
                   ) : (
                     <video
                       src={blog.media_url}
                       controls
-                      className="w-full h-auto"
+                      className="w-full h-auto rounded-md"
                     />
                   )}
                 </div>
+                {blog.caption && (
+                  <p className="mt-3 text-sm text-slate-600 italic text-center px-2">
+                    {blog.caption}
+                  </p>
+                )}
               </div>
             )}
           </article>
