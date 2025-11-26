@@ -1,50 +1,136 @@
-# Launch+ CRM Platform - Comprehensive Scope of Work
+# LAUNCH+ PLATFORM - Request for Proposal
+## Comprehensive Technical Specification & Scope of Work
 
 ## Document Information
-- **Project Name:** Launch+ CRM Platform
-- **Version:** 2.0
+- **Project Name:** LAUNCH+ Platform - Digital Ecosystem for Small Business Growth Fund Acceleration
+- **Program:** LAUNCH+ Initiative (€16.5M, Oct 2025 - Dec 2027)
+- **Version:** 3.0 (RFP Edition)
 - **Date:** November 2025
 - **Prepared For:** Collaborative for Frontier Finance (CFF)
-- **Prepared By:** Development Team
-- **Document Status:** Final Scope
+- **Procurement Type:** Platform Development & Implementation
+- **Document Status:** Final RFP Scope
 
 ---
 
 ## Executive Summary
 
-The Launch+ CRM Platform is a comprehensive fund manager assessment and management system designed to streamline the evaluation, onboarding, and management of Small Business Growth Funds seeking to participate in the LAUNCH+ program. This platform will serve as the central operational hub for CFF's Mauritius-domiciled fund administration platform (structured as a Variable Capital Company - VCC).
+### Program Overview
 
-### Business Context
+The LAUNCH+ Platform is a mission-critical digital ecosystem that operationalizes the Collaborative for Frontier Finance's €16.5M LAUNCH+ Initiative - an integrated market creation program designed to accelerate Small Business Growth Funds (SBGFs) across Africa. The platform serves as the operational backbone connecting five interdependent program components: shared services administration, technical assistance delivery, capital deployment management, portfolio company impact tracking, and knowledge ecosystem development.
 
-Small Business Growth Funds (SGFs) face systemic barriers in accessing institutional and development capital. Despite over 100 funds targeting $2.25 billion for Africa's "missing middle," only one-third of this capital has been secured. The Launch+ platform addresses this "Hourglass Dilemma" by providing:
+### Business Context: The Small Business Finance Gap
 
-1. **Shared Services** (mandatory, Phase I, partially subsidized):
-   - Back-office services (accounting, finance, tax, legal, HR)
-   - Fund administration services
-   - Capacity building and knowledge services
+**Market Problem:**
+The World Bank estimates that small and growing businesses (SGBs) create 7 out of 10 formal jobs in Africa's economy. These businesses are critical drivers of climate adaptation, gender inclusion, youth employment, and living-wage job creation. However, there is a systemic failure in meeting their capital needs:
 
-2. **Capital Support** (optional, Phase II, repayable):
-   - Op-Ex lines of credit
-   - Warehousing lines of credit
+- **Capital Access Gap:** 100+ Small Business Growth Funds across Africa seek $2.25B to finance growth-oriented SMEs, yet have only accessed ~$790M (~33% of target capital)
+- **Missing Middle Crisis:** SMEs requiring €200K-€5M in financing cannot access appropriate capital from traditional banks
+- **Institutional Capital Disconnect:** DFIs and impact investors avoid SBGFs due to perceived risks: challenging fund economics (small fund models seen as unsustainable), track record deficits, high transaction costs relative to deal size
+- **Domestic Capital Untapped:** African pension funds hold $1.8T in AUM but invest only ~3% in alternative assets, with minimal allocation to local growth businesses
+- **Operational Barriers:** SBGFs face prohibitive legal/compliance costs, lengthy licensing processes, and limited access to world-class fund administration
+
+**Systemic Impact:**
+This capital gap undermines Africa's small businesses - the primary engines of sustainable economic development, job creation, and poverty alleviation. In 2024, CFF network funds reported 37% increase in direct jobs and 47% in indirect jobs, with 55% of roles for first-time employees, 40% for women, and 75% for youth - demonstrating strong alignment with inclusive growth objectives.
+
+### The LAUNCH+ Solution
+
+LAUNCH+ is a **Variable Capital Company (VCC)** domiciled in Mauritius that provides an integrated platform combining:
+
+1. **Shared Services & Fund Administration** (Mandatory, subsidized years 1-3)
+   - Turnkey VCC sub-fund setup with FSC licensing support
+   - World-class fund administration, legal, governance, and compliance
+   - Back-office services: accounting, finance, tax, HR
+   - Reduces costs by 40-60% and accelerates time-to-market from 6-12 months to 2-3 months
+
+2. **Technical Assistance & Capacity Building** (€1M allocation)
+   - Peer-to-peer learning cohorts with structured knowledge exchange
+   - Expert-led training on governance, valuation, impact measurement, fundraising
+   - Individual mentoring and coaching with vetted technical advisors
+   - Customized support plans based on diagnostic assessments
+
+3. **Warehousing Capital Lines** (€6M allocation)
+   - Catalytic capital to fund 1-3 investable deals per manager
+   - Demonstrates investment thesis and capabilities to institutional LPs
+   - Flexible, milestone-linked deployment based on pipeline strength
+
+4. **Operating Overhead Support** (€4M allocation)
+   - Opex funding for team building, legal costs, investor outreach
+   - Provided as loans, repayable grants, or standard grants
+   - Enables managers to build capacity while pursuing first close
+
+5. **Small Business Finance Learning Lab** (€2M allocation)
+   - Multi-channel knowledge architecture with data analytics tools
+   - Case study library highlighting fund manager innovations
+   - Online portal with AI-enhanced knowledge exchange
+   - Regular convenings fostering partnerships and peer learning
+
+### Target Beneficiaries
+
+**Primary:** 20-30 Small Business Growth Funds across 3-5 cohorts (Oct 2025 - Apr 2027)
+- Cohort 1 (Oct 2025): 3-5 fund managers
+- Cohorts 2-3 (Apr 2026, Oct 2026): 5-10 fund managers each
+- Subsequent cohorts: 5-10 fund managers each
+
+**SBGF Characteristics:**
+- Locally-based vehicles with deep knowledge of business landscape
+- Target financing: $20K-$2M per deal (majority <$500K) to early-stage entrepreneurs
+- Flexible instruments and timeframes suitable for small business needs
+- Pre and post-investment capacity support to portfolio companies
+- Impact-oriented: SDG alignment with focus on jobs, gender, climate, green tech
+- Diversity-focused: Women and youth in teams and portfolio companies
+
+**Secondary:** 4,500+ small and growing businesses receiving investment from program-supported SBGFs
+
+**Tertiary:** 60+ institutional LPs, DFIs, pension funds, and ecosystem actors engaged through Learning Lab
+
+### Expected Outcomes & Impact
+
+**Immediate Outputs (2025-2027):**
+- 20-30 fund managers onboarded and supported toward first close with institutional investors
+- €6M warehousing capital deployed across demonstration investments
+- €4M opex support for team capacity building
+- Comprehensive TA delivered including diagnostics, expert coaching, peer learning
+- Learning Lab launched with case studies, analytics tools, and stakeholder convenings
+
+**Intermediate Outcomes (3-5 years):**
+- 45+ Small Business Growth Funds accelerated toward sustainable fund economics
+- Collective AUM of $900M-$1.5B managed by supported funds
+- Financing deployed to ~4,500 early-stage businesses across Africa
+- 37%+ increase in direct jobs, 47%+ in indirect jobs (based on 2024 network benchmarks)
+- Strong inclusive growth metrics: 55% first-time employees, 40% women, 75% youth
+- Demonstration effect proving viability of SBGF asset class to institutional investors
+- Reduction in information asymmetries through comprehensive data and research
+
+**Long-Term Systemic Impact:**
+- Mobilize domestic (African pension funds) and global institutional capital to SBGF asset class
+- Establish SBGFs as competitive alternative to traditional banks for SME financing
+- Influence traditional financial institutions to innovate their own business models for growth enterprises
+- Create compounding effect on scale of "appropriate" capital for Africa's small business sector
 
 ### Platform Objectives
 
-The CRM platform will enable CFF to:
-- **Assess** fund manager eligibility using standardized, objective criteria
-- **Manage** multi-stage application processes from initial inquiry to cohort onboarding
-- **Score** and rank applicants transparently using weighted evaluation matrices
-- **Track** fund manager relationships, progress, and service utilization
-- **Generate** comprehensive reports and analytics on the pipeline and cohort performance
-- **Communicate** effectively with fund managers throughout their journey
-- **Support** decision-making for investment committee and operations team
+The LAUNCH+ Platform must enable CFF to:
+
+1. **Accelerate Onboarding**: Reduce fund manager application and onboarding from 6-12 months to 2-3 months through automated workflows
+2. **Reduce Costs**: Lower fund administration costs by 40-60% through shared services and economies of scale
+3. **Standardize Assessment**: Implement objective, lifecycle-based evaluation methodology with transparent scoring
+4. **Deploy Capital Efficiently**: Track and manage €10M in warehousing loans + opex support with milestone-linked disbursement
+5. **Build Manager Capacity**: Coordinate delivery of customized TA programs including diagnostics, expert matching, peer learning
+6. **Track Portfolio Impact**: Monitor 4,500+ portfolio company investments including job creation, gender metrics, SDG alignment
+7. **Facilitate Capital Raising**: Connect fund managers with institutional LPs through transparent performance dashboards
+8. **Scale Knowledge**: Create searchable Learning Lab with case studies, analytics, AI-enhanced insights for 100+ stakeholders
+9. **Enable VCC Administration**: Interface with Mauritius fund administrator for regulatory compliance and governance
+10. **Generate Insights**: Provide data-driven analytics to refine program design and advocate for policy/regulatory change
 
 ### Expected Business Impact
 
-- **Efficiency Gains:** Reduce application processing time by 60%
-- **Scale:** Support 100+ fund manager applications annually
-- **Quality:** Improve assessment consistency and reduce bias
-- **Transparency:** Provide clear, documented rationale for all decisions
-- **Insights:** Enable data-driven decision making for program optimization
+- **Efficiency Gains:** Reduce assessment/onboarding time by 70% (from 6-12 months to 2-3 months)
+- **Cost Reduction:** Lower fund administration costs by 40-60% through shared services
+- **Scale:** Support 20-30 fund managers in Phase I, scalable to 100+ applications annually
+- **Quality:** Improve assessment consistency with standardized, lifecycle-based methodology
+- **Capital Mobilization:** Track deployment of €10M in catalytic capital + facilitate $900M-$1.5B in institutional LP commitments
+- **Impact Transparency:** Monitor job creation, gender inclusion, SDG alignment across 4,500+ portfolio businesses
+- **Market Creation:** Demonstrate sustainable asset class, influencing billions in future institutional allocations
 
 ---
 
