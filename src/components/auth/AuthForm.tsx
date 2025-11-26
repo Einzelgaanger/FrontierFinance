@@ -185,7 +185,7 @@ export default function AuthForm() {
         <CardHeader className="text-center pt-6 sm:pt-8">
           <div className="flex justify-center mb-3 sm:mb-4">
             <img 
-              src="/CFF LOGO.png" 
+              src="/cff-logo.png" 
               alt="CFF Logo" 
               className="h-14 sm:h-16 md:h-20 w-auto object-contain"
             />

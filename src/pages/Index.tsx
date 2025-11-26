@@ -118,7 +118,7 @@ const Index = () => {
         {/* Top Left Logo - Responsive */}
         <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20">
           <img 
-            src="/CFF LOGO.png" 
+            src="/cff-logo.png" 
             alt="CFF Logo" 
             className="h-12 sm:h-16 md:h-20 w-auto object-contain"
           />
@@ -677,7 +677,7 @@ const Index = () => {
             {/* Company Info */}
             <div className="col-span-1 lg:col-span-2">
               <div className="flex justify-start mb-4">
-                <img src="/CFF LOGO.png" alt="CFF Logo" className="h-16 w-auto object-contain" />
+                <img src="/cff-logo.png" alt="CFF Logo" className="h-16 w-auto object-contain" />
               </div>
               <p className="text-gray-300 mb-6 text-base leading-relaxed max-w-md">
                 A multi-stakeholder initiative increasing access to capital for small and growing businesses in emerging markets through networks, research, and initiatives.
