@@ -145,6 +145,7 @@ const FundManagerDetail = () => {
   const [surveyStatus, setSurveyStatus] = useState<{[key: string]: boolean}>({});
   const [surveys, setSurveys] = useState<Array<{ year: number; data: any }>>([]);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [selectedSection, setSelectedSection] = useState<number>(1);
   const [fieldVisibility, setFieldVisibility] = useState<Record<string, { viewer: boolean; member: boolean; admin: boolean }>>({});
 
 
@@ -259,7 +260,10 @@ const FundManagerDetail = () => {
         }
       }
       setSurveys(collected);
-      if (collected.length > 0) setSelectedYear(collected[0].year);
+      if (collected.length > 0) {
+        setSelectedYear(collected[0].year);
+        setSelectedSection(1); // Reset to first section when year changes
+      }
     };
 
   useEffect(() => {
@@ -275,6 +279,26 @@ const FundManagerDetail = () => {
       fetchSurveys();
     }
   }, [id]);
+
+  // Reset selected section when year changes or ensure it's valid
+  useEffect(() => {
+    if (selectedYear && surveys.find(s => s.year === selectedYear)) {
+      const surveyData = surveys.find(s => s.year === selectedYear)?.data;
+      if (surveyData) {
+        const sections = getSectionData(surveyData, selectedYear);
+        if (sections.length > 0) {
+          // If current selected section doesn't exist in new year, reset to first section
+          const sectionExists = sections.some(s => s.id === selectedSection);
+          if (!sectionExists) {
+            setSelectedSection(sections[0].id);
+          }
+        } else {
+          // No sections available, reset to 1
+          setSelectedSection(1);
+        }
+      }
+    }
+  }, [selectedYear, surveys]);
 
   if (loading) {
     return (
@@ -422,8 +446,36 @@ const FundManagerDetail = () => {
       .join(' ');
   };
 
+  // Year selection actions for header (matching AdminAnalytics design)
+  const availableYears = [2021, 2022, 2023, 2024];
+  const yearSelectionActions = surveys.length > 0 ? (
+    <div className="flex items-center gap-2">
+      {availableYears.map((year) => {
+        const isCompleted = surveyStatus[String(year)];
+        const isActive = selectedYear === year;
+        if (!isCompleted) return null;
+        return (
+          <Button
+            key={year}
+            variant={isActive ? 'default' : 'secondary'}
+            className={`h-8 px-3 text-xs ${
+              isActive ? 'shadow-md' : 'opacity-80 hover:opacity-100'
+            }`}
+            onClick={() => {
+              setSelectedYear(year);
+              setSelectedSection(1); // Reset to first section when year changes
+            }}
+            aria-pressed={isActive}
+          >
+            {year}
+          </Button>
+        );
+      })}
+    </div>
+  ) : null;
+
   return (
-    <SidebarLayout>
+    <SidebarLayout headerActions={yearSelectionActions}>
        <div className="min-h-screen bg-gradient-to-br from-[#f5f5dc] to-[#f0f0e6]">
 
          {/* Main Content - Proper spacing below header */}
@@ -489,88 +541,6 @@ const FundManagerDetail = () => {
                          <p className="text-sm text-gray-900">{fundManager.description || 'No description provided'}</p>
                        </div>
                      </div>
-
-                     {/* Survey Year Navigation and In-Page Viewer */}
-                     <div className="mt-6 pt-4 border-t border-blue-200">
-                       <div className="flex items-center space-x-3 mb-4">
-                         <div className="w-6 h-6 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-sm">
-                           <BarChart3 className="w-3 h-3 text-white" />
-                         </div>
-                         <h3 className="text-base font-bold text-gray-800">Survey Responses</h3>
-                       </div>
-
-                       <div className="flex gap-2 flex-wrap mb-4">
-                         {[2021, 2022, 2023, 2024].map((year) => {
-                           const isCompleted = surveyStatus[String(year)];
-                           return (
-                             <Badge
-                               key={year}
-                               variant={selectedYear === year ? 'default' : 'secondary'}
-                               className={`cursor-pointer px-3 py-1 ${isCompleted ? '' : 'opacity-50 cursor-not-allowed'}`}
-                               onClick={() => isCompleted && setSelectedYear(year)}
-                             >
-                               {year}
-                             </Badge>
-                           );
-                         })}
-                       </div>
-
-                       {selectedYear && surveys.find(s => s.year === selectedYear) ? (
-                         (() => {
-                           const sections = getSectionData(surveys.find(s => s.year === selectedYear)?.data, selectedYear);
-                           if (sections.length === 0) {
-                             return <p className="text-sm text-gray-500">No visible data for your access level.</p>;
-                           }
-                           return (
-                             <Tabs defaultValue={`section-${sections[0].id}`} className="w-full">
-                               <TabsList className="w-full flex p-0 rounded-lg overflow-hidden border border-blue-200/60">
-                                 {sections.map((section) => (
-                                   <TabsTrigger
-                                     key={section.id}
-                                     value={`section-${section.id}`}
-                                     className="flex-1 basis-0 justify-center text-xs sm:text-sm py-2 sm:py-3 px-2 sm:px-3 truncate whitespace-nowrap bg-[#f0f0e6] hover:bg-white/80 data-[state=active]:bg-white data-[state=active]:text-gray-900 border-r last:border-r-0 border-blue-200/60"
-                                     title={section.title}
-                                   >
-                                     {section.title}
-                                   </TabsTrigger>
-                                 ))}
-                               </TabsList>
-                               {sections.map((section) => {
-                                 const surveyData = surveys.find(s => s.year === selectedYear)?.data;
-                                 return (
-                                   <TabsContent key={section.id} value={`section-${section.id}`}>
-                                     <Card className="border-2 border-blue-200/60 shadow-sm bg-[#f5f5dc]">
-                                       <CardHeader className="bg-[#f0f0e6] border-b border-blue-200/60 rounded-t-md">
-                                         <CardTitle className="flex items-center justify-between text-gray-800">
-                                           <span className="text-base font-bold">{section.title}</span>
-                                           <Badge className="bg-blue-100 text-blue-700 border-blue-300" variant="outline">{section.fields.length} fields</Badge>
-                                         </CardTitle>
-                                       </CardHeader>
-                                       <CardContent className="pt-4">
-                                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            {section.fields.map((field: string) => (
-                                              <div key={field} className="rounded-lg border border-blue-200/60 bg-white p-4">
-                                                <p className="font-semibold text-[11px] uppercase tracking-wide text-gray-600 mb-2">
-                                                  {getQuestionLabel(field, selectedYear)}
-                                                </p>
-                                                <div className="text-sm whitespace-pre-wrap leading-relaxed text-gray-900">
-                                                  {formatFieldValue(surveyData?.[field])}
-                                                </div>
-                                              </div>
-                                            ))}
-                                          </div>
-                                       </CardContent>
-                                     </Card>
-                                   </TabsContent>
-                                 );
-                               })}
-                             </Tabs>
-                           );
-                         })()
-                       ) : (
-                         <p className="text-sm text-gray-500">Select a completed year to view responses.</p>
-                       )}
-                     </div>
                    </div>
                  </div>
 
@@ -592,6 +562,99 @@ const FundManagerDetail = () => {
                  </div>
                </div>
              </div>
+
+            {/* Survey Responses Section - Full Width */}
+            {surveys.length > 0 && selectedYear && surveys.find(s => s.year === selectedYear) ? (
+              <div className="mt-8">
+                {(() => {
+                  const sections = getSectionData(surveys.find(s => s.year === selectedYear)?.data, selectedYear);
+                  if (sections.length === 0) {
+                    return <p className="text-sm text-gray-500">No visible data for your access level.</p>;
+                  }
+                  
+                  // Ensure selectedSection is valid
+                  const validSection = sections.find(s => s.id === selectedSection) || sections[0];
+                  const currentSection = validSection;
+                  const surveyData = surveys.find(s => s.year === selectedYear)?.data;
+                  
+                  return (
+                    <>
+                      {/* Section Selector - Matching AdminAnalytics Design */}
+                      <div className="rounded-2xl border border-blue-900/15 bg-white shadow-md p-5 mb-6">
+                        <div className="flex items-center justify-between flex-wrap gap-3 mb-2">
+                          <div className="flex items-center gap-2">
+                            <Briefcase className="h-4 w-4 text-blue-900" />
+                            <span className="text-xs font-semibold text-blue-900 uppercase tracking-[0.18em]">Survey Sections</span>
+                          </div>
+                          <span className="text-[11px] text-slate-500">Choose a focus area to explore data</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {sections.map((section) => {
+                            const isActive = selectedSection === section.id;
+                            return (
+                              <Button
+                                key={section.id}
+                                size="sm"
+                                variant="ghost"
+                                className={`h-9 px-4 text-[11px] font-medium tracking-wide transition-all rounded-full ${
+                                  isActive
+                                    ? 'bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white shadow-md hover:brightness-110'
+                                    : 'bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100'
+                                }`}
+                                onClick={() => setSelectedSection(section.id)}
+                                aria-pressed={isActive}
+                              >
+                                <span className="mr-2 font-semibold">{section.id}.</span>
+                                <span className="truncate max-w-[140px]">{section.title}</span>
+                              </Button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Section Content */}
+                      <div className="space-y-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">{currentSection.title}</h2>
+                            <p className="text-muted-foreground mt-1">Survey year {selectedYear}</p>
+                          </div>
+                          <Badge className="bg-blue-100 text-blue-700 border-blue-300" variant="outline">
+                            {currentSection.fields.length} fields
+                          </Badge>
+                        </div>
+
+                        <Card className="border-2 border-blue-200/60 shadow-sm bg-white">
+                          <CardHeader className="bg-gradient-to-r from-slate-50 to-blue-50 border-b border-blue-200/60 rounded-t-md">
+                            <CardTitle className="flex items-center justify-between text-gray-800">
+                              <span className="text-lg font-bold">{currentSection.title}</span>
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="pt-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                              {currentSection.fields.map((field: string) => (
+                                <div key={field} className="rounded-lg border border-blue-200/60 bg-gradient-to-br from-white to-blue-50/30 p-4 hover:shadow-md transition-shadow">
+                                  <p className="font-semibold text-[11px] uppercase tracking-wide text-gray-600 mb-2">
+                                    {getQuestionLabel(field, selectedYear)}
+                                  </p>
+                                  <div className="text-sm whitespace-pre-wrap leading-relaxed text-gray-900">
+                                    {formatFieldValue(surveyData?.[field])}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            ) : surveys.length === 0 ? (
+              <div className="mt-8">
+                <p className="text-sm text-gray-500">No survey responses available for this fund manager.</p>
+              </div>
+            ) : null}
            </div>
         </div>
       </div>

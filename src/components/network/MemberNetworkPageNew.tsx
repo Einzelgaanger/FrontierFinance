@@ -44,17 +44,27 @@ export default function MemberNetworkPageNew() {
 
   // Close filter dropdown when clicking outside
   useEffect(() => {
+    if (!showYearFilter) return;
+
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (showYearFilter && !target.closest('.year-filter-container')) {
+      const filterContainer = document.querySelector('.year-filter-container');
+      
+      // Check if click is outside the filter container
+      if (filterContainer && !filterContainer.contains(target)) {
         setShowYearFilter(false);
       }
     };
 
-    if (showYearFilter) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
+    // Use a small delay to ensure the click event that opened it doesn't immediately close it
+    const timeoutId = setTimeout(() => {
+      document.addEventListener('mousedown', handleClickOutside, true);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeoutId);
+      document.removeEventListener('mousedown', handleClickOutside, true);
+    };
   }, [showYearFilter]);
 
   const fetchProfiles = async () => {
@@ -162,11 +172,11 @@ export default function MemberNetworkPageNew() {
       );
     }
 
-    // Filter by selected years
+    // Filter by selected years - must have ALL selected years (AND logic)
     if (selectedYears.length > 0) {
       filtered = filtered.filter(profile => {
-        // Show profiles that have at least one of the selected years
-        return selectedYears.some(year => profile.completed_surveys.includes(year));
+        // Show profiles that have ALL of the selected years
+        return selectedYears.every(year => profile.completed_surveys.includes(year));
       });
     }
 
@@ -271,12 +281,17 @@ export default function MemberNetworkPageNew() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setShowYearFilter(!showYearFilter)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowYearFilter(prev => !prev);
+                }}
                 className={`flex items-center gap-1.5 h-9 px-3 rounded-lg border-slate-300 hover:border-emerald-400 hover:bg-emerald-50 transition-all ${
                   selectedYears.length > 0 
                     ? 'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-sm' 
                     : 'bg-white text-slate-700 hover:bg-slate-50'
                 }`}
+                type="button"
               >
                 <ListFilter className={`w-4 h-4 ${
                   selectedYears.length > 0 
@@ -292,7 +307,10 @@ export default function MemberNetworkPageNew() {
               </Button>
 
               {showYearFilter && (
-                <Card className="absolute right-0 top-full mt-2 z-50 min-w-[280px] shadow-lg border border-slate-200">
+                <Card 
+                  className="absolute right-0 top-full mt-2 z-[100] min-w-[280px] shadow-lg border border-slate-200"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-sm font-semibold">Filter by Survey Year</CardTitle>
@@ -300,8 +318,13 @@ export default function MemberNetworkPageNew() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={clearYearFilter}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            clearYearFilter();
+                          }}
                           className="h-6 px-2 text-xs"
+                          type="button"
                         >
                           <X className="w-3 h-3 mr-1" />
                           Clear
@@ -318,17 +341,31 @@ export default function MemberNetworkPageNew() {
                           <div
                             key={year}
                             className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors"
-                            onClick={() => toggleYear(year)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              toggleYear(year);
+                            }}
                           >
                             <div className="flex items-center space-x-3">
                               <Checkbox
                                 checked={isSelected}
-                                onCheckedChange={() => toggleYear(year)}
+                                onCheckedChange={(checked) => {
+                                  if (checked !== isSelected) {
+                                    toggleYear(year);
+                                  }
+                                }}
                                 id={`year-${year}`}
+                                onClick={(e) => e.stopPropagation()}
                               />
                               <label
                                 htmlFor={`year-${year}`}
                                 className="text-sm font-medium text-slate-900 cursor-pointer flex-1"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  toggleYear(year);
+                                }}
                               >
                                 {year} Survey
                               </label>
@@ -354,7 +391,7 @@ export default function MemberNetworkPageNew() {
                     )}
                     {selectedYears.length > 0 && (
                       <p className="text-xs text-slate-500 pt-2 border-t border-slate-200">
-                        Showing {filteredProfiles.length} profile{filteredProfiles.length !== 1 ? 's' : ''} with selected year{selectedYears.length !== 1 ? 's' : ''}
+                        Showing {filteredProfiles.length} profile{filteredProfiles.length !== 1 ? 's' : ''} with all selected year{selectedYears.length !== 1 ? 's' : ''} ({selectedYears.join(', ')})
                       </p>
                     )}
                     </CardContent>

@@ -498,35 +498,101 @@ const AdminV2 = () => {
     }));
   }, [membershipRequests]);
 
-  // Application lifetime data (last 7 days - same as bar chart)
+  // Application lifetime data - cumulative totals over time
   const lifetimeData = useMemo(() => {
-    const last7Days = Array.from({ length: 7 }, (_, i) => {
-      const date = new Date();
-      date.setDate(date.getDate() - (6 - i));
-      return date.toISOString().split('T')[0];
-    });
+    if (membershipRequests.length === 0) {
+      return [];
+    }
 
-    return last7Days.map(date => {
-      // Count applications created on this specific date
-      const dayRequests = membershipRequests.filter(r => 
-        r.created_at && r.created_at.split('T')[0] === date
-      );
+    // Sort requests by creation date
+    const sortedRequests = [...membershipRequests]
+      .filter(r => r.created_at)
+      .sort((a, b) => new Date(a.created_at!).getTime() - new Date(b.created_at!).getTime());
 
-      // Format date for display
-      const displayDate = new Date(date).toLocaleDateString('en-US', { 
+    if (sortedRequests.length === 0) {
+      return [];
+    }
+
+    // Get date range from first application to today
+    const firstDate = new Date(sortedRequests[0].created_at!);
+    const today = new Date();
+    
+    // Group by month for better visualization
+    const monthlyData: Record<string, {
+      date: string;
+      dateValue: string;
+      applications: number;
+      approved: number;
+      rejected: number;
+      pending: number;
+    }> = {};
+
+    // Initialize all months from first application to today
+    const currentDate = new Date(firstDate);
+    currentDate.setDate(1); // Start of month
+    
+    while (currentDate <= today) {
+      const monthKey = currentDate.toISOString().slice(0, 7); // YYYY-MM
+      const displayDate = currentDate.toLocaleDateString('en-US', { 
         month: 'short', 
-        day: 'numeric'
+        year: 'numeric'
+      });
+      
+      monthlyData[monthKey] = {
+        date: displayDate,
+        dateValue: monthKey,
+        applications: 0,
+        approved: 0,
+        rejected: 0,
+        pending: 0
+      };
+      
+      // Move to next month
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+
+    // Convert to array and calculate cumulative values
+    const result: Array<{
+      date: string;
+      dateValue: string;
+      applications: number;
+      approved: number;
+      rejected: number;
+      pending: number;
+    }> = [];
+
+    let runningApplications = 0;
+    let runningApproved = 0;
+    let runningRejected = 0;
+    let runningPending = 0;
+
+    // Sort months chronologically
+    const sortedMonths = Object.keys(monthlyData).sort();
+
+    sortedMonths.forEach(monthKey => {
+      // Count new applications created in this specific month
+      const monthRequests = sortedRequests.filter(r => {
+        const rDate = new Date(r.created_at!);
+        return rDate.toISOString().slice(0, 7) === monthKey;
       });
 
-      return {
-        date: displayDate,
-        dateValue: date,
-        applications: dayRequests.length,
-        approved: dayRequests.filter(r => r.status === 'approved').length,
-        rejected: dayRequests.filter(r => r.status === 'rejected').length,
-        pending: dayRequests.filter(r => r.status === 'pending').length
-      };
+      // Add new applications to running totals (cumulative)
+      runningApplications += monthRequests.length;
+      runningApproved += monthRequests.filter(r => r.status === 'approved').length;
+      runningRejected += monthRequests.filter(r => r.status === 'rejected').length;
+      runningPending += monthRequests.filter(r => r.status === 'pending').length;
+
+      result.push({
+        date: monthlyData[monthKey].date,
+        dateValue: monthlyData[monthKey].dateValue,
+        applications: runningApplications,
+        approved: runningApproved,
+        rejected: runningRejected,
+        pending: runningPending
+      });
     });
+
+    return result;
   }, [membershipRequests]);
 
   if (userRole !== 'admin') {
@@ -802,8 +868,8 @@ const AdminV2 = () => {
                       {/* Application Lifetime Chart */}
                       <Card className="border border-slate-200 bg-white shadow-sm">
                         <CardHeader className="border-b border-slate-200">
-                          <CardTitle className="text-lg font-semibold text-slate-900">Application Lifetime</CardTitle>
-                          <CardDescription className="text-slate-500">Number of applications over the last 7 days</CardDescription>
+                          <CardTitle className="text-lg font-semibold text-slate-900">Lifetime Applications</CardTitle>
+                          <CardDescription className="text-slate-500">Cumulative total of all applications over time</CardDescription>
                         </CardHeader>
                         <CardContent className="pt-6">
                           <ResponsiveContainer width="100%" height={300}>
