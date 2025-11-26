@@ -67,7 +67,7 @@ const ForgotPassword = () => {
           <CardHeader className="text-center pb-4 sm:pb-6 pt-6 sm:pt-8">
             <div className="flex justify-center mb-3 sm:mb-4">
               <img 
-                src="/CFF LOGO.png" 
+                src="/cff-logo.png" 
                 alt="CFF Logo" 
                 className="h-12 sm:h-14 md:h-16 w-auto object-contain"
               />
@@ -123,7 +123,7 @@ const ForgotPassword = () => {
         <CardHeader className="text-center pb-4 sm:pb-6 pt-6 sm:pt-8">
           <div className="flex justify-center mb-3 sm:mb-4">
             <img 
-              src="/CFF LOGO.png" 
+              src="/cff-logo.png" 
               alt="CFF Logo" 
               className="h-12 sm:h-14 md:h-16 w-auto object-contain"
             />

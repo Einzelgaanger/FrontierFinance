@@ -155,10 +155,10 @@ const ResetPassword = () => {
           <CardHeader className="text-center pb-4 sm:pb-6 pt-6 sm:pt-8">
             <div className="flex justify-center mb-3 sm:mb-4">
               <img 
-                src="/CFF LOGO.png" 
-                alt="CFF Logo" 
-                className="h-12 sm:h-14 md:h-16 w-auto object-contain"
-              />
+              src="/cff-logo.png" 
+              alt="CFF Logo" 
+              className="h-12 sm:h-14 md:h-16 w-auto object-contain"
+            />
             </div>
             <CardTitle className="text-xl sm:text-2xl font-bold text-white">Password Updated!</CardTitle>
             <CardDescription className="text-white/90 text-sm sm:text-base">
@@ -192,7 +192,7 @@ const ResetPassword = () => {
         <CardHeader className="text-center pb-4 sm:pb-6 pt-6 sm:pt-8">
           <div className="flex justify-center mb-3 sm:mb-4">
             <img 
-              src="/CFF LOGO.png" 
+              src="/cff-logo.png" 
               alt="CFF Logo" 
               className="h-12 sm:h-14 md:h-16 w-auto object-contain"
             />

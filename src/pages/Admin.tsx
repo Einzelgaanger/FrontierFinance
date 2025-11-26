@@ -861,7 +861,7 @@ const Admin = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <img 
-                src="/CFF LOGO.png" 
+                src="/cff-logo.png" 
                 alt="CFF Logo" 
                 className="h-10 w-auto object-contain"
               />
