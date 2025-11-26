@@ -1,24 +1,228 @@
-# Launch+ CRM Platform - Scope of Work
+# Launch+ CRM Platform - Comprehensive Scope of Work
+
+## Document Information
+- **Project Name:** Launch+ CRM Platform
+- **Version:** 2.0
+- **Date:** November 2025
+- **Prepared For:** Collaborative for Frontier Finance (CFF)
+- **Prepared By:** Development Team
+- **Document Status:** Final Scope
+
+---
 
 ## Executive Summary
 
-The Launch+ CRM Platform is a comprehensive fund manager assessment and management system designed to streamline the evaluation, onboarding, and management of Small Business Growth Funds seeking to participate in the LAUNCH+ program. The platform will handle the complete lifecycle from initial eligibility assessment through to ongoing fund manager relationship management.
+The Launch+ CRM Platform is a comprehensive fund manager assessment and management system designed to streamline the evaluation, onboarding, and management of Small Business Growth Funds seeking to participate in the LAUNCH+ program. This platform will serve as the central operational hub for CFF's Mauritius-domiciled fund administration platform (structured as a Variable Capital Company - VCC).
+
+### Business Context
+
+Small Business Growth Funds (SGFs) face systemic barriers in accessing institutional and development capital. Despite over 100 funds targeting $2.25 billion for Africa's "missing middle," only one-third of this capital has been secured. The Launch+ platform addresses this "Hourglass Dilemma" by providing:
+
+1. **Shared Services** (mandatory, Phase I, partially subsidized):
+   - Back-office services (accounting, finance, tax, legal, HR)
+   - Fund administration services
+   - Capacity building and knowledge services
+
+2. **Capital Support** (optional, Phase II, repayable):
+   - Op-Ex lines of credit
+   - Warehousing lines of credit
+
+### Platform Objectives
+
+The CRM platform will enable CFF to:
+- **Assess** fund manager eligibility using standardized, objective criteria
+- **Manage** multi-stage application processes from initial inquiry to cohort onboarding
+- **Score** and rank applicants transparently using weighted evaluation matrices
+- **Track** fund manager relationships, progress, and service utilization
+- **Generate** comprehensive reports and analytics on the pipeline and cohort performance
+- **Communicate** effectively with fund managers throughout their journey
+- **Support** decision-making for investment committee and operations team
+
+### Expected Business Impact
+
+- **Efficiency Gains:** Reduce application processing time by 60%
+- **Scale:** Support 100+ fund manager applications annually
+- **Quality:** Improve assessment consistency and reduce bias
+- **Transparency:** Provide clear, documented rationale for all decisions
+- **Insights:** Enable data-driven decision making for program optimization
 
 ---
 
 ## 1. Project Overview
 
 ### 1.1 Purpose
+
 To develop a web-based CRM platform that enables CFF to:
-- Assess fund manager eligibility using standardized criteria
-- Manage multi-stage application processes
-- Score and rank applicants objectively
-- Track fund manager relationships and progress
-- Generate reports and analytics on the pipeline
+- **Assess** fund manager eligibility using standardized, evidence-based criteria
+- **Manage** complex multi-stage application processes with workflow automation
+- **Score** and rank applicants objectively with transparent, auditable methodologies
+- **Track** comprehensive fund manager relationships, interactions, and program progress
+- **Generate** actionable reports and analytics on pipeline health and cohort performance
+- **Communicate** professionally with fund managers through integrated channels
+- **Support** strategic decision-making with data-driven insights
 
 ### 1.2 Target Users
-- **Internal Users**: CFF operations team, investment committee members, administrators
-- **External Users**: Fund managers applying to the LAUNCH+ program
+
+#### Internal Users (CFF Team)
+1. **System Administrators**
+   - Full system access and configuration
+   - User management and permissions
+   - System monitoring and maintenance
+   - Approximately 2-3 users
+
+2. **Operations Staff (Primary Users)**
+   - Application processing and management
+   - Fund manager communication
+   - Document management
+   - Day-to-day CRM operations
+   - Approximately 5-8 users
+
+3. **Reviewers / Analysts**
+   - Application review and assessment
+   - Scoring and commentary
+   - Due diligence support
+   - Approximately 4-6 users
+
+4. **Investment Committee Members**
+   - Read access to applications
+   - Voting/decision making
+   - Committee reports access
+   - Approximately 5-10 users
+
+5. **Senior Leadership**
+   - Executive dashboards
+   - Strategic reports
+   - High-level analytics
+   - Approximately 2-4 users
+
+#### External Users (Fund Managers)
+1. **Applicants**
+   - Complete eligibility and full applications
+   - Upload required documents
+   - Track application status
+   - Communicate with CFF team
+   - Estimated 200-500 users annually
+
+2. **Program Participants**
+   - Access to program resources
+   - Service utilization tracking
+   - Ongoing reporting requirements
+   - Estimated 30-50 active users per cohort
+
+### 1.3 User Personas & Stories
+
+#### Persona 1: Sarah - Operations Manager
+**Background:** Sarah manages the day-to-day operations of the Launch+ program. She processes applications, coordinates reviews, and communicates with fund managers.
+
+**Key User Stories:**
+- *As an operations manager, I want to quickly filter applications by stage so that I can prioritize my review queue*
+- *As an operations manager, I want to send templated emails to applicants so that I maintain consistent communication*
+- *As an operations manager, I want to assign reviewers to applications so that the workload is distributed fairly*
+- *As an operations manager, I want to track which documents are missing so that I can follow up with applicants*
+
+**Success Criteria:**
+- Can process 10+ applications per day
+- Reduces email response time by 50%
+- Zero applications lost or overlooked
+
+#### Persona 2: David - Senior Reviewer
+**Background:** David is an experienced investment professional who assesses fund manager applications and provides recommendations to the investment committee.
+
+**Key User Stories:**
+- *As a reviewer, I want to see all application responses in one place so that I can conduct thorough assessments*
+- *As a reviewer, I want to add private notes and ratings so that I can document my evaluation rationale*
+- *As a reviewer, I want to compare similar applications side-by-side so that I can make relative assessments*
+- *As a reviewer, I want to see the applicant's track record and team composition clearly so that I can assess their capability*
+
+**Success Criteria:**
+- Can complete detailed review in 2-3 hours per application
+- Can access all needed information without external systems
+- Has confidence in recommendation quality
+
+#### Persona 3: Amina - Fund Manager (Applicant)
+**Background:** Amina is a first-time fund manager in the pilot stage, seeking support through the Launch+ program.
+
+**Key User Stories:**
+- *As an applicant, I want to save my progress so that I can complete the application over multiple sessions*
+- *As an applicant, I want clear instructions for each question so that I provide the right information*
+- *As an applicant, I want to know my application status so that I can plan accordingly*
+- *As an applicant, I want to upload documents securely so that I know my sensitive information is protected*
+
+**Success Criteria:**
+- Can complete eligibility form in under 20 minutes
+- Understands requirements without external support
+- Feels confident about application process
+
+#### Persona 4: Michael - Investment Committee Member
+**Background:** Michael is a board member who reviews shortlisted applications and makes final decisions on cohort membership.
+
+**Key User Stories:**
+- *As a committee member, I want executive summaries of applications so that I can review efficiently*
+- *As a committee member, I want to see reviewer recommendations and scores so that I can make informed decisions*
+- *As a committee member, I want to vote on applications digitally so that decisions are documented*
+- *As a committee member, I want to see comparative cohort analytics so that I can assess overall quality*
+
+**Success Criteria:**
+- Can review 20+ applications in a 2-hour committee meeting
+- Has all needed decision-making information
+- Decisions are documented and auditable
+
+### 1.4 Business Requirements Summary
+
+#### Functional Requirements
+1. **Application Management**
+   - Multi-stage application process (eligibility → full application)
+   - Progress tracking and auto-save
+   - Document upload and management
+   - Application status workflow
+
+2. **Assessment & Scoring**
+   - Automated scoring based on defined criteria
+   - Manual reviewer assessments
+   - Configurable scoring weights
+   - Audit trail for all scoring decisions
+
+3. **CRM & Relationship Management**
+   - Comprehensive fund manager profiles
+   - Communication history tracking
+   - Activity timeline and notes
+   - Cohort assignment and tracking
+
+4. **Reporting & Analytics**
+   - Pipeline dashboards
+   - Cohort analytics
+   - Assessment reports
+   - Executive summaries
+
+5. **Communication**
+   - Email integration
+   - Templated communications
+   - Notification system
+   - In-app messaging
+
+#### Non-Functional Requirements
+1. **Performance**
+   - Page load time < 2 seconds
+   - Support for 50+ concurrent users
+   - Large file uploads (100MB+) within 2 minutes
+
+2. **Security**
+   - End-to-end encryption for sensitive data
+   - Role-based access control
+   - Audit logging of all actions
+   - GDPR compliance
+
+3. **Usability**
+   - Mobile-responsive design
+   - Intuitive navigation (< 3 clicks to any feature)
+   - Accessibility (WCAG 2.1 Level AA)
+   - Multi-language support (English, French - future)
+
+4. **Reliability**
+   - 99.9% uptime
+   - Automated backups (daily)
+   - Disaster recovery plan
+   - Data retention for 7 years
 
 ---
 
@@ -372,25 +576,326 @@ To develop a web-based CRM platform that enables CFF to:
 ## 3. Technical Architecture
 
 ### 3.1 Technology Stack
-- **Frontend**: React, TypeScript, Tailwind CSS, shadcn/ui components
-- **Backend**: Supabase (PostgreSQL database, Authentication, Storage, Edge Functions)
-- **Deployment**: Vercel (frontend), Supabase Cloud (backend)
-- **Email**: Resend or SendGrid
-- **File Storage**: Supabase Storage with CDN
-- **Analytics**: Custom analytics dashboard
 
-### 3.2 Security & Compliance
-- End-to-end encryption for sensitive data
-- GDPR/data protection compliance considerations
-- Regular security audits
-- Backup and disaster recovery procedures
-- Data retention policies
+#### Frontend Layer
+- **Framework**: React 18+ with TypeScript
+- **Styling**: Tailwind CSS with custom design system
+- **UI Components**: shadcn/ui component library
+- **State Management**: React Query (TanStack Query) for server state, Zustand for client state
+- **Form Management**: React Hook Form with Zod validation
+- **Routing**: React Router v6
+- **Build Tool**: Vite
+- **Testing**: Vitest (unit), Playwright (E2E)
 
-### 3.3 Scalability
-- Designed to handle 500+ applications per year
-- Support for 50+ concurrent internal users
-- Cloud-based infrastructure for automatic scaling
-- Performance optimization for large file uploads
+#### Backend Layer
+- **Database**: PostgreSQL (via Supabase)
+  - Relational data model
+  - Full-text search capabilities
+  - Row-level security (RLS)
+  - Real-time subscriptions
+- **Authentication**: Supabase Auth
+  - Email/password authentication
+  - Magic link support
+  - JWT tokens
+  - Multi-factor authentication (MFA) support
+- **Storage**: Supabase Storage
+  - Secure file storage
+  - Access control policies
+  - CDN integration
+  - Virus scanning
+- **API**: Supabase Edge Functions (Deno)
+  - RESTful endpoints
+  - Webhook handlers
+  - Background jobs
+  - Email sending logic
+
+#### Infrastructure & DevOps
+- **Hosting**: Vercel (frontend), Supabase Cloud (backend)
+- **CDN**: Vercel Edge Network
+- **CI/CD**: GitHub Actions
+- **Monitoring**: Sentry (error tracking), Vercel Analytics
+- **Email Service**: Resend or SendGrid
+- **SMS** (optional): Twilio
+- **Video Processing**: Cloudinary or Mux (for video uploads)
+
+### 3.2 Database Schema Design
+
+#### Core Tables
+
+**1. fund_managers**
+```sql
+- id (uuid, primary key)
+- email (text, unique)
+- first_name (text)
+- last_name (text)
+- phone (text)
+- organization_name (text)
+- fund_name (text)
+- website (text)
+- linkedin_url (text)
+- created_at (timestamp)
+- updated_at (timestamp)
+- status (enum: active, inactive, blacklisted)
+```
+
+**2. applications**
+```sql
+- id (uuid, primary key)
+- fund_manager_id (uuid, foreign key)
+- application_type (enum: eligibility, full)
+- status (enum: draft, submitted, under_review, committee_review, approved, rejected, waitlisted)
+- submission_date (timestamp)
+- decision_date (timestamp)
+- cohort_id (uuid, foreign key, nullable)
+- created_at (timestamp)
+- updated_at (timestamp)
+```
+
+**3. application_responses**
+```sql
+- id (uuid, primary key)
+- application_id (uuid, foreign key)
+- section_name (text)
+- question_id (text)
+- question_text (text)
+- response_value (jsonb)
+- created_at (timestamp)
+- updated_at (timestamp)
+```
+
+**4. documents**
+```sql
+- id (uuid, primary key)
+- application_id (uuid, foreign key)
+- fund_manager_id (uuid, foreign key)
+- document_type (enum: pitch_deck, cv, cap_table, ppm, video, other)
+- file_name (text)
+- file_size (bigint)
+- file_path (text)
+- mime_type (text)
+- uploaded_by (uuid, foreign key to users)
+- uploaded_at (timestamp)
+- version (integer)
+```
+
+**5. assessments**
+```sql
+- id (uuid, primary key)
+- application_id (uuid, foreign key)
+- reviewer_id (uuid, foreign key to users)
+- assessment_type (enum: automated, manual, committee)
+- overall_score (numeric)
+- recommendation (enum: strong_accept, accept, neutral, decline, strong_decline)
+- comments (text)
+- status (enum: in_progress, completed)
+- created_at (timestamp)
+- updated_at (timestamp)
+```
+
+**6. assessment_scores**
+```sql
+- id (uuid, primary key)
+- assessment_id (uuid, foreign key)
+- criterion_name (text)
+- criterion_category (enum: primary, secondary)
+- score (numeric)
+- max_score (numeric)
+- notes (text)
+- created_at (timestamp)
+```
+
+**7. cohorts**
+```sql
+- id (uuid, primary key)
+- name (text)
+- start_date (date)
+- end_date (date)
+- capacity (integer)
+- current_enrollment (integer)
+- status (enum: planning, open, in_progress, completed)
+- created_at (timestamp)
+- updated_at (timestamp)
+```
+
+**8. communications**
+```sql
+- id (uuid, primary key)
+- fund_manager_id (uuid, foreign key)
+- application_id (uuid, foreign key, nullable)
+- type (enum: email, sms, note)
+- direction (enum: inbound, outbound)
+- subject (text)
+- body (text)
+- template_id (uuid, nullable)
+- sent_by (uuid, foreign key to users)
+- sent_at (timestamp)
+- opened_at (timestamp, nullable)
+- clicked_at (timestamp, nullable)
+```
+
+**9. activity_log**
+```sql
+- id (uuid, primary key)
+- user_id (uuid, foreign key)
+- entity_type (text)
+- entity_id (uuid)
+- action (text)
+- old_value (jsonb, nullable)
+- new_value (jsonb, nullable)
+- ip_address (text)
+- user_agent (text)
+- created_at (timestamp)
+```
+
+### 3.3 Security & Compliance
+
+#### Data Security
+1. **Encryption**
+   - Data at rest: AES-256 encryption
+   - Data in transit: TLS 1.3
+   - Database field-level encryption for PII
+
+2. **Access Control**
+   - Row-level security (RLS) policies on all tables
+   - Role-based permissions (Admin, Operations, Reviewer, Committee, Applicant)
+   - IP whitelisting for admin access (optional)
+   - Session timeout after 30 minutes of inactivity
+
+3. **Authentication**
+   - Password requirements: min 12 characters, uppercase, lowercase, number, special character
+   - Account lockout after 5 failed attempts
+   - Password reset with time-limited tokens
+   - Optional two-factor authentication (TOTP)
+
+4. **Audit Trail**
+   - All data modifications logged
+   - User activity tracking
+   - Document access logs
+   - Retention: 7 years
+
+#### Compliance
+
+**GDPR Compliance:**
+- Data minimization (collect only necessary information)
+- Right to access (users can download their data)
+- Right to erasure (data deletion capability)
+- Consent management
+- Data processing agreements
+- Privacy policy and terms of service
+
+**Data Protection:**
+- Regular backups (daily, 30-day retention)
+- Disaster recovery plan (RTO: 4 hours, RPO: 1 hour)
+- Data residency compliance (Mauritius/Africa)
+- Third-party vendor security assessments
+
+**Application Security:**
+- Regular penetration testing (annually)
+- Vulnerability scanning (weekly)
+- Security patch management
+- Incident response plan
+- Security awareness training for users
+
+### 3.4 Integration Architecture
+
+#### External Systems
+1. **Email Service** (Resend/SendGrid)
+   - Transactional emails
+   - Campaign emails
+   - Webhooks for delivery tracking
+
+2. **Storage Service** (Supabase Storage)
+   - Document storage
+   - Video hosting
+   - CDN delivery
+
+3. **Analytics** (Custom)
+   - Application funnel tracking
+   - User behavior analytics
+   - Performance metrics
+
+4. **Future Integrations**
+   - Accounting systems (QuickBooks, Xero)
+   - Calendar (Google Calendar, Outlook)
+   - CRM systems (Salesforce integration for partnership scenarios)
+
+#### API Design
+- RESTful API endpoints
+- GraphQL for complex queries (future consideration)
+- Webhook support for event notifications
+- Rate limiting: 100 requests/minute per user
+- API versioning (v1, v2, etc.)
+- Comprehensive API documentation (OpenAPI/Swagger)
+
+### 3.5 Scalability & Performance
+
+#### Performance Targets
+- **Page Load:** < 2 seconds (desktop), < 3 seconds (mobile)
+- **API Response:** < 200ms (p95)
+- **Database Queries:** < 100ms (p95)
+- **File Upload:** 100MB file in < 2 minutes
+- **Concurrent Users:** 50+ without degradation
+
+#### Scalability Strategy
+1. **Horizontal Scaling**
+   - Serverless edge functions auto-scale
+   - Database read replicas for reporting
+   - CDN for static assets
+
+2. **Caching Strategy**
+   - Application-level caching (React Query)
+   - API response caching (5-15 minutes for static data)
+   - CDN caching for documents
+
+3. **Database Optimization**
+   - Indexed columns for frequent queries
+   - Materialized views for complex reports
+   - Query optimization and monitoring
+   - Connection pooling
+
+4. **Load Testing**
+   - Simulate 100+ concurrent users
+   - Stress test file upload system
+   - Validate backup/restore procedures
+
+### 3.6 Deployment Architecture
+
+#### Environments
+1. **Development**
+   - Local development with hot reload
+   - Supabase local development
+   - Mock data and seed scripts
+
+2. **Staging**
+   - Production-like environment
+   - Full integration testing
+   - User acceptance testing (UAT)
+   - Preview deployments for PRs
+
+3. **Production**
+   - Blue-green deployment strategy
+   - Zero-downtime deployments
+   - Automated rollback capability
+   - Health checks and monitoring
+
+#### CI/CD Pipeline
+1. **Code Quality**
+   - TypeScript type checking
+   - ESLint linting
+   - Prettier formatting
+   - Unit test coverage (>80%)
+
+2. **Testing**
+   - Unit tests (Vitest)
+   - Integration tests
+   - E2E tests (Playwright) on critical paths
+   - Visual regression testing
+
+3. **Deployment**
+   - Automated deployment on merge to main
+   - Database migrations (Supabase)
+   - Edge function deployment
+   - Post-deployment smoke tests
 
 ---
 
@@ -602,40 +1107,585 @@ Priority: Q2 2026
 
 ---
 
-## Appendices
+---
 
-### Appendix A: Sample Scoring Calculation
-[Include detailed example of how scoring works with sample data]
+## 6. Risk Assessment & Mitigation
 
-### Appendix B: Data Model Overview
-[High-level entity relationship diagram]
+### 6.1 Technical Risks
 
-### Appendix C: User Roles & Permissions Matrix
-[Detailed breakdown of what each role can access/do]
+#### Risk 1: Large File Upload Performance
+**Probability:** Medium  
+**Impact:** High  
+**Description:** Video files (up to 100MB) may cause performance issues or timeouts.
+
+**Mitigation Strategies:**
+- Implement chunked file uploads
+- Use cloud-based video processing (Cloudinary/Mux)
+- Provide progress indicators
+- Set clear file size limits and format restrictions
+- Compress videos on client-side before upload
+- Implement resumable uploads
+
+**Contingency Plan:**
+- Alternative: Provide external link option for large videos
+- Fallback to email submission for problematic uploads
 
 ---
 
-**Document Version:** 1.0  
-**Date:** November 26, 2025  
-**Prepared By:** [Developer Name]  
-**For:** Collaborative for Frontier Finance (CFF)  
-**Contact:** [Contact Information]
+#### Risk 2: Data Migration Complexity
+**Probability:** Medium  
+**Impact:** Medium  
+**Description:** Migrating existing applicant data from spreadsheets/emails may be complex and error-prone.
+
+**Mitigation Strategies:**
+- Design flexible import tools
+- Create data validation scripts
+- Perform dry-run migrations
+- Maintain parallel systems during transition
+- Document data mapping comprehensively
+
+**Contingency Plan:**
+- Manual data entry for initial cohort
+- Phased migration approach
+- Data quality verification checkpoints
 
 ---
 
-## Approval
+#### Risk 3: Third-Party Service Downtime
+**Probability:** Low  
+**Impact:** High  
+**Description:** Dependency on Supabase, Vercel, or email services may create single points of failure.
 
-**Prepared by:**
-- Name: _______________________
-- Title: _______________________
-- Date: _______________________
+**Mitigation Strategies:**
+- Implement graceful degradation
+- Queue email sending for retry
+- Monitor third-party service status
+- Maintain service-level agreements (SLAs)
+- Build offline capabilities where possible
 
-**Reviewed and Approved by:**
-- Name: Arnold Byarugaba
-- Title: Chief Operating Officer and Head of Networks
-- Date: _______________________
+**Contingency Plan:**
+- Multi-region deployment for critical services
+- Backup email service provider
+- Status page for applicants during outages
 
-**Client Acceptance:**
-- Name: _______________________
-- Title: _______________________
-- Date: _______________________
+---
+
+### 6.2 Business Risks
+
+#### Risk 4: Low User Adoption (Internal)
+**Probability:** Medium  
+**Impact:** High  
+**Description:** CFF staff may resist transitioning from existing processes to new platform.
+
+**Mitigation Strategies:**
+- Involve key users in design process
+- Provide comprehensive training
+- Demonstrate clear efficiency gains
+- Offer ongoing support and feedback channels
+- Phase rollout to reduce overwhelm
+
+**Contingency Plan:**
+- Extended parallel operation with old system
+- Additional training sessions
+- Assign "power users" as champions
+
+---
+
+#### Risk 5: Incomplete Applications
+**Probability:** High  
+**Impact:** Medium  
+**Description:** Applicants may submit incomplete applications, causing processing delays.
+
+**Mitigation Strategies:**
+- Implement required field validation
+- Provide clear progress indicators
+- Send reminder emails for incomplete sections
+- Create application checklist
+- Offer preview before submission
+
+**Contingency Plan:**
+- Operations team follows up manually
+- Grace period for completing missing items
+- Automated reminder workflow
+
+---
+
+#### Risk 6: Scoring Criteria Changes
+**Probability:** Medium  
+**Impact:** Medium  
+**Description:** CFF may need to modify scoring criteria during active application cycles.
+
+**Mitigation Strategies:**
+- Design configurable scoring engine
+- Version scoring criteria
+- Allow historical score recalculation
+- Document all changes
+- Grandfather existing applications
+
+**Contingency Plan:**
+- Manual score adjustments with audit trail
+- Freeze criteria during application windows
+
+---
+
+### 6.3 Security Risks
+
+#### Risk 7: Data Breach
+**Probability:** Low  
+**Impact:** Critical  
+**Description:** Unauthorized access to sensitive fund manager data could damage reputation and cause legal issues.
+
+**Mitigation Strategies:**
+- Implement comprehensive security controls (see Section 3.3)
+- Regular security audits
+- Penetration testing
+- Employee security training
+- Incident response plan
+- Cyber insurance
+
+**Contingency Plan:**
+- Immediate breach notification protocol
+- Forensic investigation
+- Affected party notification
+- Legal counsel engagement
+
+---
+
+#### Risk 8: Unauthorized Access
+**Probability:** Medium  
+**Impact:** High  
+**Description:** Weak passwords or compromised accounts could expose confidential information.
+
+**Mitigation Strategies:**
+- Enforce strong password policies
+- Implement two-factor authentication
+- Session timeout controls
+- Regular access reviews
+- Activity monitoring and alerts
+
+**Contingency Plan:**
+- Immediate account suspension
+- Password reset requirements
+- Access audit and review
+
+---
+
+### 6.4 Operational Risks
+
+#### Risk 9: Key Personnel Departure
+**Probability:** Medium  
+**Impact:** High  
+**Description:** Loss of development team members could delay project or impact maintenance.
+
+**Mitigation Strategies:**
+- Comprehensive documentation
+- Code review processes
+- Knowledge transfer sessions
+- Cross-training team members
+- Maintain vendor relationships
+
+**Contingency Plan:**
+- Engage backup developers
+- Extend timelines if necessary
+- Prioritize critical features
+
+---
+
+#### Risk 10: Budget Overruns
+**Probability:** Medium  
+**Impact:** Medium  
+**Description:** Scope creep or unforeseen complexity could increase costs beyond budget.
+
+**Mitigation Strategies:**
+- Phased approach with clear milestones
+- Regular budget reviews
+- Change request process
+- Time and materials tracking
+- MVP-first approach
+
+**Contingency Plan:**
+- Descope lower-priority features
+- Extend timeline to spread costs
+- Seek additional funding if justified
+
+---
+
+## 7. Success Metrics & KPIs
+
+### 7.1 Application Processing Metrics
+
+| Metric | Baseline (Current) | Target (Year 1) | Measurement Method |
+|--------|-------------------|-----------------|-------------------|
+| **Application Processing Time** | 14 days average | 5 days average | Time from submission to first review |
+| **Application Completion Rate** | 45% | 75% | % of started applications submitted |
+| **Document Upload Success Rate** | N/A | 95% | Successful uploads / attempted uploads |
+| **Application Error Rate** | N/A | <2% | Applications with submission errors |
+
+### 7.2 User Adoption & Satisfaction Metrics
+
+| Metric | Target | Measurement Method |
+|--------|--------|-------------------|
+| **Internal User Adoption** | 100% by Month 2 | Active users / total operations staff |
+| **Applicant Satisfaction** | 4.0/5.0 | Post-submission survey (NPS) |
+| **System Usability Score (SUS)** | >75 | Quarterly usability survey |
+| **Support Ticket Volume** | <10/month after Month 3 | Tickets logged in system |
+
+### 7.3 Efficiency Metrics
+
+| Metric | Baseline | Target (Year 1) | Business Impact |
+|--------|----------|-----------------|-----------------|
+| **Time to First Response** | 5 days | 24 hours | Improved applicant experience |
+| **Reviewer Time Per Application** | 6 hours | 2-3 hours | 50% efficiency gain |
+| **Applications Per Operations Staff** | 10/month | 25/month | 2.5x productivity |
+| **Committee Meeting Prep Time** | 8 hours | 2 hours | 75% time savings |
+
+### 7.4 Quality Metrics
+
+| Metric | Target | Measurement Method |
+|--------|--------|-------------------|
+| **Scoring Consistency** | >90% | Inter-rater reliability between reviewers |
+| **Decision Appeal Rate** | <5% | Applicants requesting review / total decisions |
+| **Data Accuracy** | 99% | Regular data audits |
+| **System Uptime** | 99.9% | Monitoring tools |
+
+### 7.5 Business Outcome Metrics
+
+| Metric | Year 1 Target | Year 2 Target | Strategic Value |
+|--------|---------------|---------------|-----------------|
+| **Applications Processed** | 150 | 300 | Double pipeline capacity |
+| **Cohort Fill Rate** | 90% | 95% | Optimal cohort composition |
+| **Time to Cohort Launch** | 6 months | 4 months | Faster time to market |
+| **Applicant Pipeline Value** | $500M AUM | $1B AUM | Market sizing |
+| **Cost Per Application** | $500 | $300 | 40% cost reduction |
+
+### 7.6 Measurement Dashboard
+
+**Weekly Metrics:**
+- Active applications by stage
+- Average processing time (current week)
+- Submission volume trends
+- System performance metrics
+
+**Monthly Metrics:**
+- Cohort progress
+- User adoption rates
+- Support ticket analysis
+- Cost per application
+
+**Quarterly Metrics:**
+- Overall program health
+- Strategic KPIs
+- User satisfaction surveys
+- ROI analysis
+
+---
+
+## 8. Training & Change Management
+
+### 8.1 Training Program
+
+#### Phase 1: Core Team Training (Week 19)
+**Audience:** Operations managers, administrators  
+**Duration:** 2 days (16 hours)  
+**Format:** In-person or virtual
+
+**Topics:**
+- System overview and navigation
+- User management and permissions
+- Application processing workflows
+- Document management
+- Communication tools
+- Reporting and analytics
+- Troubleshooting common issues
+
+**Deliverables:**
+- Training manual (100+ pages)
+- Video tutorials (10+ videos)
+- Quick reference guides
+- Hands-on exercises
+
+---
+
+#### Phase 2: Extended Team Training (Week 20)
+**Audience:** Reviewers, committee members  
+**Duration:** 1 day (8 hours)  
+**Format:** Virtual sessions
+
+**Topics:**
+- Application review process
+- Scoring methodology
+- Decision documentation
+- Committee workflows
+- Report access and interpretation
+
+**Deliverables:**
+- Role-specific guides
+- Video walkthroughs
+- FAQ documents
+
+---
+
+#### Phase 3: Applicant Onboarding (Ongoing)
+**Audience:** Fund managers  
+**Duration:** Self-paced  
+**Format:** Online resources
+
+**Topics:**
+- How to apply
+- Document requirements
+- Application tips
+- Technical support
+
+**Deliverables:**
+- Applicant guide
+- Video tutorials
+- FAQ page
+- Help center
+
+---
+
+### 8.2 Change Management Strategy
+
+#### Communication Plan
+1. **Pre-Launch (Weeks 1-18)**
+   - Monthly updates to stakeholders
+   - Demo sessions for key users
+   - Feedback collection
+
+2. **Launch (Weeks 19-20)**
+   - Launch announcement
+   - Training sessions
+   - Support availability
+   - Success stories
+
+3. **Post-Launch (Months 1-3)**
+   - Weekly check-ins
+   - User feedback sessions
+   - Quick wins communication
+   - Iterative improvements
+
+#### Stakeholder Engagement
+| Stakeholder Group | Engagement Strategy | Frequency |
+|-------------------|-------------------|-----------|
+| **Executive Leadership** | Strategic updates, ROI reports | Monthly |
+| **Operations Team** | Working sessions, feedback loops | Weekly |
+| **Reviewers** | Training refreshers, best practices | Bi-weekly |
+| **IT/Technical Team** | Technical reviews, security audits | Monthly |
+| **Fund Managers** | Newsletter, help resources | Monthly |
+
+#### Success Factors
+- **Executive Sponsorship:** Visible support from COO
+- **User Champions:** Identify 2-3 power users
+- **Quick Wins:** Demonstrate value early (Week 1)
+- **Feedback Loop:** Regular user input collection
+- **Continuous Improvement:** Monthly enhancement releases
+
+---
+
+## 9. Testing Strategy
+
+### 9.1 Testing Approach
+
+#### Unit Testing
+- **Coverage Target:** 80%+
+- **Tools:** Vitest, React Testing Library
+- **Scope:** Individual components, functions, utilities
+- **Responsibility:** Development team
+- **Frequency:** Every code commit
+
+#### Integration Testing
+- **Coverage Target:** Critical paths
+- **Tools:** Vitest, Supertest
+- **Scope:** API endpoints, database interactions, third-party integrations
+- **Responsibility:** Development team
+- **Frequency:** Before each deployment
+
+#### End-to-End (E2E) Testing
+- **Coverage Target:** 20+ critical user flows
+- **Tools:** Playwright
+- **Scope:** Complete user journeys (application submission, review, decision)
+- **Responsibility:** QA team
+- **Frequency:** Before production deployment
+
+**Critical User Flows:**
+1. New applicant completes eligibility form
+2. Applicant completes full application with documents
+3. Operations staff reviews application
+4. Reviewer scores application
+5. Committee member votes on application
+6. System sends decision email
+7. Admin generates cohort report
+8. Fund manager checks application status
+
+#### User Acceptance Testing (UAT)
+- **Duration:** 2 weeks (Week 18-19)
+- **Participants:** 5-8 CFF staff, 2-3 test applicants
+- **Scenarios:** Real-world workflows with test data
+- **Acceptance Criteria:** 90%+ scenario success rate
+
+**UAT Checklist:**
+- [ ] All critical workflows complete successfully
+- [ ] No blocking bugs
+- [ ] Performance meets targets
+- [ ] Training materials validated
+- [ ] User satisfaction score >4/5
+
+#### Performance Testing
+- **Tools:** k6, Lighthouse
+- **Scenarios:**
+  - 50 concurrent users
+  - 100 simultaneous logins
+  - 20 large file uploads
+  - Report generation with 500+ applications
+- **Success Criteria:** Meet performance targets (Section 3.5)
+
+#### Security Testing
+- **Tools:** OWASP ZAP, Manual penetration testing
+- **Scope:**
+  - Authentication vulnerabilities
+  - Authorization bypass
+  - SQL injection
+  - XSS attacks
+  - CSRF protection
+  - Data exposure
+- **Frequency:** Before production launch, then quarterly
+
+### 9.2 Bug Tracking & Resolution
+
+#### Priority Levels
+| Priority | Definition | Response Time | Resolution Time |
+|----------|-----------|---------------|-----------------|
+| **P0 - Critical** | System down, data loss | Immediate | 4 hours |
+| **P1 - High** | Major functionality broken | 4 hours | 24 hours |
+| **P2 - Medium** | Minor functionality issue | 24 hours | 1 week |
+| **P3 - Low** | Cosmetic, enhancement | 1 week | As scheduled |
+
+#### Bug Workflow
+1. Report bug with detailed reproduction steps
+2. Triage and assign priority
+3. Assign to developer
+4. Fix and test in development
+5. Deploy to staging for verification
+6. Release to production
+7. Verify fix with reporter
+
+---
+
+## 10. Deployment & Rollout Plan
+
+### 10.1 Pre-Launch Checklist
+
+**Technical Preparation:**
+- [ ] All code reviewed and merged
+- [ ] Database migrations tested
+- [ ] Edge functions deployed
+- [ ] Environment variables configured
+- [ ] SSL certificates valid
+- [ ] CDN configured
+- [ ] Backup systems verified
+- [ ] Monitoring alerts configured
+- [ ] Security scan completed (no critical issues)
+- [ ] Performance testing passed
+
+**Operational Preparation:**
+- [ ] Training completed (all users)
+- [ ] Documentation finalized
+- [ ] Support processes defined
+- [ ] Communication templates loaded
+- [ ] Test data cleared
+- [ ] User accounts created
+- [ ] Access permissions verified
+- [ ] Rollback plan documented
+
+**Business Readiness:**
+- [ ] Stakeholder sign-off received
+- [ ] Launch communications prepared
+- [ ] Support team briefed
+- [ ] Escalation procedures defined
+- [ ] Success metrics dashboard ready
+
+### 10.2 Rollout Strategy
+
+#### Phase 1: Soft Launch (Week 20)
+**Duration:** 1 week  
+**Scope:** Internal users only
+
+**Activities:**
+- Enable system for CFF operations team
+- Process 3-5 test applications end-to-end
+- Monitor system performance
+- Gather initial feedback
+- Address any critical issues
+
+**Success Criteria:**
+- Zero P0/P1 bugs
+- Operations team comfortable with system
+- Performance targets met
+
+---
+
+#### Phase 2: Limited External Launch (Week 21-22)
+**Duration:** 2 weeks  
+**Scope:** Invited applicants (10-15 fund managers)
+
+**Activities:**
+- Open applications to select fund managers
+- Provide white-glove support
+- Monitor application completion rates
+- Gather applicant feedback
+- Refine help documentation
+
+**Success Criteria:**
+- 80%+ application completion rate
+- Applicant satisfaction >4/5
+- No significant support issues
+
+---
+
+#### Phase 3: Full Launch (Week 23+)
+**Duration:** Ongoing  
+**Scope:** All applicants
+
+**Activities:**
+- Announce platform publicly
+- Open applications to all eligible fund managers
+- Scale support as needed
+- Monitor all KPIs
+- Continuous improvement
+
+**Success Criteria:**
+- All success metrics on track
+- System stable under load
+- User adoption targets met
+
+### 10.3 Post-Launch Support
+
+#### Support Tiers
+
+**Tier 1: Self-Service**
+- Help center / Knowledge base
+- Video tutorials
+- FAQ page
+- Chatbot (future)
+
+**Tier 2: Email Support**
+- support@frontierfinance.org
+- Response time: 24 hours
+- For general inquiries, how-to questions
+
+**Tier 3: Priority Support**
+- Dedicated support for CFF operations team
+- Response time: 2 hours
+- Slack channel or phone support
+
+**Tier 4: Development Team**
+- For bugs, technical issues
+- Escalated from Tier 3
+- Response time: 4 hours (P0), 24 hours (P1)
+
+#### Support Schedule
+- **Months 1-3:** Enhanced support (extended hours, daily check-ins)
+- **Months 4-6:** Standard support
+- **Months 7+:** Maintenance mode
+
+---
