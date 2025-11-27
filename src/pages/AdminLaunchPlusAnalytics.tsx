@@ -37,6 +37,11 @@ const AdminLaunchPlusAnalytics = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAssessment, setSelectedAssessment] = useState<Assessment | null>(null);
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     if (userRole !== 'admin') {
       navigate('/');
@@ -129,10 +134,6 @@ const AdminLaunchPlusAnalytics = () => {
       </div>
     );
   }
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-amber-50">
