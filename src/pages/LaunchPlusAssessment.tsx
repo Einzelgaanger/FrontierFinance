@@ -56,9 +56,8 @@ const LaunchPlusAssessment = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   
-  const { register, handleSubmit, watch, setValue, trigger, formState: { errors } } = useForm<AssessmentFormData>({
-    resolver: zodResolver(fullSchema),
-    mode: 'onTouched', // Only validate after user interacts with fields, prevents errors on mount
+  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<AssessmentFormData>({
+    mode: 'onBlur',
     defaultValues: {
       full_name: '',
       email: '',
@@ -68,22 +67,22 @@ const LaunchPlusAssessment = () => {
       linkedin_profile: '',
       address: '',
       other_social_media: '',
-      fund_stages: [], // Initialize as empty array
+      fund_stages: [],
       stage_explanation: '',
-      interested_services: [], // Initialize as empty array
-      geographical_focus: [], // Initialize as empty array
+      interested_services: [],
+      geographical_focus: [],
       legal_status: '',
       operations_vs_domicile: '',
-      capital_raised_grants: undefined,
-      capital_raised_first_loss: undefined,
-      capital_raised_equity: undefined,
-      capital_raised_debt: undefined,
-      capital_raised_senior: undefined,
-      capital_raised_other: undefined,
+      capital_raised_grants: 0,
+      capital_raised_first_loss: 0,
+      capital_raised_equity: 0,
+      capital_raised_debt: 0,
+      capital_raised_senior: 0,
+      capital_raised_other: 0,
       capital_raised_other_description: '',
-      investments_count: undefined,
-      capital_committed: undefined,
-      capital_disbursed: undefined,
+      investments_count: 0,
+      capital_committed: 0,
+      capital_disbursed: 0,
       program_expectations: '',
     },
   });
@@ -104,35 +103,36 @@ const LaunchPlusAssessment = () => {
       ? currentValues.filter(v => v !== value)
       : [...currentValues, value];
     setValue(field, newValues);
-    trigger(field);
   };
 
-  const validateSection = async (section: number): Promise<boolean> => {
-    let fieldsToValidate: (keyof AssessmentFormData)[] = [];
+  const validateSection = (section: number): boolean => {
+    const formData = watch();
     
-    switch(section) {
-      case 1:
-        fieldsToValidate = ['full_name', 'email', 'phone_whatsapp', 'fund_name', 'fund_website', 'linkedin_profile', 'address', 'other_social_media'];
-        break;
-      case 2:
-        fieldsToValidate = ['fund_stages', 'stage_explanation'];
-        break;
-      case 3:
-        fieldsToValidate = ['interested_services', 'geographical_focus', 'legal_status', 'operations_vs_domicile', 'program_expectations'];
-        break;
+    try {
+      switch(section) {
+        case 1:
+          section1Schema.parse(formData);
+          break;
+        case 2:
+          section2Schema.parse(formData);
+          break;
+        case 3:
+          section3Schema.parse(formData);
+          break;
+      }
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const firstError = error.issues[0];
+        const fieldName = firstError.path.join('.').replace(/_/g, ' ');
+        toast.error(`Please fill in: ${fieldName}`);
+      }
+      return false;
     }
-
-    const result = await trigger(fieldsToValidate);
-    
-    if (!result) {
-      toast.error('Please complete all required fields before proceeding');
-    }
-    
-    return result;
   };
 
-  const handleNext = async () => {
-    const isValid = await validateSection(currentSection);
+  const handleNext = () => {
+    const isValid = validateSection(currentSection);
     if (isValid && currentSection < totalSections) {
       setCurrentSection(currentSection + 1);
       window.scrollTo({ top: 0, behavior: 'instant' });
