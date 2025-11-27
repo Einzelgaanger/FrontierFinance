@@ -23,7 +23,8 @@ import {
   XCircle,
   Eye,
   Calendar,
-  RefreshCw
+  RefreshCw,
+  Rocket
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -426,6 +427,12 @@ const AdminDashboard = () => {
                     </Link>
                   </Button>
                   <Button asChild className="h-12 bg-purple-600 hover:bg-purple-700 text-white">
+                    <Link to="/admin/launch-plus-analytics" className="flex items-center justify-center">
+                      <Rocket className="w-5 h-5 mr-2" />
+                      LAUNCH+ Analytics
+                    </Link>
+                  </Button>
+                  <Button asChild className="h-12 bg-orange-600 hover:bg-orange-700 text-white">
                     <Link to="/admin" className="flex items-center justify-center">
                       <Settings className="w-5 h-5 mr-2" />
                       System Settings
