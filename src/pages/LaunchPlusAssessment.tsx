@@ -176,11 +176,10 @@ const LaunchPlusAssessment = () => {
         user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null
       };
       
-      const { data: insertData, error } = await supabase
+      const { error } = await supabase
         .from('launch_plus_assessments')
         // @ts-expect-error - TypeScript can't infer the exact shape, but validation ensures required fields exist
-        .insert([insertPayload])
-        .select();
+        .insert([insertPayload]);
 
       if (error) {
         console.error('Supabase submission error:', {
@@ -203,11 +202,7 @@ const LaunchPlusAssessment = () => {
         throw new Error(errorMessage);
       }
 
-      if (!insertData || insertData.length === 0) {
-        throw new Error('No data returned from server. Submission may have failed.');
-      }
-
-      console.log('Assessment submitted successfully:', insertData[0]?.id);
+      console.log('Assessment submitted successfully!');
       setIsSubmitted(true);
       toast.success('Assessment submitted successfully!');
       
