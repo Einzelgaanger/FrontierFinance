@@ -204,10 +204,14 @@ const LaunchPlusIntro = () => {
               <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-0 shadow-2xl border border-white/20 overflow-hidden group hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2">
                 <div className="relative h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px]">
                   <img 
-                    src="/Launch+1.jpg" 
+                    src="/Launch%2B1.jpg" 
                     alt="LAUNCH+ Network Gathering" 
                     className="w-full h-full object-cover"
                     loading="lazy"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/Launch+1.jpg";
+                    }}
                   />
                 </div>
               </div>
@@ -222,10 +226,14 @@ const LaunchPlusIntro = () => {
                 <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-0 shadow-xl border border-white/20 overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 mt-8 sm:mt-12">
                   <div className="relative h-[200px] sm:h-[250px] md:h-[280px]">
                     <img 
-                      src="/Launch+2.jpg" 
+                      src="/Launch%2B2.jpg" 
                       alt="LAUNCH+ Convening Event" 
                       className="w-full h-full object-cover"
                       loading="lazy"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "/Launch+2.jpg";
+                      }}
                     />
                   </div>
                 </div>

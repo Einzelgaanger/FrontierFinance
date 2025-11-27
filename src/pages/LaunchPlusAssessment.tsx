@@ -122,36 +122,90 @@ const LaunchPlusAssessment = () => {
   const onSubmit = async (data: AssessmentFormData) => {
     setIsSubmitting(true);
     try {
+      // Clean data - remove empty values but keep 0 and false
       const cleanData = Object.entries(data).reduce((acc, [key, value]) => {
+        // Keep the value if it's not null, undefined, or empty string
+        // But keep 0, false, and empty arrays
         if (value !== undefined && value !== null && value !== '') {
+          acc[key] = value;
+        } else if (value === 0 || (typeof value === 'boolean' && value === false) || (Array.isArray(value) && value.length === 0)) {
           acc[key] = value;
         }
         return acc;
-      }, {} as any);
+      }, {} as Record<string, unknown>);
 
-      const { error } = await supabase
+      console.log('Submitting assessment data:', { 
+        fieldsCount: Object.keys(cleanData).length,
+        hasEmail: !!cleanData.email,
+        hasFundName: !!cleanData.fund_name
+      });
+
+      // Type assertion needed because we're dynamically building the insert object
+      // Validation ensures required fields (email, full_name, fund_name) are present
+      const insertPayload = {
+        ...cleanData,
+        submission_status: 'completed',
+        ip_address: null,
+        user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null
+      };
+      
+      const { data: insertData, error } = await supabase
         .from('launch_plus_assessments')
-        .insert([{
-          ...cleanData,
-          submission_status: 'completed',
-          ip_address: null,
-          user_agent: navigator.userAgent
-        }]);
+        // @ts-expect-error - TypeScript can't infer the exact shape, but validation ensures required fields exist
+        .insert([insertPayload])
+        .select();
 
       if (error) {
-        console.error('Submission error:', error);
-        throw error;
+        console.error('Supabase submission error:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        
+        // Provide more specific error messages
+        let errorMessage = 'Failed to submit assessment. Please try again.';
+        if (error.code === '23505') {
+          errorMessage = 'This email has already been used. Please use a different email address.';
+        } else if (error.code === '23503') {
+          errorMessage = 'Invalid data. Please check all fields and try again.';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        throw new Error(errorMessage);
       }
 
+      if (!insertData || insertData.length === 0) {
+        throw new Error('No data returned from server. Submission may have failed.');
+      }
+
+      console.log('Assessment submitted successfully:', insertData[0]?.id);
       setIsSubmitted(true);
       toast.success('Assessment submitted successfully!');
       
+      // Redirect to homepage after successful submission
+      // Can be configured via VITE_APP_URL if needed
+      const redirectUrl = import.meta.env.VITE_APP_URL || 'https://escpnetwork.net/';
       setTimeout(() => {
-        window.location.href = 'https://escpnetwork.net/';
+        window.location.href = redirectUrl;
       }, 3000);
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to submit assessment. Please try again.');
-      console.error('Submission error:', error);
+    } catch (error: unknown) {
+      const errorMessage = 
+        (error instanceof Error && error.message) ||
+        (typeof error === 'object' && error !== null && 'error' in error && typeof (error as { error?: { message?: string } }).error?.message === 'string' 
+          ? (error as { error: { message: string } }).error.message 
+          : null) ||
+        'Failed to submit assessment. Please check your connection and try again.';
+      
+      console.error('Submission error details:', {
+        error,
+        message: errorMessage,
+        stack: error instanceof Error ? error.stack : undefined,
+        timestamp: new Date().toISOString()
+      });
+      
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -597,9 +651,13 @@ const LaunchPlusAssessment = () => {
       {/* Background image */}
       <div className="fixed inset-0 z-0 opacity-20">
         <img 
-          src="/Launch+2.jpg" 
+          src="/Launch%2B2.jpg" 
           alt="Launch+ Background" 
           className="w-full h-full object-cover"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = "/Launch+2.jpg";
+          }}
         />
       </div>
       

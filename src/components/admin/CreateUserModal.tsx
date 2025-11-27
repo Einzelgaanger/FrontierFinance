@@ -94,7 +94,7 @@ const CreateUserModal = ({ open, onClose, onSuccess }: CreateUserModalProps) => 
 
     try {
       // Use the project URL directly since supabaseUrl is protected
-      const supabaseUrl = 'https://qiqxdivyyjcbegdlptuq.supabase.co';
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://qiqxdivyyjcbegdlptuq.supabase.co';
       if (!supabaseUrl) {
         throw new Error('Supabase URL not configured');
       }

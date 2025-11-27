@@ -301,7 +301,8 @@ const CreateViewerModal = ({ open, onClose, onSuccess }: CreateViewerModalProps)
       }
 
       // First, create the user account
-      const userResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-user`, {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://qiqxdivyyjcbegdlptuq.supabase.co';
+      const userResponse = await fetch(`${supabaseUrl}/functions/v1/create-user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

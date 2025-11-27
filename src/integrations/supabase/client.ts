@@ -2,14 +2,21 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = "https://qiqxdivyyjcbegdlptuq.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpcXhkaXZ5eWpjYmVnZGxwdHVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5MjA4NDUsImV4cCI6MjA2NzQ5Njg0NX0.jkOmX28FJaWdMP2oFMflVwTpErCEU5WavvRzdnuyGRg";
+// Use environment variables with fallback to hardcoded values for backward compatibility
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://qiqxdivyyjcbegdlptuq.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpcXhkaXZ5eWpjYmVnZGxwdHVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5MjA4NDUsImV4cCI6MjA2NzQ5Njg0NX0.jkOmX28FJaWdMP2oFMflVwTpErCEU5WavvRzdnuyGRg";
+
+// Extract project ID from URL for localStorage cleanup
+const getProjectIdFromUrl = (url: string): string | null => {
+  const match = url.match(/https:\/\/([^.]+)\.supabase\.co/);
+  return match ? match[1] : null;
+};
 
 // Clear any stale Supabase auth data that might have the wrong URL
 // This fixes issues where localStorage has cached auth data from a different Supabase project
 if (typeof window !== 'undefined') {
   try {
-    const currentProjectId = 'qiqxdivyyjcbegdlptuq';
+    const currentProjectId = getProjectIdFromUrl(SUPABASE_URL) || 'qiqxdivyyjcbegdlptuq';
     const oldProjectId = 'fixysaskihumorizijuv';
     const allKeys = Object.keys(localStorage);
     
