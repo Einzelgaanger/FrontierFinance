@@ -135,6 +135,15 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
       color: "teal"
     },
     { 
+      name: "Analytics", 
+      href: "/analytics", 
+      icon: BarChart3, 
+      roles: ["admin"],
+      description: "Data insights and reports",
+      badge: null,
+      color: "red"
+    },
+    { 
       name: "Launch +", 
       href: "/admin/launch-plus-analytics", 
       icon: Rocket, 
@@ -185,6 +194,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     if (href === "/dashboard" && location.pathname === "/dashboard") return true;
     if (href === "/profile" && location.pathname === "/profile") return true;
     if (href === "/network" && location.pathname === "/network") return true;
+    if (href === "/analytics" && location.pathname === "/analytics") return true;
     if (href === "/admin/launch-plus-analytics" && location.pathname === "/admin/launch-plus-analytics") return true;
     if (href === "/admin" && location.pathname === "/admin") return true;
     if (href === "/portiq" && location.pathname === "/portiq") return true;
@@ -419,6 +429,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                       <h2 className="text-2xl font-bold text-white transition-colors">
                         {location.pathname.startsWith('/survey') && 'Surveys'}
                         {location.pathname === '/network' && 'Network Directory'}
+                        {location.pathname === '/analytics' && 'Analytics Hub'}
                         {location.pathname === '/admin/launch-plus-analytics' && 'Launch + Analytics'}
                         {(location.pathname === '/admin' || (location.pathname.startsWith('/admin') && location.pathname !== '/admin/launch-plus-analytics')) && 'Admin Panel'}
                         {location.pathname === '/portiq' && 'PortIQ - AI Assistant'}
@@ -426,6 +437,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                       <p className="text-sm text-white/70 transition-colors">
                         {location.pathname.startsWith('/survey') && 'Complete and view survey responses'}
                         {location.pathname === '/network' && 'Browse and connect with fund managers'}
+                        {location.pathname === '/analytics' && 'Data insights and comprehensive reports'}
                         {location.pathname === '/admin/launch-plus-analytics' && 'View and analyze LAUNCH+ assessment submissions'}
                         {(location.pathname === '/admin' || (location.pathname.startsWith('/admin') && location.pathname !== '/admin/launch-plus-analytics')) && 'Manage users, content, and system settings'}
                         {location.pathname === '/portiq' && 'Your intelligent assistant for data insights and analysis'}
