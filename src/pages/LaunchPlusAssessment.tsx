@@ -88,27 +88,31 @@ const LaunchPlusAssessment = () => {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
-        <div className="fixed inset-0 z-0">
+      <div className="min-h-screen relative bg-gradient-to-br from-blue-50 via-white to-amber-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-0 opacity-10">
           <img 
             src="/Launch+2.jpg" 
             alt="Launch+ Background" 
-            className="w-full h-full object-cover opacity-20"
+            className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-blue-900/90 to-purple-900/95" />
         </div>
-        <Card className="max-w-2xl w-full backdrop-blur-xl bg-slate-900/40 shadow-2xl rounded-3xl border border-white/10 relative z-10">
+        
+        {/* Animated gradient orbs */}
+        <div className="absolute top-20 -left-20 w-96 h-96 bg-blue-200/40 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 -right-20 w-96 h-96 bg-amber-200/40 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        
+        <Card className="max-w-2xl w-full bg-white/95 backdrop-blur-sm shadow-2xl rounded-3xl border-blue-200 relative z-10">
           <CardContent className="pt-12 pb-12 text-center">
             <div className="flex justify-center mb-6 animate-scale-in">
-              <div className="p-4 bg-green-500/20 rounded-full backdrop-blur-sm border border-green-500/30">
-                <CheckCircle2 className="h-20 w-20 text-green-400" />
+              <div className="p-4 bg-green-100 rounded-full border-2 border-green-300">
+                <CheckCircle2 className="h-20 w-20 text-green-600" />
               </div>
             </div>
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-amber-400 bg-clip-text text-transparent mb-4">Thank You!</h2>
-            <p className="text-xl text-gray-200 mb-8">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-blue-700 to-amber-600 bg-clip-text text-transparent mb-4">Thank You!</h2>
+            <p className="text-xl text-gray-700 mb-8">
               Your assessment has been submitted successfully. We will review your information and get back to you soon.
             </p>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-500">
               Redirecting you to our website...
             </p>
           </CardContent>
@@ -135,100 +139,100 @@ const LaunchPlusAssessment = () => {
     switch (currentSection) {
       case 1:
         return (
-          <Card className="shadow-2xl border border-white/10 backdrop-blur-xl bg-slate-900/40 rounded-3xl animate-fade-in hover:shadow-blue-500/20 transition-all duration-300">
-            <CardHeader className="bg-gradient-to-r from-blue-900/50 via-purple-900/50 to-blue-900/50 rounded-t-3xl pb-8 border-b border-white/10">
+          <Card className="shadow-xl border-2 border-blue-200 bg-white rounded-3xl animate-fade-in hover:shadow-2xl transition-all duration-300">
+            <CardHeader className="bg-gradient-to-r from-blue-100 via-blue-50 to-amber-50 rounded-t-3xl pb-8 border-b-2 border-blue-200">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-blue-500/20 rounded-full backdrop-blur-sm border border-blue-500/30">
-                  <User className="w-6 h-6 text-blue-400" />
+                <div className="p-3 bg-blue-600 rounded-full shadow-md">
+                  <User className="w-6 h-6 text-white" />
                 </div>
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Basic Information</CardTitle>
+                <CardTitle className="text-3xl font-bold text-blue-800">Basic Information</CardTitle>
               </div>
-              <CardDescription className="text-base text-gray-300">Tell us about yourself and your fund</CardDescription>
+              <CardDescription className="text-base text-gray-600">Tell us about yourself and your fund</CardDescription>
             </CardHeader>
             <CardContent className="pt-8 space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="full_name" className="text-base font-semibold text-gray-200">Full Name *</Label>
+                  <Label htmlFor="full_name" className="text-base font-semibold text-gray-700">Full Name *</Label>
                   <Input
                     id="full_name"
                     {...register('full_name', { required: true })}
-                    className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="Enter your full name"
                   />
-                  {errors.full_name && <span className="text-sm text-red-400">This field is required</span>}
+                  {errors.full_name && <span className="text-sm text-red-600">This field is required</span>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-base font-semibold text-gray-200">Email Address *</Label>
+                  <Label htmlFor="email" className="text-base font-semibold text-gray-700">Email Address *</Label>
                   <Input
                     id="email"
                     type="email"
                     {...register('email', { required: true })}
-                    className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="your@email.com"
                   />
-                  {errors.email && <span className="text-sm text-red-400">This field is required</span>}
+                  {errors.email && <span className="text-sm text-red-600">This field is required</span>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone_whatsapp" className="text-base font-semibold text-gray-200">Phone / WhatsApp</Label>
+                  <Label htmlFor="phone_whatsapp" className="text-base font-semibold text-gray-700">Phone / WhatsApp</Label>
                   <Input
                     id="phone_whatsapp"
                     {...register('phone_whatsapp')}
-                    className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="+1 234 567 8900"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="fund_name" className="text-base font-semibold text-gray-200">Fund Name *</Label>
+                  <Label htmlFor="fund_name" className="text-base font-semibold text-gray-700">Fund Name *</Label>
                   <Input
                     id="fund_name"
                     {...register('fund_name', { required: true })}
-                    className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="Your Fund Name"
                   />
-                  {errors.fund_name && <span className="text-sm text-red-400">This field is required</span>}
+                  {errors.fund_name && <span className="text-sm text-red-600">This field is required</span>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="fund_website" className="text-base font-semibold text-gray-200">Fund Website</Label>
+                  <Label htmlFor="fund_website" className="text-base font-semibold text-gray-700">Fund Website</Label>
                   <Input
                     id="fund_website"
                     {...register('fund_website')}
-                    className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="https://yourfund.com"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="linkedin_profile" className="text-base font-semibold text-gray-200">LinkedIn Profile</Label>
+                  <Label htmlFor="linkedin_profile" className="text-base font-semibold text-gray-700">LinkedIn Profile</Label>
                   <Input
                     id="linkedin_profile"
                     {...register('linkedin_profile')}
-                    className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="https://linkedin.com/in/yourprofile"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="address" className="text-base font-semibold text-gray-200">Address</Label>
+                <Label htmlFor="address" className="text-base font-semibold text-gray-700">Address</Label>
                 <Textarea
                   id="address"
                   {...register('address')}
-                  className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl transition-all backdrop-blur-sm"
+                  className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl transition-all"
                   rows={3}
                   placeholder="Your complete address"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="other_social_media" className="text-base font-semibold text-gray-200">Other Social Media</Label>
+                <Label htmlFor="other_social_media" className="text-base font-semibold text-gray-700">Other Social Media</Label>
                 <Textarea
                   id="other_social_media"
                   {...register('other_social_media')}
-                  className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl transition-all backdrop-blur-sm"
+                  className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl transition-all"
                   rows={2}
                   placeholder="Instagram, X (Twitter), Facebook, etc."
                 />
@@ -239,19 +243,19 @@ const LaunchPlusAssessment = () => {
       
       case 2:
         return (
-          <Card className="shadow-2xl border border-white/10 backdrop-blur-xl bg-slate-900/40 rounded-3xl animate-fade-in hover:shadow-purple-500/20 transition-all duration-300">
-            <CardHeader className="bg-gradient-to-r from-purple-900/50 via-blue-900/50 to-purple-900/50 rounded-t-3xl pb-8 border-b border-white/10">
+          <Card className="shadow-xl border-2 border-blue-200 bg-white rounded-3xl animate-fade-in hover:shadow-2xl transition-all duration-300">
+            <CardHeader className="bg-gradient-to-r from-blue-100 via-blue-50 to-amber-50 rounded-t-3xl pb-8 border-b-2 border-blue-200">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-purple-500/20 rounded-full backdrop-blur-sm border border-purple-500/30">
-                  <Briefcase className="w-6 h-6 text-purple-400" />
+                <div className="p-3 bg-blue-600 rounded-full shadow-md">
+                  <Briefcase className="w-6 h-6 text-white" />
                 </div>
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Stage of Fund</CardTitle>
+                <CardTitle className="text-3xl font-bold text-blue-800">Stage of Fund</CardTitle>
               </div>
-              <CardDescription className="text-base text-gray-300">Help us understand where you are in your journey</CardDescription>
+              <CardDescription className="text-base text-gray-600">Help us understand where you are in your journey</CardDescription>
             </CardHeader>
             <CardContent className="pt-8 space-y-6">
               <div className="space-y-4">
-                <Label className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <Label className="text-lg font-bold text-blue-800">
                   Which stage best represents your current fund? (Select all that apply)
                 </Label>
                 
@@ -280,16 +284,16 @@ const LaunchPlusAssessment = () => {
                   ].map((stage) => (
                     <div 
                       key={stage.value} 
-                      className="flex items-start space-x-4 p-5 border-2 border-white/10 bg-slate-800/30 rounded-2xl hover:bg-slate-700/30 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 backdrop-blur-sm"
+                      className="flex items-start space-x-4 p-5 border-2 border-blue-200 bg-blue-50/50 rounded-2xl hover:bg-blue-100/50 hover:border-blue-400 transition-all duration-300 hover:shadow-md"
                     >
                       <Checkbox
                         checked={fundStages.includes(stage.value)}
                         onCheckedChange={() => handleCheckboxChange('fund_stages', stage.value)}
-                        className="mt-1 border-white/20"
+                        className="mt-1 border-blue-400"
                       />
                       <div className="flex-1">
-                        <Label className="font-bold text-base cursor-pointer text-gray-200">{stage.label}</Label>
-                        <p className="text-sm text-gray-400 mt-2 leading-relaxed">{stage.description}</p>
+                        <Label className="font-bold text-base cursor-pointer text-gray-800">{stage.label}</Label>
+                        <p className="text-sm text-gray-600 mt-2 leading-relaxed">{stage.description}</p>
                       </div>
                     </div>
                   ))}
@@ -297,14 +301,14 @@ const LaunchPlusAssessment = () => {
               </div>
 
               <div className="space-y-3">
-                <Label htmlFor="stage_explanation" className="text-base font-semibold text-gray-200">
+                <Label htmlFor="stage_explanation" className="text-base font-semibold text-gray-700">
                   If you fall between two stages, please explain (Optional)
                 </Label>
-                <p className="text-sm text-gray-400">Note: If you selected "concept" or "scale" stage, this opportunity may not be the right fit for you.</p>
+                <p className="text-sm text-gray-600">Note: If you selected "concept" or "scale" stage, this opportunity may not be the right fit for you.</p>
                 <Textarea
                   id="stage_explanation"
                   {...register('stage_explanation')}
-                  className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-purple-500 rounded-xl transition-all backdrop-blur-sm"
+                  className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl transition-all"
                   rows={5}
                   placeholder="Describe where you are in your fund journey..."
                 />
@@ -316,370 +320,301 @@ const LaunchPlusAssessment = () => {
       case 3:
         return (
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Card className="shadow-2xl border border-white/10 backdrop-blur-xl bg-slate-900/40 rounded-3xl animate-fade-in hover:shadow-amber-500/20 transition-all duration-300">
-              <CardHeader className="bg-gradient-to-r from-amber-900/50 via-purple-900/50 to-blue-900/50 rounded-t-3xl pb-8 border-b border-white/10">
+            <Card className="shadow-xl border-2 border-blue-200 bg-white rounded-3xl animate-fade-in hover:shadow-2xl transition-all duration-300">
+              <CardHeader className="bg-gradient-to-r from-amber-100 via-blue-50 to-blue-100 rounded-t-3xl pb-8 border-b-2 border-blue-200">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 bg-amber-500/20 rounded-full backdrop-blur-sm border border-amber-500/30">
-                    <Target className="w-6 h-6 text-amber-400" />
+                  <div className="p-3 bg-amber-600 rounded-full shadow-md">
+                    <Target className="w-6 h-6 text-white" />
                   </div>
-                  <CardTitle className="text-3xl font-bold bg-gradient-to-r from-amber-400 to-purple-400 bg-clip-text text-transparent">Eligibility for LAUNCH+</CardTitle>
+                  <CardTitle className="text-3xl font-bold text-blue-800">Eligibility for LAUNCH+</CardTitle>
                 </div>
-                <CardDescription className="text-base text-gray-300">Tell us about your needs and current status</CardDescription>
+                <CardDescription className="text-base text-gray-600">Tell us about your needs and current status</CardDescription>
               </CardHeader>
               <CardContent className="pt-8 space-y-8">
-                {/* Services Interest */}
-                <div className="space-y-4">
-                  <Label className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    Which LAUNCH+ services are you interested in? (Select all that apply)
-                  </Label>
-                  
-                  <div className="space-y-6">
-                    <div className="space-y-3">
-                      <p className="text-base font-semibold text-purple-300 bg-purple-900/30 p-3 rounded-xl border border-purple-500/30 backdrop-blur-sm">
-                        Shared Services (Mandatory, Phase I - Partially Subsidized)
-                      </p>
-                      {[
-                        'Shared back-office services (accounting, finance, tax, legal, HR)',
-                        'Fund administration services',
-                        'Capacity building and knowledge services (strategy, governance, impact measurement)'
-                      ].map((service) => (
-                        <div key={service} className="flex items-start space-x-4 p-4 border-2 border-white/10 bg-slate-800/30 rounded-2xl hover:bg-slate-700/30 hover:border-blue-500/50 transition-all duration-300 backdrop-blur-sm">
-                          <Checkbox
-                            checked={interestedServices.includes(service)}
-                            onCheckedChange={() => handleCheckboxChange('interested_services', service)}
-                            className="mt-1 border-white/20"
-                          />
-                          <Label className="cursor-pointer text-sm leading-relaxed text-gray-300">{service}</Label>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="space-y-3">
-                      <p className="text-base font-semibold text-green-300 bg-green-900/30 p-3 rounded-xl border border-green-500/30 backdrop-blur-sm">
-                        Capital Support (Optional, Phase II - Repayable)
-                      </p>
-                      {[
-                        'Op-Ex line of credit',
-                        'Warehousing line of credit'
-                      ].map((service) => (
-                        <div key={service} className="flex items-start space-x-4 p-4 border-2 border-white/10 bg-slate-800/30 rounded-2xl hover:bg-slate-700/30 hover:border-green-500/50 transition-all duration-300 backdrop-blur-sm">
-                          <Checkbox
-                            checked={interestedServices.includes(service)}
-                            onCheckedChange={() => handleCheckboxChange('interested_services', service)}
-                            className="mt-1 border-white/20"
-                          />
-                          <Label className="cursor-pointer text-sm leading-relaxed text-gray-300">{service}</Label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Geographical Focus */}
-                <div className="space-y-4">
-                  <Label className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    Geographic Focus (Select all regions you invest in)
-                  </Label>
-                  
-                  <div className="grid md:grid-cols-2 gap-3">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="interested_services" className="text-base font-semibold text-gray-700">Interested Services (Select all that apply)</Label>
                     {[
-                      'East Africa',
-                      'West Africa',
-                      'Central Africa',
-                      'Southern Africa',
-                      'North Africa',
-                      'Pan-African'
-                    ].map((region) => (
-                      <div 
-                        key={region} 
-                        className="flex items-center space-x-3 p-4 border-2 border-white/10 bg-slate-800/30 rounded-2xl hover:bg-slate-700/30 hover:border-blue-500/50 transition-all duration-300 backdrop-blur-sm"
-                      >
+                      { value: 'investment', label: 'Investment' },
+                      { value: 'technical_assistance', label: 'Technical Assistance' },
+                      { value: 'networking', label: 'Networking' },
+                      { value: 'capacity_building', label: 'Capacity Building' },
+                      { value: 'other', label: 'Other' },
+                    ].map(service => (
+                      <div key={service.value} className="flex items-center space-x-3">
                         <Checkbox
-                          checked={geographicalFocus.includes(region)}
-                          onCheckedChange={() => handleCheckboxChange('geographical_focus', region)}
-                          className="border-white/20"
+                          checked={interestedServices.includes(service.value)}
+                          onCheckedChange={() => handleCheckboxChange('interested_services', service.value)}
+                          className="border-amber-400"
+                          id={`service-${service.value}`}
                         />
-                        <Label className="cursor-pointer text-sm text-gray-300">{region}</Label>
+                        <Label htmlFor={`service-${service.value}`} className="cursor-pointer text-gray-800">{service.label}</Label>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="geographical_focus" className="text-base font-semibold text-gray-700">Geographical Focus (Select all that apply)</Label>
+                    {[
+                      { value: 'local', label: 'Local' },
+                      { value: 'regional', label: 'Regional' },
+                      { value: 'national', label: 'National' },
+                      { value: 'international', label: 'International' },
+                    ].map(region => (
+                      <div key={region.value} className="flex items-center space-x-3">
+                        <Checkbox
+                          checked={geographicalFocus.includes(region.value)}
+                          onCheckedChange={() => handleCheckboxChange('geographical_focus', region.value)}
+                          className="border-amber-400"
+                          id={`region-${region.value}`}
+                        />
+                        <Label htmlFor={`region-${region.value}`} className="cursor-pointer text-gray-800">{region.label}</Label>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Legal Status */}
-                <div className="space-y-3">
-                  <Label htmlFor="legal_status" className="text-base font-semibold text-gray-200">
-                    Legal Status / Structure
-                  </Label>
+                <div className="space-y-2">
+                  <Label htmlFor="legal_status" className="text-base font-semibold text-gray-700">Legal Status</Label>
                   <Input
                     id="legal_status"
                     {...register('legal_status')}
-                    className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
-                    placeholder="e.g., LLC, Limited Partnership, Trust"
+                    className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                    placeholder="Describe your fund's legal status"
                   />
                 </div>
 
-                {/* Operations vs Domicile */}
-                <div className="space-y-3">
-                  <Label htmlFor="operations_vs_domicile" className="text-base font-semibold text-gray-200">
-                    Operations vs Domiciliation Locations
-                  </Label>
+                <div className="space-y-2">
+                  <Label htmlFor="operations_vs_domicile" className="text-base font-semibold text-gray-700">Operations vs Domicile</Label>
                   <Textarea
                     id="operations_vs_domicile"
                     {...register('operations_vs_domicile')}
-                    className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl transition-all backdrop-blur-sm"
+                    className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl transition-all"
                     rows={3}
-                    placeholder="Where do you operate vs where are you legally domiciled?"
+                    placeholder="Explain your operations and domicile setup"
                   />
                 </div>
 
-                {/* Capital Raised */}
-                <div className="space-y-4">
-                  <Label className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    Capital Raised to Date (USD)
-                  </Label>
-                  
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="capital_raised_grants" className="text-sm text-gray-300">Grants</Label>
-                      <Input
-                        id="capital_raised_grants"
-                        type="number"
-                        {...register('capital_raised_grants', { valueAsNumber: true })}
-                        className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="capital_raised_first_loss" className="text-sm text-gray-300">First Loss Capital</Label>
-                      <Input
-                        id="capital_raised_first_loss"
-                        type="number"
-                        {...register('capital_raised_first_loss', { valueAsNumber: true })}
-                        className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="capital_raised_equity" className="text-sm text-gray-300">Equity</Label>
-                      <Input
-                        id="capital_raised_equity"
-                        type="number"
-                        {...register('capital_raised_equity', { valueAsNumber: true })}
-                        className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="capital_raised_debt" className="text-sm text-gray-300">Debt</Label>
-                      <Input
-                        id="capital_raised_debt"
-                        type="number"
-                        {...register('capital_raised_debt', { valueAsNumber: true })}
-                        className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="capital_raised_senior" className="text-sm text-gray-300">Senior Capital</Label>
-                      <Input
-                        id="capital_raised_senior"
-                        type="number"
-                        {...register('capital_raised_senior', { valueAsNumber: true })}
-                        className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="capital_raised_other" className="text-sm text-gray-300">Other</Label>
-                      <Input
-                        id="capital_raised_other"
-                        type="number"
-                        {...register('capital_raised_other', { valueAsNumber: true })}
-                        className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
-                        placeholder="0"
-                      />
-                    </div>
-                  </div>
-
+                <div className="grid md:grid-cols-3 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="capital_raised_other_description" className="text-sm text-gray-300">
-                      If "Other", please describe
-                    </Label>
-                    <Textarea
-                      id="capital_raised_other_description"
-                      {...register('capital_raised_other_description')}
-                      className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl transition-all backdrop-blur-sm"
-                      rows={2}
-                      placeholder="Describe other capital sources..."
+                    <Label htmlFor="capital_raised_grants" className="text-base font-semibold text-gray-700">Capital Raised - Grants</Label>
+                    <Input
+                      id="capital_raised_grants"
+                      type="number"
+                      {...register('capital_raised_grants', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_raised_first_loss" className="text-base font-semibold text-gray-700">Capital Raised - First Loss</Label>
+                    <Input
+                      id="capital_raised_first_loss"
+                      type="number"
+                      {...register('capital_raised_first_loss', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_raised_equity" className="text-base font-semibold text-gray-700">Capital Raised - Equity</Label>
+                    <Input
+                      id="capital_raised_equity"
+                      type="number"
+                      {...register('capital_raised_equity', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
                     />
                   </div>
                 </div>
 
-                {/* Investment Activity */}
-                <div className="space-y-4">
-                  <Label className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    Investment Activity
-                  </Label>
-                  
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="investments_count" className="text-sm text-gray-300">Number of Investments Made</Label>
-                      <Input
-                        id="investments_count"
-                        type="number"
-                        {...register('investments_count', { valueAsNumber: true })}
-                        className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="capital_committed" className="text-sm text-gray-300">Capital Committed (USD)</Label>
-                      <Input
-                        id="capital_committed"
-                        type="number"
-                        {...register('capital_committed', { valueAsNumber: true })}
-                        className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="capital_disbursed" className="text-sm text-gray-300">Capital Disbursed (USD)</Label>
-                      <Input
-                        id="capital_disbursed"
-                        type="number"
-                        {...register('capital_disbursed', { valueAsNumber: true })}
-                        className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl h-12 transition-all backdrop-blur-sm"
-                        placeholder="0"
-                      />
-                    </div>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_raised_debt" className="text-base font-semibold text-gray-700">Capital Raised - Debt</Label>
+                    <Input
+                      id="capital_raised_debt"
+                      type="number"
+                      {...register('capital_raised_debt', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_raised_senior" className="text-base font-semibold text-gray-700">Capital Raised - Senior</Label>
+                    <Input
+                      id="capital_raised_senior"
+                      type="number"
+                      {...register('capital_raised_senior', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_raised_other" className="text-base font-semibold text-gray-700">Capital Raised - Other</Label>
+                    <Input
+                      id="capital_raised_other"
+                      type="number"
+                      {...register('capital_raised_other', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
                   </div>
                 </div>
 
-                {/* Program Expectations */}
-                <div className="space-y-3">
-                  <Label htmlFor="program_expectations" className="text-base font-semibold text-gray-200">
-                    What are your expectations from the LAUNCH+ program? (Max 250 words) *
-                  </Label>
+                <div className="space-y-2">
+                  <Label htmlFor="capital_raised_other_description" className="text-base font-semibold text-gray-700">If Other, please describe</Label>
+                  <Textarea
+                    id="capital_raised_other_description"
+                    {...register('capital_raised_other_description')}
+                    className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl transition-all"
+                    rows={3}
+                    placeholder="Describe other capital sources"
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="investments_count" className="text-base font-semibold text-gray-700">Number of Investments</Label>
+                    <Input
+                      id="investments_count"
+                      type="number"
+                      {...register('investments_count', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_committed" className="text-base font-semibold text-gray-700">Capital Committed</Label>
+                    <Input
+                      id="capital_committed"
+                      type="number"
+                      {...register('capital_committed', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_disbursed" className="text-base font-semibold text-gray-700">Capital Disbursed</Label>
+                    <Input
+                      id="capital_disbursed"
+                      type="number"
+                      {...register('capital_disbursed', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="program_expectations" className="text-base font-semibold text-gray-700">Program Expectations</Label>
                   <Textarea
                     id="program_expectations"
-                    {...register('program_expectations', { 
-                      required: true,
-                      maxLength: 1500
-                    })}
-                    className="border-2 border-white/10 bg-slate-800/50 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-xl transition-all backdrop-blur-sm"
-                    rows={6}
-                    placeholder="Tell us what you hope to achieve through LAUNCH+..."
+                    {...register('program_expectations')}
+                    className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl transition-all"
+                    rows={5}
+                    placeholder="Describe your expectations from the LAUNCH+ program"
                   />
-                  {errors.program_expectations && (
-                    <span className="text-sm text-red-400">This field is required (max 250 words)</span>
-                  )}
                 </div>
               </CardContent>
             </Card>
           </form>
         );
+      
+      default:
+        return null;
     }
   };
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-      {/* Background Image with Overlay */}
-      <div className="fixed inset-0 z-0">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50 relative overflow-hidden p-4">
+      {/* Background image */}
+      <div className="fixed inset-0 z-0 opacity-10">
         <img 
           src="/Launch+2.jpg" 
           alt="Launch+ Background" 
-          className="w-full h-full object-cover opacity-20"
+          className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-blue-900/90 to-purple-900/95" />
       </div>
-
+      
       {/* Animated gradient orbs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
-
-      <div className="relative z-10 container mx-auto px-4 py-8 max-w-5xl">
+      <div className="absolute top-20 -left-20 w-96 h-96 bg-blue-200/40 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-20 -right-20 w-96 h-96 bg-amber-200/40 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      
+      <div className="relative z-10 max-w-5xl mx-auto py-8">
         {/* Header */}
-        <div className="mb-12 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-amber-400 bg-clip-text text-transparent mb-4">
-            LAUNCH+ Capital Facility
+        <div className="text-center mb-8">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-blue-700 to-amber-600 bg-clip-text text-transparent mb-3">
+            LAUNCH+ Assessment
           </h1>
-          <p className="text-gray-300 text-xl">Assessment Questionnaire</p>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mb-8 backdrop-blur-sm bg-white/5 rounded-2xl p-6 border border-white/10">
-          <div className="flex justify-between items-center mb-3">
-            <span className="text-sm font-medium text-gray-300">
-              Section {currentSection} of {totalSections}
-            </span>
-            <span className="text-sm font-medium text-blue-400">
-              {Math.round((currentSection / totalSections) * 100)}% Complete
-            </span>
-          </div>
-          <div className="w-full bg-slate-800/50 rounded-full h-3 overflow-hidden shadow-inner border border-white/5">
-            <div 
-              className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-amber-500 rounded-full transition-all duration-500 ease-out shadow-lg shadow-blue-500/50"
-              style={{ width: `${(currentSection / totalSections) * 100}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Form Card */}
-        <div className="mb-8">
-          {renderSection()}
-        </div>
-
-        {/* Navigation Buttons */}
-        <div className="flex justify-between backdrop-blur-sm bg-white/5 rounded-2xl p-6 border border-white/10">
-          <Button
-            type="button"
-            onClick={handlePrevious}
-            disabled={currentSection === 1}
-            variant="outline"
-            className="rounded-xl px-8 py-3 border-2 border-blue-500/30 bg-slate-800/50 text-gray-200 hover:border-blue-500 hover:bg-blue-500/20 transition-all duration-200 disabled:opacity-30"
-          >
-            <ChevronLeft className="mr-2 h-5 w-5" />
-            Previous
-          </Button>
+          <p className="text-gray-600 text-lg">Section {currentSection} of {totalSections}</p>
           
-          {currentSection === totalSections ? (
-            <Button 
-              onClick={handleSubmit(onSubmit)}
-              disabled={isSubmitting}
-              className="rounded-xl px-8 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-amber-600 hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-200 text-white font-semibold"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                <>
-                  Submit Application
-                  <Send className="ml-2 h-5 w-5" />
-                </>
-              )}
-            </Button>
-          ) : (
+          {/* Progress Bar */}
+          <div className="mt-4 max-w-md mx-auto">
+            <div className="w-full bg-blue-200 rounded-full h-3">
+              <div
+                className="h-full bg-gradient-to-r from-blue-600 to-amber-600 rounded-full transition-all duration-500"
+                style={{ width: `${(currentSection / totalSections) * 100}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {renderSection()}
+
+        {/* Navigation */}
+        <div className="mt-8 flex justify-between items-center">
+          {currentSection > 1 && (
             <Button
               type="button"
-              onClick={handleNext}
-              className="rounded-xl px-8 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-amber-600 hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-200 text-white font-semibold"
+              onClick={handlePrevious}
+              variant="outline"
+              className="border-2 border-blue-300 text-blue-700 hover:bg-blue-50 rounded-xl px-6"
             >
-              Next
-              <ChevronRight className="ml-2 h-5 w-5" />
+              <ArrowLeft className="mr-2 h-5 w-5" />
+              Previous
             </Button>
           )}
+          
+          <div className="ml-auto">
+            {currentSection < totalSections ? (
+              <Button
+                type="button"
+                onClick={handleNext}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg rounded-xl px-8"
+              >
+                Next Section
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            ) : (
+              <Button
+                onClick={handleSubmit(onSubmit)}
+                disabled={isSubmitting}
+                className="bg-gradient-to-r from-amber-600 to-blue-600 hover:from-amber-700 hover:to-blue-700 text-white shadow-lg rounded-xl px-8"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    Submit Assessment
+                    <Send className="ml-2 h-5 w-5" />
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
