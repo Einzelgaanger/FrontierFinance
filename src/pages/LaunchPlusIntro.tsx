@@ -203,13 +203,10 @@ const LaunchPlusIntro = () => {
               <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-0 shadow-2xl border border-white/20 overflow-hidden group hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2">
                 <div className="relative h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px]">
                   <img 
-                    src="/Launch%2B1.jpg" 
+                    src="/Launch+1.jpg" 
                     alt="LAUNCH+ Network Gathering" 
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                    }}
+                    loading="lazy"
                   />
                 </div>
               </div>
@@ -221,16 +218,13 @@ const LaunchPlusIntro = () => {
             {/* Left Column: Second Image */}
             <div className="space-y-4 sm:space-y-6">
               <div className={`transition-all duration-500 delay-100 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-0 shadow-xl border border-white/20 overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-0 shadow-xl border border-white/20 overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 mt-8 sm:mt-12">
                   <div className="relative h-[200px] sm:h-[250px] md:h-[280px]">
                     <img 
-                      src="/Launch%2B2.jpg" 
+                      src="/Launch+2.jpg" 
                       alt="LAUNCH+ Convening Event" 
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
+                      loading="lazy"
                     />
                   </div>
                 </div>
@@ -238,7 +232,7 @@ const LaunchPlusIntro = () => {
             </div>
 
             {/* Right Column: Platform Description */}
-            <div className={`mt-8 sm:mt-12 transition-all duration-500 delay-150 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+            <div className={`-mt-4 sm:-mt-6 transition-all duration-500 delay-150 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
                 Platform Benefits
               </h3>
