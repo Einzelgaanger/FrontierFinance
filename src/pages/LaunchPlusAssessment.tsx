@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -10,39 +12,54 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { Loader2, CheckCircle2, ArrowRight, ArrowLeft, User, Briefcase, Target, Send } from 'lucide-react';
 
-interface AssessmentFormData {
-  full_name: string;
-  address: string;
-  phone_whatsapp: string;
-  email: string;
-  fund_name: string;
-  fund_website: string;
-  linkedin_profile: string;
-  other_social_media: string;
-  fund_stages: string[];
-  stage_explanation: string;
-  interested_services: string[];
-  geographical_focus: string[];
-  legal_status: string;
-  operations_vs_domicile: string;
-  capital_raised_grants: number;
-  capital_raised_first_loss: number;
-  capital_raised_equity: number;
-  capital_raised_debt: number;
-  capital_raised_senior: number;
-  capital_raised_other: number;
-  capital_raised_other_description: string;
-  investments_count: number;
-  capital_committed: number;
-  capital_disbursed: number;
-  program_expectations: string;
-}
+// Validation schemas for each section
+const section1Schema = z.object({
+  full_name: z.string().min(1, 'Full name is required').max(100, 'Name must be less than 100 characters'),
+  email: z.string().email('Invalid email address').max(255, 'Email must be less than 255 characters'),
+  phone_whatsapp: z.string().optional(),
+  fund_name: z.string().min(1, 'Fund name is required').max(200, 'Fund name must be less than 200 characters'),
+  fund_website: z.string().optional(),
+  linkedin_profile: z.string().optional(),
+  address: z.string().optional(),
+  other_social_media: z.string().optional(),
+});
+
+const section2Schema = z.object({
+  fund_stages: z.array(z.string()).min(1, 'Please select at least one fund stage'),
+  stage_explanation: z.string().optional(),
+});
+
+const section3Schema = z.object({
+  interested_services: z.array(z.string()).min(1, 'Please select at least one service'),
+  geographical_focus: z.array(z.string()).min(1, 'Please select at least one geographical focus'),
+  legal_status: z.string().optional(),
+  operations_vs_domicile: z.string().optional(),
+  capital_raised_grants: z.number().min(0, 'Must be 0 or greater').optional(),
+  capital_raised_first_loss: z.number().min(0, 'Must be 0 or greater').optional(),
+  capital_raised_equity: z.number().min(0, 'Must be 0 or greater').optional(),
+  capital_raised_debt: z.number().min(0, 'Must be 0 or greater').optional(),
+  capital_raised_senior: z.number().min(0, 'Must be 0 or greater').optional(),
+  capital_raised_other: z.number().min(0, 'Must be 0 or greater').optional(),
+  capital_raised_other_description: z.string().optional(),
+  investments_count: z.number().min(0, 'Must be 0 or greater').optional(),
+  capital_committed: z.number().min(0, 'Must be 0 or greater').optional(),
+  capital_disbursed: z.number().min(0, 'Must be 0 or greater').optional(),
+  program_expectations: z.string().optional(),
+});
+
+const fullSchema = section1Schema.merge(section2Schema).merge(section3Schema);
+
+type AssessmentFormData = z.infer<typeof fullSchema>;
 
 const LaunchPlusAssessment = () => {
   const [currentSection, setCurrentSection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<AssessmentFormData>();
+  
+  const { register, handleSubmit, watch, setValue, trigger, formState: { errors } } = useForm<AssessmentFormData>({
+    resolver: zodResolver(fullSchema),
+    mode: 'onChange',
+  });
 
   const fundStages = watch('fund_stages') || [];
   const interestedServices = watch('interested_services') || [];
@@ -60,14 +77,53 @@ const LaunchPlusAssessment = () => {
       ? currentValues.filter(v => v !== value)
       : [...currentValues, value];
     setValue(field, newValues);
+    trigger(field);
+  };
+
+  const validateSection = async (section: number): Promise<boolean> => {
+    let fieldsToValidate: (keyof AssessmentFormData)[] = [];
+    
+    switch(section) {
+      case 1:
+        fieldsToValidate = ['full_name', 'email', 'phone_whatsapp', 'fund_name', 'fund_website', 'linkedin_profile', 'address', 'other_social_media'];
+        break;
+      case 2:
+        fieldsToValidate = ['fund_stages', 'stage_explanation'];
+        break;
+      case 3:
+        fieldsToValidate = ['interested_services', 'geographical_focus', 'legal_status', 'operations_vs_domicile', 'program_expectations'];
+        break;
+    }
+
+    const result = await trigger(fieldsToValidate);
+    
+    if (!result) {
+      toast.error('Please complete all required fields before proceeding');
+    }
+    
+    return result;
+  };
+
+  const handleNext = async () => {
+    const isValid = await validateSection(currentSection);
+    if (isValid && currentSection < totalSections) {
+      setCurrentSection(currentSection + 1);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentSection > 1) {
+      setCurrentSection(currentSection - 1);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
   };
 
   const onSubmit = async (data: AssessmentFormData) => {
     setIsSubmitting(true);
     try {
-      // Prepare clean data - remove undefined values
       const cleanData = Object.entries(data).reduce((acc, [key, value]) => {
-        if (value !== undefined && value !== null) {
+        if (value !== undefined && value !== null && value !== '') {
           acc[key] = value;
         }
         return acc;
@@ -77,10 +133,10 @@ const LaunchPlusAssessment = () => {
         .from('launch_plus_assessments')
         .insert([{
           ...cleanData,
-          submission_status: 'completed'
-        }])
-        .select()
-        .single();
+          submission_status: 'completed',
+          ip_address: null,
+          user_agent: navigator.userAgent
+        }]);
 
       if (error) {
         console.error('Submission error:', error);
@@ -124,20 +180,6 @@ const LaunchPlusAssessment = () => {
     );
   }
 
-  const handleNext = () => {
-    if (currentSection < totalSections) {
-      setCurrentSection(currentSection + 1);
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentSection > 1) {
-      setCurrentSection(currentSection - 1);
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
-  };
-
   const renderSection = () => {
     switch (currentSection) {
       case 1:
@@ -158,11 +200,11 @@ const LaunchPlusAssessment = () => {
                   <Label htmlFor="full_name" className="text-sm font-medium text-gray-700">Full Name *</Label>
                   <Input
                     id="full_name"
-                    {...register('full_name', { required: true })}
+                    {...register('full_name')}
                     className="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:ring-gray-500 rounded-md h-10"
                     placeholder="Enter your full name"
                   />
-                  {errors.full_name && <span className="text-sm text-red-600">This field is required</span>}
+                  {errors.full_name && <span className="text-sm text-red-600">{errors.full_name.message}</span>}
                 </div>
 
                 <div className="space-y-2">
@@ -170,11 +212,11 @@ const LaunchPlusAssessment = () => {
                   <Input
                     id="email"
                     type="email"
-                    {...register('email', { required: true })}
+                    {...register('email')}
                     className="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:ring-gray-500 rounded-md h-10"
                     placeholder="your@email.com"
                   />
-                  {errors.email && <span className="text-sm text-red-600">This field is required</span>}
+                  {errors.email && <span className="text-sm text-red-600">{errors.email.message}</span>}
                 </div>
 
                 <div className="space-y-2">
@@ -191,11 +233,11 @@ const LaunchPlusAssessment = () => {
                   <Label htmlFor="fund_name" className="text-sm font-medium text-gray-700">Fund Name *</Label>
                   <Input
                     id="fund_name"
-                    {...register('fund_name', { required: true })}
+                    {...register('fund_name')}
                     className="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:ring-gray-500 rounded-md h-10"
                     placeholder="Your Fund Name"
                   />
-                  {errors.fund_name && <span className="text-sm text-red-600">This field is required</span>}
+                  {errors.fund_name && <span className="text-sm text-red-600">{errors.fund_name.message}</span>}
                 </div>
 
                 <div className="space-y-2">
@@ -259,7 +301,7 @@ const LaunchPlusAssessment = () => {
             <CardContent className="pt-6 space-y-6">
               <div className="space-y-4">
                 <Label className="text-base font-medium text-gray-900">
-                  Which stage best represents your current fund? (Select all that apply)
+                  Which stage best represents your current fund? (Select all that apply) *
                 </Label>
                 
                 <div className="space-y-3">
@@ -301,6 +343,7 @@ const LaunchPlusAssessment = () => {
                     </div>
                   ))}
                 </div>
+                {errors.fund_stages && <span className="text-sm text-red-600">{errors.fund_stages.message}</span>}
               </div>
 
               <div className="space-y-3">
@@ -322,29 +365,29 @@ const LaunchPlusAssessment = () => {
       
       case 3:
         return (
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Card className="shadow-md border border-gray-200 bg-white">
-              <CardHeader className="bg-gray-50 border-b border-gray-200 pb-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-gray-700 rounded">
-                    <Target className="w-5 h-5 text-white" />
-                  </div>
-                  <CardTitle className="text-2xl font-semibold text-gray-900">Eligibility for LAUNCH+</CardTitle>
+          <Card className="shadow-md border border-gray-200 bg-white">
+            <CardHeader className="bg-gray-50 border-b border-gray-200 pb-6">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-gray-700 rounded">
+                  <Target className="w-5 h-5 text-white" />
                 </div>
-                <CardDescription className="text-base text-gray-600">Tell us about your needs and current status</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-6 space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium text-gray-700">Interested Services (Select all that apply)</Label>
+                <CardTitle className="text-2xl font-semibold text-gray-900">Eligibility for LAUNCH+</CardTitle>
+              </div>
+              <CardDescription className="text-base text-gray-600">Tell us about your needs and current status</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium text-gray-700">Interested Services (Select all that apply) *</Label>
+                  <div className="space-y-2">
                     {[
-                      { value: 'investment', label: 'Investment' },
-                      { value: 'technical_assistance', label: 'Technical Assistance' },
-                      { value: 'networking', label: 'Networking' },
-                      { value: 'capacity_building', label: 'Capacity Building' },
-                      { value: 'other', label: 'Other' },
+                      { value: 'shared_back_office', label: 'Shared Back-office Services' },
+                      { value: 'fund_administration', label: 'Fund Administration' },
+                      { value: 'capacity_building', label: 'Capacity Building/TA Support' },
+                      { value: 'opex_financing', label: 'Op-ex Financing' },
+                      { value: 'warehousing_capital', label: 'Warehousing Lines of Credit' },
                     ].map(service => (
-                      <div key={service.value} className="flex items-center space-x-3">
+                      <div key={service.value} className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded">
                         <Checkbox
                           checked={interestedServices.includes(service.value)}
                           onCheckedChange={() => handleCheckboxChange('interested_services', service.value)}
@@ -355,16 +398,20 @@ const LaunchPlusAssessment = () => {
                       </div>
                     ))}
                   </div>
+                  {errors.interested_services && <span className="text-sm text-red-600">{errors.interested_services.message}</span>}
+                </div>
 
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium text-gray-700">Geographical Focus (Select all that apply)</Label>
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium text-gray-700">Geographical Focus (Select all that apply) *</Label>
+                  <div className="space-y-2">
                     {[
-                      { value: 'local', label: 'Local' },
-                      { value: 'regional', label: 'Regional' },
-                      { value: 'national', label: 'National' },
-                      { value: 'international', label: 'International' },
+                      { value: 'west_africa', label: 'West Africa' },
+                      { value: 'east_africa', label: 'East Africa' },
+                      { value: 'central_africa', label: 'Central Africa' },
+                      { value: 'southern_africa', label: 'Southern Africa' },
+                      { value: 'north_africa', label: 'North Africa' },
                     ].map(region => (
-                      <div key={region.value} className="flex items-center space-x-3">
+                      <div key={region.value} className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded">
                         <Checkbox
                           checked={geographicalFocus.includes(region.value)}
                           onCheckedChange={() => handleCheckboxChange('geographical_focus', region.value)}
@@ -375,32 +422,36 @@ const LaunchPlusAssessment = () => {
                       </div>
                     ))}
                   </div>
+                  {errors.geographical_focus && <span className="text-sm text-red-600">{errors.geographical_focus.message}</span>}
                 </div>
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="legal_status" className="text-sm font-medium text-gray-700">Legal Status</Label>
-                  <Input
-                    id="legal_status"
-                    {...register('legal_status')}
-                    className="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:ring-gray-500 rounded-md h-10"
-                    placeholder="Describe your fund's legal status"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="legal_status" className="text-sm font-medium text-gray-700">Legal Status</Label>
+                <Input
+                  id="legal_status"
+                  {...register('legal_status')}
+                  className="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:ring-gray-500 rounded-md h-10"
+                  placeholder="Describe your fund's legal status"
+                />
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="operations_vs_domicile" className="text-sm font-medium text-gray-700">Operations vs Domicile</Label>
-                  <Textarea
-                    id="operations_vs_domicile"
-                    {...register('operations_vs_domicile')}
-                    className="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:ring-gray-500 rounded-md"
-                    rows={3}
-                    placeholder="Explain your operations and domicile setup"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="operations_vs_domicile" className="text-sm font-medium text-gray-700">Operations vs Domicile</Label>
+                <Textarea
+                  id="operations_vs_domicile"
+                  {...register('operations_vs_domicile')}
+                  className="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:ring-gray-500 rounded-md"
+                  rows={3}
+                  placeholder="Explain your operations and domicile setup"
+                />
+              </div>
 
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">Capital Raised (in USD)</Label>
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="capital_raised_grants" className="text-sm font-medium text-gray-700">Capital Raised - Grants</Label>
+                    <Label htmlFor="capital_raised_grants" className="text-xs text-gray-600">Grants</Label>
                     <Input
                       id="capital_raised_grants"
                       type="number"
@@ -411,7 +462,7 @@ const LaunchPlusAssessment = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="capital_raised_first_loss" className="text-sm font-medium text-gray-700">Capital Raised - First Loss</Label>
+                    <Label htmlFor="capital_raised_first_loss" className="text-xs text-gray-600">First Loss</Label>
                     <Input
                       id="capital_raised_first_loss"
                       type="number"
@@ -422,7 +473,7 @@ const LaunchPlusAssessment = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="capital_raised_equity" className="text-sm font-medium text-gray-700">Capital Raised - Equity</Label>
+                    <Label htmlFor="capital_raised_equity" className="text-xs text-gray-600">Equity</Label>
                     <Input
                       id="capital_raised_equity"
                       type="number"
@@ -434,9 +485,9 @@ const LaunchPlusAssessment = () => {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-4">
+                <div className="grid md:grid-cols-3 gap-4 mt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="capital_raised_debt" className="text-sm font-medium text-gray-700">Capital Raised - Debt</Label>
+                    <Label htmlFor="capital_raised_debt" className="text-xs text-gray-600">Debt</Label>
                     <Input
                       id="capital_raised_debt"
                       type="number"
@@ -447,7 +498,7 @@ const LaunchPlusAssessment = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="capital_raised_senior" className="text-sm font-medium text-gray-700">Capital Raised - Senior</Label>
+                    <Label htmlFor="capital_raised_senior" className="text-xs text-gray-600">Senior Capital</Label>
                     <Input
                       id="capital_raised_senior"
                       type="number"
@@ -458,7 +509,7 @@ const LaunchPlusAssessment = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="capital_raised_other" className="text-sm font-medium text-gray-700">Capital Raised - Other</Label>
+                    <Label htmlFor="capital_raised_other" className="text-xs text-gray-600">Other</Label>
                     <Input
                       id="capital_raised_other"
                       type="number"
@@ -469,21 +520,24 @@ const LaunchPlusAssessment = () => {
                     />
                   </div>
                 </div>
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="capital_raised_other_description" className="text-sm font-medium text-gray-700">If Other, please describe</Label>
-                  <Textarea
-                    id="capital_raised_other_description"
-                    {...register('capital_raised_other_description')}
-                    className="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:ring-gray-500 rounded-md"
-                    rows={3}
-                    placeholder="Describe other capital sources"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="capital_raised_other_description" className="text-sm font-medium text-gray-700">If Other, please describe</Label>
+                <Textarea
+                  id="capital_raised_other_description"
+                  {...register('capital_raised_other_description')}
+                  className="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:ring-gray-500 rounded-md"
+                  rows={3}
+                  placeholder="Describe other capital sources"
+                />
+              </div>
 
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">Investment Information</Label>
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="investments_count" className="text-sm font-medium text-gray-700">Number of Investments</Label>
+                    <Label htmlFor="investments_count" className="text-xs text-gray-600">Number of Investments</Label>
                     <Input
                       id="investments_count"
                       type="number"
@@ -494,7 +548,7 @@ const LaunchPlusAssessment = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="capital_committed" className="text-sm font-medium text-gray-700">Capital Committed</Label>
+                    <Label htmlFor="capital_committed" className="text-xs text-gray-600">Capital Committed (USD)</Label>
                     <Input
                       id="capital_committed"
                       type="number"
@@ -505,7 +559,7 @@ const LaunchPlusAssessment = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="capital_disbursed" className="text-sm font-medium text-gray-700">Capital Disbursed</Label>
+                    <Label htmlFor="capital_disbursed" className="text-xs text-gray-600">Capital Disbursed (USD)</Label>
                     <Input
                       id="capital_disbursed"
                       type="number"
@@ -516,20 +570,21 @@ const LaunchPlusAssessment = () => {
                     />
                   </div>
                 </div>
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="program_expectations" className="text-sm font-medium text-gray-700">Program Expectations</Label>
-                  <Textarea
-                    id="program_expectations"
-                    {...register('program_expectations')}
-                    className="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:ring-gray-500 rounded-md"
-                    rows={5}
-                    placeholder="Describe your expectations from the LAUNCH+ program"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </form>
+              <div className="space-y-2">
+                <Label htmlFor="program_expectations" className="text-sm font-medium text-gray-700">What do you expect from the LAUNCH+ program? (Max 250 words)</Label>
+                <Textarea
+                  id="program_expectations"
+                  {...register('program_expectations')}
+                  className="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:ring-gray-500 rounded-md"
+                  rows={5}
+                  placeholder="Describe your expectations from the LAUNCH+ program..."
+                  maxLength={1500}
+                />
+              </div>
+            </CardContent>
+          </Card>
         );
       
       default:
