@@ -49,7 +49,7 @@ const LaunchPlusAssessment = () => {
   const geographicalFocus = watch('geographical_focus') || [];
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentSection]);
 
   const totalSections = 3;
@@ -112,14 +112,14 @@ const LaunchPlusAssessment = () => {
   const handleNext = () => {
     if (currentSection < totalSections) {
       setCurrentSection(currentSection + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   };
 
   const handlePrevious = () => {
     if (currentSection > 1) {
       setCurrentSection(currentSection - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   };
 
@@ -583,7 +583,7 @@ const LaunchPlusAssessment = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => { if (e.key === 'Enter' && currentSection < totalSections) e.preventDefault(); }} className="space-y-8">
           {renderSection()}
 
           {/* Navigation Buttons */}
