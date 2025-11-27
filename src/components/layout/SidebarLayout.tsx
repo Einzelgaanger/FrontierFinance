@@ -186,7 +186,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     if (href === "/profile" && location.pathname === "/profile") return true;
     if (href === "/network" && location.pathname === "/network") return true;
     if (href === "/admin/launch-plus-analytics" && location.pathname === "/admin/launch-plus-analytics") return true;
-    if (href === "/admin" && location.pathname.startsWith("/admin")) return true;
+    if (href === "/admin" && location.pathname === "/admin") return true;
     if (href === "/portiq" && location.pathname === "/portiq") return true;
     if (href === "/application" && location.pathname === "/application") return true;
     if (href === "/blogs" && location.pathname === "/blogs") return true;
@@ -419,13 +419,15 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                       <h2 className="text-2xl font-bold text-white transition-colors">
                         {location.pathname.startsWith('/survey') && 'Surveys'}
                         {location.pathname === '/network' && 'Network Directory'}
-                        {location.pathname.startsWith('/admin') && 'Admin Panel'}
+                        {location.pathname === '/admin/launch-plus-analytics' && 'Launch + Analytics'}
+                        {(location.pathname === '/admin' || (location.pathname.startsWith('/admin') && location.pathname !== '/admin/launch-plus-analytics')) && 'Admin Panel'}
                         {location.pathname === '/portiq' && 'PortIQ - AI Assistant'}
                       </h2>
                       <p className="text-sm text-white/70 transition-colors">
                         {location.pathname.startsWith('/survey') && 'Complete and view survey responses'}
                         {location.pathname === '/network' && 'Browse and connect with fund managers'}
-                        {location.pathname.startsWith('/admin') && 'Manage users, content, and system settings'}
+                        {location.pathname === '/admin/launch-plus-analytics' && 'View and analyze LAUNCH+ assessment submissions'}
+                        {(location.pathname === '/admin' || (location.pathname.startsWith('/admin') && location.pathname !== '/admin/launch-plus-analytics')) && 'Manage users, content, and system settings'}
                         {location.pathname === '/portiq' && 'Your intelligent assistant for data insights and analysis'}
                       </p>
                     </>
