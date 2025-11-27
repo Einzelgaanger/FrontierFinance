@@ -537,7 +537,7 @@ const LaunchPlusAssessment = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50 relative overflow-hidden p-4">
       {/* Background image */}
-      <div className="fixed inset-0 z-0 opacity-10">
+      <div className="fixed inset-0 z-0 opacity-5">
         <img 
           src="/Launch+2.jpg" 
           alt="Launch+ Background" 
