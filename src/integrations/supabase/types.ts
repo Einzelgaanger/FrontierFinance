@@ -306,6 +306,105 @@ export type Database = {
         }
         Relationships: []
       }
+      launch_plus_assessments: {
+        Row: {
+          address: string | null
+          capital_committed: number | null
+          capital_disbursed: number | null
+          capital_raised_debt: number | null
+          capital_raised_equity: number | null
+          capital_raised_first_loss: number | null
+          capital_raised_grants: number | null
+          capital_raised_other: number | null
+          capital_raised_other_description: string | null
+          capital_raised_senior: number | null
+          created_at: string | null
+          email: string
+          full_name: string
+          fund_name: string
+          fund_stages: string[] | null
+          fund_website: string | null
+          geographical_focus: string[] | null
+          id: string
+          interested_services: string[] | null
+          investments_count: number | null
+          ip_address: string | null
+          legal_status: string | null
+          linkedin_profile: string | null
+          operations_vs_domicile: string | null
+          other_social_media: string | null
+          phone_whatsapp: string | null
+          program_expectations: string | null
+          stage_explanation: string | null
+          submission_status: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          address?: string | null
+          capital_committed?: number | null
+          capital_disbursed?: number | null
+          capital_raised_debt?: number | null
+          capital_raised_equity?: number | null
+          capital_raised_first_loss?: number | null
+          capital_raised_grants?: number | null
+          capital_raised_other?: number | null
+          capital_raised_other_description?: string | null
+          capital_raised_senior?: number | null
+          created_at?: string | null
+          email: string
+          full_name: string
+          fund_name: string
+          fund_stages?: string[] | null
+          fund_website?: string | null
+          geographical_focus?: string[] | null
+          id?: string
+          interested_services?: string[] | null
+          investments_count?: number | null
+          ip_address?: string | null
+          legal_status?: string | null
+          linkedin_profile?: string | null
+          operations_vs_domicile?: string | null
+          other_social_media?: string | null
+          phone_whatsapp?: string | null
+          program_expectations?: string | null
+          stage_explanation?: string | null
+          submission_status?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          address?: string | null
+          capital_committed?: number | null
+          capital_disbursed?: number | null
+          capital_raised_debt?: number | null
+          capital_raised_equity?: number | null
+          capital_raised_first_loss?: number | null
+          capital_raised_grants?: number | null
+          capital_raised_other?: number | null
+          capital_raised_other_description?: string | null
+          capital_raised_senior?: number | null
+          created_at?: string | null
+          email?: string
+          full_name?: string
+          fund_name?: string
+          fund_stages?: string[] | null
+          fund_website?: string | null
+          geographical_focus?: string[] | null
+          id?: string
+          interested_services?: string[] | null
+          investments_count?: number | null
+          ip_address?: string | null
+          legal_status?: string | null
+          linkedin_profile?: string | null
+          operations_vs_domicile?: string | null
+          other_social_media?: string | null
+          phone_whatsapp?: string | null
+          program_expectations?: string | null
+          stage_explanation?: string | null
+          submission_status?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       survey_responses_2021: {
         Row: {
           additional_comments: string | null
