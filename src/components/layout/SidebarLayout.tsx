@@ -26,7 +26,6 @@ import {
   ClipboardList,
   Sparkles,
   Newspaper,
-  LineChart,
   LockKeyhole,
   UserCircle,
   PlusCircle,
@@ -136,16 +135,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
       color: "teal"
     },
     { 
-      name: "Analytics", 
-      href: "/analytics", 
-      icon: LineChart, 
-      roles: ["admin"],
-      description: "Data insights and reports",
-      badge: null,
-      color: "red"
-    },
-    { 
-      name: "LAUNCH+ Analytics", 
+      name: "Launch +", 
       href: "/admin/launch-plus-analytics", 
       icon: Rocket, 
       roles: ["admin"],
@@ -195,7 +185,6 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     if (href === "/dashboard" && location.pathname === "/dashboard") return true;
     if (href === "/profile" && location.pathname === "/profile") return true;
     if (href === "/network" && location.pathname === "/network") return true;
-    if (href === "/analytics" && location.pathname === "/analytics") return true;
     if (href === "/admin/launch-plus-analytics" && location.pathname === "/admin/launch-plus-analytics") return true;
     if (href === "/admin" && location.pathname.startsWith("/admin")) return true;
     if (href === "/portiq" && location.pathname === "/portiq") return true;
@@ -221,10 +210,6 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
           case 'n':
             e.preventDefault();
             navigate('/network');
-            break;
-          case 'a':
-            e.preventDefault();
-            navigate('/analytics');
             break;
           case 'p':
             e.preventDefault();
@@ -434,14 +419,12 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                       <h2 className="text-2xl font-bold text-white transition-colors">
                         {location.pathname.startsWith('/survey') && 'Surveys'}
                         {location.pathname === '/network' && 'Network Directory'}
-                        {location.pathname === '/analytics' && 'Analytics Hub'}
                         {location.pathname.startsWith('/admin') && 'Admin Panel'}
                         {location.pathname === '/portiq' && 'PortIQ - AI Assistant'}
                       </h2>
                       <p className="text-sm text-white/70 transition-colors">
                         {location.pathname.startsWith('/survey') && 'Complete and view survey responses'}
                         {location.pathname === '/network' && 'Browse and connect with fund managers'}
-                        {location.pathname === '/analytics' && 'Data insights and comprehensive reports'}
                         {location.pathname.startsWith('/admin') && 'Manage users, content, and system settings'}
                         {location.pathname === '/portiq' && 'Your intelligent assistant for data insights and analysis'}
                       </p>
