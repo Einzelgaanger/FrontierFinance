@@ -583,7 +583,20 @@ const LaunchPlusAssessment = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => { if (e.key === 'Enter' && currentSection < totalSections) e.preventDefault(); }} className="space-y-8">
+        <form 
+          onSubmit={(e) => {
+            e.preventDefault();
+            // Only submit if explicitly on final section AND submit button is clicked
+            // This prevents accidental Enter key submissions
+          }} 
+          onKeyDown={(e) => { 
+            // Prevent ALL Enter key submissions - force users to click Submit button
+            if (e.key === 'Enter') {
+              e.preventDefault();
+            }
+          }} 
+          className="space-y-8"
+        >
           {renderSection()}
 
           {/* Navigation Buttons */}
@@ -610,7 +623,8 @@ const LaunchPlusAssessment = () => {
               </Button>
             ) : (
               <Button
-                type="submit"
+                type="button"
+                onClick={handleSubmit(onSubmit)}
                 disabled={isSubmitting}
                 className="group px-8 py-6 text-lg rounded-full bg-gradient-to-r from-success to-accent hover:shadow-2xl transition-all hover:scale-105"
               >
