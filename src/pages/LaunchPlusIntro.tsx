@@ -2,7 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Users, TrendingUp, Rocket } from 'lucide-react';
+import { ArrowRight, Users, TrendingUp, Rocket, Mail, Globe, ExternalLink, Twitter, Linkedin, Shield } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const LaunchPlusIntro = () => {
   const navigate = useNavigate();
@@ -270,6 +271,97 @@ const LaunchPlusIntro = () => {
           }
         `}</style>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-gradient-to-br from-black via-blue-950 to-black py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Company Info */}
+            <div className="col-span-1 lg:col-span-2">
+              <div className="flex justify-start mb-4">
+                <img src="/CFF%20LOGO.png" alt="CFF Logo" className="h-16 w-auto object-contain" onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }} />
+              </div>
+              <p className="text-gray-300 mb-6 text-base leading-relaxed max-w-md">
+                LAUNCH+ is an integrated fund administration platform designed to accelerate the flow of "fit for purpose" financing to Africa's growth-oriented small businesses.
+              </p>
+              <div className="space-y-3">
+                <a 
+                  href="mailto:info@frontierfinance.org" 
+                  className="flex items-center space-x-3 text-blue-300 hover:text-blue-200 transition-colors group"
+                >
+                  <div className="w-8 h-8 bg-blue-600/20 rounded-full flex items-center justify-center group-hover:bg-blue-600/30 transition-colors">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-medium">info@frontierfinance.org</span>
+                </a>
+              </div>
+            </div>
+            
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-white font-semibold mb-4 text-base flex items-center">
+                <Globe className="w-4 h-4 mr-2" />
+                Quick Links
+              </h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link to="/launch-plus-assessment" className="text-blue-300 hover:text-blue-200 transition-colors flex items-center group">
+                    <Rocket className="w-3 h-3 mr-2 group-hover:scale-110 transition-transform" />
+                    Start Questionnaire
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/auth" className="text-blue-300 hover:text-blue-200 transition-colors flex items-center group">
+                    <ExternalLink className="w-3 h-3 mr-2 group-hover:scale-110 transition-transform" />
+                    Login / Sign Up
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/network" className="text-blue-300 hover:text-blue-200 transition-colors flex items-center group">
+                    <Users className="w-3 h-3 mr-2 group-hover:scale-110 transition-transform" />
+                    Fund Manager Directory
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            
+            {/* Social Media */}
+            <div>
+              <h3 className="text-white font-semibold mb-4 text-base flex items-center">
+                <Shield className="w-4 h-4 mr-2" />
+                Connect With Us
+              </h3>
+              <p className="text-gray-400 text-sm mb-4">
+                Follow us for updates on LAUNCH+ and small business finance news
+              </p>
+              <div className="flex space-x-3">
+                <a href="https://twitter.com/CollabFFinance" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
+                  <Twitter className="w-5 h-5 text-white" />
+                </a>
+                <a href="https://www.linkedin.com/company/collaborative-for-frontier-finance/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 hover:bg-blue-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
+                  <Linkedin className="w-5 h-5 text-white" />
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-blue-800 mt-8 pt-6">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-blue-300 text-sm mb-2 md:mb-0">
+                © 2025 Collaborative for Frontier Finance. All rights reserved.
+              </p>
+              <div className="flex space-x-4 text-sm">
+                <a href="#" className="text-blue-300 hover:text-blue-200 transition-colors">Privacy Policy</a>
+                <span className="text-blue-600">•</span>
+                <a href="#" className="text-blue-300 hover:text-blue-200 transition-colors">Terms of Service</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
