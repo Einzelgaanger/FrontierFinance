@@ -1,14 +1,40 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, Users, TrendingUp, Rocket } from 'lucide-react';
 
 const LaunchPlusIntro = () => {
   const navigate = useNavigate();
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -100px 0px' }
+    );
+
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
   }, []);
 
   return (
@@ -60,7 +86,7 @@ const LaunchPlusIntro = () => {
       </section>
 
       {/* About Section */}
-      <section className="relative py-8 sm:py-12 md:py-16 overflow-hidden rounded-t-[1.5rem] sm:rounded-t-[2rem] md:rounded-t-[2.5rem] bg-amber-50 -mt-8 sm:-mt-10 md:-mt-12">
+      <section ref={sectionRef} className="relative py-8 sm:py-12 md:py-16 overflow-hidden rounded-t-[1.5rem] sm:rounded-t-[2rem] md:rounded-t-[2.5rem] bg-amber-50 -mt-8 sm:-mt-10 md:-mt-12">
         {/* Extra padding at the top to compensate for the negative margin */}
         <div className="absolute top-0 left-0 right-0 h-10 sm:h-14 md:h-18 bg-amber-50 rounded-t-[1.5rem] sm:rounded-t-[2rem] md:rounded-t-[2.5rem]"></div>
         
@@ -70,46 +96,97 @@ const LaunchPlusIntro = () => {
         <div className="hidden md:block absolute -bottom-8 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
 
         <div className="relative max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 mt-0 sm:mt-2 md:mt-4">
-          {/* Main Content */}
-          <div className="mb-8 sm:mb-12">
-            <div className="inline-block mb-2 sm:mb-3">
-              <span className="px-3 sm:px-4 md:px-6 py-1 sm:py-1.5 md:py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full text-blue-700 text-xs sm:text-sm font-semibold">
-                About LAUNCH+
-              </span>
+          {/* Top Section: Title and Image Side by Side */}
+          <div className={`grid grid-cols-1 lg:grid-cols-[1fr,1fr] gap-6 sm:gap-8 mb-8 sm:mb-12 transition-all duration-[1500ms] ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            {/* Title and Content on the Left */}
+            <div className="order-1 lg:order-1 flex flex-col justify-center">
+              <div className="inline-block mb-2 sm:mb-3">
+                <span className="px-3 sm:px-4 md:px-6 py-1 sm:py-1.5 md:py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full text-blue-700 text-xs sm:text-sm font-semibold">
+                  About LAUNCH+
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-3 sm:mb-4 md:mb-6">
+                Accelerating Small Business Growth Funds
+              </h2>
+              <div className="w-16 sm:w-20 md:w-24 h-1 sm:h-1.5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 mb-2 sm:mb-3 md:mb-4"></div>
+              
+              <div className="space-y-4 sm:space-y-6 text-sm sm:text-base text-gray-700 leading-relaxed">
+                <p>
+                  <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">LAUNCH+</span> is an integrated Mauritius domiciled fund administration platform, 
+                  structured as a registered Variable Capital Company (VCC) vehicle, developed by the 
+                  Collaborative for Frontier Finance (CFF) together with its network of Small Business 
+                  Growth Fund Managers.
+                </p>
+
+                <p>
+                  The platform is designed to accelerate the flow of "fit for purpose" financing to Africa's 
+                  growth-oriented small businesses - key drivers of job creation and economic resilience. 
+                  CFF research shows there are now over <span className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">100 Small Business Growth Funds (GFs)</span> aiming 
+                  to deploy <span className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">$2.25bn</span> in funding to support the growth of Africa's "missing middle," 
+                  yet to date, these funds have only been able to secure 1/3rd of the institutional and 
+                  development capital they are targeting.
+                </p>
+              </div>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-3 sm:mb-4 md:mb-6">
-              Accelerating Small Business Growth Funds
-            </h2>
-            <div className="w-16 sm:w-20 md:w-24 h-1 sm:h-1.5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 mb-2 sm:mb-3 md:mb-4"></div>
             
-            <div className="space-y-4 sm:space-y-6 text-sm sm:text-base text-gray-700 leading-relaxed">
-              <p>
-                <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">LAUNCH+</span> is an integrated Mauritius domiciled fund administration platform, 
-                structured as a registered Variable Capital Company (VCC) vehicle, developed by the 
-                Collaborative for Frontier Finance (CFF) together with its network of Small Business 
-                Growth Fund Managers.
-              </p>
+            {/* Large Image on the Right */}
+            <div className="order-2 lg:order-2">
+              <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-0 shadow-2xl border border-white/20 overflow-hidden group hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2">
+                <div className="relative h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px]">
+                  <img 
+                    src="/Launch%2B1.jpg" 
+                    alt="LAUNCH+ Network Gathering" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
 
-              <p>
-                The platform is designed to accelerate the flow of "fit for purpose" financing to Africa's 
-                growth-oriented small businesses - key drivers of job creation and economic resilience. 
-                CFF research shows there are now over <span className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">100 Small Business Growth Funds (GFs)</span> aiming 
-                to deploy <span className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">$2.25bn</span> in funding to support the growth of Africa's "missing middle," 
-                yet to date, these funds have only been able to secure 1/3rd of the institutional and 
-                development capital they are targeting.
-              </p>
+          {/* Bottom Section: Image and Content */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 -mt-6 sm:-mt-8 md:-mt-12">
+            {/* Left Column: Second Image */}
+            <div className="space-y-4 sm:space-y-6">
+              <div className={`transition-all duration-[1500ms] delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-0 shadow-xl border border-white/20 overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                  <div className="relative h-[200px] sm:h-[250px] md:h-[280px]">
+                    <img 
+                      src="/Launch%2B2.jpg" 
+                      alt="LAUNCH+ Convening Event" 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
 
-              <p>
+            {/* Right Column: Platform Description */}
+            <div className={`mt-8 sm:mt-12 transition-all duration-[1500ms] delay-400 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
+                Platform Benefits
+              </h3>
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-4">
                 The platform is designed to accelerate cohorts of GFs, providing support needed to refine 
                 their investment strategies, attract institutional and development capital and scale more 
                 rapidly. By offering cost-efficient shared services, LAUNCH+ ensures world class governance 
                 and operational performance.
               </p>
+              <p className="text-xs sm:text-sm text-gray-600">
+                Join a network of fund managers working together to bridge the financing gap for Africa's growing businesses.
+              </p>
             </div>
           </div>
 
           {/* Services Cards */}
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12 mt-8 sm:mt-12">
             <Card className="bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-3 mb-3">

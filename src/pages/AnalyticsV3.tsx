@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   BarChart,
   Bar,
@@ -53,7 +54,9 @@ import {
   CheckCircle,
   AlertCircle,
   Info,
-  Eye
+  Eye,
+  Sparkles,
+  Zap
 } from 'lucide-react';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
@@ -231,31 +234,69 @@ const AnalyticsV3 = () => {
     };
   }, [surveyData, userRole]);
 
+  // Year selection actions for header
+  const yearSelectionActions = (
+    <div className="flex items-center gap-2">
+      {availableYears.map((year) => {
+        const isActive = selectedYear === year;
+        return (
+          <Button
+            key={year}
+            variant={isActive ? 'default' : 'secondary'}
+            className={`h-8 px-3 text-xs ${
+              isActive ? 'shadow-md' : 'opacity-80 hover:opacity-100'
+            }`}
+            onClick={() => setSelectedYear(year)}
+            aria-pressed={isActive}
+          >
+            {year}
+          </Button>
+        );
+      })}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={fetchSurveyData}
+        disabled={loading}
+        className="gap-2"
+      >
+        <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+        Refresh
+      </Button>
+    </div>
+  );
+
   // Render overview section
   const renderOverview = () => (
     <div className="space-y-6">
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Responses</CardTitle>
-            <Users className="h-4 w-4 text-blue-600" />
+        <Card className="relative overflow-hidden border-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-blue-600/5 to-transparent" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
+            <CardTitle className="text-sm font-medium">Total Responses</CardTitle>
+            <div className="p-2 bg-blue-500/10 rounded-lg">
+              <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{overviewMetrics?.totalResponses || 0}</div>
-            <p className="text-xs text-gray-500 mt-1">
+          <CardContent className="relative">
+            <div className="text-3xl font-bold">{overviewMetrics?.totalResponses || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1">
               {overviewMetrics?.completedThisMonth || 0} this month
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Response Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-green-600" />
+        <Card className="relative overflow-hidden border-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-green-600/5 to-transparent" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
+            <CardTitle className="text-sm font-medium">Response Rate</CardTitle>
+            <div className="p-2 bg-green-500/10 rounded-lg">
+              <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{overviewMetrics?.responseRate || 0}%</div>
+          <CardContent className="relative">
+            <div className="text-3xl font-bold">{overviewMetrics?.responseRate || 0}%</div>
             <p className="text-xs text-green-600 mt-1 flex items-center">
               <ArrowUp className="h-3 w-3 mr-1" />
               +12% from last year
@@ -263,27 +304,33 @@ const AnalyticsV3 = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Visible Fields</CardTitle>
-            <Eye className="h-4 w-4 text-purple-600" />
+        <Card className="relative overflow-hidden border-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-purple-600/5 to-transparent" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
+            <CardTitle className="text-sm font-medium">Visible Fields</CardTitle>
+            <div className="p-2 bg-purple-500/10 rounded-lg">
+              <Eye className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{overviewMetrics?.visibleFieldsCount || 0}</div>
-            <p className="text-xs text-gray-500 mt-1">
+          <CardContent className="relative">
+            <div className="text-3xl font-bold">{overviewMetrics?.visibleFieldsCount || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1">
               Based on your {userRole} role
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Data Quality</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-600" />
+        <Card className="relative overflow-hidden border-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-600/5 to-transparent" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
+            <CardTitle className="text-sm font-medium">Data Quality</CardTitle>
+            <div className="p-2 bg-orange-500/10 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">94%</div>
-            <p className="text-xs text-gray-500 mt-1">
+          <CardContent className="relative">
+            <div className="text-3xl font-bold">94%</div>
+            <p className="text-xs text-muted-foreground mt-1">
               High completeness
             </p>
           </CardContent>
@@ -292,23 +339,40 @@ const AnalyticsV3 = () => {
 
       {/* Geographic Distribution (if visible) */}
       {canViewField('geographic_markets') && (
-        <Card>
+        <Card className="hover-lift">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Globe className="h-5 w-5 text-blue-600" />
-              Geographic Distribution
-            </CardTitle>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="p-2 bg-blue-500/10 rounded-lg">
+                <Globe className="h-5 w-5 text-blue-600" />
+              </div>
+              <CardTitle className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                Geographic Distribution
+              </CardTitle>
+            </div>
             <CardDescription>Market presence across regions</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={calculateDistribution('geographic_markets').slice(0, 10)}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-                <YAxis />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis 
+                  dataKey="name" 
+                  angle={-45} 
+                  textAnchor="end" 
+                  height={100}
+                  tick={{ fontSize: 11 }}
+                  stroke="hsl(var(--muted-foreground))"
+                />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '6px'
+                  }}
+                />
                 <Legend />
-                <Bar dataKey="value" fill="#3b82f6" name="Fund Count" />
+                <Bar dataKey="value" fill="#3b82f6" name="Fund Count" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -318,12 +382,16 @@ const AnalyticsV3 = () => {
       {/* Fund Type Distribution */}
       {canViewField('fund_type_status') && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
+          <Card className="hover-lift">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <PieChartIcon className="h-5 w-5 text-green-600" />
-                Fund Type Distribution
-              </CardTitle>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-2 bg-green-500/10 rounded-lg">
+                  <PieChartIcon className="h-5 w-5 text-green-600" />
+                </div>
+                <CardTitle className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                  Fund Type Distribution
+                </CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
@@ -332,9 +400,9 @@ const AnalyticsV3 = () => {
                     data={calculateDistribution('fund_type_status')}
                     cx="50%"
                     cy="50%"
-                    labelLine={false}
+                    labelLine={true}
                     label={({ name, percentage }) => `${name}: ${percentage}%`}
-                    outerRadius={80}
+                    outerRadius={90}
                     fill="#8884d8"
                     dataKey="value"
                   >
@@ -342,7 +410,13 @@ const AnalyticsV3 = () => {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '6px'
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
@@ -350,28 +424,30 @@ const AnalyticsV3 = () => {
 
           {/* Sector Focus */}
           {canViewField('sector_focus') && (
-            <Card>
+            <Card className="hover-lift">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Target className="h-5 w-5 text-orange-600" />
-                  Top Sectors
-                </CardTitle>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="p-2 bg-orange-500/10 rounded-lg">
+                    <Target className="h-5 w-5 text-orange-600" />
+                  </div>
+                  <CardTitle className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                    Top Sectors
+                  </CardTitle>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {calculateDistribution('sector_focus').slice(0, 8).map((sector, idx) => (
-                    <div key={idx} className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">{sector.name}</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-gradient-to-r from-orange-400 to-orange-600"
-                            style={{ width: `${sector.percentage}%` }}
-                          />
-                        </div>
-                        <span className="text-sm font-semibold text-gray-900 w-12 text-right">
-                          {sector.percentage}%
-                        </span>
+                    <div key={idx} className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="font-medium text-gray-700">{sector.name}</span>
+                        <span className="text-muted-foreground">{sector.percentage}%</span>
+                      </div>
+                      <div className="w-full bg-secondary rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-orange-400 to-orange-600 h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${sector.percentage}%` }}
+                        />
                       </div>
                     </div>
                   ))}
@@ -400,12 +476,16 @@ const AnalyticsV3 = () => {
     return (
       <div className="space-y-6">
         {canViewField('fte_staff_current') && (
-          <Card>
+          <Card className="hover-lift">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-blue-600" />
-                Team Size Distribution
-              </CardTitle>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-2 bg-blue-500/10 rounded-lg">
+                  <Users className="h-5 w-5 text-blue-600" />
+                </div>
+                <CardTitle className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                  Team Size Distribution
+                </CardTitle>
+              </div>
               <CardDescription>Full-time equivalent staff analysis</CardDescription>
             </CardHeader>
             <CardContent>
@@ -414,21 +494,21 @@ const AnalyticsV3 = () => {
                   const stats = calculateNumericStats('fte_staff_current');
                   return (
                     <>
-                      <div>
-                        <p className="text-sm text-gray-600">Average</p>
-                        <p className="text-2xl font-bold text-gray-900">{stats.avg.toFixed(1)}</p>
+                      <div className="p-3 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900">
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Average</p>
+                        <p className="text-xl font-bold">{stats.avg.toFixed(1)}</p>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Median</p>
-                        <p className="text-2xl font-bold text-gray-900">{stats.median}</p>
+                      <div className="p-3 rounded-lg bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Median</p>
+                        <p className="text-xl font-bold">{stats.median}</p>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Min</p>
-                        <p className="text-2xl font-bold text-gray-900">{stats.min}</p>
+                      <div className="p-3 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950 dark:to-orange-900">
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Min</p>
+                        <p className="text-xl font-bold">{stats.min}</p>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Max</p>
-                        <p className="text-2xl font-bold text-gray-900">{stats.max}</p>
+                      <div className="p-3 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900">
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Max</p>
+                        <p className="text-xl font-bold">{stats.max}</p>
                       </div>
                     </>
                   );
@@ -440,11 +520,21 @@ const AnalyticsV3 = () => {
                   data={calculateDistribution('fte_staff_current')
                     .map(item => ({ name: item.name, count: item.value }))}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="count" fill="#3b82f6" name="Number of Funds" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fontSize: 11 }}
+                    stroke="hsl(var(--muted-foreground))"
+                  />
+                  <YAxis stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '6px'
+                    }}
+                  />
+                  <Bar dataKey="count" fill="#3b82f6" name="Number of Funds" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
@@ -452,12 +542,16 @@ const AnalyticsV3 = () => {
         )}
 
         {canViewField('team_based') && (
-          <Card>
+          <Card className="hover-lift">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Building2 className="h-5 w-5 text-purple-600" />
-                Team Structure
-              </CardTitle>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-2 bg-purple-500/10 rounded-lg">
+                  <Building2 className="h-5 w-5 text-purple-600" />
+                </div>
+                <CardTitle className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                  Team Structure
+                </CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
@@ -466,7 +560,7 @@ const AnalyticsV3 = () => {
                     data={calculateDistribution('team_based')}
                     cx="50%"
                     cy="50%"
-                    labelLine={false}
+                    labelLine={true}
                     label={({ name, percentage }) => `${name}: ${percentage}%`}
                     outerRadius={100}
                     fill="#8884d8"
@@ -476,7 +570,13 @@ const AnalyticsV3 = () => {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '6px'
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
@@ -506,12 +606,16 @@ const AnalyticsV3 = () => {
     return (
       <div className="space-y-6">
         {visibleFinancialFields.map(field => (
-          <Card key={field}>
+          <Card key={field} className="hover-lift">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-green-600" />
-                {field.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-              </CardTitle>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-2 bg-green-500/10 rounded-lg">
+                  <DollarSign className="h-5 w-5 text-green-600" />
+                </div>
+                <CardTitle className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                  {field.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                </CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -519,25 +623,25 @@ const AnalyticsV3 = () => {
                   const stats = calculateNumericStats(field);
                   return (
                     <>
-                      <div>
-                        <p className="text-sm text-gray-600">Total</p>
-                        <p className="text-xl font-bold text-gray-900">${(stats.total / 1000000).toFixed(1)}M</p>
+                      <div className="p-3 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900">
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Total</p>
+                        <p className="text-xl font-bold">${(stats.total / 1000000).toFixed(1)}M</p>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Average</p>
-                        <p className="text-xl font-bold text-gray-900">${(stats.avg / 1000000).toFixed(1)}M</p>
+                      <div className="p-3 rounded-lg bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Average</p>
+                        <p className="text-xl font-bold">${(stats.avg / 1000000).toFixed(1)}M</p>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Median</p>
-                        <p className="text-xl font-bold text-gray-900">${(stats.median / 1000000).toFixed(1)}M</p>
+                      <div className="p-3 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950 dark:to-orange-900">
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Median</p>
+                        <p className="text-xl font-bold">${(stats.median / 1000000).toFixed(1)}M</p>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Min</p>
-                        <p className="text-xl font-bold text-gray-900">${(stats.min / 1000000).toFixed(1)}M</p>
+                      <div className="p-3 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900">
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Min</p>
+                        <p className="text-xl font-bold">${(stats.min / 1000000).toFixed(1)}M</p>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Max</p>
-                        <p className="text-xl font-bold text-gray-900">${(stats.max / 1000000).toFixed(1)}M</p>
+                      <div className="p-3 rounded-lg bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950 dark:to-pink-900">
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Max</p>
+                        <p className="text-xl font-bold">${(stats.max / 1000000).toFixed(1)}M</p>
                       </div>
                     </>
                   );
@@ -552,109 +656,107 @@ const AnalyticsV3 = () => {
 
   if (loading) {
     return (
-      <SidebarLayout>
-        <div className="p-6">
-          <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="h-32 bg-gray-200 rounded"></div>
-              ))}
-            </div>
-            <div className="h-64 bg-gray-200 rounded"></div>
+      <SidebarLayout headerActions={yearSelectionActions}>
+        <div className="container mx-auto p-6 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <Card key={i} className="relative overflow-hidden border-none">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-5 w-5 rounded" />
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-8 w-16 mb-2" />
+                  <Skeleton className="h-3 w-20" />
+                </CardContent>
+              </Card>
+            ))}
           </div>
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-48" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-64 w-full" />
+            </CardContent>
+          </Card>
         </div>
       </SidebarLayout>
     );
   }
 
   return (
-    <SidebarLayout>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics Dashboard</h1>
-                <p className="text-gray-600">Comprehensive survey data analysis and insights</p>
-              </div>
-              <div className="flex items-center gap-4">
-                <Badge variant="outline" className="flex items-center gap-2">
-                  <Calendar className="h-3 w-3" />
-                  Last updated: {lastUpdated.toLocaleTimeString()}
-                </Badge>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={fetchSurveyData}
-                  disabled={loading}
-                >
-                  <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                  Refresh
-                </Button>
-              </div>
+    <SidebarLayout headerActions={yearSelectionActions}>
+      <div className="container mx-auto p-6 space-y-6">
+        {/* Header Section */}
+        <div className="rounded-2xl border border-blue-900/15 bg-white shadow-md p-5">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-2">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-blue-900" />
+              <span className="text-xs font-semibold text-blue-900 uppercase tracking-[0.18em]">Analytics Dashboard</span>
             </div>
-
-            {/* Year Selector */}
-            <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm border">
-              <label className="text-sm font-medium text-gray-700">Select Year:</label>
-              <div className="flex gap-2">
-                {availableYears.map(year => (
-                  <Button
-                    key={year}
-                    variant={selectedYear === year ? 'default' : 'outline'}
-                    onClick={() => setSelectedYear(year)}
-                    className="min-w-[80px]"
-                  >
-                    {year}
-                  </Button>
-                ))}
-              </div>
-              <div className="ml-auto flex items-center gap-2">
-                <Badge className={`
-                  ${userRole === 'admin' ? 'bg-red-500' : ''}
-                  ${userRole === 'member' ? 'bg-green-500' : ''}
-                  ${userRole === 'viewer' ? 'bg-blue-500' : ''}
-                `}>
-                  {userRole?.toUpperCase()} ACCESS
-                </Badge>
-              </div>
+            <Badge className={`
+              ${userRole === 'admin' ? 'bg-red-500' : ''}
+              ${userRole === 'member' ? 'bg-green-500' : ''}
+              ${userRole === 'viewer' ? 'bg-blue-500' : ''}
+            `}>
+              {userRole?.toUpperCase()} ACCESS
+            </Badge>
+          </div>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-2">
+                Survey Analytics {selectedYear}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Comprehensive survey data analysis and insights • Last updated: {lastUpdated.toLocaleTimeString()}
+              </p>
             </div>
           </div>
-
-          {/* Analytics Sections */}
-          <Tabs value={activeSection} onValueChange={setActiveSection}>
-            <TabsList className="grid w-full grid-cols-4 mb-6">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="team">Team Analytics</TabsTrigger>
-              <TabsTrigger value="financial">Financial</TabsTrigger>
-              <TabsTrigger value="strategy">Strategy</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="overview">
-              {renderOverview()}
-            </TabsContent>
-
-            <TabsContent value="team">
-              {renderTeamAnalytics()}
-            </TabsContent>
-
-            <TabsContent value="financial">
-              {renderFinancialAnalytics()}
-            </TabsContent>
-
-            <TabsContent value="strategy">
-              <Card>
-                <CardContent className="text-center py-12">
-                  <Info className="h-12 w-12 text-blue-400 mx-auto mb-4" />
-                  <p className="text-gray-600">Strategy analytics coming soon</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
         </div>
+
+        {/* Analytics Sections */}
+        <Tabs value={activeSection} onValueChange={setActiveSection} className="space-y-6">
+          <TabsList className="bg-white/95 backdrop-blur-md shadow-md rounded-lg p-1 border">
+            <TabsTrigger value="overview" className="rounded-md">Overview</TabsTrigger>
+            <TabsTrigger value="team" className="rounded-md">Team Analytics</TabsTrigger>
+            <TabsTrigger value="financial" className="rounded-md">Financial</TabsTrigger>
+            <TabsTrigger value="strategy" className="rounded-md">Strategy</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview">
+            {renderOverview()}
+          </TabsContent>
+
+          <TabsContent value="team">
+            {renderTeamAnalytics()}
+          </TabsContent>
+
+          <TabsContent value="financial">
+            {renderFinancialAnalytics()}
+          </TabsContent>
+
+          <TabsContent value="strategy">
+            <Card>
+              <CardContent className="text-center py-12">
+                <Info className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+                <p className="text-gray-600">Strategy analytics coming soon</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
+
+      {/* Custom Styles */}
+      <style>{`
+        .hover-lift {
+          transition: all 0.3s ease;
+        }
+        .hover-lift:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+      `}</style>
     </SidebarLayout>
   );
 };
