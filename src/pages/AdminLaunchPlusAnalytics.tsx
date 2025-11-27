@@ -92,11 +92,13 @@ const AdminLaunchPlusAnalytics = () => {
   );
 
   const totalSubmissions = assessments.length;
+  
+  // Dynamically count fund stages (case-insensitive)
   const stageDistribution = {
-    concept: assessments.filter(a => a.fund_stages?.includes('concept')).length,
-    pilot: assessments.filter(a => a.fund_stages?.includes('pilot')).length,
-    implementation: assessments.filter(a => a.fund_stages?.includes('implementation')).length,
-    scale: assessments.filter(a => a.fund_stages?.includes('scale')).length,
+    concept: assessments.filter(a => a.fund_stages?.some(s => s.toLowerCase() === 'concept')).length,
+    pilot: assessments.filter(a => a.fund_stages?.some(s => s.toLowerCase() === 'pilot')).length,
+    implementation: assessments.filter(a => a.fund_stages?.some(s => s.toLowerCase() === 'implementation')).length,
+    scale: assessments.filter(a => a.fund_stages?.some(s => s.toLowerCase() === 'scale')).length,
   };
 
   const capitalByType = {
@@ -109,20 +111,22 @@ const AdminLaunchPlusAnalytics = () => {
   };
 
   const totalCapitalRaised = Object.values(capitalByType).reduce((sum, val) => sum + val, 0);
-  const serviceInterests = {
-    investment: assessments.filter(a => a.interested_services?.includes('investment')).length,
-    technical_assistance: assessments.filter(a => a.interested_services?.includes('technical_assistance')).length,
-    networking: assessments.filter(a => a.interested_services?.includes('networking')).length,
-    capacity_building: assessments.filter(a => a.interested_services?.includes('capacity_building')).length,
-    other: assessments.filter(a => a.interested_services?.includes('other')).length,
-  };
+  
+  // Dynamically count actual service interests from data
+  const allServices = assessments.flatMap(a => a.interested_services || []);
+  const uniqueServices = [...new Set(allServices)];
+  const serviceInterests = uniqueServices.reduce((acc, service) => {
+    acc[service] = assessments.filter(a => a.interested_services?.includes(service)).length;
+    return acc;
+  }, {} as Record<string, number>);
 
-  const geographicFocus = {
-    local: assessments.filter(a => a.geographical_focus?.includes('local')).length,
-    regional: assessments.filter(a => a.geographical_focus?.includes('regional')).length,
-    national: assessments.filter(a => a.geographical_focus?.includes('national')).length,
-    international: assessments.filter(a => a.geographical_focus?.includes('international')).length,
-  };
+  // Dynamically count actual geographic regions from data
+  const allRegions = assessments.flatMap(a => a.geographical_focus || []);
+  const uniqueRegions = [...new Set(allRegions)];
+  const geographicFocus = uniqueRegions.reduce((acc, region) => {
+    acc[region] = assessments.filter(a => a.geographical_focus?.includes(region)).length;
+    return acc;
+  }, {} as Record<string, number>);
 
   const totalInvestments = assessments.reduce((sum, a) => sum + (a.investments_count || 0), 0);
   const totalCommitted = assessments.reduce((sum, a) => sum + (a.capital_committed || 0), 0);
