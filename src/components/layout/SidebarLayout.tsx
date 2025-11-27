@@ -29,7 +29,8 @@ import {
   LineChart,
   LockKeyhole,
   UserCircle,
-  PlusCircle
+  PlusCircle,
+  Rocket
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -144,6 +145,15 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
       color: "red"
     },
     { 
+      name: "LAUNCH+ Analytics", 
+      href: "/admin/launch-plus-analytics", 
+      icon: Rocket, 
+      roles: ["admin"],
+      description: "LAUNCH+ assessment submissions",
+      badge: null,
+      color: "purple"
+    },
+    { 
       name: "Admin Panel", 
       href: "/admin", 
       icon: LockKeyhole, 
@@ -186,6 +196,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     if (href === "/profile" && location.pathname === "/profile") return true;
     if (href === "/network" && location.pathname === "/network") return true;
     if (href === "/analytics" && location.pathname === "/analytics") return true;
+    if (href === "/admin/launch-plus-analytics" && location.pathname === "/admin/launch-plus-analytics") return true;
     if (href === "/admin" && location.pathname.startsWith("/admin")) return true;
     if (href === "/portiq" && location.pathname === "/portiq") return true;
     if (href === "/application" && location.pathname === "/application") return true;
