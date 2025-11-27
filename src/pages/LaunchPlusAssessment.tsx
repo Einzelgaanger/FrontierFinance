@@ -58,7 +58,34 @@ const LaunchPlusAssessment = () => {
   
   const { register, handleSubmit, watch, setValue, trigger, formState: { errors } } = useForm<AssessmentFormData>({
     resolver: zodResolver(fullSchema),
-    mode: 'onChange',
+    mode: 'onTouched', // Only validate after user interacts with fields, prevents errors on mount
+    defaultValues: {
+      full_name: '',
+      email: '',
+      phone_whatsapp: '',
+      fund_name: '',
+      fund_website: '',
+      linkedin_profile: '',
+      address: '',
+      other_social_media: '',
+      fund_stages: [], // Initialize as empty array
+      stage_explanation: '',
+      interested_services: [], // Initialize as empty array
+      geographical_focus: [], // Initialize as empty array
+      legal_status: '',
+      operations_vs_domicile: '',
+      capital_raised_grants: undefined,
+      capital_raised_first_loss: undefined,
+      capital_raised_equity: undefined,
+      capital_raised_debt: undefined,
+      capital_raised_senior: undefined,
+      capital_raised_other: undefined,
+      capital_raised_other_description: '',
+      investments_count: undefined,
+      capital_committed: undefined,
+      capital_disbursed: undefined,
+      program_expectations: '',
+    },
   });
 
   const fundStages = watch('fund_stages') || [];
