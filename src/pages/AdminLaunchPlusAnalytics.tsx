@@ -564,252 +564,295 @@ const AdminLaunchPlusAnalytics = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Detail Modal */}
+        {/* Enhanced Detail Modal */}
         <Dialog open={!!selectedAssessment} onOpenChange={() => setSelectedAssessment(null)}>
-          <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto bg-white rounded-3xl">
-            <DialogHeader>
-              <DialogTitle className="text-3xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Complete Assessment Details
-              </DialogTitle>
-            </DialogHeader>
-            {selectedAssessment && (
-              <div className="space-y-8">
-                {/* Section 1: Basic Information */}
-                <div className="bg-blue-50/50 p-6 rounded-2xl">
-                  <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Section 1: Basic Information
-                  </h3>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-1">Full Name</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedAssessment.full_name}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-1">Email</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedAssessment.email}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-1">Phone / WhatsApp</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedAssessment.phone_whatsapp || 'Not provided'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-1">Address</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedAssessment.address || 'Not provided'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-1">Fund Name</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedAssessment.fund_name}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-1">Fund Website</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedAssessment.fund_website || 'Not provided'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-1">LinkedIn Profile</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedAssessment.linkedin_profile || 'Not provided'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-1">Other Social Media</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedAssessment.other_social_media || 'Not provided'}</p>
-                    </div>
-                  </div>
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden bg-gradient-to-br from-blue-50/95 via-white to-purple-50/95 backdrop-blur-xl border-0 shadow-2xl">
+            <DialogHeader className="border-b pb-4">
+              <div className="flex items-start justify-between">
+                <div>
+                  <DialogTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                    {selectedAssessment?.full_name}
+                  </DialogTitle>
+                  <p className="text-lg text-gray-600">{selectedAssessment?.fund_name}</p>
                 </div>
+                <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 text-sm rounded-full">
+                  {selectedAssessment && format(new Date(selectedAssessment.created_at), 'MMM dd, yyyy')}
+                </Badge>
+              </div>
+            </DialogHeader>
+            
+            <div className="overflow-y-auto max-h-[calc(90vh-120px)] pr-2 custom-scrollbar">
+              {selectedAssessment && (
+                <div className="space-y-6 py-4">
+                  {/* Basic Information */}
+                  <Card className="bg-white/90 backdrop-blur-md shadow-lg rounded-2xl border-0">
+                    <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-2xl">
+                      <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-600"></div>
+                        Basic Information
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-1">
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Full Name</p>
+                          <p className="text-base font-medium text-gray-900">{selectedAssessment.full_name}</p>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</p>
+                          <p className="text-base font-medium text-gray-900">{selectedAssessment.email}</p>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Phone / WhatsApp</p>
+                          <p className="text-base font-medium text-gray-900">{selectedAssessment.phone_whatsapp || 'Not provided'}</p>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Fund Name</p>
+                          <p className="text-base font-medium text-gray-900">{selectedAssessment.fund_name}</p>
+                        </div>
+                        {selectedAssessment.address && (
+                          <div className="md:col-span-2 space-y-1">
+                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Address</p>
+                            <p className="text-base font-medium text-gray-900">{selectedAssessment.address}</p>
+                          </div>
+                        )}
+                        {selectedAssessment.fund_website && (
+                          <div className="space-y-1">
+                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Website</p>
+                            <a href={selectedAssessment.fund_website} target="_blank" rel="noopener noreferrer" className="text-base font-medium text-blue-600 hover:underline">
+                              {selectedAssessment.fund_website}
+                            </a>
+                          </div>
+                        )}
+                        {selectedAssessment.linkedin_profile && (
+                          <div className="space-y-1">
+                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">LinkedIn</p>
+                            <a href={selectedAssessment.linkedin_profile} target="_blank" rel="noopener noreferrer" className="text-base font-medium text-blue-600 hover:underline truncate block">
+                              {selectedAssessment.linkedin_profile}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
 
-                {/* Section 2: Stage of Fund */}
-                <div className="bg-purple-50/50 p-6 rounded-2xl">
-                  <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Section 2: Stage of Fund
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-2">
-                        Which stage best represents your current fund? (Select all that apply)
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {(selectedAssessment.fund_stages || []).length > 0 ? (
-                          (selectedAssessment.fund_stages || []).map((stage: string) => (
-                            <Badge key={stage} className="bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-full capitalize text-sm px-4 py-1">
+                  {/* Fund Stage */}
+                  <Card className="bg-white/90 backdrop-blur-md shadow-lg rounded-2xl border-0">
+                    <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-t-2xl">
+                      <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-purple-600"></div>
+                        Fund Stage
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-6 space-y-4">
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Selected Stages</p>
+                        <div className="flex flex-wrap gap-2">
+                          {(selectedAssessment.fund_stages || []).map((stage: string) => (
+                            <Badge key={stage} className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full capitalize text-sm">
                               {stage}
                             </Badge>
-                          ))
-                        ) : (
-                          <p className="text-gray-500 italic">No stages selected</p>
-                        )}
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-2">
-                        If you fall between two stages, please explain
-                      </p>
-                      <p className="text-base text-gray-900 bg-white p-4 rounded-xl border border-gray-200">
-                        {selectedAssessment.stage_explanation || 'No explanation provided'}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                      {selectedAssessment.stage_explanation && (
+                        <div className="bg-purple-50/50 p-4 rounded-xl">
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Stage Explanation</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">{selectedAssessment.stage_explanation}</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
 
-                {/* Section 3: Eligibility for LAUNCH+ */}
-                <div className="bg-green-50/50 p-6 rounded-2xl">
-                  <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Section 3: Eligibility for LAUNCH+
-                  </h3>
-                  <div className="space-y-6">
-                    {/* Services */}
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-2">
-                        Which LAUNCH+ services are you interested in?
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {(selectedAssessment.interested_services || []).length > 0 ? (
-                          (selectedAssessment.interested_services || []).map((service: string) => (
-                            <Badge key={service} className="bg-green-100 text-green-700 hover:bg-green-200 rounded-full text-sm px-4 py-1">
+                  {/* Eligibility Details */}
+                  <Card className="bg-white/90 backdrop-blur-md shadow-lg rounded-2xl border-0">
+                    <CardHeader className="bg-gradient-to-r from-green-50 to-blue-50 rounded-t-2xl">
+                      <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-600"></div>
+                        Eligibility for LAUNCH+
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-6 space-y-6">
+                      <div className="bg-blue-50/50 p-5 rounded-xl">
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Interested Services</p>
+                        <div className="flex flex-wrap gap-2">
+                          {(selectedAssessment.interested_services || []).map((service: string) => (
+                            <Badge key={service} className="bg-white text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg text-xs">
                               {service}
                             </Badge>
-                          ))
-                        ) : (
-                          <p className="text-gray-500 italic">No services selected</p>
-                        )}
+                          ))}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Geographic Focus */}
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-2">
-                        What is the geographical focus of your fund?
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {(selectedAssessment.geographical_focus || []).length > 0 ? (
-                          (selectedAssessment.geographical_focus || []).map((geo: string) => (
-                            <Badge key={geo} className="bg-purple-100 text-purple-700 hover:bg-purple-200 rounded-full text-sm px-4 py-1">
+                      <div className="bg-purple-50/50 p-5 rounded-xl">
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Geographic Focus</p>
+                        <div className="flex flex-wrap gap-2">
+                          {(selectedAssessment.geographical_focus || []).map((geo: string) => (
+                            <Badge key={geo} className="bg-white text-purple-700 border border-purple-200 px-3 py-1.5 rounded-lg text-xs">
                               {geo}
                             </Badge>
-                          ))
-                        ) : (
-                          <p className="text-gray-500 italic">No geographic focus specified</p>
-                        )}
+                          ))}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Legal Status */}
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-2">
-                        What/where is your fund's current legal status?
-                      </p>
-                      <p className="text-base text-gray-900 bg-white p-4 rounded-xl border border-gray-200">
-                        {selectedAssessment.legal_status || 'Not provided'}
-                      </p>
-                    </div>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="bg-gray-50 p-4 rounded-xl">
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Legal Status</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedAssessment.legal_status || 'Not specified'}</p>
+                        </div>
+                        <div className="bg-gray-50 p-4 rounded-xl">
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Operations vs Domicile</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedAssessment.operations_vs_domicile || 'Not specified'}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
 
-                    {/* Operations vs Domicile */}
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-2">
-                        Where are your fund operations vs. legal domiciliation?
-                      </p>
-                      <p className="text-base text-gray-900 bg-white p-4 rounded-xl border border-gray-200">
-                        {selectedAssessment.operations_vs_domicile || 'Not provided'}
-                      </p>
-                    </div>
-
-                    {/* Capital Raised */}
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-3">
-                        How much have you raised to date in your current fund? (USD Equivalent)
-                      </p>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        <div className="bg-white p-4 rounded-xl border border-gray-200">
-                          <p className="text-xs text-gray-500 mb-1">Grants</p>
-                          <p className="text-lg font-bold text-gray-900">
+                  {/* Capital Information */}
+                  <Card className="bg-white/90 backdrop-blur-md shadow-lg rounded-2xl border-0">
+                    <CardHeader className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-t-2xl">
+                      <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-emerald-600"></div>
+                        Capital Raised Breakdown
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-xl border border-green-100">
+                          <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-1">Grants</p>
+                          <p className="text-2xl font-bold text-green-600">
                             ${(selectedAssessment.capital_raised_grants || 0).toLocaleString()}
                           </p>
                         </div>
-                        <div className="bg-white p-4 rounded-xl border border-gray-200">
-                          <p className="text-xs text-gray-500 mb-1">First Loss/Guarantee</p>
-                          <p className="text-lg font-bold text-gray-900">
-                            ${(selectedAssessment.capital_raised_first_loss || 0).toLocaleString()}
-                          </p>
-                        </div>
-                        <div className="bg-white p-4 rounded-xl border border-gray-200">
-                          <p className="text-xs text-gray-500 mb-1">Equity</p>
-                          <p className="text-lg font-bold text-gray-900">
+                        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-5 rounded-xl border border-blue-100">
+                          <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide mb-1">Equity</p>
+                          <p className="text-2xl font-bold text-blue-600">
                             ${(selectedAssessment.capital_raised_equity || 0).toLocaleString()}
                           </p>
                         </div>
-                        <div className="bg-white p-4 rounded-xl border border-gray-200">
-                          <p className="text-xs text-gray-500 mb-1">Debt</p>
-                          <p className="text-lg font-bold text-gray-900">
+                        <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-5 rounded-xl border border-purple-100">
+                          <p className="text-xs font-semibold text-purple-700 uppercase tracking-wide mb-1">Debt</p>
+                          <p className="text-2xl font-bold text-purple-600">
                             ${(selectedAssessment.capital_raised_debt || 0).toLocaleString()}
                           </p>
                         </div>
-                        <div className="bg-white p-4 rounded-xl border border-gray-200">
-                          <p className="text-xs text-gray-500 mb-1">Senior Capital</p>
-                          <p className="text-lg font-bold text-gray-900">
+                        <div className="bg-gradient-to-br from-amber-50 to-yellow-50 p-5 rounded-xl border border-amber-100">
+                          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">First Loss</p>
+                          <p className="text-2xl font-bold text-amber-600">
+                            ${(selectedAssessment.capital_raised_first_loss || 0).toLocaleString()}
+                          </p>
+                        </div>
+                        <div className="bg-gradient-to-br from-indigo-50 to-violet-50 p-5 rounded-xl border border-indigo-100">
+                          <p className="text-xs font-semibold text-indigo-700 uppercase tracking-wide mb-1">Senior Capital</p>
+                          <p className="text-2xl font-bold text-indigo-600">
                             ${(selectedAssessment.capital_raised_senior || 0).toLocaleString()}
                           </p>
                         </div>
-                        <div className="bg-white p-4 rounded-xl border border-gray-200">
-                          <p className="text-xs text-gray-500 mb-1">Other</p>
-                          <p className="text-lg font-bold text-gray-900">
+                        <div className="bg-gradient-to-br from-pink-50 to-rose-50 p-5 rounded-xl border border-pink-100">
+                          <p className="text-xs font-semibold text-pink-700 uppercase tracking-wide mb-1">Other</p>
+                          <p className="text-2xl font-bold text-pink-600">
                             ${(selectedAssessment.capital_raised_other || 0).toLocaleString()}
                           </p>
                         </div>
                       </div>
-                      {selectedAssessment.capital_raised_other_description && (
-                        <div className="mt-3">
-                          <p className="text-xs text-gray-500 mb-1">Other Capital Description</p>
-                          <p className="text-sm text-gray-900 bg-white p-3 rounded-xl border border-gray-200">
-                            {selectedAssessment.capital_raised_other_description}
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                    </CardContent>
+                  </Card>
 
-                    {/* Investment Information */}
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-3">Investment Information</p>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-white p-4 rounded-xl border border-gray-200">
-                          <p className="text-xs text-gray-500 mb-1">Number of Investments</p>
-                          <p className="text-2xl font-bold text-gray-900">
-                            {selectedAssessment.investments_count || 0}
-                          </p>
+                  {/* Investment Information */}
+                  <Card className="bg-white/90 backdrop-blur-md shadow-lg rounded-2xl border-0">
+                    <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-2xl">
+                      <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-600"></div>
+                        Investment Activity
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div className="bg-gradient-to-br from-gray-50 to-slate-50 p-5 rounded-xl border border-gray-200">
+                          <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Total Investments</p>
+                          <p className="text-3xl font-bold text-gray-900">{selectedAssessment.investments_count || 0}</p>
                         </div>
-                        <div className="bg-white p-4 rounded-xl border border-gray-200">
-                          <p className="text-xs text-gray-500 mb-1">Capital Committed (USD)</p>
-                          <p className="text-2xl font-bold text-gray-900">
+                        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-5 rounded-xl border border-blue-100">
+                          <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide mb-1">Capital Committed</p>
+                          <p className="text-2xl font-bold text-blue-600">
                             ${(selectedAssessment.capital_committed || 0).toLocaleString()}
                           </p>
                         </div>
-                        <div className="bg-white p-4 rounded-xl border border-gray-200">
-                          <p className="text-xs text-gray-500 mb-1">Capital Disbursed (USD)</p>
-                          <p className="text-2xl font-bold text-gray-900">
+                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-xl border border-green-100">
+                          <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-1">Capital Disbursed</p>
+                          <p className="text-2xl font-bold text-green-600">
                             ${(selectedAssessment.capital_disbursed || 0).toLocaleString()}
                           </p>
                         </div>
                       </div>
-                    </div>
+                    </CardContent>
+                  </Card>
 
-                    {/* Program Expectations */}
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 mb-2">
-                        What are you looking to get out of the LAUNCH+ Program?
-                      </p>
-                      <p className="text-base text-gray-900 bg-white p-4 rounded-xl border border-gray-200 leading-relaxed">
-                        {selectedAssessment.program_expectations || 'No expectations provided'}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                  {/* Program Expectations */}
+                  {selectedAssessment.program_expectations && (
+                    <Card className="bg-white/90 backdrop-blur-md shadow-lg rounded-2xl border-0">
+                      <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-t-2xl">
+                        <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-amber-600"></div>
+                          Program Expectations
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="pt-6">
+                        <div className="bg-amber-50/50 p-5 rounded-xl">
+                          <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+                            {selectedAssessment.program_expectations}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
 
-                {/* Submission Info */}
-                <div className="text-center pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-500">
-                    Submitted on: <span className="font-semibold text-gray-700">{format(new Date(selectedAssessment.created_at), 'PPpp')}</span>
-                  </p>
+                  {/* Submission Metadata */}
+                  <Card className="bg-white/90 backdrop-blur-md shadow-lg rounded-2xl border-0">
+                    <CardHeader className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-t-2xl">
+                      <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-gray-600"></div>
+                        Submission Details
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="bg-gray-50 p-4 rounded-xl">
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Submission Date & Time</p>
+                          <p className="text-base font-medium text-gray-900">
+                            {format(new Date(selectedAssessment.created_at), 'PPpp')}
+                          </p>
+                        </div>
+                        <div className="bg-gray-50 p-4 rounded-xl">
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Status</p>
+                          <Badge className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-3 py-1 rounded-full text-sm">
+                            {selectedAssessment.submission_status || 'Completed'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </DialogContent>
         </Dialog>
+
+        <style>{`
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #3b82f6, #a855f7);
+            border-radius: 10px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #2563eb, #9333ea);
+          }
+        `}</style>
       </div>
     </SidebarLayout>
   );

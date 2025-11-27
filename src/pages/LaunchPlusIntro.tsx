@@ -131,10 +131,11 @@ const LaunchPlusIntro = () => {
             
             {/* Large Image on the Right */}
             <div className="order-2 lg:order-2">
-              <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-0 shadow-2xl border border-white/20 overflow-hidden group hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2">
+              <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl overflow-hidden group hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2 shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-purple-600/10 z-10"></div>
                 <div className="relative h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px]">
                   <img 
-                    src="/Launch%2B1.jpg" 
+                    src="/Launch+1.jpg" 
                     alt="LAUNCH+ Network Gathering" 
                     className="w-full h-full object-cover"
                     onError={(e) => {
@@ -152,10 +153,11 @@ const LaunchPlusIntro = () => {
             {/* Left Column: Second Image */}
             <div className="space-y-4 sm:space-y-6">
               <div className={`transition-all duration-[1500ms] delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-0 shadow-xl border border-white/20 overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 shadow-xl">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-blue-600/10 z-10"></div>
                   <div className="relative h-[200px] sm:h-[250px] md:h-[280px]">
                     <img 
-                      src="/Launch%2B2.jpg" 
+                      src="/Launch+2.jpg" 
                       alt="LAUNCH+ Convening Event" 
                       className="w-full h-full object-cover"
                       onError={(e) => {
