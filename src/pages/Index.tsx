@@ -148,21 +148,21 @@ const Index = () => {
                 >
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <Users className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform duration-300" />
-                    <span className="text-sm sm:text-base">Join the Network</span>
+                    <span className="text-sm sm:text-base">Join ESCP Network</span>
                     <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
                   </div>
                 </Button>
               </Link>
-              <Link to="/network" className="w-full sm:w-auto">
+              <Link to="/launch-plus-intro" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
                   variant="outline" 
                   className="group w-full sm:w-auto border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 bg-white/5 backdrop-blur-md px-6 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold shadow-xl hover:shadow-white/10 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full"
                 >
                   <div className="flex items-center space-x-2 sm:space-x-3">
-                    <Search className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300" />
-                    <span className="text-sm sm:text-base">Browse Directory</span>
-                    <Globe className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform duration-300" />
+                    <Rocket className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300" />
+                    <span className="text-sm sm:text-base">Explore LAUNCH+</span>
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform duration-300" />
                   </div>
                 </Button>
               </Link>
