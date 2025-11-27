@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-import { Loader2, CheckCircle2, ArrowRight, ArrowLeft, User, Briefcase, Target, Rocket } from 'lucide-react';
+import { Loader2, CheckCircle2, ArrowRight, ArrowLeft, User, Briefcase, Target, Rocket, ChevronLeft, ChevronRight, Send } from 'lucide-react';
 
 interface AssessmentFormData {
   full_name: string;
@@ -88,19 +88,31 @@ const LaunchPlusAssessment = () => {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-purple-600 flex items-center justify-center p-4">
-        <Card className="max-w-2xl w-full bg-white/95 backdrop-blur-md shadow-2xl rounded-3xl border-0">
+      <div className="min-h-screen relative bg-gradient-to-br from-blue-50 via-white to-amber-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-0 opacity-10">
+          <img 
+            src="/Launch+2.jpg" 
+            alt="Launch+ Background" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        
+        {/* Animated gradient orbs */}
+        <div className="absolute top-20 -left-20 w-96 h-96 bg-blue-200/40 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 -right-20 w-96 h-96 bg-amber-200/40 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        
+        <Card className="max-w-2xl w-full bg-white/95 backdrop-blur-sm shadow-2xl rounded-3xl border-blue-200 relative z-10">
           <CardContent className="pt-12 pb-12 text-center">
             <div className="flex justify-center mb-6 animate-scale-in">
-              <div className="p-4 bg-green-100 rounded-full">
+              <div className="p-4 bg-green-100 rounded-full border-2 border-green-300">
                 <CheckCircle2 className="h-20 w-20 text-green-600" />
               </div>
             </div>
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">Thank You!</h2>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-blue-700 to-amber-600 bg-clip-text text-transparent mb-4">Thank You!</h2>
             <p className="text-xl text-gray-700 mb-8">
               Your assessment has been submitted successfully. We will review your information and get back to you soon.
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-500">
               Redirecting you to our website...
             </p>
           </CardContent>
@@ -127,13 +139,13 @@ const LaunchPlusAssessment = () => {
     switch (currentSection) {
       case 1:
         return (
-          <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-md rounded-3xl animate-fade-in hover:shadow-xl transition-all duration-300">
-            <CardHeader className="bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 rounded-t-3xl pb-8">
+          <Card className="shadow-xl border-2 border-blue-200 bg-white rounded-3xl animate-fade-in hover:shadow-2xl transition-all duration-300">
+            <CardHeader className="bg-gradient-to-r from-blue-100 via-blue-50 to-amber-50 rounded-t-3xl pb-8 border-b-2 border-blue-200">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-blue-100 rounded-full">
-                  <User className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-blue-600 rounded-full shadow-md">
+                  <User className="w-6 h-6 text-white" />
                 </div>
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Basic Information</CardTitle>
+                <CardTitle className="text-3xl font-bold text-blue-800">Basic Information</CardTitle>
               </div>
               <CardDescription className="text-base text-gray-600">Tell us about yourself and your fund</CardDescription>
             </CardHeader>
@@ -144,7 +156,7 @@ const LaunchPlusAssessment = () => {
                   <Input
                     id="full_name"
                     {...register('full_name', { required: true })}
-                    className="border-2 border-blue-200 focus:border-blue-500 rounded-xl h-12 transition-all"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="Enter your full name"
                   />
                   {errors.full_name && <span className="text-sm text-red-600">This field is required</span>}
@@ -156,7 +168,7 @@ const LaunchPlusAssessment = () => {
                     id="email"
                     type="email"
                     {...register('email', { required: true })}
-                    className="border-2 border-blue-200 focus:border-blue-500 rounded-xl h-12 transition-all"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="your@email.com"
                   />
                   {errors.email && <span className="text-sm text-red-600">This field is required</span>}
@@ -167,7 +179,7 @@ const LaunchPlusAssessment = () => {
                   <Input
                     id="phone_whatsapp"
                     {...register('phone_whatsapp')}
-                    className="border-2 border-blue-200 focus:border-blue-500 rounded-xl h-12 transition-all"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="+1 234 567 8900"
                   />
                 </div>
@@ -177,7 +189,7 @@ const LaunchPlusAssessment = () => {
                   <Input
                     id="fund_name"
                     {...register('fund_name', { required: true })}
-                    className="border-2 border-blue-200 focus:border-blue-500 rounded-xl h-12 transition-all"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="Your Fund Name"
                   />
                   {errors.fund_name && <span className="text-sm text-red-600">This field is required</span>}
@@ -188,7 +200,7 @@ const LaunchPlusAssessment = () => {
                   <Input
                     id="fund_website"
                     {...register('fund_website')}
-                    className="border-2 border-blue-200 focus:border-blue-500 rounded-xl h-12 transition-all"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="https://yourfund.com"
                   />
                 </div>
@@ -198,7 +210,7 @@ const LaunchPlusAssessment = () => {
                   <Input
                     id="linkedin_profile"
                     {...register('linkedin_profile')}
-                    className="border-2 border-blue-200 focus:border-blue-500 rounded-xl h-12 transition-all"
+                    className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl h-12 transition-all"
                     placeholder="https://linkedin.com/in/yourprofile"
                   />
                 </div>
@@ -209,7 +221,7 @@ const LaunchPlusAssessment = () => {
                 <Textarea
                   id="address"
                   {...register('address')}
-                  className="border-2 border-blue-200 focus:border-blue-500 rounded-xl transition-all"
+                  className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl transition-all"
                   rows={3}
                   placeholder="Your complete address"
                 />
@@ -220,7 +232,7 @@ const LaunchPlusAssessment = () => {
                 <Textarea
                   id="other_social_media"
                   {...register('other_social_media')}
-                  className="border-2 border-blue-200 focus:border-blue-500 rounded-xl transition-all"
+                  className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl transition-all"
                   rows={2}
                   placeholder="Instagram, X (Twitter), Facebook, etc."
                 />
@@ -231,19 +243,19 @@ const LaunchPlusAssessment = () => {
       
       case 2:
         return (
-          <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-md rounded-3xl animate-fade-in hover:shadow-xl transition-all duration-300">
-            <CardHeader className="bg-gradient-to-r from-purple-50 via-blue-50 to-purple-50 rounded-t-3xl pb-8">
+          <Card className="shadow-xl border-2 border-blue-200 bg-white rounded-3xl animate-fade-in hover:shadow-2xl transition-all duration-300">
+            <CardHeader className="bg-gradient-to-r from-blue-100 via-blue-50 to-amber-50 rounded-t-3xl pb-8 border-b-2 border-blue-200">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-purple-100 rounded-full">
-                  <Briefcase className="w-6 h-6 text-purple-600" />
+                <div className="p-3 bg-blue-600 rounded-full shadow-md">
+                  <Briefcase className="w-6 h-6 text-white" />
                 </div>
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Stage of Fund</CardTitle>
+                <CardTitle className="text-3xl font-bold text-blue-800">Stage of Fund</CardTitle>
               </div>
               <CardDescription className="text-base text-gray-600">Help us understand where you are in your journey</CardDescription>
             </CardHeader>
             <CardContent className="pt-8 space-y-6">
               <div className="space-y-4">
-                <Label className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <Label className="text-lg font-bold text-blue-800">
                   Which stage best represents your current fund? (Select all that apply)
                 </Label>
                 
@@ -272,12 +284,12 @@ const LaunchPlusAssessment = () => {
                   ].map((stage) => (
                     <div 
                       key={stage.value} 
-                      className="flex items-start space-x-4 p-5 border-2 border-blue-200 rounded-2xl hover:bg-blue-50 hover:border-blue-400 transition-all duration-300 hover:shadow-lg"
+                      className="flex items-start space-x-4 p-5 border-2 border-blue-200 bg-blue-50/50 rounded-2xl hover:bg-blue-100/50 hover:border-blue-400 transition-all duration-300 hover:shadow-md"
                     >
                       <Checkbox
                         checked={fundStages.includes(stage.value)}
                         onCheckedChange={() => handleCheckboxChange('fund_stages', stage.value)}
-                        className="mt-1"
+                        className="mt-1 border-blue-400"
                       />
                       <div className="flex-1">
                         <Label className="font-bold text-base cursor-pointer text-gray-800">{stage.label}</Label>
@@ -296,7 +308,7 @@ const LaunchPlusAssessment = () => {
                 <Textarea
                   id="stage_explanation"
                   {...register('stage_explanation')}
-                  className="border-2 border-blue-200 focus:border-blue-500 rounded-xl transition-all"
+                  className="border-2 border-blue-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-400/20 rounded-xl transition-all"
                   rows={5}
                   placeholder="Describe where you are in your fund journey..."
                 />
@@ -307,209 +319,214 @@ const LaunchPlusAssessment = () => {
       
       case 3:
         return (
-          <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-md rounded-3xl animate-fade-in hover:shadow-xl transition-all duration-300">
-            <CardHeader className="bg-gradient-to-r from-green-50 via-blue-50 to-purple-50 rounded-t-3xl pb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-green-100 rounded-full">
-                  <Target className="w-6 h-6 text-green-600" />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Card className="shadow-xl border-2 border-blue-200 bg-white rounded-3xl animate-fade-in hover:shadow-2xl transition-all duration-300">
+              <CardHeader className="bg-gradient-to-r from-amber-100 via-blue-50 to-blue-100 rounded-t-3xl pb-8 border-b-2 border-blue-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-amber-600 rounded-full shadow-md">
+                    <Target className="w-6 h-6 text-white" />
+                  </div>
+                  <CardTitle className="text-3xl font-bold text-blue-800">Eligibility for LAUNCH+</CardTitle>
                 </div>
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Eligibility for LAUNCH+</CardTitle>
-              </div>
-              <CardDescription className="text-base text-gray-600">Tell us about your needs and current status</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-8 space-y-8">
-              {/* Services Interest */}
-              <div className="space-y-4">
-                <Label className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Which LAUNCH+ services are you interested in? (Select all that apply)
-                </Label>
-                
-                <div className="space-y-6">
-                  <div className="space-y-3">
-                    <p className="text-base font-semibold text-purple-700 bg-purple-50 p-3 rounded-xl border border-purple-200">
-                      Shared Services (Mandatory, Phase I - Partially Subsidized)
-                    </p>
+                <CardDescription className="text-base text-gray-600">Tell us about your needs and current status</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-8 space-y-8">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="interested_services" className="text-base font-semibold text-gray-700">Interested Services (Select all that apply)</Label>
                     {[
-                      'Shared back-office services (accounting, finance, tax, legal, HR)',
-                      'Fund administration services',
-                      'Capacity building and knowledge services (strategy, governance, impact measurement)'
-                    ].map((service) => (
-                      <div key={service} className="flex items-start space-x-4 p-4 border-2 border-blue-200 rounded-2xl hover:bg-blue-50 hover:border-blue-400 transition-all duration-300">
+                      { value: 'investment', label: 'Investment' },
+                      { value: 'technical_assistance', label: 'Technical Assistance' },
+                      { value: 'networking', label: 'Networking' },
+                      { value: 'capacity_building', label: 'Capacity Building' },
+                      { value: 'other', label: 'Other' },
+                    ].map(service => (
+                      <div key={service.value} className="flex items-center space-x-3">
                         <Checkbox
-                          checked={interestedServices.includes(service)}
-                          onCheckedChange={() => handleCheckboxChange('interested_services', service)}
-                          className="mt-1"
+                          checked={interestedServices.includes(service.value)}
+                          onCheckedChange={() => handleCheckboxChange('interested_services', service.value)}
+                          className="border-amber-400"
+                          id={`service-${service.value}`}
                         />
-                        <Label className="cursor-pointer text-sm leading-relaxed text-gray-700">{service}</Label>
+                        <Label htmlFor={`service-${service.value}`} className="cursor-pointer text-gray-800">{service.label}</Label>
                       </div>
                     ))}
                   </div>
 
-                  <div className="space-y-3">
-                    <p className="text-base font-semibold text-green-700 bg-green-50 p-3 rounded-xl border border-green-200">
-                      Capital Support (Optional, Phase II - Repayable)
-                    </p>
+                  <div className="space-y-2">
+                    <Label htmlFor="geographical_focus" className="text-base font-semibold text-gray-700">Geographical Focus (Select all that apply)</Label>
                     {[
-                      'Op-Ex line of credit',
-                      'Warehousing line of credit'
-                    ].map((service) => (
-                      <div key={service} className="flex items-start space-x-4 p-4 border-2 border-blue-200 rounded-2xl hover:bg-blue-50 hover:border-blue-400 transition-all duration-300">
+                      { value: 'local', label: 'Local' },
+                      { value: 'regional', label: 'Regional' },
+                      { value: 'national', label: 'National' },
+                      { value: 'international', label: 'International' },
+                    ].map(region => (
+                      <div key={region.value} className="flex items-center space-x-3">
                         <Checkbox
-                          checked={interestedServices.includes(service)}
-                          onCheckedChange={() => handleCheckboxChange('interested_services', service)}
-                          className="mt-1"
+                          checked={geographicalFocus.includes(region.value)}
+                          onCheckedChange={() => handleCheckboxChange('geographical_focus', region.value)}
+                          className="border-amber-400"
+                          id={`region-${region.value}`}
                         />
-                        <Label className="cursor-pointer text-sm leading-relaxed text-gray-700">{service}</Label>
+                        <Label htmlFor={`region-${region.value}`} className="cursor-pointer text-gray-800">{region.label}</Label>
                       </div>
                     ))}
                   </div>
                 </div>
-              </div>
 
-              {/* Geographical Focus */}
-              <div className="space-y-4">
-                <Label className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Geographical Focus (Select all that apply)
-                </Label>
-                <div className="grid md:grid-cols-2 gap-3">
-                  {[
-                    'US', 'Europe', 'Africa: West Africa', 'Africa: East Africa',
-                    'Africa: Central Africa', 'Africa: Southern Africa', 'Africa: North Africa',
-                    'Middle East', 'Other'
-                  ].map((region) => (
-                    <div key={region} className="flex items-center space-x-3 p-4 border-2 border-blue-200 rounded-2xl hover:bg-blue-50 hover:border-blue-400 transition-all duration-300">
-                      <Checkbox
-                        checked={geographicalFocus.includes(region)}
-                        onCheckedChange={() => handleCheckboxChange('geographical_focus', region)}
-                      />
-                      <Label className="cursor-pointer font-medium text-gray-700">{region}</Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Legal Status */}
-              <div className="space-y-3">
-                <Label htmlFor="legal_status" className="text-base font-semibold text-gray-700">
-                  Fund's Current Legal Status (Structure and date)
-                </Label>
-                <Textarea
-                  id="legal_status"
-                  {...register('legal_status')}
-                  className="border-2 border-blue-200 focus:border-blue-500 rounded-xl transition-all"
-                  rows={3}
-                  placeholder="e.g., LLC incorporated in Delaware, January 2023"
-                />
-              </div>
-
-              <div className="space-y-3">
-                <Label htmlFor="operations_vs_domicile" className="text-base font-semibold text-gray-700">
-                  Fund Operations vs. Legal Domiciliation
-                </Label>
-                <Textarea
-                  id="operations_vs_domicile"
-                  {...register('operations_vs_domicile')}
-                  className="border-2 border-blue-200 focus:border-blue-500 rounded-xl transition-all"
-                  rows={3}
-                  placeholder="Describe where your fund operates vs. where it is legally domiciled"
-                />
-              </div>
-
-              {/* Capital Raised */}
-              <div className="space-y-4">
-                <Label className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Capital Raised to Date (USD Equivalent)
-                </Label>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {[
-                    { field: 'capital_raised_grants', label: 'Grants' },
-                    { field: 'capital_raised_first_loss', label: 'First Loss or Guarantee' },
-                    { field: 'capital_raised_equity', label: 'Equity' },
-                    { field: 'capital_raised_debt', label: 'Debt' },
-                    { field: 'capital_raised_senior', label: 'Senior Capital' },
-                    { field: 'capital_raised_other', label: 'Other' }
-                  ].map((item) => (
-                    <div key={item.field} className="space-y-2">
-                      <Label htmlFor={item.field} className="font-semibold text-gray-700">{item.label}</Label>
-                      <Input
-                        id={item.field}
-                        type="number"
-                        step="0.01"
-                        {...register(item.field as any, { valueAsNumber: true })}
-                        className="border-2 border-blue-200 focus:border-blue-500 rounded-xl h-12 transition-all"
-                        placeholder="0.00"
-                      />
-                    </div>
-                  ))}
-                </div>
-                
                 <div className="space-y-2">
-                  <Label htmlFor="capital_raised_other_description" className="font-semibold text-gray-700">
-                    Other - Please specify
-                  </Label>
+                  <Label htmlFor="legal_status" className="text-base font-semibold text-gray-700">Legal Status</Label>
                   <Input
+                    id="legal_status"
+                    {...register('legal_status')}
+                    className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                    placeholder="Describe your fund's legal status"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="operations_vs_domicile" className="text-base font-semibold text-gray-700">Operations vs Domicile</Label>
+                  <Textarea
+                    id="operations_vs_domicile"
+                    {...register('operations_vs_domicile')}
+                    className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl transition-all"
+                    rows={3}
+                    placeholder="Explain your operations and domicile setup"
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_raised_grants" className="text-base font-semibold text-gray-700">Capital Raised - Grants</Label>
+                    <Input
+                      id="capital_raised_grants"
+                      type="number"
+                      {...register('capital_raised_grants', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_raised_first_loss" className="text-base font-semibold text-gray-700">Capital Raised - First Loss</Label>
+                    <Input
+                      id="capital_raised_first_loss"
+                      type="number"
+                      {...register('capital_raised_first_loss', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_raised_equity" className="text-base font-semibold text-gray-700">Capital Raised - Equity</Label>
+                    <Input
+                      id="capital_raised_equity"
+                      type="number"
+                      {...register('capital_raised_equity', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_raised_debt" className="text-base font-semibold text-gray-700">Capital Raised - Debt</Label>
+                    <Input
+                      id="capital_raised_debt"
+                      type="number"
+                      {...register('capital_raised_debt', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_raised_senior" className="text-base font-semibold text-gray-700">Capital Raised - Senior</Label>
+                    <Input
+                      id="capital_raised_senior"
+                      type="number"
+                      {...register('capital_raised_senior', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="capital_raised_other" className="text-base font-semibold text-gray-700">Capital Raised - Other</Label>
+                    <Input
+                      id="capital_raised_other"
+                      type="number"
+                      {...register('capital_raised_other', { valueAsNumber: true })}
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="capital_raised_other_description" className="text-base font-semibold text-gray-700">If Other, please describe</Label>
+                  <Textarea
                     id="capital_raised_other_description"
                     {...register('capital_raised_other_description')}
-                    className="border-2 border-blue-200 focus:border-blue-500 rounded-xl h-12 transition-all"
+                    className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl transition-all"
+                    rows={3}
                     placeholder="Describe other capital sources"
                   />
                 </div>
-              </div>
 
-              {/* Investments */}
-              <div className="space-y-4">
-                <Label className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Investment Activity</Label>
-                <div className="grid md:grid-cols-3 gap-4">
+                <div className="grid md:grid-cols-3 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="investments_count" className="font-semibold text-gray-700">Number of Investments</Label>
+                    <Label htmlFor="investments_count" className="text-base font-semibold text-gray-700">Number of Investments</Label>
                     <Input
                       id="investments_count"
                       type="number"
                       {...register('investments_count', { valueAsNumber: true })}
-                      className="border-2 border-blue-200 focus:border-blue-500 rounded-xl h-12 transition-all"
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
                       placeholder="0"
+                      min={0}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="capital_committed" className="font-semibold text-gray-700">Capital Committed (USD)</Label>
+                    <Label htmlFor="capital_committed" className="text-base font-semibold text-gray-700">Capital Committed</Label>
                     <Input
                       id="capital_committed"
                       type="number"
-                      step="0.01"
                       {...register('capital_committed', { valueAsNumber: true })}
-                      className="border-2 border-blue-200 focus:border-blue-500 rounded-xl h-12 transition-all"
-                      placeholder="0.00"
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="capital_disbursed" className="font-semibold text-gray-700">Capital Disbursed (USD)</Label>
+                    <Label htmlFor="capital_disbursed" className="text-base font-semibold text-gray-700">Capital Disbursed</Label>
                     <Input
                       id="capital_disbursed"
                       type="number"
-                      step="0.01"
                       {...register('capital_disbursed', { valueAsNumber: true })}
-                      className="border-2 border-blue-200 focus:border-blue-500 rounded-xl h-12 transition-all"
-                      placeholder="0.00"
+                      className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl h-12 transition-all"
+                      placeholder="0"
+                      min={0}
                     />
                   </div>
                 </div>
-              </div>
 
-              {/* Program Expectations */}
-              <div className="space-y-3">
-                <Label htmlFor="program_expectations" className="text-base font-semibold text-gray-700">
-                  What are you looking to get out of the LAUNCH+ Program? (250 words max)
-                </Label>
-                <Textarea
-                  id="program_expectations"
-                  {...register('program_expectations')}
-                  className="border-2 border-blue-200 focus:border-blue-500 rounded-xl transition-all"
-                  rows={6}
-                  placeholder="Explain your expectations from the program..."
-                />
-              </div>
-            </CardContent>
-          </Card>
+                <div className="space-y-2">
+                  <Label htmlFor="program_expectations" className="text-base font-semibold text-gray-700">Program Expectations</Label>
+                  <Textarea
+                    id="program_expectations"
+                    {...register('program_expectations')}
+                    className="border-2 border-amber-200 bg-white text-gray-900 placeholder:text-gray-400 focus:border-amber-500 focus:ring-amber-400/20 rounded-xl transition-all"
+                    rows={5}
+                    placeholder="Describe your expectations from the LAUNCH+ program"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </form>
         );
       
       default:
@@ -518,162 +535,88 @@ const LaunchPlusAssessment = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white scrollbar-hide overflow-x-hidden">
-      {/* Hero Header */}
-      <section className="relative min-h-[40vh] bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url(/CFF2025(Day2)-87+(1).webp)' }}>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/75 to-purple-900/80"></div>
-        
-        <div className="relative z-10 flex items-center justify-center min-h-[40vh] px-4">
-          <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 text-center">
-            <div className="flex justify-center mb-6 animate-scale-in">
-              <div className="p-4 bg-white/10 rounded-full backdrop-blur-sm shadow-2xl">
-                <Rocket className="h-12 w-12 text-white" />
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50 relative overflow-hidden p-4">
+      {/* Background image */}
+      <div className="fixed inset-0 z-0 opacity-10">
+        <img 
+          src="/Launch+2.jpg" 
+          alt="Launch+ Background" 
+          className="w-full h-full object-cover"
+        />
+      </div>
+      
+      {/* Animated gradient orbs */}
+      <div className="absolute top-20 -left-20 w-96 h-96 bg-blue-200/40 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-20 -right-20 w-96 h-96 bg-amber-200/40 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      
+      <div className="relative z-10 max-w-5xl mx-auto py-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-blue-700 to-amber-600 bg-clip-text text-transparent mb-3">
+            LAUNCH+ Assessment
+          </h1>
+          <p className="text-gray-600 text-lg">Section {currentSection} of {totalSections}</p>
+          
+          {/* Progress Bar */}
+          <div className="mt-4 max-w-md mx-auto">
+            <div className="w-full bg-blue-200 rounded-full h-3">
+              <div
+                className="h-full bg-gradient-to-r from-blue-600 to-amber-600 rounded-full transition-all duration-500"
+                style={{ width: `${(currentSection / totalSections) * 100}%` }}
+              />
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
-              LAUNCH+ Assessment
-            </h1>
-            <p className="text-xl sm:text-2xl text-white/95 mb-4 max-w-3xl mx-auto font-medium px-2">
-              Help us understand your fund better
-            </p>
           </div>
         </div>
-      </section>
 
-      {/* Main Content */}
-      <section className="relative py-12 overflow-hidden rounded-t-[3rem] bg-amber-50 -mt-12">
-        <div className="absolute top-0 left-0 right-0 h-14 bg-amber-50 rounded-t-[3rem]"></div>
-        
-        {/* Floating Orbs */}
-        <div className="hidden md:block absolute top-20 left-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="hidden md:block absolute top-40 right-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        {renderSection()}
 
-        <div className="relative container mx-auto px-4 max-w-5xl">
-          {/* Progress Bar */}
-          <div className="mb-12 max-w-3xl mx-auto">
-            <div className="flex items-center justify-between mb-4">
-              {[1, 2, 3].map((step) => (
-                <div key={step} className="flex flex-col items-center flex-1">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 ${
-                    currentSection >= step 
-                      ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-lg scale-110' 
-                      : 'bg-gray-200 text-gray-400'
-                  }`}>
-                    {step}
-                  </div>
-                  <p className={`text-sm mt-2 font-medium transition-colors ${
-                    currentSection >= step ? 'text-blue-600' : 'text-gray-400'
-                  }`}>
-                    {step === 1 ? 'Basic Info' : step === 2 ? 'Fund Stage' : 'Eligibility'}
-                  </p>
-                </div>
-              ))}
-            </div>
-            <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div 
-                className="absolute h-full bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-500 ease-out rounded-full"
-                style={{ width: `${(currentSection / totalSections) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-
-          {/* Form */}
-          <form 
-            onSubmit={(e) => {
-              e.preventDefault();
-            }} 
-            onKeyDown={(e) => { 
-              if (e.key === 'Enter') {
-                e.preventDefault();
-              }
-            }} 
-            className="space-y-8"
-          >
-            {renderSection()}
-
-            {/* Navigation Buttons */}
-            <div className="flex justify-between items-center gap-4 pt-6">
+        {/* Navigation */}
+        <div className="mt-8 flex justify-between items-center">
+          {currentSection > 1 && (
+            <Button
+              type="button"
+              onClick={handlePrevious}
+              variant="outline"
+              className="border-2 border-blue-300 text-blue-700 hover:bg-blue-50 rounded-xl px-6"
+            >
+              <ArrowLeft className="mr-2 h-5 w-5" />
+              Previous
+            </Button>
+          )}
+          
+          <div className="ml-auto">
+            {currentSection < totalSections ? (
               <Button
                 type="button"
-                variant="outline"
-                onClick={handlePrevious}
-                disabled={currentSection === 1}
-                className="group px-8 py-6 text-lg rounded-full border-2 border-blue-300 hover:bg-blue-50 hover:border-blue-500 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleNext}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg rounded-xl px-8"
               >
-                <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-                Previous
+                Next Section
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-
-              {currentSection < totalSections ? (
-                <Button
-                  type="button"
-                  onClick={handleNext}
-                  className="group px-8 py-6 text-lg rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 hover:shadow-2xl transition-all hover:scale-105"
-                >
-                  Next
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              ) : (
-                <Button
-                  type="button"
-                  onClick={handleSubmit(onSubmit)}
-                  disabled={isSubmitting}
-                  className="group px-8 py-6 text-lg rounded-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 hover:shadow-2xl transition-all hover:scale-105"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      Submit Assessment
-                      <CheckCircle2 className="w-5 h-5 ml-2 group-hover:scale-110 transition-transform" />
-                    </>
-                  )}
-                </Button>
-              )}
-            </div>
-          </form>
-
-          {/* Section Info */}
-          <div className="text-center mt-8 text-sm text-gray-600">
-            Section {currentSection} of {totalSections}
+            ) : (
+              <Button
+                onClick={handleSubmit(onSubmit)}
+                disabled={isSubmitting}
+                className="bg-gradient-to-r from-amber-600 to-blue-600 hover:from-amber-700 hover:to-blue-700 text-white shadow-lg rounded-xl px-8"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    Submit Assessment
+                    <Send className="ml-2 h-5 w-5" />
+                  </>
+                )}
+              </Button>
+            )}
           </div>
         </div>
-      </section>
-
-      {/* Custom Animations */}
-      <style>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-        
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        
-        @keyframes scale-in {
-          from {
-            transform: scale(0.9);
-            opacity: 0;
-          }
-          to {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-        
-        .animate-scale-in {
-          animation: scale-in 0.5s ease-out;
-        }
-      `}</style>
+      </div>
     </div>
   );
 };
