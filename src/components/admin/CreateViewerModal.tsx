@@ -49,7 +49,7 @@ const surveySchema = z.object({
   // Section 3: Geographic & Market Focus
   legal_domicile: z.array(z.string()).optional(),
   legal_domicile_other: z.string().optional(),
-  markets_operated: z.record(z.number()).optional(),
+  markets_operated: z.record(z.string(), z.number()).optional(),
   markets_operated_other: z.string().optional(),
 
   // Section 4: Investment Strategy
@@ -80,7 +80,7 @@ const surveySchema = z.object({
   first_close_month_to: z.number().optional(),
 
   // Section 7: Investment Instruments
-  investment_instruments_priority: z.record(z.number()).optional(),
+  investment_instruments_priority: z.record(z.string(), z.number()).optional(),
   investment_instruments_data: z.array(z.object({
     name: z.string(),
     committed: z.number(),
