@@ -65,12 +65,27 @@ const LaunchPlusAssessment = () => {
   const onSubmit = async (data: AssessmentFormData) => {
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from('launch_plus_assessments').insert([{
-        ...data,
-        submission_status: 'completed'
-      }]);
+      // Prepare clean data - remove undefined values
+      const cleanData = Object.entries(data).reduce((acc, [key, value]) => {
+        if (value !== undefined && value !== null) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as any);
 
-      if (error) throw error;
+      const { error } = await supabase
+        .from('launch_plus_assessments')
+        .insert([{
+          ...cleanData,
+          submission_status: 'completed'
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Submission error:', error);
+        throw error;
+      }
 
       setIsSubmitted(true);
       toast.success('Assessment submitted successfully!');
@@ -79,7 +94,7 @@ const LaunchPlusAssessment = () => {
         window.location.href = 'https://escpnetwork.net/';
       }, 3000);
     } catch (error: any) {
-      toast.error('Failed to submit assessment. Please try again.');
+      toast.error(error.message || 'Failed to submit assessment. Please try again.');
       console.error('Submission error:', error);
     } finally {
       setIsSubmitting(false);
