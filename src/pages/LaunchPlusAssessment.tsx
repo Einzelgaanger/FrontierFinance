@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -47,6 +47,10 @@ const LaunchPlusAssessment = () => {
   const fundStages = watch('fund_stages') || [];
   const interestedServices = watch('interested_services') || [];
   const geographicalFocus = watch('geographical_focus') || [];
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentSection]);
 
   const totalSections = 3;
 
