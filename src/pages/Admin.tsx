@@ -39,10 +39,11 @@ import {
   User,
   Mail,
   RefreshCw,
-  Loader2
+  Loader2,
+  Rocket
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Json } from '@/integrations/supabase/types';
 import { populateMemberSurveys } from '@/utils/populateMemberSurveys';
 import CreateUserModal from '@/components/admin/CreateUserModal';
@@ -126,6 +127,7 @@ interface ActivityLog {
 const Admin = () => {
   const { user, userRole } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [fundManagers, setFundManagers] = useState<FundManager[]>([]);
   const [loading, setLoading] = useState(true);
   const [membershipRequests, setMembershipRequests] = useState<MembershipRequest[]>([]);
@@ -874,15 +876,24 @@ const Admin = () => {
                 <p className="text-slate-600">Manage applications, members, and network activities</p>
               </div>
             </div>
-            <Button
-              onClick={refreshData}
-              disabled={loading}
-              variant="outline"
-              className="flex items-center gap-2 bg-white/70 backdrop-blur-sm border-slate-200 text-slate-700 hover:bg-white/90"
-            >
-              <RefreshCw className="w-4 h-4" />
-              {loading ? 'Refreshing...' : 'Refresh Data'}
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => navigate('/admin/launch-plus-analytics')}
+                className="flex items-center gap-2 bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-white shadow-md"
+              >
+                <Rocket className="w-4 h-4" />
+                LAUNCH+ Assessment Analytics
+              </Button>
+              <Button
+                onClick={refreshData}
+                disabled={loading}
+                variant="outline"
+                className="flex items-center gap-2 bg-white/70 backdrop-blur-sm border-slate-200 text-slate-700 hover:bg-white/90"
+              >
+                <RefreshCw className="w-4 h-4" />
+                {loading ? 'Refreshing...' : 'Refresh Data'}
+              </Button>
+            </div>
           </div>
         </div>
 

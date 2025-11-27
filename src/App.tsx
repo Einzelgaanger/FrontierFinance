@@ -32,6 +32,9 @@ import AdminAnalytics from "./pages/AdminAnalytics";
 import SurveyResponseViewer from "./components/survey/SurveyResponseViewer";
 import NotFound from "./pages/NotFound";
 import PortIQ from "./pages/PortIQ";
+import LaunchPlusIntro from "./pages/LaunchPlusIntro";
+import LaunchPlusAssessment from "./pages/LaunchPlusAssessment";
+import AdminLaunchPlusAnalytics from "./pages/AdminLaunchPlusAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -136,6 +139,13 @@ const App = () => {
             <Route path="/blogs/:id" element={
               <ProtectedRoute>
                 <BlogDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/launch-plus-intro" element={<LaunchPlusIntro />} />
+            <Route path="/launch-plus-assessment" element={<LaunchPlusAssessment />} />
+            <Route path="/admin/launch-plus-analytics" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminLaunchPlusAnalytics />
               </ProtectedRoute>
             } />
             <Route path="*" element={<NotFound />} />
