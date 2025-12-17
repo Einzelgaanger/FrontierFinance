@@ -22,6 +22,7 @@ import MyProfile from "./pages/MyProfile";
 import ViewerSettings from "./pages/ViewerSettings";
 import Application from "./pages/Application";
 import Blogs from "./pages/Blogs";
+import Community from "./pages/Community";
 import BlogDetail from "./pages/BlogDetail";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -131,9 +132,14 @@ const App = () => {
                 <PortIQ />
               </ProtectedRoute>
             } />
+            <Route path="/community" element={
+              <ProtectedRoute>
+                <Community />
+              </ProtectedRoute>
+            } />
             <Route path="/blogs" element={
               <ProtectedRoute>
-                <Blogs />
+                <Community />
               </ProtectedRoute>
             } />
             <Route path="/blogs/:id" element={

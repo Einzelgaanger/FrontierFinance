@@ -126,11 +126,11 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
       color: "purple"
     },
     { 
-      name: "Blogs", 
-      href: "/blogs", 
+      name: "Community", 
+      href: "/community", 
       icon: Newspaper, 
       roles: ["admin", "member", "viewer"],
-      description: "Share insights and connect",
+      description: "Blogs & Learning Hub",
       badge: null,
       color: "teal"
     },
@@ -199,7 +199,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     if (href === "/admin" && location.pathname === "/admin") return true;
     if (href === "/portiq" && location.pathname === "/portiq") return true;
     if (href === "/application" && location.pathname === "/application") return true;
-    if (href === "/blogs" && location.pathname === "/blogs") return true;
+    if (href === "/community" && (location.pathname === "/community" || location.pathname === "/blogs")) return true;
     return false;
   };
 
@@ -406,13 +406,13 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                         Join the CFF Network and connect with global fund managers
                       </p>
                     </>
-                  ) : location.pathname === '/blogs' ? (
+                  ) : location.pathname === '/community' || location.pathname === '/blogs' ? (
                     <>
                       <h2 className="text-2xl font-bold text-white transition-colors">
-                        Community Blogs
+                        Community Hub
                       </h2>
                       <p className="text-sm text-white/70 transition-colors">
-                        Share insights and connect with fellow fund managers
+                        Connect, share insights, and access learning resources
                       </p>
                     </>
                   ) : location.pathname === '/profile' ? (
@@ -449,18 +449,6 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
             
             <div className="flex items-center gap-2">
               {headerActions}
-              {location.pathname === '/blogs' && (
-                <Button 
-                  onClick={() => {
-                    const event = new CustomEvent('openCreateBlogModal');
-                    window.dispatchEvent(event);
-                  }}
-                  className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg text-white rounded-full px-4"
-                >
-                  <PlusCircle className="h-5 w-5" />
-                  Create Post
-                </Button>
-              )}
             </div>
           </div>
         </header>
