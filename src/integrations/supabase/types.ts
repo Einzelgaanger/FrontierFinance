@@ -405,6 +405,60 @@ export type Database = {
         }
         Relationships: []
       }
+      learning_resources: {
+        Row: {
+          category: string
+          content: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          difficulty_level: string | null
+          duration_minutes: number | null
+          id: string
+          is_featured: boolean | null
+          is_published: boolean | null
+          resource_type: string
+          resource_url: string | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string
+          content?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          difficulty_level?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          resource_type?: string
+          resource_url?: string | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          content?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          difficulty_level?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          resource_type?: string
+          resource_url?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       survey_responses_2021: {
         Row: {
           additional_comments: string | null
