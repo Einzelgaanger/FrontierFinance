@@ -73,6 +73,11 @@ A comprehensive digital ecosystem that serves as the **central hub** for the Col
 - Analytics & reporting
 - Content moderation
 
+*Why would they use it?*
+→ To efficiently manage and grow the ESCP network, gain real-time visibility into fund manager activities, produce research reports, identify trends across the portfolio, and make data-driven decisions about network development and resource allocation.
+
+---
+
 **MEMBER (Fund Managers)**
 - Network directory access
 - Survey completion
@@ -80,10 +85,20 @@ A comprehensive digital ecosystem that serves as the **central hub** for the Col
 - Blog posting & engagement
 - AI assistant access
 
+*Why would they use it?*
+→ To connect with peer fund managers facing similar challenges, benchmark their fund against network averages, discover co-investment opportunities, access shared learning resources, gain visibility with LPs and ecosystem partners, and contribute to collective research that strengthens the sector.
+
+---
+
 **VIEWER (External Partners)**
 - Limited read-only access
 - Application for membership
 - Public directory browsing
+
+*Why would they use it?*
+→ To discover and evaluate early-stage fund managers operating in frontier markets, understand the landscape of capital providers serving SGBs, identify potential partners or investees, and assess whether to engage more deeply with the network.
+
+---
 
 ### Access Flow:
 1. External visitors can view the public landing page
@@ -356,6 +371,60 @@ A Mauritius-domiciled Variable Capital Company (VCC) providing:
 - Application status
 - Internal notes
 - Full performance data
+
+---
+
+# SLIDE 11: Envisioned Outcomes After Year 1
+
+## What Success Looks Like
+
+### FOR THE NETWORK:
+
+**GROWTH & ENGAGEMENT**
+- 150+ active fund manager members (50% growth)
+- 80%+ annual survey completion rate
+- Monthly active users engaging with platform features
+
+**DATA & INTELLIGENCE**
+- Comprehensive 5-year dataset (2021-2025) enabling robust trend analysis
+- AI assistant answering 500+ queries monthly
+- 3+ published research reports using platform data
+
+**CONNECTIVITY**
+- 50+ documented peer introductions or co-investment explorations
+- Active blog/learning hub with member-contributed content
+- Cross-network partnerships (e.g., Artha Networks integration)
+
+---
+
+### FOR FUND MANAGERS (Members):
+
+- **Visibility**: Enhanced profile discovery by LPs and partners
+- **Benchmarking**: Clear understanding of where their fund stands vs. peers
+- **Learning**: Access to best practices and peer insights that improve operations
+- **Capital Access**: Pipeline to Launch+ facility and other funding opportunities
+
+---
+
+### FOR LPs & ECOSYSTEM PARTNERS (Viewers):
+
+- **Discovery**: Streamlined identification of emerging fund managers
+- **Due Diligence**: Standardized data to inform investment decisions
+- **Engagement**: Clear pathway from viewer to active partner
+
+---
+
+### IMPACT METRICS TO TRACK:
+
+| Outcome | Year 1 Target |
+|---------|---------------|
+| Network Members | 150+ |
+| Survey Response Rate | 80%+ |
+| PortIQ Queries/Month | 500+ |
+| Peer Connections Facilitated | 50+ |
+| Research Reports Published | 3+ |
+| Launch+ Applications Processed | 30+ |
+| External Partnerships Established | 5+ |
 
 ---
 
