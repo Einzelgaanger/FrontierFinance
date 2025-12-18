@@ -65,38 +65,40 @@ A comprehensive digital ecosystem that serves as the **central hub** for the Col
 
 ## Who Uses the Platform?
 
-### THREE USER ROLES:
+---
 
-**ADMIN (CFF Staff)**
-- Full platform access
-- User management & approval
-- Analytics & reporting
-- Content moderation
+### ADMIN (CFF Staff)
 
-*Why would they use it?*
-→ To efficiently manage and grow the ESCP network, gain real-time visibility into fund manager activities, produce research reports, identify trends across the portfolio, and make data-driven decisions about network development and resource allocation.
+| What They Can Do | Why They'd Do It |
+|------------------|------------------|
+| Full platform access | Maintain oversight of the entire network ecosystem |
+| User management & approval | Control quality of membership and onboard new fund managers |
+| Analytics & reporting | Generate insights for research publications and donor reports |
+| Content moderation | Ensure community content meets professional standards |
+| Launch+ application review | Identify and select fund managers for capital facility support |
 
 ---
 
-**MEMBER (Fund Managers)**
-- Network directory access
-- Survey completion
-- Peer profile viewing
-- Blog posting & engagement
-- AI assistant access
+### MEMBER (Fund Managers)
 
-*Why would they use it?*
-→ To connect with peer fund managers facing similar challenges, benchmark their fund against network averages, discover co-investment opportunities, access shared learning resources, gain visibility with LPs and ecosystem partners, and contribute to collective research that strengthens the sector.
+| What They Can Do | Why They'd Do It |
+|------------------|------------------|
+| Network directory access | Find peer fund managers for co-investment, knowledge sharing, or referrals |
+| Survey completion | Contribute data that shapes sector research and benchmarks their fund |
+| Peer profile viewing | Learn from others' strategies, identify potential collaborators |
+| Blog posting & engagement | Share expertise, build thought leadership, learn from peers |
+| AI assistant (PortIQ) access | Quickly query network data without manual searching |
+| Learning Hub access | Access curated resources to strengthen fund operations |
 
 ---
 
-**VIEWER (External Partners)**
-- Limited read-only access
-- Application for membership
-- Public directory browsing
+### VIEWER (External Partners, LPs, Ecosystem Builders)
 
-*Why would they use it?*
-→ To discover and evaluate early-stage fund managers operating in frontier markets, understand the landscape of capital providers serving SGBs, identify potential partners or investees, and assess whether to engage more deeply with the network.
+| What They Can Do | Why They'd Do It |
+|------------------|------------------|
+| Public directory browsing | Discover fund managers operating in their markets of interest |
+| High-level analytics | Understand the landscape of capital providers serving SGBs |
+| Application for membership | Join the network to access deeper data and peer connections |
 
 ---
 
