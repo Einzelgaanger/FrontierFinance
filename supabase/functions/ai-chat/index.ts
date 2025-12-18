@@ -337,9 +337,9 @@ ${Object.keys(dataContext.surveys || {}).length > 0 ?
 Use sample_data above for structure reference. Full dataset has the counts shown in survey_counts.` : 
   `Survey data structure: ${Object.keys(dataContext.survey_counts || {}).filter(y => dataContext.survey_counts[y] > 0).length > 0 ? 
     'Counts available but detailed data may be limited by access level. Use counts for accurate totals.' : 
-    'No survey data available.'}`
+    'No survey data available.'}`}
 
-ACCESSIBLE FIELDS (${userRole} role):
+# ACCESSIBLE FIELDS (${userRole} role):
 ${accessibleFields || 'No specific field restrictions documented.'}
 
 # COLUMN NAME GUIDE (Critical for accurate cross-year queries)

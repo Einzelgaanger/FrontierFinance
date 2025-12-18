@@ -14,8 +14,9 @@ import {
   MessageCircle, 
   TrendingUp,
   Users,
-  Sparkles,
-  Filter
+  Activity,
+  Filter,
+  ArrowUpRight
 } from "lucide-react";
 import { toast } from "sonner";
 import { CreateBlogModal } from "@/components/blogs/CreateBlogModal";
@@ -168,142 +169,128 @@ export function BlogFeed() {
 
   const getMediaIcon = (type: string | null) => {
     switch (type) {
-      case "image": return <Image className="h-3.5 w-3.5" />;
-      case "video": return <Video className="h-3.5 w-3.5" />;
-      default: return <FileText className="h-3.5 w-3.5" />;
+      case "image": return <Image className="h-3 w-3" />;
+      case "video": return <Video className="h-3 w-3" />;
+      default: return <FileText className="h-3 w-3" />;
+    }
+  };
+
+  const getMediaLabel = (type: string | null) => {
+    switch (type) {
+      case "image": return "Image";
+      case "video": return "Video";
+      default: return "Article";
     }
   };
 
   const filterOptions = [
-    { value: 'all' as const, label: 'All', icon: Sparkles },
-    { value: 'text' as const, label: 'Articles', icon: FileText },
-    { value: 'image' as const, label: 'Images', icon: Image },
-    { value: 'video' as const, label: 'Videos', icon: Video },
+    { value: 'all' as const, label: 'All updates' },
+    { value: 'text' as const, label: 'Articles' },
+    { value: 'image' as const, label: 'Images' },
+    { value: 'video' as const, label: 'Videos' },
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Stats Bar */}
-      <div className="grid grid-cols-3 gap-4">
-        <Card className="border-0 bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-medium text-blue-100 uppercase tracking-wide">Posts</p>
-                <p className="text-2xl font-bold mt-1">{stats.totalPosts}</p>
-              </div>
-              <div className="p-2 bg-white/20 rounded-lg">
-                <TrendingUp className="h-5 w-5" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-0 bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-lg">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-medium text-purple-100 uppercase tracking-wide">Contributors</p>
-                <p className="text-2xl font-bold mt-1">{stats.totalAuthors}</p>
-              </div>
-              <div className="p-2 bg-white/20 rounded-lg">
-                <Users className="h-5 w-5" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-0 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-medium text-emerald-100 uppercase tracking-wide">Engagement</p>
-                <p className="text-2xl font-bold mt-1">{stats.totalEngagement}</p>
-              </div>
-              <div className="p-2 bg-white/20 rounded-lg">
-                <Heart className="h-5 w-5" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="space-y-5">
+      {/* Compact Stats Row */}
+      <div className="flex items-center gap-6 py-3 px-4 bg-slate-50 rounded-lg border border-slate-100">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 bg-slate-200/60 rounded">
+            <FileText className="h-3.5 w-3.5 text-slate-600" />
+          </div>
+          <div>
+            <span className="text-lg font-semibold text-slate-900">{stats.totalPosts}</span>
+            <span className="text-xs text-slate-500 ml-1.5">posts</span>
+          </div>
+        </div>
+        <div className="h-6 w-px bg-slate-200" />
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 bg-slate-200/60 rounded">
+            <Users className="h-3.5 w-3.5 text-slate-600" />
+          </div>
+          <div>
+            <span className="text-lg font-semibold text-slate-900">{stats.totalAuthors}</span>
+            <span className="text-xs text-slate-500 ml-1.5">contributors</span>
+          </div>
+        </div>
+        <div className="h-6 w-px bg-slate-200" />
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 bg-slate-200/60 rounded">
+            <Activity className="h-3.5 w-3.5 text-slate-600" />
+          </div>
+          <div>
+            <span className="text-lg font-semibold text-slate-900">{stats.totalEngagement}</span>
+            <span className="text-xs text-slate-500 ml-1.5">interactions</span>
+          </div>
+        </div>
+        <div className="ml-auto">
+          <Button 
+            onClick={() => setIsCreateModalOpen(true)}
+            size="sm"
+            className="bg-slate-900 hover:bg-slate-800 text-white h-8 px-3 text-xs font-medium"
+          >
+            <PlusCircle className="h-3.5 w-3.5 mr-1.5" />
+            New post
+          </Button>
+        </div>
       </div>
 
-      {/* Filter Bar */}
-      <Card className="border border-slate-200 shadow-sm">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-slate-500" />
-              <span className="text-sm font-medium text-slate-700">Filter:</span>
-              <div className="flex gap-1.5">
-                {filterOptions.map((option) => {
-                  const Icon = option.icon;
-                  return (
-                    <Button
-                      key={option.value}
-                      size="sm"
-                      variant={activeFilter === option.value ? "default" : "ghost"}
-                      className={`h-8 px-3 text-xs ${
-                        activeFilter === option.value 
-                          ? "bg-slate-900 text-white hover:bg-slate-800" 
-                          : "text-slate-600 hover:bg-slate-100"
-                      }`}
-                      onClick={() => setActiveFilter(option.value)}
-                    >
-                      <Icon className="h-3.5 w-3.5 mr-1.5" />
-                      {option.label}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-            <Button 
-              onClick={() => setIsCreateModalOpen(true)}
-              size="sm"
-              className="bg-blue-600 hover:bg-blue-700 text-white gap-2"
-            >
-              <PlusCircle className="h-4 w-4" />
-              New Post
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Filter Pills */}
+      <div className="flex items-center gap-1.5">
+        <Filter className="h-3.5 w-3.5 text-slate-400 mr-1" />
+        {filterOptions.map((option) => (
+          <button
+            key={option.value}
+            onClick={() => setActiveFilter(option.value)}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+              activeFilter === option.value 
+                ? "bg-slate-900 text-white" 
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+            }`}
+          >
+            {option.label}
+          </button>
+        ))}
+        <span className="text-xs text-slate-400 ml-2">
+          {filteredBlogs.length} {filteredBlogs.length === 1 ? 'result' : 'results'}
+        </span>
+      </div>
 
       {/* Posts Grid */}
       {loading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <Card key={i} className="animate-pulse">
+            <Card key={i} className="animate-pulse border-slate-200">
               <CardContent className="p-4 space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-slate-200" />
+                  <div className="h-9 w-9 rounded-full bg-slate-100" />
                   <div className="space-y-1.5 flex-1">
-                    <div className="h-3.5 w-24 rounded bg-slate-200" />
-                    <div className="h-3 w-16 rounded bg-slate-200" />
+                    <div className="h-3 w-24 rounded bg-slate-100" />
+                    <div className="h-2.5 w-16 rounded bg-slate-100" />
                   </div>
                 </div>
-                <div className="h-32 rounded-lg bg-slate-200" />
-                <div className="h-4 w-3/4 rounded bg-slate-200" />
+                <div className="h-4 w-3/4 rounded bg-slate-100" />
+                <div className="h-3 w-full rounded bg-slate-100" />
               </CardContent>
             </Card>
           ))}
         </div>
       ) : filteredBlogs.length === 0 ? (
-        <Card className="border-dashed border-2 border-slate-300">
-          <CardContent className="py-12 text-center">
-            <div className="mx-auto w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-4">
-              <FileText className="h-6 w-6 text-slate-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">No posts yet</h3>
-            <p className="text-sm text-slate-500 mb-4 max-w-sm mx-auto">
-              Be the first to share your insights with the community.
-            </p>
-            <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
-              <PlusCircle className="h-4 w-4" />
-              Create First Post
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="py-16 text-center">
+          <div className="mx-auto w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
+            <FileText className="h-5 w-5 text-slate-400" />
+          </div>
+          <h3 className="text-sm font-medium text-slate-900 mb-1">No posts yet</h3>
+          <p className="text-xs text-slate-500 mb-4">
+            Be the first to share your insights.
+          </p>
+          <Button onClick={() => setIsCreateModalOpen(true)} size="sm" variant="outline" className="h-8 text-xs">
+            <PlusCircle className="h-3.5 w-3.5 mr-1.5" />
+            Create post
+          </Button>
+        </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filteredBlogs.map((blog) => {
             const badge = blog.author?.total_points ? getBadge(blog.author.total_points) : null;
             
@@ -311,87 +298,88 @@ export function BlogFeed() {
               <Card 
                 key={blog.id}
                 onClick={() => setSelectedBlog(blog)}
-                className="group cursor-pointer border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-200 overflow-hidden"
+                className="group cursor-pointer border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all duration-150 overflow-hidden"
               >
                 <CardContent className="p-0">
                   {/* Media Preview */}
                   {blog.media_type === 'image' && blog.media_url && (
-                    <div className="aspect-video w-full overflow-hidden bg-slate-100">
+                    <div className="aspect-[16/10] w-full overflow-hidden bg-slate-50">
                       <img 
                         src={blog.media_url} 
                         alt={blog.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-200"
                       />
                     </div>
                   )}
                   {blog.media_type === 'video' && blog.media_url && (
-                    <div className="aspect-video w-full overflow-hidden bg-slate-900 relative">
-                      <video src={blog.media_url} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                        <div className="p-3 rounded-full bg-white/90">
-                          <Video className="h-6 w-6 text-slate-900" />
+                    <div className="aspect-[16/10] w-full overflow-hidden bg-slate-900 relative">
+                      <video src={blog.media_url} className="w-full h-full object-cover opacity-80" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="p-2.5 rounded-full bg-white/90 shadow">
+                          <Video className="h-5 w-5 text-slate-900" />
                         </div>
                       </div>
                     </div>
                   )}
                   
                   <div className="p-4">
-                    {/* Author */}
-                    <div className="flex items-center gap-3 mb-3">
-                      <Avatar className="h-9 w-9 border-2 border-white shadow-sm">
+                    {/* Author Row */}
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <Avatar className="h-8 w-8 border border-slate-200">
                         <AvatarImage src={blog.author?.profile_picture_url || ""} />
-                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white text-xs">
+                        <AvatarFallback className="bg-slate-100 text-slate-600 text-xs font-medium">
                           {blog.author?.full_name?.charAt(0) || "U"}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <p className="text-sm font-semibold text-slate-900 truncate">
+                        <div className="flex items-center gap-1">
+                          <p className="text-sm font-medium text-slate-900 truncate">
                             {blog.author?.full_name || "Unknown"}
                           </p>
-                          {badge && <span className="text-sm">{badge.icon}</span>}
+                          {badge && <span className="text-xs">{badge.icon}</span>}
                         </div>
                         <p className="text-xs text-slate-500 truncate">
                           {blog.author?.company_name || ""}
                         </p>
                       </div>
-                      <Badge variant="secondary" className="text-xs gap-1 shrink-0">
+                      <Badge variant="secondary" className="text-[10px] gap-1 h-5 px-1.5 bg-slate-100 text-slate-600 shrink-0">
                         {getMediaIcon(blog.media_type)}
+                        {getMediaLabel(blog.media_type)}
                       </Badge>
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-semibold text-slate-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                    <h3 className="font-medium text-slate-900 text-sm mb-1.5 line-clamp-2 group-hover:text-blue-700 transition-colors leading-snug">
                       {blog.title}
                     </h3>
 
                     {/* Content Preview */}
                     {blog.content && (
-                      <p className="text-sm text-slate-600 line-clamp-2 mb-3">
+                      <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed">
                         {blog.content}
                       </p>
                     )}
 
                     {/* Footer */}
-                    <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+                    <div className="flex items-center justify-between pt-2.5 border-t border-slate-100">
                       <div className="flex items-center gap-3">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleLike(blog.id, blog.is_liked || false);
                           }}
-                          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-red-500 transition-colors"
+                          className="flex items-center gap-1 text-xs text-slate-500 hover:text-red-500 transition-colors"
                         >
-                          <Heart className={`h-4 w-4 ${blog.is_liked ? 'fill-red-500 text-red-500' : ''}`} />
-                          {blog.like_count}
+                          <Heart className={`h-3.5 w-3.5 ${blog.is_liked ? 'fill-red-500 text-red-500' : ''}`} />
+                          <span>{blog.like_count}</span>
                         </button>
-                        <span className="flex items-center gap-1.5 text-xs text-slate-500">
-                          <MessageCircle className="h-4 w-4" />
-                          {blog.comment_count}
+                        <span className="flex items-center gap-1 text-xs text-slate-500">
+                          <MessageCircle className="h-3.5 w-3.5" />
+                          <span>{blog.comment_count}</span>
                         </span>
                       </div>
-                      <span className="text-xs text-slate-400">
-                        {format(new Date(blog.created_at), "MMM d")}
+                      <span className="text-[11px] text-slate-400">
+                        {format(new Date(blog.created_at), "MMM d, yyyy")}
                       </span>
                     </div>
                   </div>
