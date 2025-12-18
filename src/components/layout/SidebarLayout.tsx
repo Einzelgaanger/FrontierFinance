@@ -126,11 +126,11 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
       color: "purple"
     },
     { 
-      name: "Community", 
+      name: "Community hub", 
       href: "/community", 
       icon: Newspaper, 
       roles: ["admin", "member", "viewer"],
-      description: "Blogs & Learning Hub",
+      description: "Network updates & learning resources",
       badge: null,
       color: "teal"
     },
@@ -409,10 +409,10 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                   ) : location.pathname === '/community' || location.pathname === '/blogs' ? (
                     <>
                       <h2 className="text-2xl font-bold text-white transition-colors">
-                        Community Hub
+                        Community hub
                       </h2>
                       <p className="text-sm text-white/70 transition-colors">
-                        Connect, share insights, and access learning resources
+                        Network updates, perspectives and structured learning for fund managers
                       </p>
                     </>
                   ) : location.pathname === '/profile' ? (

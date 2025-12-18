@@ -646,28 +646,26 @@ const ViewerDashboardV2 = () => {
 
   if (showSuccessMessage) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-blue-50 relative">
-        {/* Decorative floating orbs */}
-        <div className="hidden md:block absolute top-20 left-10 w-72 h-72 bg-green-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="hidden md:block absolute top-40 right-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        
-        <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <div className="w-32 h-32 bg-gradient-to-br from-green-400 via-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl transform hover:scale-110 transition-transform duration-300">
-              <CheckCircle className="w-16 h-16 text-white" />
+      <div
+        className="min-h-screen bg-slate-900/80"
+        style={{
+          backgroundImage: 'url(/CFF.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center bg-white/95 backdrop-blur-sm rounded-xl border border-gray-200 px-8 py-10 shadow-sm">
+            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-10 h-10 text-white" />
             </div>
-            <div className="inline-block mb-4">
-              <span className="px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-full text-green-700 text-sm font-semibold">
-                You're All Set! 🎉
-              </span>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent mb-4">
-              Application Submitted Successfully!
+            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-2">
+              Application submitted
             </h1>
-            <p className="text-lg text-gray-700 mb-8 max-w-xl mx-auto leading-relaxed">
-              Awesome! 🚀 Thank you for your interest in joining the CFF Network. Your application has been submitted for review.
-              <br /><br />
-              We'll get back to you within <span className="font-bold text-green-600">5-7 business days</span>. We're excited to have you join our community!
+            <p className="text-sm text-gray-600 mb-6 max-w-xl mx-auto leading-relaxed">
+              Thank you for your interest in joining the CFF Network. Your application has been received and will be reviewed by the team.
+              You can expect a response within <span className="font-semibold text-gray-900">5–7 business days</span>.
             </p>
             <Button
               onClick={() => {
@@ -693,13 +691,9 @@ const ViewerDashboardV2 = () => {
                   topics_of_interest: [],
                 });
               }}
-              className="group bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-6 text-lg font-bold shadow-2xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full"
+              className="px-6 py-3 text-sm font-medium rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
             >
-              <div className="flex items-center space-x-2">
-                <Users className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                <span>Submit Another Application</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-              </div>
+              Submit another application
             </Button>
           </div>
         </div>
@@ -710,267 +704,179 @@ const ViewerDashboardV2 = () => {
   // Preview/Landing Page
   if (!showApplicationForm) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-blue-50 relative">
-        {/* Decorative floating orbs */}
-        <div className="hidden md:block absolute top-20 left-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="hidden md:block absolute top-40 right-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="hidden md:block absolute bottom-20 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-
-        {/* Preview Cards */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Application Preview - Left Side */}
-            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-orange-50 to-amber-50 border-2 border-orange-200 hover:border-orange-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-100/0 to-amber-100/0 group-hover:from-orange-100/30 group-hover:to-amber-100/40 transition-all duration-500"></div>
-            <div className="relative p-8">
-              {/* Header Section */}
-              <div className="text-center mb-8">
-                <div className="inline-block mb-3">
-                  <span className="px-4 py-2 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full text-orange-700 text-sm font-semibold">
-                    Ready to Join? 🚀
-                  </span>
-                </div>
-                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-orange-600 via-orange-700 to-amber-600 bg-clip-text text-transparent mb-3">
-                  Become a Member Today!
+      <div
+        className="min-h-screen bg-slate-900/80"
+        style={{
+          backgroundImage: 'url(/CFF.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            {/* Application Overview */}
+            <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl p-8 shadow-sm">
+              <div className="mb-6">
+                <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-2">
+                  Membership application
                 </h2>
-                <p className="text-sm md:text-base text-gray-700 mb-6 max-w-2xl mx-auto">
-                  Join our vibrant community in just 4 simple steps. It's quick, easy, and takes about 10-15 minutes!
+                <p className="text-sm text-gray-600">
+                  Share a concise overview of your organization and investment activity to help us assess fit with the CFF Network.
                 </p>
               </div>
 
-              {/* Application Steps Preview - Reorganized as 2x2 grid */}
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                <div className="text-center group/step bg-white/60 rounded-xl p-4 border border-orange-100 hover:border-orange-300 transition-all">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-lg">1</span>
-                  </div>
-                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-blue-600 transition-colors duration-300 text-sm">Tell Us About You</h3>
-                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Your organization</p>
+              <div className="grid grid-cols-2 gap-4 mb-8 text-sm text-gray-700">
+                <div className="space-y-1">
+                  <p className="font-medium text-gray-900">1. Organization details</p>
+                  <p className="text-xs text-gray-500">Basic information and domicile</p>
                 </div>
-                
-                <div className="text-center group/step bg-white/60 rounded-xl p-4 border border-orange-100 hover:border-orange-300 transition-all">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-lg">2</span>
-                  </div>
-                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-green-600 transition-colors duration-300 text-sm">Your Team</h3>
-                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Team details</p>
+                <div className="space-y-1">
+                  <p className="font-medium text-gray-900">2. Team & role</p>
+                  <p className="text-xs text-gray-500">Your role and team overview</p>
                 </div>
-                
-                <div className="text-center group/step bg-white/60 rounded-xl p-4 border border-orange-100 hover:border-orange-300 transition-all">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-lg">3</span>
-                  </div>
-                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-purple-600 transition-colors duration-300 text-sm">Investment Strategy</h3>
-                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">Your focus areas</p>
+                <div className="space-y-1">
+                  <p className="font-medium text-gray-900">3. Investment profile</p>
+                  <p className="text-xs text-gray-500">Strategy, tickets and capital raised</p>
                 </div>
-                
-                <div className="text-center group/step bg-white/60 rounded-xl p-4 border border-orange-100 hover:border-orange-300 transition-all">
-                  <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover/step:scale-110 group-hover/step:rotate-6 transition-all duration-300">
-                    <span className="text-white font-bold text-lg">4</span>
-                  </div>
-                  <h3 className="font-bold text-gray-800 mb-1 group-hover/step:text-orange-600 transition-colors duration-300 text-sm">Your Goals</h3>
-                  <p className="text-xs text-gray-600 group-hover/step:text-gray-700 transition-colors duration-300">What you're looking for</p>
+                <div className="space-y-1">
+                  <p className="font-medium text-gray-900">4. Network expectations</p>
+                  <p className="text-xs text-gray-500">How you plan to engage</p>
                 </div>
               </div>
 
-              {/* Benefits Section */}
-              <div className="bg-white/40 rounded-xl p-6 mb-8 border border-orange-100">
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-orange-600 mb-1">4</div>
-                    <div className="text-xs text-gray-600">Simple Steps</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-orange-600 mb-1">10-15</div>
-                    <div className="text-xs text-gray-600">Minutes</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-orange-600 mb-1">200+</div>
-                    <div className="text-xs text-gray-600">Members</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA Button */}
-              <div className="text-center">
+              <div className="border-t border-gray-100 pt-6 mt-2">
+                <p className="text-xs text-gray-500 mb-3">
+                  Typical completion time: 10–15 minutes.
+                </p>
                 <Button
                   onClick={() => setShowApplicationForm(true)}
-                  className="group bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 hover:from-orange-600 hover:via-orange-700 hover:to-amber-700 text-white px-8 py-6 text-base font-bold shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full w-full"
+                  className="w-full justify-center px-6 py-3 text-sm font-medium rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
                   size="lg"
                 >
-                  <div className="flex items-center justify-center space-x-3">
-                    <Users className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                    <span>Start Your Application</span>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  </div>
+                  <span>Start application</span>
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
-                <p className="text-sm text-gray-600 mt-4 font-medium">
-                  ⏱️ Takes approximately 10-15 minutes to complete
-                </p>
               </div>
             </div>
-          </div>
 
-            {/* Three Cards - Right Side */}
+            {/* Viewer tools */}
             <div className="flex flex-col gap-6">
-            {/* Network Benefits */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-blue-50 border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-100/0 to-blue-200/0 group-hover:from-blue-100/20 group-hover:to-blue-200/30 transition-all duration-500"></div>
-                <div className="relative p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                      <Users className="w-6 h-6 text-white" />
+              <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900">Network overview</h3>
+                    <p className="text-xs text-gray-500">
+                      High-level view of the CFF fund manager community.
+                    </p>
                   </div>
-                    <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300">
-                      Connect & Network
-                    </h3>
                 </div>
-                  <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
-                    Join 200+ fund managers across 25+ countries and build meaningful connections in emerging markets.
-                  </p>
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full">200+ Managers</span>
-                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full">25+ Countries</span>
+                <div className="flex items-center gap-4 text-xs text-gray-700">
+                  <div>
+                    <p className="font-semibold text-gray-900">200+</p>
+                    <p className="text-gray-500">fund managers</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">25+</p>
+                    <p className="text-gray-500">countries</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Survey Access with Year Buttons */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-green-50 border-2 border-green-200 hover:border-green-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-100/0 to-green-200/0 group-hover:from-green-100/20 group-hover:to-green-200/30 transition-all duration-500"></div>
-                <div className="relative p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                      <BarChart3 className="w-6 h-6 text-white" />
+              <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900">Survey library</h3>
+                    <p className="text-xs text-gray-500">
+                      Access ESCP survey instruments from 2021–2024.
+                    </p>
                   </div>
-                    <h3 className="text-lg font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent group-hover:from-green-700 group-hover:to-green-900 transition-all duration-300">
-                      Market Insights
-                    </h3>
                 </div>
-                  <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
-                    Dive into comprehensive survey data and market intelligence from 2021-2024. Discover trends, patterns, and opportunities.
-                </p>
-                
-                {/* Survey Year Buttons */}
-                  <div className="grid grid-cols-4 gap-2 mb-3">
+                <div className="grid grid-cols-4 gap-2 mb-3">
                   {surveyYears.map((survey) => (
                     <Button
                       key={survey.year}
                       variant="outline"
                       size="sm"
                       onClick={() => navigate(survey.path)}
-                        className="h-9 text-xs font-semibold bg-white/90 hover:bg-green-100 hover:text-green-700 hover:border-green-400 border-green-200 text-green-700 transition-all transform hover:scale-105 rounded-lg"
+                      className="h-9 text-xs font-medium border-gray-300 text-gray-800 hover:bg-gray-100 rounded-md"
                     >
                       {survey.year}
                     </Button>
                   ))}
                 </div>
-                
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full">4 Years Data</span>
-                    <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full">Trend Analysis</span>
-                </div>
+                <p className="text-xs text-gray-500">
+                  Four years of data on local capital providers and MSME financing.
+                </p>
               </div>
-            </div>
 
-            {/* Professional Development */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-purple-50 border-2 border-purple-200 hover:border-purple-400 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-100/0 to-purple-200/0 group-hover:from-purple-100/20 group-hover:to-purple-200/30 transition-all duration-500"></div>
-                <div className="relative p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                      <Rocket className="w-6 h-6 text-white" />
+              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900">Learning and events</h3>
+                    <p className="text-xs text-gray-500">
+                      Webinars, workshops and curated resources for fund managers.
+                    </p>
                   </div>
-                    <h3 className="text-lg font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent group-hover:from-purple-700 group-hover:to-purple-900 transition-all duration-300">
-                      Grow & Learn
-                    </h3>
                 </div>
-                  <p className="text-sm text-gray-700 group-hover:text-gray-800 transition-colors duration-300 leading-relaxed mb-4">
-                    Level up your skills with exclusive webinars, workshops, and resources designed for fund managers.
-                  </p>
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full">Webinars</span>
-                    <span className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full">Workshops</span>
-                </div>
+                <p className="text-xs text-gray-500">
+                  As the platform evolves, this space will host structured learning content,
+                  recordings and practical tools for managers across the network.
+                </p>
               </div>
             </div>
           </div>
-              </div>
-
-                </div>
-                
-        {/* Custom Animations CSS */}
-        <style>{`
-          @keyframes blob {
-            0%, 100% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-          }
-          
-          .animate-blob {
-            animation: blob 7s infinite;
-          }
-
-          .animation-delay-2000 {
-            animation-delay: 2s;
-          }
-
-          .animation-delay-4000 {
-            animation-delay: 4s;
-          }
-        `}</style>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-blue-50 relative">
-      {/* Decorative floating orbs */}
-      <div className="hidden md:block absolute top-20 left-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-      <div className="hidden md:block absolute top-40 right-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-      
+    <div
+      className="min-h-screen bg-slate-900/80"
+      style={{
+        backgroundImage: 'url(/CFF.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       {/* Header with Back Button */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
         <div className="flex items-center justify-between mb-4">
           <Button
             variant="outline"
             onClick={() => setShowApplicationForm(false)}
-            className="flex items-center border-blue-300 text-blue-700 hover:bg-blue-50 bg-white shadow-md hover:shadow-lg transition-all"
+            className="flex items-center border-gray-300 text-gray-800 hover:bg-gray-100 bg-white shadow-sm"
           >
             <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
             Back to Overview
           </Button>
         </div>
         <div className="text-center mb-6">
-          <div className="inline-block mb-3">
-            <span className="px-4 py-2 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full text-orange-700 text-sm font-semibold">
-              Let's Get Started! 🎯
-            </span>
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-600 via-orange-700 to-amber-600 bg-clip-text text-transparent mb-3">
-            Membership Application
+          <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-2">
+            Membership application
           </h1>
-          <p className="text-base text-gray-700 max-w-2xl mx-auto">
-            Join our vibrant community of fund managers. We're excited to have you! 🚀
+          <p className="text-sm text-gray-600 max-w-2xl mx-auto">
+            Provide a concise overview of your organization, team and investment activity to support the review process.
           </p>
         </div>
       </div>
       
       {/* Application Form */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-        <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-blue-50 to-purple-50 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 shadow-2xl hover:shadow-3xl">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-100/30 to-purple-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <div className="relative p-8 md:p-10">
+        <div className="rounded-2xl bg-white/95 backdrop-blur-sm border border-gray-200 shadow-sm">
+          <div className="p-8 md:p-10">
             <div className="space-y-6">
               {/* Progress Bar */}
               <div className="space-y-3">
                 <div className="flex justify-between text-sm font-semibold">
                   <span className="text-gray-700">Step {currentSection} of 4</span>
-                  <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{Math.round((currentSection / 4) * 100)}% Complete</span>
+                  <span className="text-gray-900">{Math.round((currentSection / 4) * 100)}% complete</span>
                 </div>
-                <div className="w-full h-4 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 rounded-full overflow-hidden shadow-inner">
+                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-500 ease-out shadow-lg"
+                    className="h-full bg-blue-600 rounded-full transition-all duration-500 ease-out"
                     style={{ width: `${(currentSection / 4) * 100}%` }}
                   ></div>
                 </div>
