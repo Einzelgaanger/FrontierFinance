@@ -8,7 +8,19 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { CheckCircle, XCircle, Clock, Mail, Building2, Calendar, Eye } from 'lucide-react';
+import { 
+  CheckCircle, XCircle, Clock, Mail, Calendar, Eye, 
+  FileText, Link as LinkIcon, User, MapPin, Briefcase, DollarSign,
+  Users, Target, Building2, ExternalLink, Download
+} from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+
+interface UploadedFile {
+  name: string;
+  url: string;
+  type: 'file' | 'link';
+}
 
 interface Application {
   id: string;
@@ -18,26 +30,26 @@ interface Application {
   application_text?: string;
   status: 'pending' | 'approved' | 'rejected';
   admin_notes?: string;
-  review_notes?: string;
   created_at: string;
-  updated_at?: string;
   reviewed_at?: string;
   reviewed_by?: string;
   applicant_name: string;
   vehicle_name: string;
   organization_website?: string;
-  domicile_countries?: string[];
   role_job_title?: string;
+  team_size?: string;
+  location?: string;
   team_overview?: string;
   investment_thesis?: string;
   typical_check_size?: string;
   number_of_investments?: string;
   amount_raised_to_date?: string;
   supporting_documents?: string[];
-  supporting_document_links?: string[];
   expectations_from_network?: string;
   how_heard_about_network?: string;
-  topics_of_interest?: string[];
+  information_sharing_topics?: string[];
+  profile_picture_url?: string;
+  rejection_cooldown_until?: string;
 }
 
 const ApplicationManagement = () => {
@@ -53,20 +65,14 @@ const ApplicationManagement = () => {
   useEffect(() => {
     fetchApplications();
 
-    // Set up real-time subscription for live updates
     const applicationsSubscription = supabase
       .channel('applications-live-updates')
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'applications' },
-        (payload) => {
-          console.log('Application change detected:', payload);
-          // Refresh applications when any change occurs
-          fetchApplications();
-        }
+        () => fetchApplications()
       )
       .subscribe();
 
-    // Cleanup subscription on unmount
     return () => {
       supabase.removeChannel(applicationsSubscription);
     };
@@ -81,33 +87,7 @@ const ApplicationManagement = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setApplications((data || []).map((req: any) => ({
-        id: req.id,
-        user_id: req.user_id,
-        company_name: req.company_name || req.vehicle_name || 'Unknown',
-        email: req.email,
-        application_text: req.application_text || req.investment_thesis || 'No application text provided',
-        status: req.status,
-        admin_notes: req.admin_notes || req.review_notes,
-        created_at: req.created_at,
-        reviewed_at: req.reviewed_at,
-        reviewed_by: req.reviewed_by,
-        applicant_name: req.applicant_name || '',
-        vehicle_name: req.vehicle_name || '',
-        organization_website: req.organization_website,
-        domicile_countries: req.domicile_countries,
-        role_job_title: req.role_job_title,
-        team_overview: req.team_overview,
-        investment_thesis: req.investment_thesis,
-        typical_check_size: req.typical_check_size,
-        number_of_investments: req.number_of_investments,
-        amount_raised_to_date: req.amount_raised_to_date,
-        supporting_documents: req.supporting_documents,
-        supporting_document_links: req.supporting_document_links,
-        expectations_from_network: req.expectations_from_network,
-        how_heard_about_network: req.how_heard_about_network,
-        topics_of_interest: req.topics_of_interest
-      })));
+      setApplications((data || []) as Application[]);
     } catch (error) {
       console.error('Error fetching applications:', error);
       toast({
@@ -186,13 +166,25 @@ const ApplicationManagement = () => {
     try {
       setReviewing(true);
 
+      // Calculate 5 business days cooldown
+      const cooldownDate = new Date();
+      let businessDays = 0;
+      while (businessDays < 5) {
+        cooldownDate.setDate(cooldownDate.getDate() + 1);
+        const dayOfWeek = cooldownDate.getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          businessDays++;
+        }
+      }
+
       const { error } = await supabase
         .from('applications')
         .update({
           status: 'rejected',
           admin_notes: adminNotes,
           reviewed_at: new Date().toISOString(),
-          reviewed_by: user.id
+          reviewed_by: user.id,
+          rejection_cooldown_until: cooldownDate.toISOString()
         })
         .eq('id', selectedApp.id);
 
@@ -203,13 +195,14 @@ const ApplicationManagement = () => {
         body: {
           applicationId: selectedApp.id,
           status: 'rejected',
-          adminNotes
+          adminNotes,
+          cooldownDate: cooldownDate.toISOString()
         }
       });
 
       toast({
         title: "Application Rejected",
-        description: "The applicant has been notified via email."
+        description: "The applicant has been notified via email. They can reapply after 5 business days."
       });
 
       setReviewDialogOpen(false);
@@ -226,19 +219,30 @@ const ApplicationManagement = () => {
     }
   };
 
+  const parseDocuments = (docs?: string[]): UploadedFile[] => {
+    if (!docs) return [];
+    return docs.map(doc => {
+      try {
+        return JSON.parse(doc);
+      } catch {
+        return { name: doc, url: doc, type: 'link' as const };
+      }
+    });
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 text-[10px] font-medium px-2 py-0.5">
-          <Clock className="w-2.5 h-2.5 mr-1" /> Pending
+        return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+          <Clock className="w-3 h-3 mr-1" /> Pending
         </Badge>;
       case 'approved':
-        return <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px] font-medium px-2 py-0.5">
-          <CheckCircle className="w-2.5 h-2.5 mr-1" /> Approved
+        return <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+          <CheckCircle className="w-3 h-3 mr-1" /> Approved
         </Badge>;
       case 'rejected':
-        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 text-[10px] font-medium px-2 py-0.5">
-          <XCircle className="w-2.5 h-2.5 mr-1" /> Rejected
+        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+          <XCircle className="w-3 h-3 mr-1" /> Rejected
         </Badge>;
       default:
         return null;
@@ -248,8 +252,8 @@ const ApplicationManagement = () => {
   if (loading) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-        <p className="text-gray-600 mt-4">Loading applications...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+        <p className="text-muted-foreground mt-4">Loading applications...</p>
       </div>
     );
   }
@@ -258,411 +262,382 @@ const ApplicationManagement = () => {
   const reviewedApps = applications.filter(app => app.status !== 'pending');
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Membership Applications</h2>
-          <p className="text-xs text-slate-500 mt-0.5">Review and approve membership requests</p>
+          <h2 className="text-xl font-semibold">Membership Applications</h2>
+          <p className="text-sm text-muted-foreground">Review and approve membership requests</p>
         </div>
         <div className="flex gap-3">
-          <div className="text-center px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-md">
-            <div className="text-base font-semibold text-amber-700">{pendingApps.length}</div>
-            <div className="text-[10px] text-amber-600 font-medium">Pending</div>
+          <div className="text-center px-4 py-2 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="text-2xl font-bold text-amber-700">{pendingApps.length}</div>
+            <div className="text-xs text-amber-600 font-medium">Pending</div>
           </div>
-          <div className="text-center px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-md">
-            <div className="text-base font-semibold text-slate-700">{applications.length}</div>
-            <div className="text-[10px] text-slate-600 font-medium">Total</div>
+          <div className="text-center px-4 py-2 bg-muted border rounded-lg">
+            <div className="text-2xl font-bold">{applications.length}</div>
+            <div className="text-xs text-muted-foreground font-medium">Total</div>
           </div>
         </div>
       </div>
 
       {/* Pending Applications */}
       {pendingApps.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
             <Clock className="w-4 h-4 text-amber-600" />
             Pending Review ({pendingApps.length})
           </h3>
-          {pendingApps.map((app) => (
-            <Card key={app.id} className="border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0">
-                    <CardTitle className="text-sm font-semibold text-slate-900 mb-1">
-                      {app.applicant_name || app.company_name || app.vehicle_name || 'Application'}
-                    </CardTitle>
-                    <CardDescription className="flex items-center gap-3 text-xs">
-                      {app.vehicle_name && (
-                        <span className="text-slate-600">{app.vehicle_name}</span>
+          <div className="grid gap-4">
+            {pendingApps.map((app) => (
+              <Card key={app.id} className="hover:shadow-md transition-shadow">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      {app.profile_picture_url ? (
+                        <img 
+                          src={app.profile_picture_url} 
+                          alt={app.applicant_name} 
+                          className="w-12 h-12 rounded-full object-cover border-2 border-primary"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                          <User className="w-6 h-6 text-muted-foreground" />
+                        </div>
                       )}
-                      <span className="flex items-center gap-1 text-slate-500">
-                        <Mail className="w-3 h-3" />
-                        {app.email}
-                      </span>
-                      <span className="flex items-center gap-1 text-slate-500">
-                        <Calendar className="w-3 h-3" />
-                        {new Date(app.created_at).toLocaleDateString()}
-                      </span>
-                    </CardDescription>
+                      <div>
+                        <CardTitle className="text-base">{app.applicant_name}</CardTitle>
+                        <CardDescription className="flex items-center gap-2">
+                          <Building2 className="w-3 h-3" />
+                          {app.vehicle_name}
+                        </CardDescription>
+                      </div>
+                    </div>
+                    {getStatusBadge(app.status)}
                   </div>
-                  {getStatusBadge(app.status)}
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0 space-y-3">
-                <div className="grid grid-cols-4 gap-3 text-xs">
-                  <div>
-                    <p className="text-slate-500 mb-0.5">Applicant</p>
-                    <p className="font-medium text-slate-900">{app.applicant_name || 'N/A'}</p>
+                </CardHeader>
+                <CardContent className="pt-0 space-y-3">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Mail className="w-3 h-3" />
+                      <span className="truncate">{app.email}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <MapPin className="w-3 h-3" />
+                      <span className="truncate">{app.location || 'Not provided'}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <DollarSign className="w-3 h-3" />
+                      <span className="truncate">{app.typical_check_size || 'N/A'}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Calendar className="w-3 h-3" />
+                      <span>{new Date(app.created_at).toLocaleDateString()}</span>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-slate-500 mb-0.5">Role</p>
-                    <p className="font-medium text-slate-900">{app.role_job_title || 'N/A'}</p>
+                  <div className="flex gap-2 pt-2 border-t">
+                    <Button onClick={() => handleReview(app)} size="sm">
+                      <Eye className="w-4 h-4 mr-2" />
+                      Review Full Application
+                    </Button>
                   </div>
-                  <div>
-                    <p className="text-slate-500 mb-0.5">Vehicle</p>
-                    <p className="font-medium text-slate-900">{app.vehicle_name || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <p className="text-slate-500 mb-0.5">Website</p>
-                    <p className="font-medium text-slate-900 truncate">{app.organization_website || 'N/A'}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-3 text-xs">
-                  <div>
-                    <p className="text-slate-500 mb-0.5">Check Size</p>
-                    <p className="font-medium text-slate-900">{app.typical_check_size || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <p className="text-slate-500 mb-0.5">Investments</p>
-                    <p className="font-medium text-slate-900">{app.number_of_investments || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <p className="text-slate-500 mb-0.5">Amount Raised</p>
-                    <p className="font-medium text-slate-900">{app.amount_raised_to_date || 'N/A'}</p>
-                  </div>
-                </div>
-                <div className="flex gap-2 pt-2 border-t border-slate-100">
-                  <Button
-                    onClick={() => handleReview(app)}
-                    size="sm"
-                    variant="default"
-                    className="text-xs"
-                  >
-                    <Eye className="w-3 h-3 mr-1.5" />
-                    Review
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       )}
 
       {/* Reviewed Applications */}
       {reviewedApps.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-slate-700">
-            Reviewed Applications ({reviewedApps.length})
-          </h3>
-          {reviewedApps.map((app) => (
-            <Card key={app.id} className="border border-slate-200 bg-white shadow-sm">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0">
-                    <CardTitle className="text-sm font-semibold text-slate-900 mb-1">
-                      {app.applicant_name || app.company_name || app.vehicle_name || 'Application'}
-                    </CardTitle>
-                    <CardDescription className="flex items-center gap-3 text-xs">
-                      {app.vehicle_name && (
-                        <span className="text-slate-600">{app.vehicle_name}</span>
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold">Reviewed Applications ({reviewedApps.length})</h3>
+          <div className="grid gap-3">
+            {reviewedApps.map((app) => (
+              <Card key={app.id} className="bg-muted/30">
+                <CardHeader className="py-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {app.profile_picture_url ? (
+                        <img 
+                          src={app.profile_picture_url} 
+                          alt={app.applicant_name} 
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                          <User className="w-5 h-5 text-muted-foreground" />
+                        </div>
                       )}
-                      <span className="flex items-center gap-1 text-slate-500">
-                        <Mail className="w-3 h-3" />
-                        {app.email}
-                      </span>
-                      <span className="flex items-center gap-1 text-slate-500">
-                        <Calendar className="w-3 h-3" />
-                        {app.reviewed_at ? new Date(app.reviewed_at).toLocaleDateString() : 'N/A'}
-                      </span>
-                    </CardDescription>
+                      <div>
+                        <CardTitle className="text-sm">{app.applicant_name}</CardTitle>
+                        <CardDescription className="text-xs">
+                          {app.vehicle_name} • Reviewed {app.reviewed_at ? new Date(app.reviewed_at).toLocaleDateString() : 'N/A'}
+                        </CardDescription>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {getStatusBadge(app.status)}
+                      <Button variant="ghost" size="sm" onClick={() => handleReview(app)}>
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                  {getStatusBadge(app.status)}
-                </div>
-              </CardHeader>
-              {app.admin_notes && (
-                <CardContent className="pt-0">
-                  <p className="text-xs text-slate-500 mb-1">Admin Notes:</p>
-                  <p className="text-xs text-slate-700 bg-slate-50 p-2 rounded border border-slate-200">{app.admin_notes}</p>
-                </CardContent>
-              )}
-            </Card>
-          ))}
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
         </div>
       )}
 
       {applications.length === 0 && (
         <Card>
           <CardContent className="text-center py-12">
-            <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">No applications yet</p>
+            <Building2 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground">No applications yet</p>
           </CardContent>
         </Card>
       )}
 
-      {/* Review Dialog */}
+      {/* Full Review Dialog */}
       <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto border-slate-200">
-          <DialogHeader className="border-b border-slate-200 pb-3">
-            <DialogTitle className="text-base font-semibold text-slate-900">
-              Review Application - {selectedApp?.applicant_name || selectedApp?.vehicle_name || selectedApp?.company_name || 'Application'}
-            </DialogTitle>
-            <DialogDescription className="text-xs text-slate-500 mt-1">
-              Review all application details and make a decision
-            </DialogDescription>
-          </DialogHeader>
-
-          {selectedApp && (
-            <div className="space-y-4 pt-4">
-              {/* Basic Information */}
-              <div className="grid grid-cols-3 gap-4 text-xs border-b border-slate-100 pb-4">
-                <div>
-                  <p className="text-slate-500 mb-1 font-medium">Applicant Name</p>
-                  <p className="text-slate-900 font-semibold">{selectedApp.applicant_name || 'Not provided'}</p>
-                </div>
-                <div>
-                  <p className="text-slate-500 mb-1 font-medium">Email</p>
-                  <p className="text-slate-900 font-semibold">{selectedApp.email}</p>
-                </div>
-                <div>
-                  <p className="text-slate-500 mb-1 font-medium">Submitted</p>
-                  <p className="text-slate-900 font-semibold">{new Date(selectedApp.created_at).toLocaleDateString()}</p>
-                </div>
-                <div>
-                  <p className="text-slate-500 mb-1 font-medium">Vehicle Name</p>
-                  <p className="text-slate-900 font-semibold">{selectedApp.vehicle_name || 'Not provided'}</p>
-                </div>
-                <div>
-                  <p className="text-slate-500 mb-1 font-medium">Company</p>
-                  <p className="text-slate-900 font-semibold">{selectedApp.company_name || selectedApp.vehicle_name || 'Not provided'}</p>
-                </div>
-                <div>
-                  <p className="text-slate-500 mb-1 font-medium">Role/Title</p>
-                  <p className="text-slate-900 font-semibold">{selectedApp.role_job_title || 'Not provided'}</p>
-                </div>
-                <div>
-                  <p className="text-slate-500 mb-1 font-medium">Website</p>
-                  <p className="text-slate-900 font-semibold truncate">{selectedApp.organization_website || 'Not provided'}</p>
-                </div>
-                {selectedApp.domicile_countries && selectedApp.domicile_countries.length > 0 && (
-                  <div>
-                    <p className="text-slate-500 mb-1 font-medium">Domicile Countries</p>
-                    <p className="text-slate-900 font-semibold">{selectedApp.domicile_countries.join(', ')}</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Financial Information */}
-              <div className="grid grid-cols-3 gap-4 text-xs border-b border-slate-100 pb-4">
-                <div>
-                  <p className="text-slate-500 mb-1 font-medium">Check Size</p>
-                  <p className="text-slate-900 font-semibold">{selectedApp.typical_check_size || 'Not provided'}</p>
-                </div>
-                <div>
-                  <p className="text-slate-500 mb-1 font-medium">Number of Investments</p>
-                  <p className="text-slate-900 font-semibold">{selectedApp.number_of_investments || 'Not provided'}</p>
-                </div>
-                <div>
-                  <p className="text-slate-500 mb-1 font-medium">Amount Raised</p>
-                  <p className="text-slate-900 font-semibold">{selectedApp.amount_raised_to_date || 'Not provided'}</p>
-                </div>
-              </div>
-
-              {/* Detailed Sections */}
-              <div className="space-y-3">
-                {selectedApp.team_overview && (
-                  <div>
-                    <p className="text-xs font-semibold text-slate-700 mb-1.5">Team Overview</p>
-                    <div className="text-xs text-slate-700 bg-slate-50 border border-slate-200 p-3 rounded-md whitespace-pre-wrap leading-relaxed">
-                      {selectedApp.team_overview}
-                    </div>
-                  </div>
-                )}
-
-                {selectedApp.investment_thesis && (
-                  <div>
-                    <p className="text-xs font-semibold text-slate-700 mb-1.5">Investment Thesis</p>
-                    <div className="text-xs text-slate-700 bg-slate-50 border border-slate-200 p-3 rounded-md whitespace-pre-wrap leading-relaxed">
-                      {selectedApp.investment_thesis}
-                    </div>
-                  </div>
-                )}
-
-                {selectedApp.expectations_from_network && (
-                  <div>
-                    <p className="text-xs font-semibold text-slate-700 mb-1.5">Network Expectations</p>
-                    <div className="text-xs text-slate-700 bg-slate-50 border border-slate-200 p-3 rounded-md whitespace-pre-wrap leading-relaxed">
-                      {selectedApp.expectations_from_network}
-                    </div>
-                  </div>
-                )}
-
-                {selectedApp.how_heard_about_network && (
-                  <div>
-                    <p className="text-xs font-semibold text-slate-700 mb-1.5">How They Heard About Us</p>
-                    <div className="text-xs text-slate-700 bg-slate-50 border border-slate-200 p-3 rounded-md">
-                      {selectedApp.how_heard_about_network}
-                    </div>
-                  </div>
-                )}
-
-                {(selectedApp.supporting_documents && selectedApp.supporting_documents.length > 0) || 
-                 (selectedApp.supporting_document_links && selectedApp.supporting_document_links.length > 0) ? (
-                  <div>
-                    <p className="text-xs font-semibold text-slate-700 mb-1.5">Supporting Documents</p>
-                    <div className="space-y-1.5">
-                      {selectedApp.supporting_documents?.map((doc, idx) => {
-                        try {
-                          const parsed = JSON.parse(doc);
-                          return (
-                            <div key={idx} className="text-xs text-slate-600 bg-slate-50 border border-slate-200 p-2 rounded">
-                              {parsed.fileName || 'Document'}
-                            </div>
-                          );
-                        } catch {
-                          return null;
-                        }
-                      })}
-                      {selectedApp.supporting_document_links?.map((link, idx) => {
-                        try {
-                          const parsed = JSON.parse(link);
-                          return (
-                            <div key={idx} className="text-xs text-blue-600 bg-slate-50 border border-slate-200 p-2 rounded">
-                              <a href={parsed.fileName} target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-700">
-                                {parsed.fileName}
-                              </a>
-                            </div>
-                          );
-                        } catch {
-                          return null;
-                        }
-                      })}
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-
-              {/* Admin Notes */}
-              <div className="border-t border-slate-200 pt-4">
-                <Label htmlFor="admin-notes" className="text-xs font-semibold text-slate-700">Admin Notes (optional)</Label>
-                <Textarea
-                  id="admin-notes"
-                  value={adminNotes}
-                  onChange={(e) => setAdminNotes(e.target.value)}
-                  placeholder="Add notes about your decision..."
-                  rows={3}
-                  className="mt-1.5 text-xs"
+        <DialogContent className="max-w-4xl max-h-[90vh] p-0">
+          <DialogHeader className="p-6 pb-0">
+            <div className="flex items-center gap-4">
+              {selectedApp?.profile_picture_url ? (
+                <img 
+                  src={selectedApp.profile_picture_url} 
+                  alt={selectedApp.applicant_name} 
+                  className="w-16 h-16 rounded-full object-cover border-2 border-primary"
                 />
-                <p className="text-[10px] text-slate-500 mt-1">
-                  These notes will be included in the email notification sent to the applicant
-                </p>
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                  <User className="w-8 h-8 text-muted-foreground" />
+                </div>
+              )}
+              <div>
+                <DialogTitle className="text-xl">{selectedApp?.applicant_name}</DialogTitle>
+                <DialogDescription className="flex items-center gap-2">
+                  <Building2 className="w-4 h-4" />
+                  {selectedApp?.vehicle_name}
+                  {getStatusBadge(selectedApp?.status || '')}
+                </DialogDescription>
               </div>
             </div>
-          )}
+          </DialogHeader>
 
-          <DialogFooter className="gap-2 border-t border-slate-200 pt-4 mt-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setReviewDialogOpen(false)}
-              disabled={reviewing}
-              className="text-xs"
-            >
-              Cancel
+          <ScrollArea className="max-h-[60vh] px-6">
+            {selectedApp && (
+              <div className="space-y-6 py-4">
+                {/* Basic Info */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Email</Label>
+                    <p className="text-sm font-medium">{selectedApp.email}</p>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Website</Label>
+                    <a 
+                      href={selectedApp.organization_website} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium text-primary hover:underline flex items-center gap-1"
+                    >
+                      {selectedApp.organization_website || 'N/A'}
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Submitted</Label>
+                    <p className="text-sm font-medium">{new Date(selectedApp.created_at).toLocaleDateString()}</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Role & Team */}
+                <div className="space-y-4">
+                  <h4 className="font-semibold flex items-center gap-2">
+                    <Briefcase className="w-4 h-4" />
+                    Role & Team
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Role/Job Title</Label>
+                      <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
+                        {selectedApp.role_job_title || 'Not provided'}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Team Size & Structure</Label>
+                      <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
+                        {selectedApp.team_size || selectedApp.team_overview || 'Not provided'}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Location</Label>
+                      <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
+                        {selectedApp.location || 'Not provided'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Investment Details */}
+                <div className="space-y-4">
+                  <h4 className="font-semibold flex items-center gap-2">
+                    <Target className="w-4 h-4" />
+                    Investment Details
+                  </h4>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Investment Thesis</Label>
+                    <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
+                      {selectedApp.investment_thesis || 'Not provided'}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Ticket Size</Label>
+                      <p className="text-sm font-medium">{selectedApp.typical_check_size || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Portfolio Size</Label>
+                      <p className="text-sm font-medium">{selectedApp.number_of_investments || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Capital Raised</Label>
+                      <p className="text-sm font-medium">{selectedApp.amount_raised_to_date || 'N/A'}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Network Expectations */}
+                <div className="space-y-4">
+                  <h4 className="font-semibold flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    Network Expectations
+                  </h4>
+                  {selectedApp.information_sharing_topics && selectedApp.information_sharing_topics.length > 0 && (
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Topics Willing to Contribute</Label>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {selectedApp.information_sharing_topics.map((topic, idx) => (
+                          <Badge key={idx} variant="secondary" className="text-xs">
+                            {topic}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Expectations from Network</Label>
+                    <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
+                      {selectedApp.expectations_from_network || 'Not provided'}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">How They Heard About Us</Label>
+                    <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
+                      {selectedApp.how_heard_about_network || 'Not provided'}
+                    </p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Supporting Documents */}
+                <div className="space-y-4">
+                  <h4 className="font-semibold flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    Supporting Documents
+                  </h4>
+                  {parseDocuments(selectedApp.supporting_documents).length > 0 ? (
+                    <div className="grid gap-2">
+                      {parseDocuments(selectedApp.supporting_documents).map((doc, idx) => (
+                        <a
+                          key={idx}
+                          href={doc.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between bg-muted/50 p-3 rounded-lg hover:bg-muted transition-colors"
+                        >
+                          <div className="flex items-center gap-2">
+                            {doc.type === 'file' ? (
+                              <FileText className="w-4 h-4 text-primary" />
+                            ) : (
+                              <LinkIcon className="w-4 h-4 text-blue-600" />
+                            )}
+                            <span className="text-sm">{doc.name}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <span className="text-xs">{doc.type === 'file' ? 'Download' : 'Open'}</span>
+                            {doc.type === 'file' ? (
+                              <Download className="w-4 h-4" />
+                            ) : (
+                              <ExternalLink className="w-4 h-4" />
+                            )}
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No documents uploaded</p>
+                  )}
+                </div>
+
+                <Separator />
+
+                {/* Admin Notes */}
+                <div className="space-y-3">
+                  <Label htmlFor="admin-notes" className="font-semibold">Admin Notes</Label>
+                  <Textarea
+                    id="admin-notes"
+                    value={adminNotes}
+                    onChange={(e) => setAdminNotes(e.target.value)}
+                    placeholder="Add notes about your decision (will be included in the email to applicant)..."
+                    rows={4}
+                    disabled={selectedApp.status !== 'pending'}
+                  />
+                </div>
+              </div>
+            )}
+          </ScrollArea>
+
+          <DialogFooter className="p-6 pt-0 border-t">
+            <Button variant="outline" onClick={() => setReviewDialogOpen(false)} disabled={reviewing}>
+              Close
             </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={async () => {
-                if (!selectedApp || !user) return;
-                try {
-                  setReviewing(true);
-                  const { error } = await supabase
-                    .from('applications')
-                    .update({
-                      status: 'rejected',
-                      admin_notes: adminNotes,
-                      reviewed_at: new Date().toISOString(),
-                      reviewed_by: user.id
-                    })
-                    .eq('id', selectedApp.id);
-                  if (error) throw error;
-                  await supabase.functions.invoke('send-application-status', {
-                    body: { applicationId: selectedApp.id, status: 'rejected', adminNotes }
-                  });
-                  toast({ title: "Application Rejected", description: "The applicant has been notified via email." });
-                  setReviewDialogOpen(false);
-                  fetchApplications();
-                } catch (error) {
-                  console.error('Error rejecting application:', error);
-                  toast({ title: "Error", description: "Failed to reject application", variant: "destructive" });
-                } finally {
-                  setReviewing(false);
-                }
-              }}
-              disabled={reviewing}
-              className="text-xs"
-            >
-              {reviewing ? 'Processing...' : (
-                <>
-                  <XCircle className="w-3 h-3 mr-1.5" />
-                  Reject
-                </>
-              )}
-            </Button>
-            <Button
-              size="sm"
-              onClick={async () => {
-                if (!selectedApp || !user) return;
-                try {
-                  setReviewing(true);
-                  const { error: appError } = await supabase
-                    .from('applications')
-                    .update({
-                      status: 'approved',
-                      admin_notes: adminNotes,
-                      reviewed_at: new Date().toISOString(),
-                      reviewed_by: user.id
-                    })
-                    .eq('id', selectedApp.id);
-                  if (appError) throw appError;
-                  const { error: roleError } = await supabase
-                    .from('user_roles' as any)
-                    .update({ role: 'member' })
-                    .eq('user_id', selectedApp.user_id);
-                  if (roleError) throw roleError;
-                  await supabase.functions.invoke('send-application-status', {
-                    body: { applicationId: selectedApp.id, status: 'approved', adminNotes }
-                  });
-                  toast({ title: "Application Approved", description: "The user has been granted member access and notified via email." });
-                  setReviewDialogOpen(false);
-                  fetchApplications();
-                } catch (error) {
-                  console.error('Error approving application:', error);
-                  toast({ title: "Error", description: "Failed to approve application", variant: "destructive" });
-                } finally {
-                  setReviewing(false);
-                }
-              }}
-              disabled={reviewing}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
-            >
-              {reviewing ? 'Processing...' : (
-                <>
-                  <CheckCircle className="w-3 h-3 mr-1.5" />
-                  Approve
-                </>
-              )}
-            </Button>
+            {selectedApp?.status === 'pending' && (
+              <>
+                <Button
+                  variant="destructive"
+                  onClick={handleReject}
+                  disabled={reviewing}
+                >
+                  {reviewing ? 'Processing...' : (
+                    <>
+                      <XCircle className="w-4 h-4 mr-2" />
+                      Reject (5-day cooldown)
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={handleApprove}
+                  disabled={reviewing}
+                  className="bg-emerald-600 hover:bg-emerald-700"
+                >
+                  {reviewing ? 'Processing...' : (
+                    <>
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Approve
+                    </>
+                  )}
+                </Button>
+              </>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -671,5 +646,3 @@ const ApplicationManagement = () => {
 };
 
 export default ApplicationManagement;
-
-

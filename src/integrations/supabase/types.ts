@@ -53,14 +53,20 @@ export type Database = {
           expectations_from_network: string | null
           how_heard_about_network: string | null
           id: string
+          information_sharing_topics: string[] | null
           investment_thesis: string | null
+          location: string | null
           number_of_investments: string | null
           organization_website: string | null
+          profile_picture_url: string | null
+          rejection_cooldown_until: string | null
           reviewed_at: string | null
           reviewed_by: string | null
           role_job_title: string | null
           status: string
+          supporting_documents: string[] | null
           team_overview: string | null
+          team_size: string | null
           typical_check_size: string | null
           updated_at: string | null
           user_id: string
@@ -77,14 +83,20 @@ export type Database = {
           expectations_from_network?: string | null
           how_heard_about_network?: string | null
           id?: string
+          information_sharing_topics?: string[] | null
           investment_thesis?: string | null
+          location?: string | null
           number_of_investments?: string | null
           organization_website?: string | null
+          profile_picture_url?: string | null
+          rejection_cooldown_until?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           role_job_title?: string | null
           status?: string
+          supporting_documents?: string[] | null
           team_overview?: string | null
+          team_size?: string | null
           typical_check_size?: string | null
           updated_at?: string | null
           user_id: string
@@ -101,14 +113,20 @@ export type Database = {
           expectations_from_network?: string | null
           how_heard_about_network?: string | null
           id?: string
+          information_sharing_topics?: string[] | null
           investment_thesis?: string | null
+          location?: string | null
           number_of_investments?: string | null
           organization_website?: string | null
+          profile_picture_url?: string | null
+          rejection_cooldown_until?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           role_job_title?: string | null
           status?: string
+          supporting_documents?: string[] | null
           team_overview?: string | null
+          team_size?: string | null
           typical_check_size?: string | null
           updated_at?: string | null
           user_id?: string
