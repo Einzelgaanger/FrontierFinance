@@ -8,15 +8,13 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }
 
   try {
-    const { applicationId, status, adminNotes } = await req.json()
+    const { applicationId, status, adminNotes, cooldownDate } = await req.json()
 
     if (!applicationId || !status) {
       return new Response(
@@ -25,15 +23,13 @@ Deno.serve(async (req) => {
       )
     }
 
-    // Create Supabase client with service role for admin operations
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseKey)
 
-    // Fetch application details
     const { data: application, error: appError } = await supabase
       .from('applications')
-      .select('user_id, email, company_name')
+      .select('user_id, email, company_name, applicant_name, vehicle_name')
       .eq('id', applicationId)
       .single()
 
@@ -45,43 +41,97 @@ Deno.serve(async (req) => {
       )
     }
 
-    const dashboardLink = `${supabaseUrl}/dashboard`
+    const applicantName = application.applicant_name || application.company_name || 'Applicant'
+    const vehicleName = application.vehicle_name || application.company_name || 'your vehicle'
+    const dashboardLink = `${supabaseUrl.replace('.supabase.co', '')}/dashboard`
     const isApproved = status === 'approved'
+    const cooldownFormatted = cooldownDate ? new Date(cooldownDate).toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    }) : null
+
     const html = `<!doctype html>
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Application ${isApproved ? 'Approved' : 'Update'}</title>
+  <title>ESCP Network - Application ${isApproved ? 'Approved' : 'Update'}</title>
 </head>
-<body style="background:#f5f5dc;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
-  <div style="max-width:600px;margin:0 auto;background:#ffffff;padding:40px 20px;">
-    <h1 style="color:#000;margin:0 0 24px;font-size:24px;">${isApproved ? 'Congratulations!' : 'Application Update'}</h1>
-    <p style="color:#333;font-size:16px;line-height:24px;margin:0 0 16px;">Dear ${application.company_name},</p>
-    <p style="color:#333;font-size:16px;line-height:24px;margin:0 0 16px;">${isApproved
-      ? 'We are pleased to inform you that your application to join the CFF Network has been approved! Welcome to our community of fund managers.'
-      : `Your CFF Network membership application status has been updated to: ${status}.`}
-    </p>
-    ${adminNotes
-      ? `<p style="color:#333;font-weight:600;margin:24px 0 8px;">Message from our team:</p>
-         <div style="background:#f5f5dc;border:1px solid #000;padding:16px;border-radius:4px;color:#333;font-size:14px;line-height:20px;margin:0 0 24px;">${adminNotes}</div>`
-      : ''}
-    ${isApproved
-      ? `<p style="color:#333;font-size:16px;line-height:24px;margin:0 0 12px;">You now have full access to the CFF Network platform. Log in to explore:</p>
-         <p style="color:#333;font-size:16px;line-height:28px;margin:0 0 24px;">• Connect with other fund managers<br/>• Access exclusive resources and insights<br/>• Participate in network events<br/>• Share and view detailed fund information</p>
-         <a href="${dashboardLink}" style="background:#000;color:#f5f5dc;padding:12px 24px;border-radius:4px;text-decoration:none;display:inline-block;font-weight:700;">Access Your Dashboard</a>`
-      : ''}
-    <p style="color:#333;font-size:16px;line-height:24px;margin:32px 0 0;">If you have any questions, please don't hesitate to reach out to our team.</p>
-    <p style="color:#666;font-size:14px;line-height:20px;margin:16px 0 0;">Best regards,<br/>The CFF Network Team</p>
+<body style="background:#f8f9fa;margin:0;padding:40px 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);overflow:hidden;">
+    <div style="background:#1a1a1a;padding:32px;text-align:center;">
+      <h1 style="color:#f5f5dc;margin:0;font-size:24px;">ESCP Network</h1>
+    </div>
+    <div style="padding:40px 32px;">
+      <h2 style="color:${isApproved ? '#059669' : '#dc2626'};margin:0 0 24px;font-size:20px;">
+        ${isApproved ? '🎉 Congratulations! Your Application Has Been Approved' : '📋 Application Status Update'}
+      </h2>
+      
+      <p style="color:#333;font-size:16px;line-height:26px;margin:0 0 20px;">Dear ${applicantName},</p>
+      
+      ${isApproved ? `
+        <p style="color:#333;font-size:16px;line-height:26px;margin:0 0 20px;">
+          We are delighted to inform you that your application for <strong>${vehicleName}</strong> to join the ESCP Network has been <strong style="color:#059669;">approved</strong>!
+        </p>
+        <p style="color:#333;font-size:16px;line-height:26px;margin:0 0 20px;">
+          You now have full member access to our peer-to-peer learning network. Here's what you can do:
+        </p>
+        <ul style="color:#333;font-size:15px;line-height:28px;margin:0 0 24px;padding-left:20px;">
+          <li>Access the complete network directory of fund managers</li>
+          <li>View detailed survey data and insights</li>
+          <li>Participate in knowledge sharing and discussions</li>
+          <li>Connect with peers for co-investment opportunities</li>
+          <li>Contribute to our community resources</li>
+        </ul>
+      ` : `
+        <p style="color:#333;font-size:16px;line-height:26px;margin:0 0 20px;">
+          Thank you for your interest in joining the ESCP Network. After careful review, we regret to inform you that your application for <strong>${vehicleName}</strong> was not approved at this time.
+        </p>
+        ${cooldownFormatted ? `
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:16px;margin:0 0 20px;">
+          <p style="color:#991b1b;font-size:14px;margin:0;">
+            <strong>⏳ Reapplication Period:</strong> You may submit a new application after <strong>${cooldownFormatted}</strong>.
+          </p>
+        </div>
+        ` : ''}
+      `}
+      
+      ${adminNotes ? `
+        <div style="background:#f9fafb;border-left:4px solid ${isApproved ? '#059669' : '#f59e0b'};padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0;">
+          <p style="color:#374151;font-weight:600;margin:0 0 8px;font-size:14px;">Message from our team:</p>
+          <p style="color:#4b5563;font-size:14px;line-height:22px;margin:0;">${adminNotes}</p>
+        </div>
+      ` : ''}
+      
+      ${isApproved ? `
+        <div style="text-align:center;margin:32px 0;">
+          <a href="https://escpnetwork.net/dashboard" style="background:#1a1a1a;color:#f5f5dc;padding:14px 32px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:600;font-size:16px;">
+            Access Your Dashboard →
+          </a>
+        </div>
+      ` : `
+        <p style="color:#333;font-size:16px;line-height:26px;margin:20px 0 0;">
+          We encourage you to revisit your application based on the feedback provided and reapply when eligible. If you have questions, please don't hesitate to reach out.
+        </p>
+      `}
+    </div>
+    <div style="background:#f9fafb;padding:24px 32px;border-top:1px solid #e5e7eb;">
+      <p style="color:#6b7280;font-size:13px;line-height:20px;margin:0;text-align:center;">
+        This email was sent by the ESCP Network.<br/>
+        If you have any questions, please contact our team.
+      </p>
+    </div>
   </div>
 </body>
 </html>`
 
     const { error: emailError } = await resend.emails.send({
-      from: 'CFF Network <onboarding@resend.dev>',
+      from: 'ESCP Network <onboarding@resend.dev>',
       to: [application.email],
-      subject: status === 'approved' 
-        ? '🎉 Your CFF Network Membership Application Has Been Approved!' 
-        : 'Update on Your CFF Network Membership Application',
+      subject: isApproved 
+        ? '🎉 Welcome to the ESCP Network - Your Application Has Been Approved!' 
+        : 'ESCP Network - Application Status Update',
       html,
     })
 
@@ -90,7 +140,7 @@ Deno.serve(async (req) => {
       throw emailError
     }
 
-    console.log('Application status email sent to:', application.email)
+    console.log('Application status email sent to:', application.email, 'Status:', status)
 
     return new Response(
       JSON.stringify({ success: true }),
