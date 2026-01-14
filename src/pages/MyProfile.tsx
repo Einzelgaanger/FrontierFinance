@@ -5,10 +5,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Upload, Mail, Globe, Building2, FileText } from 'lucide-react';
+import { Loader2, Upload, Mail, Globe, Building2, FileText, Lock, Eye, EyeOff, CheckCircle, XCircle, Shield } from 'lucide-react';
 
 export default function MyProfile() {
   const { user } = useAuth();
@@ -22,6 +23,34 @@ export default function MyProfile() {
     website: '',
     profile_picture_url: ''
   });
+
+  // Password change state
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [updatingPassword, setUpdatingPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Password validation
+  const checkPasswordStrength = (password: string) => {
+    const checks = {
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    };
+    
+    const score = Object.values(checks).filter(Boolean).length;
+    return { checks, score, strength: score < 3 ? 'weak' : score < 4 ? 'medium' : 'strong' };
+  };
+
+  const passwordStrength = checkPasswordStrength(passwordForm.newPassword);
+  const passwordsMatch = passwordForm.newPassword === passwordForm.confirmPassword && passwordForm.confirmPassword !== '';
 
   useEffect(() => {
     fetchProfile();
@@ -175,6 +204,88 @@ export default function MyProfile() {
       setSaving(false);
     }
   };
+
+  const handlePasswordChange = async () => {
+    if (!user || !user.email) return;
+
+    // Validate
+    if (passwordStrength.score < 3) {
+      toast({
+        title: "Weak Password",
+        description: "Please choose a stronger password",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!passwordsMatch) {
+      toast({
+        title: "Passwords Don't Match",
+        description: "Please make sure your passwords match",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUpdatingPassword(true);
+
+    try {
+      // First, verify the current password by attempting to sign in
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: passwordForm.currentPassword,
+      });
+
+      if (signInError) {
+        toast({
+          title: "Invalid Current Password",
+          description: "The current password you entered is incorrect.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Update the password
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: passwordForm.newPassword
+      });
+
+      if (updateError) {
+        toast({
+          title: "Password Update Failed",
+          description: updateError.message,
+          variant: "destructive"
+        });
+        return;
+      }
+
+      toast({
+        title: "Password Updated Successfully",
+        description: "Your password has been changed successfully.",
+      });
+
+      // Reset form
+      setPasswordForm({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+      setShowCurrentPassword(false);
+      setShowNewPassword(false);
+      setShowConfirmPassword(false);
+
+    } catch (error) {
+      console.error('Error updating password:', error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setUpdatingPassword(false);
+    }
+  };
+
   if (loading) {
     return (
       <SidebarLayout>
@@ -321,6 +432,138 @@ export default function MyProfile() {
                     )}
                   </Button>
                 </div>
+
+                {/* Password Change Section */}
+                <Card className="border border-slate-200 shadow-sm">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-slate-800">
+                      <Shield className="w-5 h-5 mr-2 text-blue-600" />
+                      Change Password
+                    </CardTitle>
+                    <CardDescription className="text-slate-600">
+                      Update your password to keep your account secure. Your new password must be at least 8 characters long and include uppercase, lowercase, number, and special character.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="currentPassword" className="text-sm font-medium text-slate-700">Current Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                        <Input
+                          id="currentPassword"
+                          type={showCurrentPassword ? "text" : "password"}
+                          value={passwordForm.currentPassword}
+                          onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
+                          placeholder="Enter your current password"
+                          className="pl-10 pr-10 border-slate-300 focus:border-blue-500"
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                          onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                        >
+                          {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="newPassword" className="text-sm font-medium text-slate-700">New Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                        <Input
+                          id="newPassword"
+                          type={showNewPassword ? "text" : "password"}
+                          value={passwordForm.newPassword}
+                          onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
+                          placeholder="Enter your new password"
+                          className="pl-10 pr-10 border-slate-300 focus:border-blue-500"
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                        >
+                          {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                      
+                      {passwordForm.newPassword && (
+                        <div className="space-y-2 mt-2">
+                          <div className="flex items-center gap-2 text-xs">
+                            <div className={`w-2 h-2 rounded-full ${passwordStrength.strength === 'weak' ? 'bg-red-400' : passwordStrength.strength === 'medium' ? 'bg-yellow-400' : 'bg-green-400'}`} />
+                            <span className="text-slate-600">
+                              Password strength: {passwordStrength.strength}
+                            </span>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-2 text-xs">
+                            {Object.entries(passwordStrength.checks).map(([key, value]) => (
+                              <div key={key} className="flex items-center gap-1">
+                                {value ? <CheckCircle className="w-3 h-3 text-green-500" /> : <XCircle className="w-3 h-3 text-red-400" />}
+                                <span className={value ? 'text-green-600' : 'text-slate-500'}>
+                                  {key === 'length' ? '8+ chars' : 
+                                   key === 'uppercase' ? 'Uppercase' :
+                                   key === 'lowercase' ? 'Lowercase' :
+                                   key === 'number' ? 'Number' : 'Special char'}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword" className="text-sm font-medium text-slate-700">Confirm New Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                        <Input
+                          id="confirmPassword"
+                          type={showConfirmPassword ? "text" : "password"}
+                          value={passwordForm.confirmPassword}
+                          onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                          placeholder="Confirm your new password"
+                          className="pl-10 pr-10 border-slate-300 focus:border-blue-500"
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        >
+                          {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                      
+                      {passwordForm.confirmPassword && (
+                        <div className="flex items-center gap-2 text-xs mt-1">
+                          {passwordsMatch ? 
+                            <><CheckCircle className="w-3 h-3 text-green-500" /><span className="text-green-600">Passwords match</span></> :
+                            <><XCircle className="w-3 h-3 text-red-400" /><span className="text-red-500">Passwords don't match</span></>
+                          }
+                        </div>
+                      )}
+                    </div>
+
+                    <Button 
+                      onClick={handlePasswordChange}
+                      disabled={updatingPassword || !passwordForm.currentPassword || !passwordForm.newPassword || !passwordsMatch || passwordStrength.score < 3}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      {updatingPassword ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Updating Password...
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="w-4 h-4 mr-2" />
+                          Update Password
+                        </>
+                      )}
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>

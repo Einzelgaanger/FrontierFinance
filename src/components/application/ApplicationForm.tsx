@@ -90,12 +90,12 @@ const ApplicationForm = () => {
       try {
         const { data: profileData } = await supabase
           .from('user_profiles')
-          .select('company_name, avatar_url')
+          .select('company_name, profile_picture_url')
           .eq('id', user.id)
           .single();
 
-        if (profileData?.avatar_url) {
-          setProfilePicture(profileData.avatar_url);
+        if (profileData?.profile_picture_url) {
+          setProfilePicture(profileData.profile_picture_url);
         }
 
         const { data, error } = await supabase
@@ -208,7 +208,7 @@ const ApplicationForm = () => {
       // Also update user_profiles
       await supabase
         .from('user_profiles')
-        .update({ avatar_url: urlData.publicUrl })
+        .update({ profile_picture_url: urlData.publicUrl })
         .eq('id', user.id);
 
       toast({ title: "Success", description: "Profile picture uploaded" });
