@@ -36,6 +36,8 @@ import PortIQ from "./pages/PortIQ";
 import LaunchPlusIntro from "./pages/LaunchPlusIntro";
 import LaunchPlusAssessment from "./pages/LaunchPlusAssessment";
 import AdminLaunchPlusAnalytics from "./pages/AdminLaunchPlusAnalytics";
+import DevTasks from "./pages/DevTasks";
+import { FeedbackButton } from "./components/feedback/FeedbackButton";
 
 const queryClient = new QueryClient();
 
@@ -154,8 +156,11 @@ const App = () => {
                 <AdminLaunchPlusAnalytics />
               </ProtectedRoute>
             } />
+            <Route path="/devtasks" element={<DevTasks />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          {/* Floating Feedback Button - appears on all pages */}
+          <FeedbackButton />
           </div>
         </BrowserRouter>
         </AuthProvider>

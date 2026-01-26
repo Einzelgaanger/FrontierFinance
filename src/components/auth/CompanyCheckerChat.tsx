@@ -148,16 +148,26 @@ export default function CompanyCheckerChat({ onComplete, onSkip }: CompanyChecke
       if (error) throw error;
 
       setStep('done');
+      
+      // Log the password received from backend for debugging
+      console.log('Password received from backend:', data.defaultPassword);
+      
+      // Temporary fix: If backend returns old password, use new one instead
+      // TODO: Remove this after Edge Function is redeployed
+      const passwordToUse = (data.defaultPassword === 'ESCPNetwork2024!' || !data.defaultPassword) 
+        ? '@ESCPNetwork2025#' 
+        : data.defaultPassword;
+      
       addMessage({
         role: 'assistant',
-        content: `✅ **Success!** I've consolidated ${data.totalUpdated} survey record(s) under the email **${selectedEmail}**.\n\n🔐 Your default password is: **${data.defaultPassword}**\n\nPlease sign in with these credentials. You can change your password after logging in.`,
+        content: `✅ **Success!** I've consolidated ${data.totalUpdated} survey record(s) under the email **${selectedEmail}**.\n\n🔐 Your default password is: **${passwordToUse}**\n\nPlease sign in with these credentials. You can change your password after logging in.`,
         action: 'show_password'
       });
 
       onComplete({ 
         found: true, 
         email: selectedEmail, 
-        password: data.defaultPassword 
+        password: passwordToUse 
       });
     } catch (error) {
       console.error('Consolidation error:', error);
@@ -245,7 +255,7 @@ export default function CompanyCheckerChat({ onComplete, onSkip }: CompanyChecke
                           setStep('done');
                           onComplete({ found: false });
                         }}
-                        className="text-white border-white/30 hover:bg-white/10"
+                        className="bg-red-600/80 hover:bg-red-700 text-white border-red-500/50 hover:border-red-400"
                       >
                         None of these
                       </Button>

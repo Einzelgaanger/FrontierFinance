@@ -187,7 +187,7 @@ serve(async (req) => {
       )
     }
 
-    // Action 3: Consolidate surveys to primary email
+    // Action 3: Consolidate surveys to primary email and create user account
     if (action === 'consolidate') {
       if (!primaryEmail || !selectedCompanies || selectedCompanies.length === 0) {
         return new Response(
@@ -196,62 +196,399 @@ serve(async (req) => {
         )
       }
 
+      const defaultPassword = '@ESCPNetwork2025#'
       const results = {
         updated2021: 0,
         updated2022: 0,
         updated2023: 0,
         updated2024: 0,
+        userCreated: false,
+        userId: null as string | null,
         errors: [] as string[]
       }
 
+      // Step 1: Check if user already exists by trying to get user by email
+      let userId: string | null = null
+      let userExists = false
+      
+      try {
+        // First, try to get user directly by email using getUserByEmail if available
+        // Otherwise, paginate through all users
+        let page = 1
+        const perPage = 1000
+        let found = false
+        const emailLower = primaryEmail.toLowerCase().trim()
+        
+        while (!found) {
+          const { data: usersData, error: listError } = await supabase.auth.admin.listUsers({
+            page,
+            perPage
+          })
+          
+          if (listError) {
+            console.error('Error listing users:', listError)
+            // If listing fails, try to create user anyway
+            break
+          }
+          
+          const users = usersData?.users || []
+          const matchingUser = users.find(u => {
+            const userEmail = u.email?.toLowerCase().trim()
+            return userEmail === emailLower
+          })
+          
+          if (matchingUser) {
+            userId = matchingUser.id
+            userExists = true
+            found = true
+            results.userCreated = false
+            
+            console.log('Found existing user:', {
+              id: userId,
+              email: matchingUser.email,
+              emailConfirmed: !!matchingUser.email_confirmed_at
+            })
+            
+            // Update existing user's password to default password
+            console.log('Updating password for existing user:', userId)
+            const { data: updatedUser, error: updatePasswordError } = await supabase.auth.admin.updateUserById(
+              userId,
+              { 
+                password: defaultPassword,
+                email_confirm: true // Ensure email is confirmed
+              }
+            )
+            
+            if (updatePasswordError) {
+              console.error('Error updating password:', updatePasswordError)
+              results.errors.push(`Password update: ${updatePasswordError.message}`)
+              // Continue anyway - maybe password is already correct
+            } else {
+              console.log('Password updated successfully:', updatedUser?.user?.email)
+            }
+            
+            // Wait a moment for password update to propagate
+            await new Promise(resolve => setTimeout(resolve, 500))
+            
+            // Verify the user can be retrieved
+            const { data: verifyUser, error: verifyError } = await supabase.auth.admin.getUserById(userId)
+            if (verifyError) {
+              console.error('Error verifying user:', verifyError)
+            } else {
+              console.log('User verified after password update:', {
+                email: verifyUser?.user?.email,
+                emailConfirmed: !!verifyUser?.user?.email_confirmed_at,
+                userId: verifyUser?.user?.id
+              })
+            }
+            
+            // Ensure user profile exists
+            const { error: profileCheckError } = await supabase
+              .from('user_profiles')
+              .upsert({
+                id: userId,
+                email: primaryEmail,
+                company_name: selectedCompanies[0]
+              }, { onConflict: 'id' })
+            
+            if (profileCheckError) {
+              console.error('Error upserting profile:', profileCheckError)
+            } else {
+              console.log('User profile ensured')
+            }
+            
+            // Ensure user role exists
+            const { error: roleCheckError } = await supabase
+              .from('user_roles')
+              .upsert({
+                user_id: userId,
+                email: primaryEmail,
+                role: 'viewer'
+              }, { onConflict: 'user_id' })
+            
+            if (roleCheckError) {
+              console.error('Error upserting role:', roleCheckError)
+            } else {
+              console.log('User role ensured')
+            }
+            
+            break
+          }
+          
+          // If we got fewer users than perPage, we've reached the end
+          if (users.length < perPage) {
+            break
+          }
+          
+          page++
+        }
+      } catch (error) {
+        console.error('Error checking for existing user:', error)
+        // Continue to create new user if check fails
+      }
+
+      if (!userExists) {
+        // Step 2: Create new auth user
+        console.log('Creating new user with email:', primaryEmail)
+        const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+          email: primaryEmail,
+          password: defaultPassword,
+          email_confirm: true,
+          user_metadata: {
+            company_consolidated: true,
+            consolidated_at: new Date().toISOString()
+          }
+        })
+
+        if (createError) {
+          console.error('User creation error:', createError)
+          results.errors.push(`User creation: ${createError.message}`)
+          return new Response(
+            JSON.stringify({ 
+              success: false,
+              error: `Failed to create user: ${createError.message}`,
+              details: results
+            }),
+            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+
+        if (!newUser || !newUser.user) {
+          console.error('User creation returned no user data')
+          return new Response(
+            JSON.stringify({ 
+              success: false,
+              error: 'User creation succeeded but no user data returned',
+              details: results
+            }),
+            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+
+        userId = newUser.user.id
+        results.userCreated = true
+        results.userId = userId
+        console.log('User created successfully with ID:', userId, 'Email:', newUser.user.email)
+        
+        // Verify the user was created correctly
+        const { data: verifyNewUser, error: verifyError } = await supabase.auth.admin.getUserById(userId)
+        if (verifyError) {
+          console.error('Error verifying newly created user:', verifyError)
+        } else {
+          console.log('New user verified:', verifyNewUser?.user?.email, 'Email confirmed:', verifyNewUser?.user?.email_confirmed_at)
+        }
+
+        // Step 3: Create user profile
+        console.log('Creating user profile for:', userId)
+        const { error: profileError } = await supabase
+          .from('user_profiles')
+          .insert({
+            id: userId,
+            email: primaryEmail,
+            company_name: selectedCompanies[0] // Use first selected company as primary
+          })
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError)
+          if (!profileError.message.includes('duplicate')) {
+            results.errors.push(`Profile creation: ${profileError.message}`)
+          }
+        } else {
+          console.log('User profile created successfully')
+        }
+
+        // Step 4: Assign default viewer role
+        console.log('Assigning viewer role to:', userId)
+        const { error: roleError } = await supabase
+          .from('user_roles')
+          .insert({
+            user_id: userId,
+            email: primaryEmail,
+            role: 'viewer'
+          })
+
+        if (roleError) {
+          console.error('Role assignment error:', roleError)
+          if (!roleError.message.includes('duplicate')) {
+            results.errors.push(`Role assignment: ${roleError.message}`)
+          }
+        } else {
+          console.log('Role assigned successfully')
+        }
+      }
+
+      // Verify userId is set before proceeding
+      if (!userId) {
+        console.error('No userId available - cannot proceed with survey updates')
+        return new Response(
+          JSON.stringify({ 
+            success: false,
+            error: 'Failed to create or find user account',
+            details: results
+          }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      console.log('Proceeding with survey updates for userId:', userId)
+
+      // Step 5: Update all survey records to use the primary email and link to user_id
+      // Handle UNIQUE constraint by checking for existing surveys per year
       for (const companyName of selectedCompanies) {
         const searchTerm = companyName.toLowerCase()
 
-        // Update 2021 surveys
-        const { error: err2021, count: count2021 } = await supabase
+        // 2021 surveys - handle UNIQUE user_id constraint
+        const { data: surveys2021 } = await supabase
           .from('survey_responses_2021')
-          .update({ email_address: primaryEmail })
+          .select('id, user_id, email_address')
           .ilike('firm_name', `%${searchTerm}%`)
         
-        if (err2021) results.errors.push(`2021: ${err2021.message}`)
-        else results.updated2021 += count2021 || 0
+        if (surveys2021 && surveys2021.length > 0) {
+          // Check if user already has a 2021 survey
+          const existingSurvey = surveys2021.find(s => s.user_id === userId)
+          
+          if (existingSurvey) {
+            // Update existing survey email
+            const { error: err2021 } = await supabase
+              .from('survey_responses_2021')
+              .update({ email_address: primaryEmail })
+              .eq('id', existingSurvey.id)
+            if (err2021) results.errors.push(`2021: ${err2021.message}`)
+            else results.updated2021 = 1
+          } else {
+            // Use first survey found, update it
+            const firstSurvey = surveys2021[0]
+            const { error: err2021 } = await supabase
+              .from('survey_responses_2021')
+              .update({ 
+                email_address: primaryEmail,
+                user_id: userId
+              })
+              .eq('id', firstSurvey.id)
+            if (err2021) results.errors.push(`2021: ${err2021.message}`)
+            else results.updated2021 = 1
+          }
+        }
 
-        // Update 2022 surveys
-        const { error: err2022, count: count2022 } = await supabase
+        // 2022 surveys - handle UNIQUE user_id constraint
+        const { data: surveys2022 } = await supabase
           .from('survey_responses_2022')
-          .update({ email: primaryEmail })
+          .select('id, user_id, email')
           .ilike('organisation', `%${searchTerm}%`)
         
-        if (err2022) results.errors.push(`2022: ${err2022.message}`)
-        else results.updated2022 += count2022 || 0
+        if (surveys2022 && surveys2022.length > 0) {
+          const existingSurvey = surveys2022.find(s => s.user_id === userId)
+          
+          if (existingSurvey) {
+            const { error: err2022 } = await supabase
+              .from('survey_responses_2022')
+              .update({ email: primaryEmail })
+              .eq('id', existingSurvey.id)
+            if (err2022) results.errors.push(`2022: ${err2022.message}`)
+            else results.updated2022 = 1
+          } else {
+            const firstSurvey = surveys2022[0]
+            const { error: err2022 } = await supabase
+              .from('survey_responses_2022')
+              .update({ 
+                email: primaryEmail,
+                user_id: userId
+              })
+              .eq('id', firstSurvey.id)
+            if (err2022) results.errors.push(`2022: ${err2022.message}`)
+            else results.updated2022 = 1
+          }
+        }
 
-        // Update 2023 surveys
-        const { error: err2023, count: count2023 } = await supabase
+        // 2023 surveys - handle UNIQUE user_id constraint
+        const { data: surveys2023 } = await supabase
           .from('survey_responses_2023')
-          .update({ email_address: primaryEmail })
+          .select('id, user_id, email_address')
           .or(`organisation_name.ilike.%${searchTerm}%,fund_name.ilike.%${searchTerm}%`)
         
-        if (err2023) results.errors.push(`2023: ${err2023.message}`)
-        else results.updated2023 += count2023 || 0
+        if (surveys2023 && surveys2023.length > 0) {
+          const existingSurvey = surveys2023.find(s => s.user_id === userId)
+          
+          if (existingSurvey) {
+            const { error: err2023 } = await supabase
+              .from('survey_responses_2023')
+              .update({ email_address: primaryEmail })
+              .eq('id', existingSurvey.id)
+            if (err2023) results.errors.push(`2023: ${err2023.message}`)
+            else results.updated2023 = 1
+          } else {
+            const firstSurvey = surveys2023[0]
+            const { error: err2023 } = await supabase
+              .from('survey_responses_2023')
+              .update({ 
+                email_address: primaryEmail,
+                user_id: userId
+              })
+              .eq('id', firstSurvey.id)
+            if (err2023) results.errors.push(`2023: ${err2023.message}`)
+            else results.updated2023 = 1
+          }
+        }
 
-        // Update 2024 surveys
-        const { error: err2024, count: count2024 } = await supabase
+        // 2024 surveys - handle UNIQUE user_id constraint
+        const { data: surveys2024 } = await supabase
           .from('survey_responses_2024')
-          .update({ email_address: primaryEmail })
+          .select('id, user_id, email_address')
           .or(`organisation_name.ilike.%${searchTerm}%,fund_name.ilike.%${searchTerm}%`)
         
-        if (err2024) results.errors.push(`2024: ${err2024.message}`)
-        else results.updated2024 += count2024 || 0
+        if (surveys2024 && surveys2024.length > 0) {
+          const existingSurvey = surveys2024.find(s => s.user_id === userId)
+          
+          if (existingSurvey) {
+            const { error: err2024 } = await supabase
+              .from('survey_responses_2024')
+              .update({ email_address: primaryEmail })
+              .eq('id', existingSurvey.id)
+            if (err2024) results.errors.push(`2024: ${err2024.message}`)
+            else results.updated2024 = 1
+          } else {
+            const firstSurvey = surveys2024[0]
+            const { error: err2024 } = await supabase
+              .from('survey_responses_2024')
+              .update({ 
+                email_address: primaryEmail,
+                user_id: userId
+              })
+              .eq('id', firstSurvey.id)
+            if (err2024) results.errors.push(`2024: ${err2024.message}`)
+            else results.updated2024 = 1
+          }
+        }
       }
 
       const totalUpdated = results.updated2021 + results.updated2022 + results.updated2023 + results.updated2024
+
+      // Final verification: Try to get the user one more time to confirm everything is set
+      if (userId) {
+        const { data: finalVerify, error: finalVerifyError } = await supabase.auth.admin.getUserById(userId)
+        if (finalVerifyError) {
+          console.error('Final user verification failed:', finalVerifyError)
+          results.errors.push(`Final verification: ${finalVerifyError.message}`)
+        } else {
+          console.log('Final verification successful:', {
+            email: finalVerify?.user?.email,
+            emailConfirmed: !!finalVerify?.user?.email_confirmed_at,
+            userId: finalVerify?.user?.id
+          })
+        }
+      }
 
       return new Response(
         JSON.stringify({ 
           success: true,
           totalUpdated,
           details: results,
-          defaultPassword: 'ESCPNetwork2024!'
+          defaultPassword: defaultPassword,
+          userId: userId,
+          userCreated: results.userCreated,
+          message: userId 
+            ? `User account ${results.userCreated ? 'created' : 'updated'} successfully. You can now sign in with the default password.`
+            : 'Warning: User account may not have been created properly. Please check logs.'
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )

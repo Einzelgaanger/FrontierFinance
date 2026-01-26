@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -61,6 +61,13 @@ export default function AuthForm() {
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Show company checker automatically when component mounts if on signup tab
+  useEffect(() => {
+    if (activeTab === 'signup' && !companyCheckResult) {
+      setShowCompanyChecker(true);
+    }
+  }, [activeTab, companyCheckResult]);
 
   const checkPasswordStrength = (password: string) => {
     const checks = {
