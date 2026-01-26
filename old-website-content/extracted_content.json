@@ -1,0 +1,64 @@
+{
+  "website_url": "https://www.frontierfinance.org/",
+  "extraction_date": "2026-01-26",
+  "site_info": {
+    "name": "Collaborative for Frontier Finance",
+    "tagline": "Unlocking capital and growth for early stage enterprises.",
+    "description": "The Collaborative for Frontier Finance is a multi-stakeholder initiative that aims to increase access to capital for small and growing businesses in emerging markets"
+  },
+  "navigation": {
+    "main_menu": [
+      "LAUNCH+",
+      "About",
+      "Network",
+      "Learning Lab",
+      "Our Events",
+      "Contact"
+    ],
+    "secondary_links": [
+      "ESCP Network Members",
+      "Partners"
+    ]
+  },
+  "homepage": {
+    "hero": {
+      "headline": "We are building a better financial ecosystem for small and growing businesses in frontier markets.",
+      "subheadline": "The Collaborative for Frontier Finance is a multi-stakeholder initiative that aims to increase access to capital for small and growing businesses in emerging markets"
+    },
+    "how_it_works": {
+      "title": "How does the Collaborative FOR FRONTIER FINANCE work?",
+      "description": "The Collaborative for Frontier Finance works with diverse stakeholders – including fund managers, funders, and fieldbuilders – to accelerate financing solutions that target SGBs. We aim to set a common action agenda for SGB finance; to test and scale promising financing models; and to facilitate the flow of capital to the SGB market. With a bias to action, CFF works with stakeholders to identify, co-design and launch initiatives – or specific solutions that table SGB financing challenges - that are too complex for any one stakeholder to launch on their own.",
+      "three_ways": [
+        {
+          "title": "NETWORKS",
+          "icon": "ConnectIcon-04.png"
+        },
+        {
+          "title": "ACTIONABLE RESEARCH",
+          "icon": "AgendaIcon-02.png"
+        },
+        {
+          "title": "INITIATIVES",
+          "icon": "noun_rocket lift off_125617_ffffff.png"
+        }
+      ]
+    },
+    "who_involved": {
+      "title": "Who's INVOLVED IN the Collaborative for Frontier Finance?",
+      "description": "With input from 80+ fund managers, funders, and fieldbuilders over the past year, the Collaborative for Frontier Finance is a multi-stakeholder initiative.",
+      "cta": "SEE PARTNERS →"
+    },
+    "newsletter": {
+      "title": "Want to stay in the loop?",
+      "description": "Sign up here to receive occasional news and updates from the Collaborative."
+    }
+  },
+  "images_to_extract": [
+    "ConnectIcon-04.png",
+    "AgendaIcon-02.png",
+    "noun_rocket lift off_125617_ffffff.png"
+  ],
+  "key_statistics": {
+    "stakeholders": "80+ fund managers, funders, and fieldbuilders"
+  }
+}

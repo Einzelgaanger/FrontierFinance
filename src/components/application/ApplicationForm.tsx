@@ -540,10 +540,10 @@ const ApplicationForm = () => {
   function renderApplicationForm() {
     return (
       <form onSubmit={handleSubmit} className="space-y-6">
-        <Card className="max-w-3xl mx-auto">
-          <CardHeader>
-            <CardTitle className="text-2xl">ESCP Network Membership Application</CardTitle>
-            <CardDescription>
+        <Card className="max-w-6xl mx-auto bg-white/95 backdrop-blur-sm border border-gray-200/50 shadow-xl">
+          <CardHeader className="p-8 md:p-10">
+            <CardTitle className="text-2xl md:text-3xl">ESCP Network Membership Application</CardTitle>
+            <CardDescription className="text-base">
               Complete all sections to apply for membership in the ESCP Network
             </CardDescription>
             <div className="mt-4">
@@ -555,7 +555,7 @@ const ApplicationForm = () => {
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 p-8 md:p-10">
             {/* Step 1: Basic Information */}
             {currentStep === 1 && (
               <div className="space-y-4">

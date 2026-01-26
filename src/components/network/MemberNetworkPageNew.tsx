@@ -265,7 +265,17 @@ export default function MemberNetworkPageNew() {
 
   return (
     <>
-      <div className="container mx-auto py-8 px-4">
+      <div 
+        className="min-h-screen"
+        style={{
+          backgroundImage: 'url(/member.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+        }}
+      >
+        <div className="container mx-auto py-8 px-4 relative z-10">
         <div className="mb-8 space-y-4">
           {/* Search and Filter Row */}
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
@@ -273,7 +283,7 @@ export default function MemberNetworkPageNew() {
               placeholder="Search by company name, email, or description..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-md rounded-lg"
+              className="max-w-md rounded-lg bg-white/95 backdrop-blur-sm border-gray-300/50 shadow-lg"
             />
             
             {/* Year Filter */}
@@ -286,10 +296,10 @@ export default function MemberNetworkPageNew() {
                   e.stopPropagation();
                   setShowYearFilter(prev => !prev);
                 }}
-                className={`flex items-center gap-1.5 h-9 px-3 rounded-lg border-slate-300 hover:border-emerald-400 hover:bg-emerald-50 transition-all ${
+                className={`flex items-center gap-1.5 h-9 px-3 rounded-lg border-slate-300 hover:border-emerald-400 hover:bg-emerald-50 transition-all backdrop-blur-sm ${
                   selectedYears.length > 0 
-                    ? 'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-sm' 
-                    : 'bg-white text-slate-700 hover:bg-slate-50'
+                    ? 'bg-emerald-50/95 border-emerald-300 text-emerald-700 shadow-lg' 
+                    : 'bg-white/95 text-slate-700 hover:bg-white shadow-lg'
                 }`}
                 type="button"
               >
@@ -308,7 +318,7 @@ export default function MemberNetworkPageNew() {
 
               {showYearFilter && (
                 <Card 
-                  className="absolute right-0 top-full mt-2 z-[100] min-w-[280px] shadow-lg border border-slate-200"
+                  className="absolute right-0 top-full mt-2 z-[100] min-w-[280px] shadow-xl border border-slate-200 bg-white/98 backdrop-blur-md"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <CardHeader className="pb-3">
@@ -426,9 +436,9 @@ export default function MemberNetworkPageNew() {
             return (
               <Card 
                 key={profile.id} 
-                className={`transition-shadow relative overflow-hidden min-h-[400px] ${
+                className={`transition-shadow relative overflow-hidden min-h-[400px] backdrop-blur-sm ${
                   isClickable 
-                    ? 'hover:shadow-lg cursor-pointer hover:border-primary' 
+                    ? 'hover:shadow-xl cursor-pointer hover:border-primary hover:scale-[1.02]' 
                     : 'opacity-75'
                 }`}
                 onClick={() => handleCardClick(profile)}
@@ -538,6 +548,7 @@ export default function MemberNetworkPageNew() {
             <p className="text-muted-foreground">No profiles found matching your search</p>
           </div>
         )}
+        </div>
       </div>
 
       {/* Modal no longer used; redirecting to detail page */}

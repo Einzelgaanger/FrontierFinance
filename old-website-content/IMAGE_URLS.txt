@@ -1,0 +1,21 @@
+# Image URLs to Download
+
+## Logo
+https://images.squarespace-cdn.com/content/v1/59d679428dd0414c16f59855/1532109880601-J3NMBY5MDYLGZ9751N6D/CFF+white+updated.png
+
+## Core Icons
+
+### Networks Icon
+https://images.squarespace-cdn.com/content/v1/59d679428dd0414c16f59855/1538633705618-IXU8H14WV92TOPQ8KHO5/ConnectIcon-04.png
+
+### Actionable Research Icon
+https://images.squarespace-cdn.com/content/v1/59d679428dd0414c16f59855/1538633613162-U05AQ544TRIDVGV3D0L3/AgendaIcon-02.png
+
+### Initiatives Icon
+https://images.squarespace-cdn.com/content/v1/59d679428dd0414c16f59855/1538633692782-4VEUSKIYRRVVETELUNM6/noun_rocket+lift+off_125617_ffffff.png
+
+## Instructions
+1. Copy each URL above
+2. Paste in browser
+3. Right-click image → "Save image as..."
+4. Save to: old-website-content/images/

@@ -150,13 +150,23 @@ export default function ViewerNetworkPageNew() {
 
   return (
     <>
-      <div className="container mx-auto py-8 px-4">
+      <div 
+        className="min-h-screen"
+        style={{
+          backgroundImage: 'url(/member.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+        }}
+      >
+        <div className="container mx-auto py-8 px-4 relative z-10">
         <div className="mb-8">
           <Input
             placeholder="Search by company name, email, or description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="max-w-md"
+            className="max-w-md bg-white/95 backdrop-blur-sm border-gray-300/50 shadow-lg"
           />
         </div>
 
@@ -167,9 +177,9 @@ export default function ViewerNetworkPageNew() {
           return (
             <Card 
               key={profile.id} 
-              className={`transition-shadow relative overflow-hidden min-h-[400px] ${
+              className={`transition-shadow relative overflow-hidden min-h-[400px] backdrop-blur-sm ${
                 isClickable 
-                  ? 'hover:shadow-lg cursor-pointer hover:border-primary' 
+                  ? 'hover:shadow-xl cursor-pointer hover:border-primary hover:scale-[1.02]' 
                   : 'opacity-75'
               }`}
               onClick={() => handleCardClick(profile)}
@@ -278,7 +288,8 @@ export default function ViewerNetworkPageNew() {
           <p className="text-muted-foreground">No profiles found matching your search</p>
         </div>
       )}
-    </div>
+        </div>
+      </div>
 
     {/* Modal no longer used for viewers; navigation to detail page instead */}
   </>

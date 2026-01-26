@@ -750,7 +750,7 @@ const ViewerDashboardV2 = () => {
                   Typical completion time: 10–15 minutes.
                 </p>
                 <Button
-                  onClick={() => setShowApplicationForm(true)}
+                  onClick={() => navigate('/application')}
                   className="w-full justify-center px-6 py-3 text-sm font-medium rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
                   size="lg"
                 >
