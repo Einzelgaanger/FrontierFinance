@@ -1,5 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import Header from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
@@ -37,6 +39,7 @@ interface SurveyResponse2023 {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC658', '#FF6B6B'];
 
 export default function Analytics2023() {
+  const { userRole } = useAuth();
   const [data, setData] = useState<SurveyResponse2023[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState('overview');
@@ -154,7 +157,7 @@ export default function Analytics2023() {
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
-                data={calculateDistribution('geographic_focus')}
+                data={calculatePercentageDistribution('geographic_focus')}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
@@ -163,7 +166,7 @@ export default function Analytics2023() {
                 fill="#8884d8"
                 dataKey="value"
               >
-                {calculateDistribution('geographic_focus').map((entry, index) => (
+                {calculatePercentageDistribution('geographic_focus').map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
@@ -219,7 +222,7 @@ export default function Analytics2023() {
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
-                data={calculateDistribution('investment_thesis')}
+                data={calculatePercentageDistribution('investment_thesis')}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
@@ -228,7 +231,7 @@ export default function Analytics2023() {
                 fill="#FF8042"
                 dataKey="value"
               >
-                {calculateDistribution('investment_thesis').map((entry, index) => (
+                {calculatePercentageDistribution('investment_thesis').map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
@@ -283,7 +286,7 @@ export default function Analytics2023() {
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
-                data={calculateDistribution('team_structure')}
+                data={calculatePercentageDistribution('team_structure')}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
@@ -292,7 +295,7 @@ export default function Analytics2023() {
                 fill="#82CA9D"
                 dataKey="value"
               >
-                {calculateDistribution('team_structure').map((entry, index) => (
+                {calculatePercentageDistribution('team_structure').map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
@@ -410,39 +413,71 @@ export default function Analytics2023() {
     </div>
   );
 
+  if (userRole !== 'admin' && userRole !== 'member') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {userRole !== 'admin' && <Header />}
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="text-center">
+            <p className="text-gray-500">2023 Survey Analytics are only available to members and administrators.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg">Loading analytics...</div>
+      <div className="min-h-screen bg-gray-50">
+        {userRole !== 'admin' && <Header />}
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading 2023 survey analytics...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold">2023 ESCP Survey Analytics</h2>
-        <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Select metric" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="overview">Overview</SelectItem>
-            <SelectItem value="background">Background</SelectItem>
-            <SelectItem value="investment">Investment</SelectItem>
-            <SelectItem value="portfolio">Portfolio</SelectItem>
-            <SelectItem value="covid">COVID-19 Impact</SelectItem>
-            <SelectItem value="network">Network</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      {userRole !== 'admin' && <Header />}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">2023 ESCP Survey Analytics</h1>
+            <p className="text-gray-600 mt-1">Comprehensive analysis of ESCP Network Survey</p>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Badge variant="secondary" className="text-sm">
+              Total Responses: {data.length}
+            </Badge>
+            <Select value={selectedMetric} onValueChange={setSelectedMetric}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Select metric" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="overview">Overview</SelectItem>
+              <SelectItem value="background">Background</SelectItem>
+              <SelectItem value="investment">Investment</SelectItem>
+              <SelectItem value="portfolio">Portfolio</SelectItem>
+              <SelectItem value="covid">COVID-19 Impact</SelectItem>
+              <SelectItem value="network">Network</SelectItem>
+            </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-      {selectedMetric === 'overview' && renderOverview()}
-      {selectedMetric === 'background' && renderBackgroundAnalytics()}
-      {selectedMetric === 'investment' && renderInvestmentAnalytics()}
-      {selectedMetric === 'portfolio' && renderPortfolioAnalytics()}
-      {selectedMetric === 'covid' && renderCovidImpactAnalytics()}
-      {selectedMetric === 'network' && renderNetworkAnalytics()}
+        <div className="space-y-6">
+          {selectedMetric === 'overview' && renderOverview()}
+          {selectedMetric === 'background' && renderBackgroundAnalytics()}
+          {selectedMetric === 'investment' && renderInvestmentAnalytics()}
+          {selectedMetric === 'portfolio' && renderPortfolioAnalytics()}
+          {selectedMetric === 'covid' && renderCovidImpactAnalytics()}
+          {selectedMetric === 'network' && renderNetworkAnalytics()}
+        </div>
+      </div>
     </div>
   );
 } 

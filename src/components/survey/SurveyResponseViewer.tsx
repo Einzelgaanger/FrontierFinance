@@ -33,7 +33,15 @@ const SurveyResponseViewer = () => {
     try {
       setLoading(true);
       
-      const tableName = `survey_${year}_responses`;
+      // Map year to correct table name format
+      const tableNameMap: { [key: string]: string } = {
+        '2021': 'survey_responses_2021',
+        '2022': 'survey_responses_2022',
+        '2023': 'survey_responses_2023',
+        '2024': 'survey_responses_2024'
+      };
+      
+      const tableName = tableNameMap[year || ''] || `survey_responses_${year}`;
       const { data, error } = await supabase
         .from(tableName as any)
         .select('*')
@@ -50,6 +58,8 @@ const SurveyResponseViewer = () => {
         return;
       }
 
+      // The response data is stored directly in the row, not in a form_data field
+      // For 2022 surveys, gender_lens_investing is a JSONB column
       setResponse(data);
     } catch (error) {
       console.error('Error fetching survey response:', error);
@@ -90,16 +100,41 @@ const SurveyResponseViewer = () => {
       );
     }
 
-    // Handle objects (like rankings, percentages)
+    // Handle objects (like rankings, percentages, gender_lens_investing)
     if (typeof value === 'object') {
       return (
         <div className="space-y-1.5 text-sm">
-          {Object.entries(value).map(([k, v]) => (
-            <div key={k} className="flex justify-between items-center py-1 border-b border-gray-100 last:border-0">
-              <span className="text-gray-700 font-medium">{formatKey(k)}:</span>
-              <span className="text-gray-900">{String(v)}</span>
-            </div>
-          ))}
+          {Object.entries(value).map(([k, v]) => {
+            // Handle nested objects (e.g., if a value in gender_lens_investing is an object)
+            let displayValue: string;
+            if (v === null || v === undefined) {
+              displayValue = 'No response';
+            } else if (typeof v === 'object' && !Array.isArray(v)) {
+              // If the value is itself an object, try to extract meaningful data
+              // Check if it has common properties that might contain the actual value
+              if ('value' in v && typeof v.value === 'string') {
+                displayValue = v.value;
+              } else if ('label' in v && typeof v.label === 'string') {
+                displayValue = v.label;
+              } else if ('text' in v && typeof v.text === 'string') {
+                displayValue = v.text;
+              } else {
+                // Fallback: stringify the object but format it nicely
+                displayValue = JSON.stringify(v, null, 2);
+              }
+            } else if (Array.isArray(v)) {
+              displayValue = v.length > 0 ? v.join(', ') : 'No response';
+            } else {
+              displayValue = String(v);
+            }
+            
+            return (
+              <div key={k} className="flex justify-between items-center py-1 border-b border-gray-100 last:border-0">
+                <span className="text-gray-700 font-medium">{formatKey(k)}:</span>
+                <span className="text-gray-900">{displayValue}</span>
+              </div>
+            );
+          })}
         </div>
       );
     }
@@ -219,7 +254,9 @@ const SurveyResponseViewer = () => {
     );
   }
 
-  if (!response || !response.form_data) {
+  // Check if response exists - data might be directly on response or in form_data
+  const responseData = response?.form_data || response;
+  if (!response || !responseData) {
     return (
       <SidebarLayout>
         <div className="min-h-screen bg-gradient-to-br from-[#f5f5dc] to-[#f0f0e6]">
@@ -286,7 +323,8 @@ const SurveyResponseViewer = () => {
     );
   }
 
-  const sections = organizeFields(response.form_data);
+  // Use the already declared responseData
+  const sections = organizeFields(responseData);
 
   return (
     <SidebarLayout>

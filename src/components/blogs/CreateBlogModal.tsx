@@ -27,12 +27,14 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
   const [uploading, setUploading] = useState(false);
   const [useUrl, setUseUrl] = useState(true);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
     media_type: "text" as "text" | "image" | "video",
     media_url: "",
-    caption: ""
+    caption: "",
+    video_thumbnail_url: "",
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,17 +63,18 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
     });
   };
 
-  const uploadFile = async (): Promise<string | null> => {
-    if (!selectedFile || !user) return null;
+  const uploadFile = async (file?: File, prefix = ""): Promise<string | null> => {
+    const toUpload = file ?? selectedFile;
+    if (!toUpload || !user) return null;
 
     setUploading(true);
     try {
-      const fileExt = selectedFile.name.split('.').pop();
-      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-      
-      const { error: uploadError, data } = await supabase.storage
+      const fileExt = toUpload.name.split('.').pop();
+      const fileName = `${user.id}/${prefix ? prefix + "-" : ""}${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
         .from('blog-media')
-        .upload(fileName, selectedFile);
+        .upload(fileName, toUpload);
 
       if (uploadError) throw uploadError;
 
@@ -97,14 +100,23 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
     try {
       let mediaUrl = formData.media_url;
 
-      // If file upload mode and file selected, upload it
       if (!useUrl && selectedFile) {
-        const uploadedUrl = await uploadFile();
+        const uploadedUrl = await uploadFile(selectedFile);
         if (!uploadedUrl) {
           setLoading(false);
           return;
         }
         mediaUrl = uploadedUrl;
+      }
+
+      let thumbnailUrl: string | null = null;
+      if (formData.media_type === "video") {
+        if (formData.video_thumbnail_url?.trim()) {
+          thumbnailUrl = formData.video_thumbnail_url.trim();
+        } else if (thumbnailFile) {
+          const url = await uploadFile(thumbnailFile, "thumb");
+          if (url) thumbnailUrl = url;
+        }
       }
 
       const { error } = await supabase.from("blogs").insert({
@@ -114,6 +126,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
         media_type: formData.media_type,
         media_url: mediaUrl || null,
         caption: formData.caption || null,
+        thumbnail_url: thumbnailUrl,
       });
 
       if (error) throw error;
@@ -124,9 +137,11 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
         content: "",
         media_type: "text",
         media_url: "",
-        caption: ""
+        caption: "",
+        video_thumbnail_url: "",
       });
       setSelectedFile(null);
+      setThumbnailFile(null);
       onOpenChange(false);
       onSuccess();
     } catch (error: any) {
@@ -142,8 +157,8 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
         <DialogHeader>
           <DialogTitle>Create Blog Post</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+        <form onSubmit={handleSubmit} className="space-y-4 min-w-0">
+          <div className="min-w-0">
             <Label htmlFor="title">Title *</Label>
             <Input
               id="title"
@@ -151,10 +166,11 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="Enter blog title"
               required
+              className="break-words"
             />
           </div>
 
-          <div>
+          <div className="min-w-0">
             <Label>Media Type</Label>
             <RadioGroup
               value={formData.media_type}
@@ -177,8 +193,8 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
           </div>
 
           {formData.media_type !== "text" && (
-            <>
-              <div className="flex gap-2 mb-3">
+            <div className="min-w-0 space-y-4">
+              <div className="flex gap-2 mb-3 flex-wrap">
                 <Button
                   type="button"
                   variant={useUrl ? "default" : "outline"}
@@ -202,7 +218,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
               </div>
 
               {useUrl ? (
-                <div>
+                <div className="min-w-0">
                   <Label htmlFor="media_url">Media URL</Label>
                   <Input
                     id="media_url"
@@ -210,10 +226,11 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
                     onChange={(e) => setFormData({ ...formData, media_url: e.target.value })}
                     placeholder={`Enter ${formData.media_type} URL`}
                     type="url"
+                    className="break-all min-w-0"
                   />
                 </div>
               ) : (
-                <div>
+                <div className="min-w-0">
                   <Label htmlFor="media_file">Upload {formData.media_type}</Label>
                   <Input
                     id="media_file"
@@ -223,26 +240,59 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
                     disabled={uploading}
                   />
                   {selectedFile && (
-                    <p className="text-sm text-muted-foreground mt-2">
+                    <p className="text-sm text-muted-foreground mt-2 break-all">
                       Selected: {selectedFile.name}
                     </p>
                   )}
                 </div>
               )}
 
-              <div>
+              <div className="min-w-0">
                 <Label htmlFor="caption">Caption</Label>
                 <Input
                   id="caption"
                   value={formData.caption || ""}
                   onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
                   placeholder="Add a caption"
+                  className="break-words"
                 />
               </div>
-            </>
+
+              {formData.media_type === "video" && (
+                <div className="space-y-2 min-w-0">
+                  <Label>Video thumbnail (optional)</Label>
+                  <Input
+                    value={formData.video_thumbnail_url || ""}
+                    onChange={(e) => setFormData({ ...formData, video_thumbnail_url: e.target.value })}
+                    placeholder="Paste thumbnail image URL"
+                    type="url"
+                    className="break-all min-w-0"
+                  />
+                  <p className="text-xs text-muted-foreground break-words">Or upload an image:</p>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) {
+                        if (f.size > 5 * 1024 * 1024) {
+                          toast.error("Thumbnail must be under 5MB");
+                          return;
+                        }
+                        setThumbnailFile(f);
+                      }
+                    }}
+                    disabled={uploading}
+                  />
+                  {thumbnailFile && (
+                    <p className="text-sm text-muted-foreground break-all">Selected: {thumbnailFile.name}</p>
+                  )}
+                </div>
+              )}
+            </div>
           )}
 
-          <div>
+          <div className="min-w-0">
             <Label htmlFor="content">Content</Label>
             <Textarea
               id="content"
@@ -250,6 +300,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               placeholder="Share your thoughts..."
               rows={6}
+              className="resize-none break-words min-w-0"
             />
           </div>
 

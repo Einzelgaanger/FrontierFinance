@@ -1,5 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import Header from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
@@ -38,6 +40,7 @@ interface SurveyResponse2024 {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC658', '#FF6B6B'];
 
 export default function Analytics2024() {
+  const { userRole } = useAuth();
   const [data, setData] = useState<SurveyResponse2024[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState('overview');
@@ -401,33 +404,65 @@ export default function Analytics2024() {
     </div>
   );
 
+  if (userRole !== 'admin' && userRole !== 'member') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {userRole !== 'admin' && <Header />}
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="text-center">
+            <p className="text-gray-500">2024 Survey Analytics are only available to members and administrators.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg">Loading analytics...</div>
+      <div className="min-h-screen bg-gray-50">
+        {userRole !== 'admin' && <Header />}
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading 2024 survey analytics...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold">2024 MSME Financing Survey Analytics</h2>
-        <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Select metric" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="overview">Overview</SelectItem>
-            <SelectItem value="introduction">Introduction & Context</SelectItem>
-            <SelectItem value="organizational">Organizational Background</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      {userRole !== 'admin' && <Header />}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">2024 MSME Financing Survey Analytics</h1>
+            <p className="text-gray-600 mt-1">Comprehensive analysis of MSME Financing Survey</p>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Badge variant="secondary" className="text-sm">
+              Total Responses: {data.length}
+            </Badge>
+            <Select value={selectedMetric} onValueChange={setSelectedMetric}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Select metric" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="overview">Overview</SelectItem>
+              <SelectItem value="introduction">Introduction & Context</SelectItem>
+              <SelectItem value="organizational">Organizational Background</SelectItem>
+            </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-      {selectedMetric === 'overview' && renderOverview()}
-      {selectedMetric === 'introduction' && renderIntroductionAnalytics()}
-      {selectedMetric === 'organizational' && renderOrganizationalAnalytics()}
+        <div className="space-y-6">
+          {selectedMetric === 'overview' && renderOverview()}
+          {selectedMetric === 'introduction' && renderIntroductionAnalytics()}
+          {selectedMetric === 'organizational' && renderOrganizationalAnalytics()}
+        </div>
+      </div>
     </div>
   );
 } 

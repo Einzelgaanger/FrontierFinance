@@ -266,6 +266,49 @@ const FundManagerDetail = () => {
       }
     };
 
+  // Helper functions - must be defined before useEffects that use them
+  const isFieldVisible = (fieldName: string, year: number): boolean => {
+    const key = `${fieldName}_${year}`;
+    const visibility = fieldVisibility[key];
+    if (!visibility) return false;
+    if (userRole === 'admin') return visibility.admin;
+    if (userRole === 'member') return visibility.member;
+    if (userRole === 'viewer') return visibility.viewer;
+    return false;
+  };
+
+  const getSectionData = (surveyData: any, year: number) => {
+    if (!surveyData) return [];
+    
+    // Get the proper sections for this year
+    const yearSections = getSurveySections(year);
+    if (!yearSections || yearSections.length === 0) return [];
+    
+    // Build sections with visible fields
+    const sections = yearSections.map(section => {
+      const visibleFields = section.fields.filter(fieldName => {
+        // Exclude metadata fields
+        if (['id', 'user_id', 'created_at', 'updated_at', 'submission_status', 'completed_at', 'form_data'].includes(fieldName)) {
+          return false;
+        }
+        // Check if field exists in survey data
+        if (!(fieldName in surveyData)) {
+          return false;
+        }
+        // Check visibility
+        return isFieldVisible(fieldName, year);
+      });
+      
+      return {
+        id: section.id,
+        title: section.title,
+        fields: visibleFields
+      };
+    }).filter(section => section.fields.length > 0); // Only return sections with visible fields
+    
+    return sections;
+  };
+
   useEffect(() => {
     if (id && (userRole === 'viewer' || userRole === 'member' || userRole === 'admin')) {
       fetchFundManagerData();
@@ -331,49 +374,6 @@ const FundManagerDetail = () => {
     );
   }
 
-
-  const isFieldVisible = (fieldName: string, year: number): boolean => {
-    const key = `${fieldName}_${year}`;
-    const visibility = fieldVisibility[key];
-    if (!visibility) return false;
-    if (userRole === 'admin') return visibility.admin;
-    if (userRole === 'member') return visibility.member;
-    if (userRole === 'viewer') return visibility.viewer;
-    return false;
-  };
-
-  const getSectionData = (surveyData: any, year: number) => {
-    if (!surveyData) return [];
-    
-    // Get the proper sections for this year
-    const yearSections = getSurveySections(year);
-    if (!yearSections || yearSections.length === 0) return [];
-    
-    // Build sections with visible fields
-    const sections = yearSections.map(section => {
-      const visibleFields = section.fields.filter(fieldName => {
-        // Exclude metadata fields
-        if (['id', 'user_id', 'created_at', 'updated_at', 'submission_status', 'completed_at', 'form_data'].includes(fieldName)) {
-          return false;
-        }
-        // Check if field exists in survey data
-        if (!(fieldName in surveyData)) {
-          return false;
-        }
-        // Check visibility
-        return isFieldVisible(fieldName, year);
-      });
-      
-      return {
-        id: section.id,
-        title: section.title,
-        fields: visibleFields
-      };
-    }).filter(section => section.fields.length > 0); // Only return sections with visible fields
-    
-    return sections;
-  };
-
   const isPlainObject = (val: unknown): val is Record<string, unknown> => {
     return Object.prototype.toString.call(val) === '[object Object]';
   };
@@ -406,20 +406,79 @@ const FundManagerDetail = () => {
                 renderArray(val)
               ) : isPlainObject(val) ? (
                 <div className="space-y-1">
-                  {Object.entries(val as Record<string, unknown>).map(([k2, v2]) => (
-                    <div key={k2} className="flex items-start gap-2">
-                      <span className="text-xs font-medium text-muted-foreground min-w-[12rem]">{formatFieldName(k2)}</span>
-                      <span className="text-sm">
-                        {v2 === null || v2 === undefined
-                          ? 'N/A'
-                          : Array.isArray(v2)
-                          ? (renderArray(v2) as unknown as string)
-                          : isPlainObject(v2)
-                          ? String(v2)
-                          : String(v2)}
-                      </span>
-                    </div>
-                  ))}
+                  {Object.entries(val as Record<string, unknown>)
+                    .filter(([k2, v2]) => {
+                      const trimmedKey = k2.trim();
+                      // Filter out standalone "G" or "g" keys - these are artifacts from data issues
+                      if (trimmedKey === 'G' || trimmedKey === 'g') return false;
+                      // Don't render truncated key row when value is empty and there's no "G" to merge - avoids empty space
+                      const emptyOrMissing = v2 === null || v2 === undefined || (typeof v2 === 'string' && String(v2).trim() === '');
+                      const truncatedOnly = (k2.endsWith('(e') && !k2.includes('(e.g.')) || k2.trim().endsWith('(e');
+                      const gVal = (val as Record<string, unknown>)['G'] ?? (val as Record<string, unknown>)['g'];
+                      if (emptyOrMissing && truncatedOnly && (gVal == null || (typeof gVal === 'string' && gVal.trim() === ''))) return false;
+                      return true;
+                    })
+                    .map(([k2, v2]) => {
+                      // Handle nested objects properly
+                      let displayValue: string;
+                      const emptyOrMissing = v2 === null || v2 === undefined || (typeof v2 === 'string' && v2.trim() === '');
+                      const truncatedKeyNeedsMerge = (k2.endsWith('(e') && !k2.includes('(e.g.')) || k2.trim().endsWith('(e');
+                      const gVal = (val as Record<string, unknown>)['G'] ?? (val as Record<string, unknown>)['g'];
+
+                      if (emptyOrMissing && truncatedKeyNeedsMerge && gVal != null) {
+                        // Value for this criterion is stored under "G" due to data truncation
+                        if (typeof gVal === 'string') {
+                          displayValue = gVal;
+                        } else if (isPlainObject(gVal)) {
+                          const nested = gVal as Record<string, unknown>;
+                          if (typeof nested.value === 'string') displayValue = nested.value;
+                          else if (typeof nested.label === 'string') displayValue = nested.label;
+                          else if (typeof nested.text === 'string') displayValue = nested.text;
+                          else displayValue = String(Object.values(nested).find(v => typeof v === 'string') ?? 'N/A');
+                        } else {
+                          displayValue = String(gVal);
+                        }
+                      } else if (v2 === null || v2 === undefined) {
+                        displayValue = 'N/A';
+                      } else if (Array.isArray(v2)) {
+                        displayValue = v2.length > 0 ? v2.join(', ') : 'N/A';
+                      } else if (isPlainObject(v2)) {
+                        // If the value is itself an object, try to extract meaningful data
+                        const nestedObj = v2 as Record<string, unknown>;
+                        if ('value' in nestedObj && typeof nestedObj.value === 'string') {
+                          displayValue = nestedObj.value;
+                        } else if ('label' in nestedObj && typeof nestedObj.label === 'string') {
+                          displayValue = nestedObj.label;
+                        } else if ('text' in nestedObj && typeof nestedObj.text === 'string') {
+                          displayValue = nestedObj.text;
+                        } else {
+                          // Fallback: try to find the first string value in the object
+                          const firstStringValue = Object.values(nestedObj).find(v => typeof v === 'string');
+                          displayValue = firstStringValue ? String(firstStringValue) : JSON.stringify(nestedObj, null, 2);
+                        }
+                      } else {
+                        displayValue = String(v2);
+                      }
+                      
+                      // For gender_lens_investing and similar fields, keys are human-readable strings
+                      // Don't format them as field names - display as-is
+                      // Check if key looks like a human-readable sentence (contains spaces and punctuation)
+                      const isHumanReadableKey = k2.includes(' ') || k2.includes('(') || k2.includes(')') || k2.length > 20;
+                      let displayKey = isHumanReadableKey ? k2 : formatFieldName(k2);
+                      
+                      // Fix truncated keys that end with "(e" - complete them properly
+                      if (displayKey.endsWith('(e') && !displayKey.includes('(e.g.')) {
+                        // Complete the common pattern for gender equality policies
+                        displayKey = displayKey + '.g. equal compensation)';
+                      }
+                      
+                      return (
+                        <div key={k2} className="flex items-start gap-2">
+                          <span className="text-xs font-medium text-muted-foreground min-w-[12rem] break-words">{displayKey}</span>
+                          <span className="text-sm break-words">{displayValue}</span>
+                        </div>
+                      );
+                    })}
                 </div>
               ) : (
                 <span>{String(val)}</span>

@@ -341,7 +341,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
       {/* Main Content */}
       <div className="flex flex-col min-w-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 lg:ml-56">
         {/* Top Header */}
-        <header className="border-b-2 border-black px-6 py-4 transition-colors bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 font-rubik sticky top-0 z-50">
+        <header className="border-b-2 border-black px-6 py-5 md:py-6 transition-colors bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 font-rubik sticky top-0 z-50">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Button
@@ -356,7 +356,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                 <div>
                   {location.pathname === '/dashboard' && userRole === 'admin' ? (
                     <>
-                      <h2 className="text-2xl font-bold text-white transition-colors">
+                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
                         Welcome back, Administrator
                       </h2>
                       <p className="text-sm text-white/70 transition-colors">
@@ -374,7 +374,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                     </>
                   ) : location.pathname === '/dashboard' && userRole === 'member' ? (
                     <>
-                      <h2 className="text-2xl font-bold text-white transition-colors">
+                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
                         Welcome back, {user?.email?.split('@')[0] || 'Member'}!
                       </h2>
                       <p className="text-sm text-white/70 transition-colors">
@@ -393,13 +393,13 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                         <span>Back to Network</span>
                       </Button>
                       <div className="h-6 w-px bg-white/30"></div>
-                      <h2 className="text-2xl font-bold text-white transition-colors">
+                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
                         Fund Manager Details
                       </h2>
                     </div>
                   ) : location.pathname === '/application' ? (
                     <>
-                      <h2 className="text-2xl font-bold text-white transition-colors">
+                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
                         Membership Application
                       </h2>
                       <p className="text-sm text-white/70 transition-colors">
@@ -408,7 +408,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                     </>
                   ) : location.pathname === '/community' || location.pathname === '/blogs' ? (
                     <>
-                      <h2 className="text-2xl font-bold text-white transition-colors">
+                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
                         Community hub
                       </h2>
                       <p className="text-sm text-white/70 transition-colors">
@@ -417,7 +417,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                     </>
                   ) : location.pathname === '/profile' ? (
                     <>
-                      <h2 className="text-2xl font-bold text-white transition-colors">
+                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
                         Company Profile
                       </h2>
                       <p className="text-sm text-white/70 transition-colors">
@@ -426,7 +426,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                     </>
                   ) : (
                     <>
-                      <h2 className="text-2xl font-bold text-white transition-colors">
+                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
                         {location.pathname.startsWith('/survey') && 'Surveys'}
                         {location.pathname === '/network' && 'Network Directory'}
                         {location.pathname === '/analytics' && 'Analytics Hub'}

@@ -13,6 +13,7 @@ interface Blog {
   content: string | null;
   media_type: 'text' | 'image' | 'video' | null;
   media_url: string | null;
+  thumbnail_url?: string | null;
   caption: string | null;
   created_at: string;
   like_count: number;
@@ -92,8 +93,9 @@ export function BlogDetailModal({ blog, open, onOpenChange, onToggleLike }: Blog
           )}
 
           {blog.media_type === "video" && blog.media_url && (
-            <video 
+            <video
               src={blog.media_url}
+              poster={blog.thumbnail_url || undefined}
               controls
               className="w-full max-h-[400px] rounded-lg"
             />

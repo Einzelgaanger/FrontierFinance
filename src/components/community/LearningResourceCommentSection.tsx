@@ -10,7 +10,7 @@ import { formatDistanceToNow } from "date-fns";
 
 interface Comment {
   id: string;
-  blog_id: string;
+  resource_id: string;
   user_id: string;
   content: string;
   created_at: string;
@@ -21,11 +21,11 @@ interface Comment {
   };
 }
 
-interface BlogCommentSectionProps {
-  blogId: string;
+interface LearningResourceCommentSectionProps {
+  resourceId: string;
 }
 
-export function BlogCommentSection({ blogId }: BlogCommentSectionProps) {
+export function LearningResourceCommentSection({ resourceId }: LearningResourceCommentSectionProps) {
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,28 +34,27 @@ export function BlogCommentSection({ blogId }: BlogCommentSectionProps) {
 
   useEffect(() => {
     fetchComments();
-  }, [blogId]);
+  }, [resourceId]);
 
   const fetchComments = async () => {
     try {
       const { data: commentsData, error } = await supabase
-        .from("blog_comments")
+        .from("learning_resource_comments")
         .select("*")
-        .eq("blog_id", blogId)
+        .eq("resource_id", resourceId)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
 
-      // Fetch author profiles
-      const userIds = [...new Set(commentsData?.map(c => c.user_id) || [])];
+      const userIds = [...new Set(commentsData?.map((c) => c.user_id) || [])];
       const { data: profiles } = await supabase
         .from("user_profiles")
         .select("id, full_name, company_name, profile_picture_url")
         .in("id", userIds);
 
-      const commentsWithAuthors = (commentsData || []).map(comment => ({
+      const commentsWithAuthors = (commentsData || []).map((comment) => ({
         ...comment,
-        author: profiles?.find(p => p.id === comment.user_id)
+        author: profiles?.find((p) => p.id === comment.user_id),
       }));
 
       setComments(commentsWithAuthors);
@@ -72,20 +71,18 @@ export function BlogCommentSection({ blogId }: BlogCommentSectionProps) {
 
     setSubmitting(true);
     try {
-      const { error } = await supabase
-        .from("blog_comments")
-        .insert({
-          blog_id: blogId,
-          user_id: user.id,
-          content: newComment.trim()
-        });
+      const { error } = await supabase.from("learning_resource_comments").insert({
+        resource_id: resourceId,
+        user_id: user.id,
+        content: newComment.trim(),
+      });
 
       if (error) throw error;
 
       toast.success("Comment posted!");
       setNewComment("");
       fetchComments();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Failed to post comment");
       console.error(error);
     } finally {
@@ -96,7 +93,7 @@ export function BlogCommentSection({ blogId }: BlogCommentSectionProps) {
   const handleDelete = async (commentId: string) => {
     try {
       const { error } = await supabase
-        .from("blog_comments")
+        .from("learning_resource_comments")
         .delete()
         .eq("id", commentId);
 
@@ -117,7 +114,7 @@ export function BlogCommentSection({ blogId }: BlogCommentSectionProps) {
           <Textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add your thoughts..."
+            placeholder="Add your thoughts or questions..."
             rows={3}
             className="resize-none"
           />
@@ -128,11 +125,11 @@ export function BlogCommentSection({ blogId }: BlogCommentSectionProps) {
         </form>
       )}
 
-      <div className="space-y-6">
+      <div className="space-y-0">
         {loading ? (
           <>
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex gap-4 animate-pulse">
+              <div key={i} className="flex gap-4 py-5 border-b border-slate-100 animate-pulse">
                 <div className="h-10 w-10 rounded-full bg-slate-200 shrink-0" />
                 <div className="flex-1 space-y-2">
                   <div className="h-4 bg-slate-200 rounded w-1/4" />
@@ -142,7 +139,7 @@ export function BlogCommentSection({ blogId }: BlogCommentSectionProps) {
             ))}
           </>
         ) : comments.length === 0 ? (
-          <p className="text-slate-500 text-sm py-6">No comments yet. Be the first to share your thoughts.</p>
+          <p className="text-slate-500 text-sm py-6">No comments yet. Be the first to share feedback.</p>
         ) : (
           comments.map((comment) => (
             <div key={comment.id} className="flex gap-4 py-5 border-b border-slate-100 last:border-0">

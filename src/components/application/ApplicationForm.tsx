@@ -184,7 +184,7 @@ const ApplicationForm = () => {
     if (!file || !user?.id) return;
 
     if (!file.type.startsWith('image/')) {
-      toast({ title: "Error", description: "Please upload an image file", variant: "destructive" });
+      toast({ title: "Error", description: "Please upload an image file" });
       return;
     }
 
@@ -214,7 +214,7 @@ const ApplicationForm = () => {
       toast({ title: "Success", description: "Profile picture uploaded" });
     } catch (error) {
       console.error('Profile picture upload error:', error);
-      toast({ title: "Error", description: "Failed to upload profile picture", variant: "destructive" });
+      toast({ title: "Error", description: "Failed to upload profile picture" });
     } finally {
       setUploadingProfilePic(false);
     }
@@ -226,7 +226,7 @@ const ApplicationForm = () => {
     if (!files || !user?.id) return;
 
     if (uploadedFiles.length + files.length > 10) {
-      toast({ title: "Error", description: "Maximum 10 files allowed", variant: "destructive" });
+      toast({ title: "Error", description: "Maximum 10 files allowed" });
       return;
     }
 
@@ -259,7 +259,7 @@ const ApplicationForm = () => {
       toast({ title: "Success", description: `${newFiles.length} file(s) uploaded` });
     } catch (error) {
       console.error('File upload error:', error);
-      toast({ title: "Error", description: "Failed to upload files", variant: "destructive" });
+      toast({ title: "Error", description: "Failed to upload files" });
     } finally {
       setUploading(false);
     }
@@ -268,7 +268,7 @@ const ApplicationForm = () => {
   const addLink = () => {
     if (!linkInput.trim()) return;
     if (uploadedFiles.length >= 10) {
-      toast({ title: "Error", description: "Maximum 10 items allowed", variant: "destructive" });
+      toast({ title: "Error", description: "Maximum 10 items allowed" });
       return;
     }
 
@@ -302,8 +302,7 @@ const ApplicationForm = () => {
     if (!validateStep(currentStep)) {
       toast({
         title: "Missing Information",
-        description: "Please fill in all required fields before proceeding.",
-        variant: "destructive"
+        description: "Please fill in all required fields before proceeding."
       });
       return;
     }
@@ -319,8 +318,7 @@ const ApplicationForm = () => {
       if (!validateStep(i)) {
         toast({
           title: "Incomplete Application",
-          description: `Please complete all required fields in Step ${i} before submitting.`,
-          variant: "destructive"
+          description: `Please complete all required fields in Step ${i} before submitting.`
         });
         setCurrentStep(i);
         return;
@@ -391,8 +389,7 @@ const ApplicationForm = () => {
       console.error('Error submitting application:', error);
       toast({
         title: "Error",
-        description: "Failed to submit application. Please try again.",
-        variant: "destructive"
+        description: "Failed to submit application. Please try again."
       });
     } finally {
       setLoading(false);
@@ -403,7 +400,7 @@ const ApplicationForm = () => {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading application status...</p>
         </div>
       </div>
@@ -479,9 +476,9 @@ const ApplicationForm = () => {
   // Rejected with cooldown
   if (existingApplication?.status === 'rejected' && cooldownRemaining && cooldownRemaining > 0) {
     return (
-      <Card className="max-w-2xl mx-auto border-destructive/50 bg-destructive/5">
+      <Card className="max-w-2xl mx-auto border-amber-200 bg-amber-50/80">
         <CardHeader>
-          <div className="flex items-center gap-2 text-destructive">
+          <div className="flex items-center gap-2 text-amber-800">
             <XCircle className="w-6 h-6" />
             <CardTitle>Application Not Approved</CardTitle>
           </div>
@@ -491,9 +488,9 @@ const ApplicationForm = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           {existingApplication.admin_notes && (
-            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+            <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
               <Label className="text-sm font-semibold">Feedback from Admin:</Label>
-              <p className="text-sm mt-1">{existingApplication.admin_notes}</p>
+              <p className="text-sm mt-1 text-slate-700">{existingApplication.admin_notes}</p>
             </div>
           )}
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
@@ -511,9 +508,9 @@ const ApplicationForm = () => {
   if (existingApplication?.status === 'rejected') {
     return (
       <div className="space-y-6">
-        <Card className="max-w-3xl mx-auto border-destructive/50 bg-destructive/5">
+        <Card className="max-w-3xl mx-auto border-amber-200 bg-amber-50/80">
           <CardHeader>
-            <div className="flex items-center gap-2 text-destructive">
+            <div className="flex items-center gap-2 text-amber-800">
               <XCircle className="w-6 h-6" />
               <CardTitle>Application Not Approved</CardTitle>
             </div>
@@ -523,9 +520,9 @@ const ApplicationForm = () => {
           </CardHeader>
           <CardContent>
             {existingApplication.admin_notes && (
-              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+              <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
                 <Label className="text-sm font-semibold">Feedback from Admin:</Label>
-                <p className="text-sm mt-1">{existingApplication.admin_notes}</p>
+                <p className="text-sm mt-1 text-slate-700">{existingApplication.admin_notes}</p>
               </div>
             )}
           </CardContent>
@@ -551,7 +548,7 @@ const ApplicationForm = () => {
                 <span>Step {currentStep} of {totalSteps}</span>
                 <span>{percentComplete}% Complete</span>
               </div>
-              <Progress value={percentComplete} className="h-2" />
+              <Progress value={percentComplete} className="h-2" indicatorClassName="bg-sky-600" />
             </div>
           </CardHeader>
 
@@ -566,7 +563,7 @@ const ApplicationForm = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="applicant_name">1. Name <span className="text-destructive">*</span></Label>
+                    <Label htmlFor="applicant_name">1. Name <span className="text-sky-600">*</span></Label>
                     <Input
                       id="applicant_name"
                       value={formData.applicant_name}
@@ -577,7 +574,7 @@ const ApplicationForm = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="email">2. Email Address <span className="text-destructive">*</span></Label>
+                    <Label htmlFor="email">2. Email Address <span className="text-sky-600">*</span></Label>
                     <Input
                       id="email"
                       type="email"
@@ -589,7 +586,7 @@ const ApplicationForm = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="vehicle_name">3. Vehicle Name <span className="text-destructive">*</span></Label>
+                    <Label htmlFor="vehicle_name">3. Vehicle Name <span className="text-sky-600">*</span></Label>
                     <Input
                       id="vehicle_name"
                       value={formData.vehicle_name}
@@ -600,7 +597,7 @@ const ApplicationForm = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="organization_website">4. Vehicle Website <span className="text-destructive">*</span></Label>
+                    <Label htmlFor="organization_website">4. Vehicle Website <span className="text-sky-600">*</span></Label>
                     <Input
                       id="organization_website"
                       value={formData.organization_website}
@@ -622,7 +619,7 @@ const ApplicationForm = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="role_job_title">5. Role/Job Title <span className="text-destructive">*</span></Label>
+                  <Label htmlFor="role_job_title">5. Role/Job Title <span className="text-sky-600">*</span></Label>
                   <Textarea
                     id="role_job_title"
                     value={formData.role_job_title}
@@ -634,7 +631,7 @@ const ApplicationForm = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="team_size">6. Team Size <span className="text-destructive">*</span></Label>
+                  <Label htmlFor="team_size">6. Team Size <span className="text-sky-600">*</span></Label>
                   <Textarea
                     id="team_size"
                     value={formData.team_size}
@@ -646,7 +643,7 @@ const ApplicationForm = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="location">7. Location <span className="text-destructive">*</span></Label>
+                  <Label htmlFor="location">7. Location <span className="text-sky-600">*</span></Label>
                   <Textarea
                     id="location"
                     value={formData.location}
@@ -668,7 +665,7 @@ const ApplicationForm = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="investment_thesis">8. Investment Thesis <span className="text-destructive">*</span></Label>
+                  <Label htmlFor="investment_thesis">8. Investment Thesis <span className="text-sky-600">*</span></Label>
                   <Textarea
                     id="investment_thesis"
                     value={formData.investment_thesis}
@@ -681,7 +678,7 @@ const ApplicationForm = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="typical_check_size">9. Ticket Size <span className="text-destructive">*</span></Label>
+                    <Label htmlFor="typical_check_size">9. Ticket Size <span className="text-sky-600">*</span></Label>
                     <Input
                       id="typical_check_size"
                       value={formData.typical_check_size}
@@ -692,7 +689,7 @@ const ApplicationForm = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="number_of_investments">10. Portfolio <span className="text-destructive">*</span></Label>
+                    <Label htmlFor="number_of_investments">10. Portfolio <span className="text-sky-600">*</span></Label>
                     <Input
                       id="number_of_investments"
                       value={formData.number_of_investments}
@@ -704,7 +701,7 @@ const ApplicationForm = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="amount_raised_to_date">11. Capital Raised <span className="text-destructive">*</span></Label>
+                  <Label htmlFor="amount_raised_to_date">11. Capital Raised <span className="text-sky-600">*</span></Label>
                   <Textarea
                     id="amount_raised_to_date"
                     value={formData.amount_raised_to_date}
@@ -737,12 +734,12 @@ const ApplicationForm = () => {
                         <img 
                           src={profilePicture} 
                           alt="Profile" 
-                          className="w-20 h-20 rounded-full object-cover border-2 border-primary"
+                          className="w-20 h-20 rounded-full object-cover border-2 border-sky-600"
                         />
                         <button
                           type="button"
                           onClick={() => setProfilePicture(null)}
-                          className="absolute -top-1 -right-1 bg-destructive text-white rounded-full p-1"
+                          className="absolute -top-1 -right-1 bg-slate-600 hover:bg-slate-700 text-white rounded-full p-1 transition-colors"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -776,7 +773,7 @@ const ApplicationForm = () => {
                 <div className="border rounded-lg p-4">
                   <Label className="flex items-center gap-2 mb-3">
                     <FileText className="w-4 h-4" />
-                    12. Supporting Documents <span className="text-destructive">*</span>
+                    12. Supporting Documents <span className="text-sky-600">*</span>
                   </Label>
                   <p className="text-sm text-muted-foreground mb-4">
                     Upload your pitch deck, one-pager or other relevant documents (up to 10 files, max 50MB each)
@@ -793,7 +790,7 @@ const ApplicationForm = () => {
                         className="hidden"
                         disabled={uploading || uploadedFiles.length >= 10}
                       />
-                      <div className="border-2 border-dashed rounded-lg p-6 text-center hover:border-primary transition-colors">
+                      <div className="border-2 border-dashed rounded-lg p-6 text-center hover:border-sky-600 transition-colors">
                         <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
                         <p className="text-sm font-medium">
                           {uploading ? 'Uploading...' : 'Click to upload files'}
@@ -830,7 +827,7 @@ const ApplicationForm = () => {
                           <div key={index} className="flex items-center justify-between bg-muted/50 rounded-lg p-3">
                             <div className="flex items-center gap-2 min-w-0">
                               {file.type === 'file' ? (
-                                <FileText className="w-4 h-4 text-primary flex-shrink-0" />
+                                <FileText className="w-4 h-4 text-sky-600 flex-shrink-0" />
                               ) : (
                                 <LinkIcon className="w-4 h-4 text-blue-600 flex-shrink-0" />
                               )}
@@ -863,7 +860,7 @@ const ApplicationForm = () => {
 
                 <div>
                   <Label className="mb-3 block">
-                    13. Information Sharing <span className="text-destructive">*</span>
+                    13. Information Sharing <span className="text-sky-600">*</span>
                   </Label>
                   <p className="text-sm text-muted-foreground mb-3">
                     The ESCP Network is a peer-to-peer learning network with an expectation of transparent information sharing amongst members. Indicate the topics where you are willing to make regular contributions.
@@ -888,7 +885,7 @@ const ApplicationForm = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="expectations_from_network">14. Expectations <span className="text-destructive">*</span></Label>
+                  <Label htmlFor="expectations_from_network">14. Expectations <span className="text-sky-600">*</span></Label>
                   <Textarea
                     id="expectations_from_network"
                     value={formData.expectations_from_network}
@@ -900,7 +897,7 @@ const ApplicationForm = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="how_heard_about_network">15. How did you hear about us? <span className="text-destructive">*</span></Label>
+                  <Label htmlFor="how_heard_about_network">15. How did you hear about us? <span className="text-sky-600">*</span></Label>
                   <Textarea
                     id="how_heard_about_network"
                     value={formData.how_heard_about_network}
@@ -926,12 +923,12 @@ const ApplicationForm = () => {
               </Button>
 
               {currentStep < totalSteps ? (
-                <Button type="button" onClick={goNext}>
+                <Button type="button" onClick={goNext} className="!bg-sky-600 hover:!bg-sky-700 text-white">
                   Next
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               ) : (
-                <Button type="submit" disabled={loading}>
+                <Button type="submit" disabled={loading} className="!bg-sky-600 hover:!bg-sky-700 text-white">
                   {loading ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import SidebarLayout from "@/components/layout/SidebarLayout";
 import { MessageSquare, GraduationCap, Lock, Info } from "lucide-react";
@@ -7,7 +8,16 @@ import { LearningHub } from "@/components/community/LearningHub";
 
 export default function Community() {
   const { userRole } = useAuth();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState<'blogs' | 'learning'>('blogs');
+
+  // When returning from Learning Resource detail, open Learning tab
+  useEffect(() => {
+    const tab = (location.state as { tab?: 'blogs' | 'learning' })?.tab;
+    if (tab === 'learning' || tab === 'blogs') {
+      setActiveTab(tab);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     document.title = "Community | CFF Network";
@@ -33,7 +43,7 @@ export default function Community() {
           backgroundRepeat: 'no-repeat',
         }}
       >
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="max-w-7xl w-full px-4 py-4 sm:px-6 lg:px-8">
           <div className="bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             {/* Clean Header */}
             <div className="border-b border-slate-100 px-5 py-4">

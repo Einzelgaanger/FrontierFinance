@@ -24,6 +24,7 @@ import Application from "./pages/Application";
 import Blogs from "./pages/Blogs";
 import Community from "./pages/Community";
 import BlogDetail from "./pages/BlogDetail";
+import LearningResourceDetail from "./pages/LearningResourceDetail";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import AdminWrapper from "./components/AdminWrapper";
@@ -147,6 +148,11 @@ const App = () => {
             <Route path="/blogs/:id" element={
               <ProtectedRoute>
                 <BlogDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/community/learning/:id" element={
+              <ProtectedRoute>
+                <LearningResourceDetail />
               </ProtectedRoute>
             } />
             <Route path="/launch-plus-intro" element={<LaunchPlusIntro />} />

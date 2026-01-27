@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,15 +13,16 @@ import {
   FileText, 
   Heart, 
   MessageCircle, 
-  TrendingUp,
   Users,
   Activity,
   Filter,
-  ArrowUpRight
+  Search,
+  LayoutGrid,
+  List,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { CreateBlogModal } from "@/components/blogs/CreateBlogModal";
-import { BlogDetailModal } from "@/components/blogs/BlogDetailModal";
 import { format } from "date-fns";
 import { getBadge } from "@/utils/badgeSystem";
 
@@ -31,6 +33,7 @@ interface Blog {
   content: string | null;
   media_type: 'text' | 'image' | 'video' | null;
   media_url: string | null;
+  thumbnail_url: string | null;
   caption: string | null;
   created_at: string;
   like_count: number;
@@ -46,11 +49,13 @@ interface Blog {
 
 export function BlogFeed() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const [activeFilter, setActiveFilter] = useState<'all' | 'text' | 'image' | 'video'>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const fetchBlogs = useCallback(async () => {
     try {
@@ -149,9 +154,23 @@ export function BlogFeed() {
   }), [blogs]);
 
   const filteredBlogs = useMemo(() => {
-    if (activeFilter === 'all') return blogs;
-    return blogs.filter((blog) => blog.media_type === activeFilter);
-  }, [blogs, activeFilter]);
+    let result = blogs;
+    if (activeFilter !== 'all') {
+      result = result.filter((blog) => blog.media_type === activeFilter);
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter(
+        (blog) =>
+          blog.title.toLowerCase().includes(q) ||
+          (blog.content?.toLowerCase().includes(q) ?? false) ||
+          (blog.caption?.toLowerCase().includes(q) ?? false) ||
+          blog.author?.full_name?.toLowerCase().includes(q) ||
+          blog.author?.company_name?.toLowerCase().includes(q)
+      );
+    }
+    return result;
+  }, [blogs, activeFilter, searchQuery]);
 
   const toggleLike = async (blogId: string, isLiked: boolean) => {
     if (!user) return;
@@ -191,39 +210,39 @@ export function BlogFeed() {
   ];
 
   return (
-    <div className="space-y-5">
-      {/* Compact Stats Row */}
-      <div className="flex items-center gap-6 py-3 px-4 bg-slate-50 rounded-lg border border-slate-100">
-        <div className="flex items-center gap-2">
+    <div className="space-y-5 min-w-0">
+      {/* Compact Stats Row – same layout as Learning Hub */}
+      <div className="flex flex-wrap items-center gap-4 sm:gap-6 py-3 px-4 bg-slate-50 rounded-lg border border-slate-100 min-w-0">
+        <div className="flex items-center gap-2 shrink-0">
           <div className="p-1.5 bg-slate-200/60 rounded">
             <FileText className="h-3.5 w-3.5 text-slate-600" />
           </div>
-          <div>
+          <div className="min-w-0">
             <span className="text-lg font-semibold text-slate-900">{stats.totalPosts}</span>
             <span className="text-xs text-slate-500 ml-1.5">posts</span>
           </div>
         </div>
-        <div className="h-6 w-px bg-slate-200" />
-        <div className="flex items-center gap-2">
+        <div className="h-6 w-px bg-slate-200 shrink-0 hidden sm:block" />
+        <div className="flex items-center gap-2 shrink-0">
           <div className="p-1.5 bg-slate-200/60 rounded">
             <Users className="h-3.5 w-3.5 text-slate-600" />
           </div>
-          <div>
+          <div className="min-w-0">
             <span className="text-lg font-semibold text-slate-900">{stats.totalAuthors}</span>
             <span className="text-xs text-slate-500 ml-1.5">contributors</span>
           </div>
         </div>
-        <div className="h-6 w-px bg-slate-200" />
-        <div className="flex items-center gap-2">
+        <div className="h-6 w-px bg-slate-200 shrink-0 hidden sm:block" />
+        <div className="flex items-center gap-2 shrink-0">
           <div className="p-1.5 bg-slate-200/60 rounded">
             <Activity className="h-3.5 w-3.5 text-slate-600" />
           </div>
-          <div>
+          <div className="min-w-0">
             <span className="text-lg font-semibold text-slate-900">{stats.totalEngagement}</span>
             <span className="text-xs text-slate-500 ml-1.5">interactions</span>
           </div>
         </div>
-        <div className="ml-auto">
+        <div className="ml-auto shrink-0">
           <Button 
             onClick={() => setIsCreateModalOpen(true)}
             size="sm"
@@ -235,30 +254,59 @@ export function BlogFeed() {
         </div>
       </div>
 
-      {/* Filter Pills */}
-      <div className="flex items-center gap-1.5">
-        <Filter className="h-3.5 w-3.5 text-slate-400 mr-1" />
-        {filterOptions.map((option) => (
-          <button
-            key={option.value}
-            onClick={() => setActiveFilter(option.value)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-              activeFilter === option.value 
-                ? "bg-slate-900 text-white" 
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-            }`}
-          >
-            {option.label}
-          </button>
-        ))}
-        <span className="text-xs text-slate-400 ml-2">
-          {filteredBlogs.length} {filteredBlogs.length === 1 ? 'result' : 'results'}
-        </span>
+      {/* Search & Filters Row – same structure as Learning Hub */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 min-w-0">
+        <div className="relative flex-1 w-full sm:max-w-xs min-w-0">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
+          <Input
+            placeholder="Search updates..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 h-9 text-sm border-slate-200 min-w-0"
+          />
+        </div>
+        <div className="flex items-center gap-2 flex-wrap min-w-0">
+          <Filter className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+          {filterOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setActiveFilter(option.value)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 ${
+                activeFilter === option.value 
+                  ? "bg-slate-900 text-white" 
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+          <div className="flex border border-slate-200 rounded overflow-hidden shrink-0 ml-1">
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 ${viewMode === 'grid' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
+              aria-label="Grid view"
+            >
+              <LayoutGrid className="h-3.5 w-3.5 text-slate-600" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('list')}
+              className={`p-1.5 ${viewMode === 'list' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
+              aria-label="List view"
+            >
+              <List className="h-3.5 w-3.5 text-slate-600" />
+            </button>
+          </div>
+          <span className="text-xs text-slate-400 ml-1 shrink-0">
+            {filteredBlogs.length} {filteredBlogs.length === 1 ? 'result' : 'results'}
+          </span>
+        </div>
       </div>
 
-      {/* Posts Grid */}
+      {/* Posts Grid – same grid/list behaviour as Learning Hub */}
       {loading ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className={`grid gap-3 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <Card key={i} className="animate-pulse border-slate-200">
               <CardContent className="p-4 space-y-3">
@@ -276,69 +324,83 @@ export function BlogFeed() {
           ))}
         </div>
       ) : filteredBlogs.length === 0 ? (
-        <div className="py-16 text-center">
+        <div className="py-16 text-center min-w-0">
           <div className="mx-auto w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
             <FileText className="h-5 w-5 text-slate-400" />
           </div>
-          <h3 className="text-sm font-medium text-slate-900 mb-1">No posts yet</h3>
-          <p className="text-xs text-slate-500 mb-4">
-            Be the first to share your insights.
+          <h3 className="text-sm font-medium text-slate-900 mb-1">
+            {blogs.length === 0 ? "No posts yet" : "No posts match your search"}
+          </h3>
+          <p className="text-xs text-slate-500 mb-4 break-words">
+            {blogs.length === 0
+              ? "Be the first to share your insights."
+              : "Try adjusting your search or filters."}
           </p>
-          <Button onClick={() => setIsCreateModalOpen(true)} size="sm" variant="outline" className="h-8 text-xs">
-            <PlusCircle className="h-3.5 w-3.5 mr-1.5" />
-            Create post
-          </Button>
+          {blogs.length === 0 && (
+            <Button onClick={() => setIsCreateModalOpen(true)} size="sm" variant="outline" className="h-8 text-xs">
+              <PlusCircle className="h-3.5 w-3.5 mr-1.5" />
+              Create post
+            </Button>
+          )}
         </div>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className={`grid gap-3 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
           {filteredBlogs.map((blog) => {
             const badge = blog.author?.total_points ? getBadge(blog.author.total_points) : null;
             
             return (
               <Card 
                 key={blog.id}
-                onClick={() => setSelectedBlog(blog)}
+                onClick={() => navigate(`/blogs/${blog.id}`)}
                 className="group cursor-pointer border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all duration-150 overflow-hidden"
               >
-                <CardContent className="p-0">
-                  {/* Media Preview */}
-                  {blog.media_type === 'image' && blog.media_url && (
-                    <div className="aspect-[16/10] w-full overflow-hidden bg-slate-50">
-                      <img 
-                        src={blog.media_url} 
-                        alt={blog.title}
-                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-200"
-                      />
-                    </div>
-                  )}
-                  {blog.media_type === 'video' && blog.media_url && (
-                    <div className="aspect-[16/10] w-full overflow-hidden bg-slate-900 relative">
-                      <video src={blog.media_url} className="w-full h-full object-cover opacity-80" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="p-2.5 rounded-full bg-white/90 shadow">
-                          <Video className="h-5 w-5 text-slate-900" />
+                <CardContent className="p-0 overflow-hidden">
+                  {/* Media Preview – same frame as Learning Hub (image and video) */}
+                  {(blog.media_type === "image" && blog.media_url) ||
+                  (blog.media_type === "video" && (blog.thumbnail_url || blog.media_url)) ? (
+                    <div className="aspect-[16/10] w-full overflow-hidden rounded-t-lg border-b border-slate-200 bg-slate-100 relative">
+                      {blog.media_type === "image" ? (
+                        <img
+                          src={blog.media_url!}
+                          alt={blog.title}
+                          className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-200"
+                        />
+                      ) : blog.thumbnail_url ? (
+                        <img
+                          src={blog.thumbnail_url}
+                          alt={blog.title}
+                          className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-200"
+                        />
+                      ) : (
+                        <video src={blog.media_url!} className="w-full h-full object-contain opacity-90" />
+                      )}
+                      {blog.media_type === "video" && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="p-2.5 rounded-full bg-white/90 shadow">
+                            <Video className="h-5 w-5 text-slate-900" />
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
-                  )}
-                  
-                  <div className="p-4">
+                  ) : null}
+
+                  <div className="p-4 min-w-0">
                     {/* Author Row */}
-                    <div className="flex items-center gap-2.5 mb-3">
-                      <Avatar className="h-8 w-8 border border-slate-200">
+                    <div className="flex items-center gap-2.5 mb-3 min-w-0">
+                      <Avatar className="h-8 w-8 border border-slate-200 shrink-0">
                         <AvatarImage src={blog.author?.profile_picture_url || ""} />
                         <AvatarFallback className="bg-slate-100 text-slate-600 text-xs font-medium">
                           {blog.author?.full_name?.charAt(0) || "U"}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1">
-                          <p className="text-sm font-medium text-slate-900 truncate">
+                        <div className="flex items-center gap-1 flex-wrap">
+                          <p className="text-sm font-medium text-slate-900 break-words">
                             {blog.author?.full_name || "Unknown"}
                           </p>
-                          {badge && <span className="text-xs">{badge.icon}</span>}
+                          {badge && <span className="text-xs shrink-0">{badge.icon}</span>}
                         </div>
-                        <p className="text-xs text-slate-500 truncate">
+                        <p className="text-xs text-slate-500 break-words">
                           {blog.author?.company_name || ""}
                         </p>
                       </div>
@@ -349,33 +411,33 @@ export function BlogFeed() {
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-medium text-slate-900 text-sm mb-1.5 line-clamp-2 group-hover:text-blue-700 transition-colors leading-snug">
+                    <h3 className="font-medium text-slate-900 text-sm mb-1.5 line-clamp-2 group-hover:text-blue-700 transition-colors leading-snug break-words">
                       {blog.title}
                     </h3>
 
                     {/* Content Preview */}
                     {blog.content && (
-                      <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed">
+                      <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed break-words">
                         {blog.content}
                       </p>
                     )}
 
                     {/* Footer */}
-                    <div className="flex items-center justify-between pt-2.5 border-t border-slate-100">
-                      <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 flex-wrap gap-2 min-w-0">
+                      <div className="flex items-center gap-4">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleLike(blog.id, blog.is_liked || false);
                           }}
-                          className="flex items-center gap-1 text-xs text-slate-500 hover:text-red-500 transition-colors"
+                          className="flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-red-500 transition-colors"
                         >
                           <Heart className={`h-3.5 w-3.5 ${blog.is_liked ? 'fill-red-500 text-red-500' : ''}`} />
-                          <span>{blog.like_count}</span>
+                          <span>{blog.like_count} like{blog.like_count !== 1 ? 's' : ''}</span>
                         </button>
-                        <span className="flex items-center gap-1 text-xs text-slate-500">
+                        <span className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
                           <MessageCircle className="h-3.5 w-3.5" />
-                          <span>{blog.comment_count}</span>
+                          <span>{blog.comment_count} comment{blog.comment_count !== 1 ? 's' : ''}</span>
                         </span>
                       </div>
                       <span className="text-[11px] text-slate-400">
@@ -394,13 +456,6 @@ export function BlogFeed() {
         open={isCreateModalOpen}
         onOpenChange={setIsCreateModalOpen}
         onSuccess={fetchBlogs}
-      />
-
-      <BlogDetailModal
-        blog={selectedBlog}
-        open={!!selectedBlog}
-        onOpenChange={(open) => !open && setSelectedBlog(null)}
-        onToggleLike={toggleLike}
       />
     </div>
   );

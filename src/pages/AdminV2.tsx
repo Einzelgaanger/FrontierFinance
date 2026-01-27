@@ -41,7 +41,6 @@ import {
   X,
   LayoutDashboard,
   ClipboardCheck,
-  UsersRound,
   History
 } from 'lucide-react';
 
@@ -126,6 +125,182 @@ const getTimeAgo = (date: Date): string => {
   return `${Math.floor(diffInSeconds / 604800)}w ago`;
 };
 
+// Group logs by date bucket
+const getDateGroup = (date: Date): string => {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const weekStart = new Date(today);
+  weekStart.setDate(weekStart.getDate() - 7);
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  if (d.getTime() === today.getTime()) return 'Today';
+  if (d.getTime() === yesterday.getTime()) return 'Yesterday';
+  if (date.getTime() >= weekStart.getTime()) return 'This week';
+  return 'Earlier';
+};
+
+// Icon and color by action type
+function getActivityMeta(actionType: string): { icon: React.ReactNode; bg: string; text: string; label: string } {
+  const raw = actionType.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+  if (/application|approve|reject|pending/i.test(actionType))
+    return ({ icon: <ClipboardCheck className="w-4 h-4" />, bg: 'bg-amber-100', text: 'text-amber-800', label: raw });
+  if (/role|member|user|login|sign/i.test(actionType))
+    return ({ icon: <UserCheck className="w-4 h-4" />, bg: 'bg-blue-100', text: 'text-blue-800', label: raw });
+  if (/blog|post/i.test(actionType))
+    return ({ icon: <FileText className="w-4 h-4" />, bg: 'bg-emerald-100', text: 'text-emerald-800', label: raw });
+  if (/survey|network|populate/i.test(actionType))
+    return ({ icon: <BarChart3 className="w-4 h-4" />, bg: 'bg-violet-100', text: 'text-violet-800', label: raw });
+  return ({ icon: <Activity className="w-4 h-4" />, bg: 'bg-slate-100', text: 'text-slate-800', label: raw });
+}
+
+// Enhanced Activity Log section with filters, grouping, and clear layout
+function EnhancedActivityLog(props: { activityLogs: ActivityLog[]; getTimeAgo: (d: Date) => string }) {
+  const { activityLogs, getTimeAgo } = props;
+  const [activitySearch, setActivitySearch] = useState('');
+  const [activityTypeFilter, setActivityTypeFilter] = useState<string>('all');
+
+  const actionTypes = useMemo(() => {
+    const set = new Set<string>();
+    activityLogs.forEach((log) => set.add(log.action || log.activity_type || 'unknown'));
+    return Array.from(set).sort();
+  }, [activityLogs]);
+
+  const filteredAndGrouped = useMemo(() => {
+    let list = activityLogs;
+    const q = activitySearch.toLowerCase().trim();
+    if (q) {
+      list = list.filter((log) => {
+        const action = (log.action || log.activity_type || '').toLowerCase();
+        const desc = (log.description || '').toLowerCase();
+        const userStr = [log.user?.full_name, log.user?.email, log.user?.company_name].filter(Boolean).join(' ').toLowerCase();
+        const detailsStr = typeof log.details === 'object' ? JSON.stringify(log.details).toLowerCase() : '';
+        return action.includes(q) || desc.includes(q) || userStr.includes(q) || detailsStr.includes(q);
+      });
+    }
+    if (activityTypeFilter !== 'all') {
+      list = list.filter((log) => (log.action || log.activity_type || 'unknown') === activityTypeFilter);
+    }
+    const groups: Record<string, ActivityLog[]> = {};
+    list.forEach((log) => {
+      const bucket = getDateGroup(new Date(log.created_at));
+      if (!groups[bucket]) groups[bucket] = [];
+      groups[bucket].push(log);
+    });
+    const order = ['Today', 'Yesterday', 'This week', 'Earlier'];
+    return order.filter((k) => groups[k]?.length).map((k) => ({ label: k, logs: groups[k] }));
+  }, [activityLogs, activitySearch, activityTypeFilter]);
+
+  const buildDescription = (log: ActivityLog) => {
+    const desc = log.description || '';
+    const details = log.details || {};
+    if (desc) return desc;
+    const parts: string[] = [];
+    if (log.user) {
+      parts.push(`${log.user.full_name || log.user.email || 'Unknown'}`);
+      if (log.user.company_name) parts.push(` · ${log.user.company_name}`);
+    } else if (log.user_id) parts.push(`User: ${String(log.user_id).slice(0, 8)}…`);
+    if (details.applicant_name) parts.push(`Applicant: ${details.applicant_name}`);
+    if (details.old_role && details.new_role) parts.push(`Role: ${details.old_role} → ${details.new_role}`);
+    if (log.points_earned != null) parts.push(`Points: ${log.points_earned}`);
+    if (log.resource_type) parts.push(`Resource: ${log.resource_type}`);
+    if (details.blog_title) parts.push(`Blog: ${details.blog_title}`);
+    if (details.survey_year) parts.push(`Survey: ${details.survey_year}`);
+    return parts.length ? parts.join(' · ') : 'No additional details';
+  };
+
+  return (
+    <Card className="border border-slate-200 bg-white shadow-sm overflow-hidden">
+      <CardHeader className="border-b border-slate-200 bg-slate-50/50">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <CardTitle className="text-lg font-semibold text-slate-900">Activity log</CardTitle>
+            <CardDescription className="text-slate-500 mt-0.5">
+              System events, user actions, and admin changes. Use search and filters to narrow results.
+            </CardDescription>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="relative flex-1 sm:flex-initial min-w-[180px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Input
+                placeholder="Search activity..."
+                value={activitySearch}
+                onChange={(e) => setActivitySearch(e.target.value)}
+                className="pl-9 h-9 text-sm border-slate-200 bg-white"
+              />
+            </div>
+            <Select value={activityTypeFilter} onValueChange={setActivityTypeFilter}>
+              <SelectTrigger className="w-[180px] h-9 border-slate-200 bg-white text-sm">
+                <SelectValue placeholder="Action type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All types</SelectItem>
+                {actionTypes.map((t) => (
+                  <SelectItem key={t} value={t}>
+                    {t.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        {activityLogs.length === 0 ? (
+          <p className="text-sm text-slate-500 text-center py-12">No activity logs yet.</p>
+        ) : filteredAndGrouped.length === 0 ? (
+          <p className="text-sm text-slate-500 text-center py-12">No matches for your filters.</p>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {filteredAndGrouped.map(({ label, logs }) => (
+              <div key={label} className="py-4 first:pt-4">
+                <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-1 mb-3">{label}</h3>
+                <div className="space-y-2">
+                  {logs.map((log) => {
+                    const actionType = log.action || log.activity_type || 'unknown';
+                    const meta = getActivityMeta(actionType);
+                    const timestamp = new Date(log.created_at);
+                    return (
+                      <div
+                        key={log.id}
+                        className="flex gap-4 p-4 rounded-lg border border-slate-100 bg-white hover:bg-slate-50/80 hover:border-slate-200 transition-colors"
+                      >
+                        <div className={`shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${meta.bg} ${meta.text}`}>
+                          {meta.icon}
+                        </div>
+                        <div className="flex-1 min-w-0 space-y-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Badge variant="secondary" className={`text-xs font-medium ${meta.bg} ${meta.text} border-0`}>
+                              {meta.label}
+                            </Badge>
+                            {log.user && (
+                              <span className="text-xs text-slate-600">
+                                {log.user.full_name || log.user.email}
+                                {log.user.company_name ? ` · ${log.user.company_name}` : ''}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-slate-700 break-words">{buildDescription(log)}</p>
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-xs text-slate-500">
+                            <span title={timestamp.toISOString()}>{timestamp.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}</span>
+                            <span>{getTimeAgo(timestamp)}</span>
+                            {log.ip_address && <span>IP: {log.ip_address}</span>}
+                            {log.resource_type && <span>Resource: {log.resource_type}</span>}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 const AdminV2 = () => {
   const { user, userRole } = useAuth();
   const { toast } = useToast();
@@ -137,6 +312,7 @@ const AdminV2 = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([]);
   const [blogsCount, setBlogsCount] = useState(0);
+  const [learningResourcesCount, setLearningResourcesCount] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedRequest, setSelectedRequest] = useState<MembershipRequest | null>(null);
@@ -147,11 +323,12 @@ const AdminV2 = () => {
   const fetchAllData = useCallback(async () => {
     setLoading(true);
     try {
-      const [requestsResult, profilesResult, logsResult, blogsResult] = await Promise.all([
+      const [requestsResult, profilesResult, logsResult, blogsResult, learningResult] = await Promise.all([
         supabase.from('applications').select('*').order('created_at', { ascending: false }),
         supabase.from('user_profiles').select('id, email, company_name, full_name, user_role, created_at, updated_at').order('created_at', { ascending: false }),
         supabase.from('activity_log').select('*').order('created_at', { ascending: false }).limit(100),
-        supabase.from('blogs').select('id', { count: 'exact', head: true })
+        supabase.from('blogs').select('id', { count: 'exact', head: true }),
+        supabase.from('learning_resources').select('id', { count: 'exact', head: true }).eq('is_published', true)
       ]);
 
       if (requestsResult.error) {
@@ -196,6 +373,9 @@ const AdminV2 = () => {
         console.error('Error fetching blogs:', blogsResult.error);
       } else {
         setBlogsCount(blogsResult.count || 0);
+      }
+      if (!learningResult.error && learningResult.count != null) {
+        setLearningResourcesCount(learningResult.count);
       }
 
       setMembershipRequests(requestsResult.data || []);
@@ -371,6 +551,7 @@ const AdminV2 = () => {
 
     // Calculate additional metrics
     const activeMembers = profiles.filter(p => p.user_role === 'member').length;
+    const viewersCount = profiles.filter(p => p.user_role === 'viewer').length;
     const recentActivityCount = activityLogs.length;
 
     return {
@@ -381,6 +562,7 @@ const AdminV2 = () => {
       totalProfiles,
       activeProfiles,
       activeMembers,
+      viewersCount,
       approvalRate: totalRequests > 0 ? Math.round((approvedRequests / totalRequests) * 100) : 0,
       rejectionRate: totalRequests > 0 ? Math.round((rejectedRequests / totalRequests) * 100) : 0,
       thisMonthRequests,
@@ -611,151 +793,113 @@ const AdminV2 = () => {
 
   return (
     <SidebarLayout>
-      <div className="min-h-screen bg-slate-50">
-        {/* Main Content */}
-        <div className="p-8">
-          {/* Key Metrics Grid */}
-          <div className="grid grid-cols-8 gap-2 mb-8">
-            <Card className="bg-white border border-slate-200 shadow-sm">
-              <CardContent className="p-2">
-                <div className="flex items-start justify-between mb-1">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-medium text-slate-500 mb-0.5 leading-tight">Total Applications</p>
-                    <p className="text-base font-semibold text-slate-900">{stats.totalRequests}</p>
+      <div className="min-h-screen bg-slate-50/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Page header */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Admin Dashboard</h1>
+              <p className="text-sm text-slate-500 mt-1">
+                Overview of applications, members, and community activity
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => fetchAllData()}
+              disabled={loading}
+              className="border-slate-200 text-slate-600 hover:bg-slate-50 shrink-0"
+            >
+              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
+
+          {/* KPI cards – meaningful, readable metrics */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+            <Card className="bg-white border-slate-200 shadow-sm rounded-xl overflow-hidden">
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Applications</p>
+                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.totalRequests}</p>
+                    <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                      {stats.applicationsGrowth >= 0 ? <TrendingUp className="w-3 h-3 text-emerald-600" /> : <TrendingDown className="w-3 h-3 text-red-600" />}
+                      <span className={stats.applicationsGrowth >= 0 ? 'text-emerald-600' : 'text-red-600'}>
+                        {Math.abs(stats.applicationsGrowth).toFixed(1)}%
+                      </span>
+                      vs last month
+                    </p>
                   </div>
-                  <ClipboardList className="w-4 h-4 text-slate-600 flex-shrink-0 mt-0.5" />
-                </div>
-                <div className="flex items-center gap-0.5 pt-1 border-t border-slate-100">
-                  {stats.applicationsGrowth >= 0 ? (
-                    <TrendingUp className="w-2 h-2 text-emerald-600" />
-                  ) : (
-                    <TrendingDown className="w-2 h-2 text-red-600" />
-                  )}
-                  <span className={`text-[10px] font-medium ${stats.applicationsGrowth >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                    {Math.abs(stats.applicationsGrowth).toFixed(1)}%
-                  </span>
-                  <span className="text-[10px] text-slate-500">vs last month</span>
+                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                    <ClipboardList className="w-5 h-5 text-slate-600" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border border-slate-200 shadow-sm">
-              <CardContent className="p-2">
-                <div className="flex items-start justify-between mb-1">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-medium text-slate-500 mb-0.5 leading-tight">Pending Review</p>
-                    <p className="text-base font-semibold text-slate-900">{stats.pendingRequests}</p>
+            <Card className={`bg-white border shadow-sm rounded-xl overflow-hidden ${stats.pendingRequests > 0 ? 'border-amber-200 ring-1 ring-amber-100' : 'border-slate-200'}`}>
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Pending review</p>
+                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.pendingRequests}</p>
+                    <p className="text-xs text-slate-500 mt-2">
+                      {stats.pendingRequests > 0 ? 'Needs attention' : 'All caught up'}
+                    </p>
                   </div>
-                  <AlertCircle className="w-4 h-4 text-slate-600 flex-shrink-0 mt-0.5" />
-                </div>
-                <div className="pt-1 border-t border-slate-100">
-                  <span className="text-[10px] text-slate-600 leading-tight">
-                    {stats.pendingRequests > 0 ? `${Math.round((stats.pendingRequests / stats.totalRequests) * 100)}%` : '0%'}
-                  </span>
-                  <span className="text-[10px] text-slate-500 ml-1">of total</span>
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${stats.pendingRequests > 0 ? 'bg-amber-100' : 'bg-slate-100'}`}>
+                    <AlertCircle className={`w-5 h-5 ${stats.pendingRequests > 0 ? 'text-amber-600' : 'text-slate-600'}`} />
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border border-slate-200 shadow-sm">
-              <CardContent className="p-2">
-                <div className="flex items-start justify-between mb-1">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-medium text-slate-500 mb-0.5 leading-tight">Approved</p>
-                    <p className="text-base font-semibold text-slate-900">{stats.approvedRequests}</p>
+            <Card className="bg-white border-slate-200 shadow-sm rounded-xl overflow-hidden">
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Members & users</p>
+                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.totalProfiles}</p>
+                    <p className="text-xs text-slate-500 mt-2">
+                      {stats.activeMembers} members · {(stats.viewersCount ?? (stats.totalProfiles - stats.activeMembers))} viewers
+                    </p>
                   </div>
-                  <UserCheck className="w-4 h-4 text-slate-600 flex-shrink-0 mt-0.5" />
-                </div>
-                <div className="pt-1 border-t border-slate-100">
-                  <span className="text-[10px] font-medium text-slate-600">{stats.approvalRate}%</span>
-                  <span className="text-[10px] text-slate-500 ml-1">approval rate</span>
+                  <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
+                    <Users className="w-5 h-5 text-emerald-600" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border border-slate-200 shadow-sm">
-              <CardContent className="p-2">
-                <div className="flex items-start justify-between mb-1">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-medium text-slate-500 mb-0.5 leading-tight">Rejected</p>
-                    <p className="text-base font-semibold text-slate-900">{stats.rejectedRequests}</p>
+            <Card className="bg-white border-slate-200 shadow-sm rounded-xl overflow-hidden">
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Community</p>
+                    <p className="text-2xl font-bold text-slate-900 mt-1">{blogsCount + learningResourcesCount}</p>
+                    <p className="text-xs text-slate-500 mt-2">
+                      {blogsCount} posts · {learningResourcesCount} learning resources
+                    </p>
                   </div>
-                  <X className="w-4 h-4 text-slate-600 flex-shrink-0 mt-0.5" />
-                </div>
-                <div className="pt-1 border-t border-slate-100">
-                  <span className="text-[10px] font-medium text-slate-600">{stats.rejectionRate}%</span>
-                  <span className="text-[10px] text-slate-500 ml-1">rejection rate</span>
+                  <div className="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
+                    <BookOpen className="w-5 h-5 text-violet-600" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border border-slate-200 shadow-sm">
-              <CardContent className="p-2">
-                <div className="flex items-start justify-between mb-1">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-medium text-slate-500 mb-0.5 leading-tight">Active Members</p>
-                    <p className="text-base font-semibold text-slate-900">{stats.activeMembers}</p>
+            <Card className="bg-white border-slate-200 shadow-sm rounded-xl overflow-hidden">
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Avg. decision time</p>
+                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.avgProcessingDays}</p>
+                    <p className="text-xs text-slate-500 mt-2">days to approve or reject</p>
                   </div>
-                  <UserCheck className="w-4 h-4 text-slate-600 flex-shrink-0 mt-0.5" />
-                </div>
-                <div className="pt-1 border-t border-slate-100">
-                  <span className="text-[10px] text-slate-600 leading-tight">
-                    {stats.totalProfiles > 0 ? `${Math.round((stats.activeMembers / stats.totalProfiles) * 100)}%` : '0%'}
-                  </span>
-                  <span className="text-[10px] text-slate-500 ml-1">of total users</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white border border-slate-200 shadow-sm">
-              <CardContent className="p-2">
-                <div className="flex items-start justify-between mb-1">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-medium text-slate-500 mb-0.5 leading-tight">Total Users</p>
-                    <p className="text-base font-semibold text-slate-900">{stats.activeProfiles}</p>
+                  <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+                    <Clock className="w-5 h-5 text-blue-600" />
                   </div>
-                  <Users className="w-4 h-4 text-slate-600 flex-shrink-0 mt-0.5" />
-                </div>
-                <div className="flex items-center gap-0.5 pt-1 border-t border-slate-100">
-                  {stats.usersGrowth >= 0 ? (
-                    <TrendingUp className="w-2 h-2 text-emerald-600" />
-                  ) : (
-                    <TrendingDown className="w-2 h-2 text-red-600" />
-                  )}
-                  <span className={`text-[10px] font-medium ${stats.usersGrowth >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                    {Math.abs(stats.usersGrowth).toFixed(1)}%
-                  </span>
-                  <span className="text-[10px] text-slate-500">vs last month</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white border border-slate-200 shadow-sm">
-              <CardContent className="p-2">
-                <div className="flex items-start justify-between mb-1">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-medium text-slate-500 mb-0.5 leading-tight">Total Blogs</p>
-                    <p className="text-base font-semibold text-slate-900">{blogsCount}</p>
-                  </div>
-                  <BookOpen className="w-4 h-4 text-slate-600 flex-shrink-0 mt-0.5" />
-                </div>
-                <div className="pt-1 border-t border-slate-100">
-                  <span className="text-[10px] text-slate-600 leading-tight">Posts</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white border border-slate-200 shadow-sm">
-              <CardContent className="p-2">
-                <div className="flex items-start justify-between mb-1">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-medium text-slate-500 mb-0.5 leading-tight">Recent Activity</p>
-                    <p className="text-base font-semibold text-slate-900">{stats.recentActivityCount}</p>
-                  </div>
-                  <Activity className="w-4 h-4 text-slate-600 flex-shrink-0 mt-0.5" />
-                </div>
-                <div className="pt-1 border-t border-slate-100">
-                  <span className="text-[10px] text-slate-600 leading-tight">Events</span>
                 </div>
               </CardContent>
             </Card>
@@ -763,7 +907,7 @@ const AdminV2 = () => {
 
           {/* Main Dashboard Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 bg-white border border-slate-200 shadow-sm rounded-lg p-1">
+            <TabsList className="grid w-full grid-cols-3 bg-white border border-slate-200 shadow-sm rounded-xl p-1.5 h-12">
               <TabsTrigger 
                 value="overview" 
                 className="data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 font-medium"
@@ -779,13 +923,6 @@ const AdminV2 = () => {
                 Applications
               </TabsTrigger>
               <TabsTrigger 
-                value="members" 
-                className="data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 font-medium"
-              >
-                <UsersRound className="w-4 h-4 mr-2" />
-                Members
-              </TabsTrigger>
-              <TabsTrigger 
                 value="activity" 
                 className="data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 font-medium"
               >
@@ -795,13 +932,17 @@ const AdminV2 = () => {
             </TabsList>
 
                     {/* Overview Tab */}
-                    <TabsContent value="overview" className="space-y-6">
+                    <TabsContent value="overview" className="space-y-8 mt-6">
+                      <div>
+                        <h2 className="text-base font-semibold text-slate-900 mb-1">Applications pipeline</h2>
+                        <p className="text-sm text-slate-500">Trends and distribution over time.</p>
+                      </div>
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* Applications Trend Chart */}
-                        <Card className="border border-slate-200 bg-white shadow-sm">
-                          <CardHeader className="border-b border-slate-200">
-                            <CardTitle className="text-lg font-semibold text-slate-900">Applications Trend</CardTitle>
-                            <CardDescription className="text-slate-500">Daily application submissions over the last 7 days</CardDescription>
+                        <Card className="border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
+                          <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+                            <CardTitle className="text-base font-semibold text-slate-900">Applications this week</CardTitle>
+                            <CardDescription className="text-slate-500 text-sm mt-0.5">Daily submissions by outcome</CardDescription>
                           </CardHeader>
                           <CardContent className="pt-6">
                             <ResponsiveContainer width="100%" height={300}>
@@ -828,10 +969,10 @@ const AdminV2 = () => {
                         </Card>
 
                         {/* Status Distribution */}
-                        <Card className="border border-slate-200 bg-white shadow-sm">
-                          <CardHeader className="border-b border-slate-200">
-                            <CardTitle className="text-lg font-semibold text-slate-900">Status Distribution</CardTitle>
-                            <CardDescription className="text-slate-500">Current application status breakdown</CardDescription>
+                        <Card className="border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
+                          <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+                            <CardTitle className="text-base font-semibold text-slate-900">Status breakdown</CardTitle>
+                            <CardDescription className="text-slate-500 text-sm mt-0.5">Pending, approved, and rejected</CardDescription>
                           </CardHeader>
                           <CardContent className="pt-6">
                             <ResponsiveContainer width="100%" height={300}>
@@ -866,10 +1007,10 @@ const AdminV2 = () => {
                       </div>
 
                       {/* Application Lifetime Chart */}
-                      <Card className="border border-slate-200 bg-white shadow-sm">
-                        <CardHeader className="border-b border-slate-200">
-                          <CardTitle className="text-lg font-semibold text-slate-900">Lifetime Applications</CardTitle>
-                          <CardDescription className="text-slate-500">Cumulative total of all applications over time</CardDescription>
+                      <Card className="border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
+                        <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+                          <CardTitle className="text-base font-semibold text-slate-900">Applications over time</CardTitle>
+                          <CardDescription className="text-slate-500 text-sm mt-0.5">Cumulative applications, approved, rejected, and pending</CardDescription>
                         </CardHeader>
                         <CardContent className="pt-6">
                           <ResponsiveContainer width="100%" height={300}>
@@ -939,159 +1080,9 @@ const AdminV2 = () => {
               <ApplicationManagement />
             </TabsContent>
 
-            {/* Members Tab */}
-            <TabsContent value="members" className="space-y-6">
-              <Card className="border border-slate-200 bg-white shadow-sm">
-                <CardHeader className="border-b border-slate-200">
-                  <CardTitle className="text-lg font-semibold text-slate-900">User Profiles</CardTitle>
-                  <CardDescription className="text-slate-500">All registered users in the system</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-6">
-                  <div className="space-y-3">
-                     {profiles.length === 0 ? (
-                       <p className="text-sm text-slate-500 text-center py-12">No user profiles found</p>
-                     ) : (
-                       profiles.map((profile) => (
-                         <div key={profile.id} className="flex items-center justify-between p-4 border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all">
-                           <div className="flex items-center space-x-4">
-                             <div className="w-10 h-10 bg-slate-100 rounded-md flex items-center justify-center border border-slate-200">
-                               <User className="w-5 h-5 text-slate-600" />
-                             </div>
-                             <div>
-                               <p className="font-semibold text-slate-900">
-                                 {profile.full_name || profile.company_name || profile.email}
-                               </p>
-                               <p className="text-sm text-slate-600">{profile.email}</p>
-                               {profile.company_name && (
-                                 <p className="text-xs text-slate-500 mt-0.5">{profile.company_name}</p>
-                               )}
-                             </div>
-                           </div>
-                           <div className="flex items-center space-x-3">
-                             <Badge 
-                               variant="outline" 
-                               className={
-                                 profile.user_role === 'admin' ? 'border-slate-700 bg-slate-50 text-slate-700 font-medium' :
-                                 profile.user_role === 'member' ? 'border-emerald-600 bg-emerald-50 text-emerald-700 font-medium' :
-                                 'border-slate-300 bg-slate-50 text-slate-600 font-medium'
-                               }
-                             >
-                               {profile.user_role || 'viewer'}
-                             </Badge>
-                             <Button size="sm" variant="outline" className="border-slate-300 text-slate-600 hover:bg-slate-100">
-                               <Eye className="w-4 h-4" />
-                             </Button>
-                           </div>
-                         </div>
-                       ))
-                     )}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Activity Tab */}
+            {/* Activity Tab – detailed, well-presented log */}
             <TabsContent value="activity" className="space-y-6">
-              <Card className="border border-slate-200 bg-white shadow-sm">
-                <CardHeader className="border-b border-slate-200">
-                  <CardTitle className="text-lg font-semibold text-slate-900">Recent Activity</CardTitle>
-                  <CardDescription className="text-slate-500">Latest system activities and changes</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-6">
-                  <div className="space-y-3">
-                     {activityLogs.length === 0 ? (
-                       <p className="text-sm text-slate-500 text-center py-12">No activity logs found</p>
-                     ) : (
-                       activityLogs.map((log) => {
-                         // Format action/activity type
-                         const actionType = log.action || log.activity_type || 'Unknown Action';
-                         const formattedAction = actionType
-                           .replace(/_/g, ' ')
-                           .replace(/\b\w/g, l => l.toUpperCase());
-
-                         // Build detailed description
-                         let description = log.description || '';
-                         const details = log.details || {};
-
-                         // Build comprehensive description based on action type and details
-                         if (!description) {
-                           const parts: string[] = [];
-                           
-                           // User information
-                           if (log.user) {
-                             parts.push(`User: ${log.user.full_name || log.user.email || 'Unknown'}`);
-                             if (log.user.company_name) {
-                               parts.push(`(${log.user.company_name})`);
-                             }
-                           } else if (log.user_id) {
-                             parts.push(`User ID: ${log.user_id.substring(0, 8)}...`);
-                           }
-
-                           // Action-specific details
-                           if (details.applicant_name) {
-                             parts.push(`Applicant: ${details.applicant_name}`);
-                           }
-                           if (details.target_user_id) {
-                             parts.push(`Target User: ${details.target_user_id.substring(0, 8)}...`);
-                           }
-                           if (details.old_role && details.new_role) {
-                             parts.push(`Role: ${details.old_role} → ${details.new_role}`);
-                           }
-                           if (log.points_earned !== undefined && log.points_earned !== null) {
-                             parts.push(`Points: ${log.points_earned}`);
-                           }
-                           if (log.resource_type) {
-                             parts.push(`Resource: ${log.resource_type}`);
-                           }
-                           if (details.blog_title) {
-                             parts.push(`Blog: ${details.blog_title}`);
-                           }
-                           if (details.survey_year) {
-                             parts.push(`Survey: ${details.survey_year}`);
-                           }
-
-                           description = parts.length > 0 ? parts.join(' • ') : 'No additional details';
-                         }
-
-                         // Format timestamp
-                         const timestamp = new Date(log.created_at);
-                         const timeAgo = getTimeAgo(timestamp);
-
-                         return (
-                           <div key={log.id} className="flex items-start space-x-4 p-4 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
-                             <div className="w-8 h-8 bg-slate-100 rounded-md flex items-center justify-center flex-shrink-0 border border-slate-200">
-                               <Activity className="w-4 h-4 text-slate-600" />
-                             </div>
-                             <div className="flex-1 min-w-0">
-                               <div className="flex items-start justify-between gap-4">
-                                 <div className="flex-1 min-w-0">
-                                   <p className="text-sm font-semibold text-slate-900">
-                                     {formattedAction}
-                                   </p>
-                                   <p className="text-sm text-slate-600 mt-1">
-                                     {description}
-                                   </p>
-                                   <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
-                                     <span>{timestamp.toLocaleString()}</span>
-                                     <span>•</span>
-                                     <span>{timeAgo}</span>
-                                     {log.ip_address && (
-                                       <>
-                                         <span>•</span>
-                                         <span>IP: {log.ip_address}</span>
-                                       </>
-                                     )}
-                                   </div>
-                                 </div>
-                               </div>
-                             </div>
-                           </div>
-                         );
-                       })
-                     )}
-                  </div>
-                </CardContent>
-              </Card>
+              <EnhancedActivityLog activityLogs={activityLogs} getTimeAgo={getTimeAgo} />
             </TabsContent>
           </Tabs>
         </div>

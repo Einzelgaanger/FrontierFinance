@@ -611,6 +611,114 @@ const Analytics2021: React.FC = () => {
     return shortLabels[impact] || impact;
   };
 
+  // Truncate long labels for charts – avoids overflow / disappearing text (use strict maxLen for Legend)
+  const truncateLabel = (text: string, maxLen: number = 18): string => {
+    if (!text || typeof text !== 'string') return '';
+    const s = String(text).trim();
+    if (s.length <= maxLen) return s;
+    return s.slice(0, maxLen).trim() + '…';
+  };
+
+  // Split long labels into max 2 lines for chart labels (wrap at space near maxPerLine)
+  const wrapLabel = (text: string, maxPerLine: number = 18): [string, string?] => {
+    if (!text || typeof text !== 'string') return [''];
+    const s = String(text).trim();
+    if (s.length <= maxPerLine) return [s];
+    const idx = s.lastIndexOf(' ', maxPerLine);
+    const split = idx > 0 ? idx : maxPerLine;
+    return [s.slice(0, split).trim(), s.slice(split).trim()];
+  };
+
+  // Custom Pie label: category name in 2 lines + percentage (avoids overflow)
+  const renderPieLabelWrapped = (props: { cx: number; cy: number; midAngle: number; outerRadius: number; percent: number; payload?: { support?: string; participation?: string } }) => {
+    const { cx, cy, midAngle, outerRadius, percent, payload } = props;
+    const RADIAN = Math.PI / 180;
+    const r = outerRadius + 16;
+    const x = cx + r * Math.cos(-midAngle * RADIAN);
+    const y = cy + r * Math.sin(-midAngle * RADIAN);
+    const raw = String(payload?.support ?? payload?.participation ?? '').trim();
+    const [line1, line2] = wrapLabel(raw, 14);
+    if (!raw) return null;
+    return (
+      <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize={11} fill="#374151">
+        <tspan x={x} dy={line2 ? -8 : -4}>{line1 || '\u00A0'}</tspan>
+        {line2 && <tspan x={x} dy={14}>{line2}</tspan>}
+        <tspan x={x} dy={14} fontWeight="bold" fill="#111">{((percent ?? 0) * 100).toFixed(0)}%</tspan>
+      </text>
+    );
+  };
+
+  // Custom XAxis tick: 2-line wrapped labels
+  const XAxisTickWrapped = (props: { x?: number; y?: number; payload?: { value?: string }; angle?: number; textAnchor?: string }) => {
+    const { x = 0, y = 0, payload, angle = -25, textAnchor = 'end' } = props;
+    const v = String(payload?.value ?? '');
+    const [line1, line2] = wrapLabel(v, 16);
+    return (
+      <g transform={`translate(${x},${y}) rotate(${angle})`}>
+        <text textAnchor={textAnchor} fontSize={11} fill="#374151">
+          <tspan x={0} dy={0}>{line1}</tspan>
+          {line2 && <tspan x={0} dy={14}>{line2}</tspan>}
+        </text>
+      </g>
+    );
+  };
+
+  // PolarAngleAxis tick: 2-line wrapped labels (Section 7 Convening Initiatives)
+  const PolarAngleAxisTickWrapped = (props: { payload?: { value?: string; initiative?: string }; x?: number; y?: number; textAnchor?: string }) => {
+    const { payload, x = 0, y = 0, textAnchor = 'middle' } = props;
+    const v = String(payload?.initiative ?? payload?.value ?? '');
+    const [line1, line2] = wrapLabel(v, 12);
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text textAnchor={textAnchor} fontSize={10} fill="#374151">
+          <tspan x={0} dy={0}>{line1}</tspan>
+          {line2 && <tspan x={0} dy={12}>{line2}</tspan>}
+        </text>
+      </g>
+    );
+  };
+
+  // Shorter labels for Government Support (pie chart)
+  const getGovernmentSupportShortLabel = (support: string): string => {
+    const map: Record<string, string> = {
+      'Yes, government support (financial)': 'Gov. support (financial)',
+      'Yes, grant funding (financial)': 'Grant funding (financial)',
+      'Yes, non-financial assistance': 'Non-financial assistance',
+      'No': 'No',
+      'Other': 'Other'
+    };
+    return map[support] || truncateLabel(support, 20);
+  };
+
+  const getGovernmentSupportData = () => {
+    const acc = surveyData.reduce((a, survey) => {
+      survey.covid_government_support.forEach(support => {
+        a[support] = (a[support] || 0) + 1;
+      });
+      return a;
+    }, {} as Record<string, number>);
+    return Object.entries(acc).map(([support, count]) => ({
+      support,
+      supportShort: getGovernmentSupportShortLabel(support),
+      count,
+      percentage: surveyData.length > 0 ? ((count / surveyData.length) * 100).toFixed(1) : '0'
+    }));
+  };
+
+  const getMentoringProgramData = () => {
+    const acc = surveyData.reduce((a, survey) => {
+      if (survey.participate_mentoring_program) {
+        a[survey.participate_mentoring_program] = (a[survey.participate_mentoring_program] || 0) + 1;
+      }
+      return a;
+    }, {} as Record<string, number>);
+    return Object.entries(acc).map(([participation, count]) => ({
+      participation,
+      count,
+      percentage: surveyData.length > 0 ? ((count / surveyData.length) * 100).toFixed(1) : '0'
+    }));
+  };
+
   const getNetworkValueDistribution = () => {
     const distribution = surveyData.reduce((acc, survey) => {
       const value = survey.network_value_rating;
@@ -2468,10 +2576,21 @@ const Analytics2021: React.FC = () => {
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={getCOVIDImpactDistribution()} margin={{ top: 10, right: 20, bottom: 20, left: 10 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                      <XAxis dataKey="impact" tick={{ fontSize: 12 }} angle={-15} textAnchor="end" height={60} />
+                      <XAxis
+                        dataKey="impact"
+                        tick={<XAxisTickWrapped />}
+                        angle={-25}
+                        textAnchor="end"
+                        height={80}
+                        interval={0}
+                      />
                       <YAxis tick={{ fontSize: 12 }} />
-                      <Tooltip contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: 8 }} />
-                      <Bar dataKey="count" fill="#ff6b6b" radius={[6,6,0,0]} />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: 8 }}
+                        formatter={(value: number, name, props) => [value, props?.payload?.impact ?? name]}
+                        labelFormatter={(_, payload) => payload?.[0]?.payload?.impact ?? ''}
+                      />
+                      <Bar dataKey="count" fill="#ff6b6b" radius={[6,6,0,0]} name="Count" />
                     </BarChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -2486,30 +2605,34 @@ const Analytics2021: React.FC = () => {
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
-                        data={Object.entries(surveyData.reduce((acc, survey) => {
-                          survey.covid_government_support.forEach(support => {
-                            acc[support] = (acc[support] || 0) + 1;
-                          });
-                          return acc;
-                        }, {} as Record<string, number>)).map(([support, count]) => ({ support, count }))}
+                        data={getGovernmentSupportData()}
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ support, percent }) => `${support} ${(percent * 100).toFixed(0)}%`}
+                        label={renderPieLabelWrapped}
+                        nameKey="support"
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="count"
                       >
-                        {Object.entries(surveyData.reduce((acc, survey) => {
-                          survey.covid_government_support.forEach(support => {
-                            acc[support] = (acc[support] || 0) + 1;
-                          });
-                          return acc;
-                        }, {} as Record<string, number>)).map((entry, index) => (
+                        {getGovernmentSupportData().map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip />
+                      <Legend
+                        formatter={(value) => truncateLabel(String(value), 18)}
+                        wrapperStyle={{ fontSize: 12 }}
+                        iconSize={10}
+                        layout="horizontal"
+                        verticalAlign="bottom"
+                      />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: 8 }}
+                        formatter={(value: number, name, props) => [
+                          `${value} (${props?.payload?.percentage ?? '0'}%)`,
+                          props?.payload?.support ?? name
+                        ]}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -2526,10 +2649,17 @@ const Analytics2021: React.FC = () => {
                 <ResponsiveContainer width="100%" height={360}>
                   <BarChart data={getCovidAspectStackedData()} margin={{ top: 10, right: 20, bottom: 20, left: 10 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="aspect" tick={{ fontSize: 12 }} angle={-20} textAnchor="end" height={60} />
+                    <XAxis
+                      dataKey="aspect"
+                      tick={<XAxisTickWrapped />}
+                      angle={-25}
+                      textAnchor="end"
+                      height={80}
+                      interval={0}
+                    />
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: 8 }} />
-                    <Legend />
+                    <Legend formatter={(v) => truncateLabel(String(v), 18)} wrapperStyle={{ fontSize: 11 }} />
                     {COVID_IMPACT_OPTIONS.map((opt, idx) => (
                       <Bar key={opt} dataKey={opt} stackId="a" fill={COLORS[idx % COLORS.length]} radius={idx === COVID_IMPACT_OPTIONS.length - 1 ? [6,6,0,0] : [0,0,0,0]} />
                     ))}
@@ -2550,12 +2680,19 @@ const Analytics2021: React.FC = () => {
                       acc[purpose] = (acc[purpose] || 0) + 1;
                     });
                     return acc;
-                  }, {} as Record<string, number>)).map(([purpose, count]) => ({ purpose, count }))}>
+                  }, {} as Record<string, number>)).map(([purpose, count]) => ({ purpose, count }))} margin={{ bottom: 24 }}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="purpose" />
+                    <XAxis
+                      dataKey="purpose"
+                      tick={<XAxisTickWrapped />}
+                      angle={-25}
+                      textAnchor="end"
+                      height={80}
+                      interval={0}
+                    />
                     <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="#82ca9d" />
+                    <Tooltip contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: 8 }} />
+                    <Bar dataKey="count" fill="#82ca9d" name="Count" />
                   </BarChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -2675,11 +2812,18 @@ const Analytics2021: React.FC = () => {
                     <BarChart data={[
                       { session: 'Connection/Reconnection', yes: surveyData.filter(s => s.present_connection_session === 'Yes').length, no: surveyData.filter(s => s.present_connection_session === 'No').length },
                       { session: 'Demystifying Frontier Finance', yes: surveyData.filter(s => s.present_demystifying_session.length > 0).length, no: surveyData.filter(s => s.present_demystifying_session.length === 0).length }
-                    ]}>
+                    ]} margin={{ bottom: 24 }}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="session" />
+                      <XAxis
+                        dataKey="session"
+                        tick={<XAxisTickWrapped />}
+                        angle={-25}
+                        textAnchor="end"
+                        height={80}
+                        interval={0}
+                      />
                       <YAxis />
-                      <Tooltip />
+                      <Tooltip contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: 8 }} />
                       <Legend />
                       <Bar dataKey="yes" fill="#82ca9d" name="Yes" />
                       <Bar dataKey="no" fill="#ff6b6b" name="No" />
@@ -2697,30 +2841,34 @@ const Analytics2021: React.FC = () => {
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
-                        data={Object.entries(surveyData.reduce((acc, survey) => {
-                          if (survey.participate_mentoring_program) {
-                            acc[survey.participate_mentoring_program] = (acc[survey.participate_mentoring_program] || 0) + 1;
-                          }
-                          return acc;
-                        }, {} as Record<string, number>)).map(([participation, count]) => ({ participation, count }))}
+                        data={getMentoringProgramData()}
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ participation, percent }) => `${participation} ${(percent * 100).toFixed(0)}%`}
+                        label={renderPieLabelWrapped}
+                        nameKey="participation"
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="count"
                       >
-                        {Object.entries(surveyData.reduce((acc, survey) => {
-                          if (survey.participate_mentoring_program) {
-                            acc[survey.participate_mentoring_program] = (acc[survey.participate_mentoring_program] || 0) + 1;
-                          }
-                          return acc;
-                        }, {} as Record<string, number>)).map((entry, index) => (
+                        {getMentoringProgramData().map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip />
+                      <Legend
+                        formatter={(value) => truncateLabel(String(value), 18)}
+                        wrapperStyle={{ fontSize: 12 }}
+                        iconSize={10}
+                        layout="horizontal"
+                        verticalAlign="bottom"
+                      />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: 8 }}
+                        formatter={(value: number, name, props) => [
+                          `${value} (${props?.payload?.percentage ?? '0'}%)`,
+                          props?.payload?.participation ?? name
+                        ]}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -2739,9 +2887,13 @@ const Analytics2021: React.FC = () => {
                     rank: parseInt(rank) || 0
                   }))}>
                     <PolarGrid />
-                    <PolarAngleAxis dataKey="initiative" />
+                    <PolarAngleAxis dataKey="initiative" tick={<PolarAngleAxisTickWrapped />} />
                     <PolarRadiusAxis />
-                    <Radar name="Convening Initiatives" dataKey="rank" stroke="#ff6b6b" fill="#ff6b6b" fillOpacity={0.6} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: 8 }}
+                      formatter={(value, name, props) => [value, props?.payload?.initiative ?? name]}
+                    />
+                    <Radar name="Rank" dataKey="rank" stroke="#ff6b6b" fill="#ff6b6b" fillOpacity={0.6} />
                   </RadarChart>
                 </ResponsiveContainer>
               </CardContent>

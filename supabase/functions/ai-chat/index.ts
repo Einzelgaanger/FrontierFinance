@@ -44,8 +44,19 @@ Deno.serve(async (req) => {
 
     const userRole = roleError || !roleData?.role ? 'viewer' : roleData.role
 
-    // Get field visibility rules
-    const { data: fieldVisibility, error: visError } = await supabaseClient
+    // Create service role client to bypass RLS and get ALL data
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    if (!serviceRoleKey) {
+      throw new Error('SUPABASE_SERVICE_ROLE_KEY not configured')
+    }
+    
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      serviceRoleKey
+    )
+
+    // Get ALL field visibility rules (not filtered by role - AI will filter)
+    const { data: fieldVisibility, error: visError } = await supabaseAdmin
       .from('field_visibility')
       .select('*')
 
@@ -53,98 +64,47 @@ Deno.serve(async (req) => {
       throw new Error('Failed to get field visibility')
     }
 
-    // Filter fields based on user role
-    const visibleFields = fieldVisibility.filter(field => {
-      if (userRole === 'admin') return field.admin_visible
-      if (userRole === 'member') return field.member_visible
-      if (userRole === 'viewer') return field.viewer_visible
-      return false
-    })
+    // Build role-based field access rules for AI
+    const viewerFields = fieldVisibility.filter(f => f.viewer_visible).map(f => `${f.table_name}.${f.field_name}`)
+    const memberFields = fieldVisibility.filter(f => f.member_visible).map(f => `${f.table_name}.${f.field_name}`)
+    const adminFields = fieldVisibility.filter(f => f.admin_visible).map(f => `${f.table_name}.${f.field_name}`)
 
-    // Build comprehensive data context - SAME LOGIC FOR ALL ROLES (Admin, Member, Viewer)
-    // The only difference is field visibility, not the logic itself
+    // Build comprehensive data context - USE SERVICE ROLE TO GET ALL DATA
+    // AI will filter responses based on role, not the function
     const dataContext: any = {}
     const surveyYears = [2021, 2022, 2023, 2024]
     
-    // Define base fields for each year (these exist in each year's table) - same for all roles
-    const baseFieldsByYear: Record<number, string[]> = {
-      2021: ['id', 'email_address', 'firm_name', 'participant_name', 'submission_status', 'completed_at', 'created_at'],
-      2022: ['id', 'email', 'organisation', 'name', 'submission_status', 'completed_at', 'created_at'],
-      2023: ['id', 'email_address', 'organisation_name', 'fund_name', 'submission_status', 'completed_at', 'created_at'],
-      2024: ['id', 'email_address', 'organisation_name', 'fund_name', 'submission_status', 'completed_at', 'created_at']
-    }
-    
-    // Get survey field names for efficient queries - SAME LOGIC for all roles
-    const surveyFieldsByYear: Record<number, string[]> = {}
-    surveyYears.forEach(year => {
-      const yearFields = visibleFields.filter(f => f.table_name === `survey_responses_${year}`)
-      const baseFields = baseFieldsByYear[year] || ['id', 'submission_status']
-      const additionalFields = yearFields.map(f => f.field_name).filter(f => !baseFields.includes(f))
-      surveyFieldsByYear[year] = [...baseFields, ...additionalFields]
-    })
-
-    // Fetch survey data efficiently - use same comprehensive logic for all roles
+    // Fetch ALL survey data using service role (bypasses RLS)
     dataContext.surveys = {}
     dataContext.survey_counts = {}
     dataContext.survey_sample_data = {} // Sample data for context (limited to avoid token limits)
     let totalSurveys = 0
     
     for (const year of surveyYears) {
-      const fieldsToSelect = [...new Set(surveyFieldsByYear[year])].join(', ')
-      
-      // Get actual survey data with visible fields (same comprehensive approach for all roles)
-      const { data, error } = await supabaseClient
+      // Get accurate count first
+      const { count, error: countError } = await supabaseAdmin
         .from(`survey_responses_${year}`)
-        .select(fieldsToSelect)
+        .select('*', { count: 'exact', head: true })
+        .or('completed_at.not.is.null,submission_status.eq.completed')
+      
+      const surveyCount = count || 0
+      dataContext.survey_counts[year] = surveyCount
+      totalSurveys += surveyCount
+      
+      // Get ALL survey data (no field filtering - AI will filter)
+      const { data, error } = await supabaseAdmin
+        .from(`survey_responses_${year}`)
+        .select('*')
         .or('completed_at.not.is.null,submission_status.eq.completed')
         .order('completed_at', { ascending: false, nullsFirst: false })
-        .limit(100) // Limit to prevent token overflow, but get enough for context
-
-      // Try to get accurate count using count query (works better for all roles)
-      let surveyCount = data?.length || 0
-      try {
-        const { count, error: countError } = await supabaseClient
-          .from(`survey_responses_${year}`)
-          .select('*', { count: 'exact', head: true })
-          .or('completed_at.not.is.null,submission_status.eq.completed')
-        
-        // Use count if available and valid, otherwise fall back to data length
-        if (!countError && count !== null && count > 0) {
-          surveyCount = count
-        } else if (data && data.length > 0) {
-          // If count failed but we have data, use data length as minimum
-          surveyCount = data.length
-          console.log(`Count query failed for ${year}, using data length: ${surveyCount}`)
-        }
-      } catch (countErr) {
-        // If count query fails, use data length as fallback
-        console.log(`Count query error for ${year}, using data length: ${surveyCount}`)
-      }
+        .limit(100) // Limit to prevent token overflow
       
-      // Store data and counts using same comprehensive logic for all roles
-      if (!error) {
-        // Always set the count (even if 0)
-        dataContext.survey_counts[year] = surveyCount
-        totalSurveys += surveyCount
-        
-        // Store data if available (same approach for all roles)
-        if (data && data.length > 0) {
+      if (!error && data && data.length > 0) {
         dataContext.surveys[year] = data
-          // Store sample of first 10 for better context (reduces token usage while maintaining quality)
-          dataContext.survey_sample_data[year] = data.slice(0, 10)
-          console.log(`Fetched ${surveyCount} surveys for ${year} (${data.length} records with visible fields)`)
-        } else if (surveyCount > 0) {
-          // Count exists but no data returned (likely RLS restriction on fields)
-          console.log(`Count shows ${surveyCount} surveys for ${year}, but no data returned (likely field visibility restriction)`)
-          // Still record the count so AI knows data exists
-        } else {
-          console.log(`No surveys found for ${year}`)
-        }
-      } else {
-        // Error occurred - log but don't crash
+        dataContext.survey_sample_data[year] = data.slice(0, 10)
+        console.log(`Fetched ${surveyCount} surveys for ${year} (${data.length} records)`)
+      } else if (error) {
         console.error(`Error fetching ${year} surveys:`, error)
-        dataContext.survey_counts[year] = 0
-        // Don't add to total if there was an error
       }
     }
 
@@ -157,157 +117,216 @@ Deno.serve(async (req) => {
       note: 'All counts are for COMPLETED surveys only. Sample data available for years listed in years_with_sample_data.'
     }
 
-    // User's own credits (all roles) - same comprehensive approach
-    const { data: creditsData, error: creditsError } = await supabaseClient
+    // Fetch ALL data using service role (AI will filter based on role)
+    
+    // User's own credits
+    const { data: creditsData } = await supabaseAdmin
       .from('user_credits')
       .select('total_points, ai_usage_count, blog_posts_count, login_streak')
       .eq('user_id', user.id)
       .maybeSingle()
+    dataContext.user_credits = creditsData || null
 
-    if (!creditsError && creditsData) {
-      dataContext.user_credits = creditsData
-    } else if (creditsError) {
-      console.error('Error fetching user credits:', creditsError)
-    }
+    // Leaderboard (AI will decide if user can see it)
+    const { data: leaderboard } = await supabaseAdmin
+      .from('user_credits')
+      .select('user_id, total_points')
+      .order('total_points', { ascending: false })
+      .limit(10)
+    dataContext.leaderboard = leaderboard || []
 
-    // Leaderboard - SAME comprehensive query logic, but only fetch if role has access
-    if (userRole === 'member' || userRole === 'admin') {
-      const { data: leaderboard, error: leaderboardError } = await supabaseClient
-        .from('user_credits')
-        .select('user_id, total_points')
-        .order('total_points', { ascending: false })
-        .limit(10)
-
-      if (!leaderboardError && leaderboard) {
-        dataContext.leaderboard = leaderboard
-      } else if (leaderboardError) {
-        console.error('Error fetching leaderboard:', leaderboardError)
-      }
-    }
-
-    // Recent activity (user's own) - same comprehensive approach for all roles
-    const { data: activityData, error: activityError } = await supabaseClient
+    // User's own activity
+    const { data: activityData } = await supabaseAdmin
       .from('activity_log')
       .select('activity_type, points_earned, created_at, description')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(20)
+    dataContext.my_activity = activityData || []
 
-    if (!activityError && activityData) {
-      dataContext.my_activity = activityData
-    } else if (activityError) {
-      console.error('Error fetching activity:', activityError)
-    }
+    // Applications (AI will decide if user can see details)
+    const { data: applicationsData } = await supabaseAdmin
+      .from('applications')
+      .select('company_name, applicant_name, email, status, created_at, vehicle_name')
+      .order('created_at', { ascending: false })
+      .limit(50)
+    dataContext.applications = applicationsData || []
 
-    // Applications - SAME comprehensive query logic, but only fetch if role has access
-    if (userRole === 'admin') {
-      const { data: applicationsData, error: applicationsError } = await supabaseClient
-        .from('applications')
-        .select('company_name, applicant_name, email, status, created_at, vehicle_name')
-        .order('created_at', { ascending: false })
-        .limit(50)
-
-      if (!applicationsError && applicationsData) {
-        dataContext.applications = applicationsData
-      } else if (applicationsError) {
-        console.error('Error fetching applications:', applicationsError)
-      }
-    }
-
-    // Published blogs (all roles) - same comprehensive approach
-    const { data: blogsData, error: blogsError } = await supabaseClient
+    // Published blogs
+    const { data: blogsData } = await supabaseAdmin
       .from('blogs')
       .select('title, created_at, id')
       .eq('is_published', true)
       .order('created_at', { ascending: false })
       .limit(20)
+    dataContext.recent_blogs = blogsData || []
 
-    if (!blogsError && blogsData) {
-      dataContext.recent_blogs = blogsData
-    } else if (blogsError) {
-      console.error('Error fetching blogs:', blogsError)
-    }
+    // Network profiles
+    const { count: profilesCount } = await supabaseAdmin
+      .from('user_profiles')
+      .select('*', { count: 'exact', head: true })
+    dataContext.network_profiles_count = profilesCount || 0
+    
+    const { data: profilesData } = await supabaseAdmin
+      .from('user_profiles')
+      .select('id, company_name, email')
+      .limit(100)
+    dataContext.network_profiles = profilesData || []
 
-    // Network profiles - SAME comprehensive query logic for all roles
-    // Get count for all roles (same query approach)
-    const { count: profilesCount, error: profilesCountError } = await supabaseClient
+    // System statistics
+    const { count: totalUsersCount } = await supabaseAdmin
       .from('user_profiles')
       .select('*', { count: 'exact', head: true })
     
-    if (!profilesCountError && profilesCount !== null) {
-      dataContext.network_profiles_count = profilesCount
-    } else {
-      dataContext.network_profiles_count = 0
-      if (profilesCountError) {
-        console.error('Error fetching profiles count:', profilesCountError)
-      }
-    }
+    const { data: allRoles } = await supabaseAdmin
+      .from('user_roles')
+      .select('role')
     
-    // Get profile details - SAME query logic, but only fetch if role has access
-    if (userRole === 'member' || userRole === 'admin') {
-      const { data: profilesData, error: profilesError } = await supabaseClient
-        .from('user_profiles')
-        .select('id, company_name, email')
-        .limit(100)
-
-      if (!profilesError && profilesData) {
-        dataContext.network_profiles = profilesData
-      } else if (profilesError) {
-        console.error('Error fetching network profiles:', profilesError)
+    const { data: applicationsStats } = await supabaseAdmin
+      .from('applications')
+      .select('status')
+    
+    dataContext.system_statistics = {
+      total_users: totalUsersCount || 0,
+      users_by_role: {
+        admin: allRoles?.filter(r => r.role === 'admin').length || 0,
+        member: allRoles?.filter(r => r.role === 'member').length || 0,
+        viewer: allRoles?.filter(r => r.role === 'viewer').length || 0
+      },
+      total_applications: applicationsStats?.length || 0,
+      applications_by_status: {
+        pending: applicationsStats?.filter(a => a.status === 'pending').length || 0,
+        approved: applicationsStats?.filter(a => a.status === 'approved').length || 0,
+        rejected: applicationsStats?.filter(a => a.status === 'rejected').length || 0
       }
     }
 
-    // Build focused, efficient context for AI
-    const accessibleFields = visibleFields.map(f => 
-      `${f.table_name}.${f.field_name} (${f.field_category})`
-    ).join('\n')
+    // Build role-based access rules for AI
+    const roleAccessRules = {
+      viewer: {
+        can_see_fields: viewerFields,
+        can_see_leaderboard: false,
+        can_see_applications_details: false,
+        can_see_network_profiles_details: false,
+        can_see_emails: false,
+        can_see_contact_info: false,
+        can_see_financials: false,
+        can_see_performance_data: false
+      },
+      member: {
+        can_see_fields: memberFields,
+        can_see_leaderboard: true,
+        can_see_applications_details: false,
+        can_see_network_profiles_details: true,
+        can_see_emails: false,
+        can_see_contact_info: false,
+        can_see_financials: false,
+        can_see_performance_data: false
+      },
+      admin: {
+        can_see_fields: adminFields,
+        can_see_leaderboard: true,
+        can_see_applications_details: true,
+        can_see_network_profiles_details: true,
+        can_see_emails: true,
+        can_see_contact_info: true,
+        can_see_financials: true,
+        can_see_performance_data: true
+      }
+    }
 
-    // Build comprehensive data summary - SAME structure for ALL roles
+    const currentRoleRules = roleAccessRules[userRole as keyof typeof roleAccessRules] || roleAccessRules.viewer
+
+    // Build comprehensive data summary
     const surveySummaryText = Object.entries(dataContext.survey_counts)
       .map(([year, count]) => `- ${year}: ${count} completed surveys`)
       .join('\n')
     
-    // Build complete data summary using SAME comprehensive approach for all roles
     const availableDataSummary = {
       surveys: {
         total: totalSurveys,
         by_year: dataContext.survey_counts,
         sample_data_available: Object.keys(dataContext.survey_sample_data || {}).length > 0,
-        note: 'Sample data provided below shows structure. Full dataset has counts above. Use survey_counts for exact totals.'
+        note: 'ALL survey data is available in dataContext. Filter responses based on role access rules.'
       },
-      user_engagement: creditsData || null,
+      user_engagement: dataContext.user_credits || null,
       network: {
         profiles_count: dataContext.network_profiles_count || 0,
-        profiles_available: userRole === 'member' || userRole === 'admin',
-        profiles_data: dataContext.network_profiles ? `Available (${dataContext.network_profiles.length} records)` : 'Count only (details not accessible)'
+        profiles_data: dataContext.network_profiles || []
       },
-      applications: dataContext.applications ? {
-        count: dataContext.applications.length,
-        available: userRole === 'admin',
-        data: 'Available'
-      } : { 
-        count: 0, 
-        available: false,
-        note: 'Not accessible for this role'
+      applications: {
+        count: dataContext.applications?.length || 0,
+        data: dataContext.applications || []
       },
       blogs: {
         count: dataContext.recent_blogs?.length || 0,
-        recent: dataContext.recent_blogs || [],
-        note: 'Use recent_blogs array for actual blog data'
+        recent: dataContext.recent_blogs || []
       },
       activity: {
         my_activity_count: dataContext.my_activity?.length || 0,
         my_activity_data: dataContext.my_activity || [],
-        leaderboard_available: userRole === 'member' || userRole === 'admin',
-        leaderboard_data: dataContext.leaderboard ? `Available (${dataContext.leaderboard.length} records)` : 'Not accessible'
-      }
+        leaderboard_data: dataContext.leaderboard || []
+      },
+      system_statistics: dataContext.system_statistics || {}
     }
 
-    const context = `You are PortIQ, an AI assistant for the CFF Network platform analyzing fund manager data and user engagement. You provide intelligent, accurate, and helpful responses to all users regardless of their access level.
+    const context = `You are PortIQ, an AI assistant for the CFF Network platform analyzing fund manager data and user engagement.
 
-# USER CONTEXT
-Role: **${userRole}** | Email: ${user.email}
-${creditsData ? `Points: ${creditsData.total_points} | AI Uses: ${creditsData.ai_usage_count} | Blogs: ${creditsData.blog_posts_count} | Login Streak: ${creditsData.login_streak} days` : ''}
+# CRITICAL: ROLE-BASED DATA ACCESS CONTROL
+**IMPORTANT**: You have access to ALL data in the database. However, you MUST filter your responses based on the user's role.
+
+**Current User Role: ${userRole}**
+**User Email: ${user.email}**
+${dataContext.user_credits ? `Points: ${dataContext.user_credits.total_points} | AI Uses: ${dataContext.user_credits.ai_usage_count} | Blogs: ${dataContext.user_credits.blog_posts_count} | Login Streak: ${dataContext.user_credits.login_streak} days` : ''}
+
+# ROLE-BASED ACCESS RULES (YOU MUST ENFORCE THESE)
+${JSON.stringify(currentRoleRules, null, 2)}
+
+**Fields this role can see:** ${currentRoleRules.can_see_fields.length} fields
+- Viewer-visible fields: ${viewerFields.length}
+- Member-visible fields: ${memberFields.length}  
+- Admin-visible fields: ${adminFields.length}
+
+**What ${userRole}s CAN see:**
+${userRole === 'viewer' ? `
+- Aggregate statistics (total users, surveys, counts)
+- Basic survey fields: firm_name, organisation_name, fund_name, geographic_focus, target_sectors, fund_stage
+- Blog titles and dates
+- Their own activity and credits
+- Network profile counts (not details)
+` : ''}
+${userRole === 'member' ? `
+- Everything viewers can see PLUS:
+- Detailed survey fields: investment strategy, team info, portfolio metrics, investment thesis
+- Network profile details (company names, not emails)
+- Leaderboard data
+- More comprehensive survey analysis
+` : ''}
+${userRole === 'admin' ? `
+- Everything members can see PLUS:
+- Personal contact information (emails, names)
+- Financial performance data
+- Application details
+- All survey fields without restriction
+` : ''}
+
+**What ${userRole}s CANNOT see:**
+${userRole === 'viewer' ? `
+- Email addresses or personal contact info
+- Detailed financial data
+- Investment performance metrics
+- Leaderboard rankings
+- Network profile details (only counts)
+- Application details
+` : ''}
+${userRole === 'member' ? `
+- Email addresses or personal contact info
+- Detailed financial performance data
+- Application details
+` : ''}
+${userRole === 'admin' ? `
+- No restrictions - full access to all data
+` : ''}
 
 # DATABASE SUMMARY (Accurate Counts - Use SAME comprehensive approach for ALL roles)
 **Total Completed Surveys: ${totalSurveys}**
@@ -317,6 +336,18 @@ ${surveySummaryText}
 - My Activity: ${dataContext.my_activity?.length || 0}${dataContext.my_activity && dataContext.my_activity.length > 0 ? ' (detailed records available)' : ''}
 ${dataContext.applications ? `- Applications: ${dataContext.applications.length} (detailed records available)` : '- Applications: Not accessible for this role'}
 ${dataContext.leaderboard ? `- Leaderboard: Top ${dataContext.leaderboard.length} users (available)` : '- Leaderboard: Not accessible for this role'}
+
+# SYSTEM STATISTICS (Available to ALL roles - aggregate counts only)
+**Total System Users: ${dataContext.system_statistics?.total_users || 0}**
+- Admins: ${dataContext.system_statistics?.users_by_role?.admin || 0}
+- Members: ${dataContext.system_statistics?.users_by_role?.member || 0}
+- Viewers: ${dataContext.system_statistics?.users_by_role?.viewer || 0}
+**Total Membership Applications: ${dataContext.system_statistics?.total_applications || 0}**
+- Pending: ${dataContext.system_statistics?.applications_by_status?.pending || 0}
+- Approved: ${dataContext.system_statistics?.applications_by_status?.approved || 0}
+- Rejected: ${dataContext.system_statistics?.applications_by_status?.rejected || 0}
+
+**Note:** These are aggregate statistics (counts only). Detailed user information is restricted based on role.
 
 # AVAILABLE DATA STRUCTURE
 ${JSON.stringify(availableDataSummary, null, 2)}
@@ -339,8 +370,12 @@ Use sample_data above for structure reference. Full dataset has the counts shown
     'Counts available but detailed data may be limited by access level. Use counts for accurate totals.' : 
     'No survey data available.'}`}
 
-# ACCESSIBLE FIELDS (${userRole} role):
-${accessibleFields || 'No specific field restrictions documented.'}
+# FIELD ACCESS RULES
+**Viewer-visible fields (${viewerFields.length}):** Basic organizational and geographic information
+**Member-visible fields (${memberFields.length}):** Includes investment details, team info, portfolio metrics
+**Admin-visible fields (${adminFields.length}):** All fields including contact info and financials
+
+**Current role (${userRole}) can access:** ${currentRoleRules.can_see_fields.length} fields
 
 # COLUMN NAME GUIDE (Critical for accurate cross-year queries)
 **2021 Survey:** email_address, firm_name, participant_name, geographic_focus, target_sectors
@@ -350,59 +385,42 @@ ${accessibleFields || 'No specific field restrictions documented.'}
 
 **IMPORTANT:** Column names differ across years. Always check the correct field name for the year you're querying.
 
-# CORE INSTRUCTIONS (Apply to ALL roles equally - Admin, Member, Viewer use SAME logic)
-1. **Access database data comprehensively**: Use the SAME approach for ALL queries:
-   - Always check dataContext for available data
-   - Use exact counts from survey_counts, network_profiles_count, etc.
-   - Reference actual data from surveys, blogs, activity, etc.
-   - NEVER guess or estimate - always use actual data from dataContext
+# CORE INSTRUCTIONS - ROLE-BASED RESPONSE FILTERING
 
-2. **Verify ALL data before answering**: 
-   - For surveys: Check dataContext.survey_counts[year] for exact counts
-   - For surveys: Check dataContext.surveys[year] or survey_sample_data[year] for actual records
-   - For network: Check dataContext.network_profiles_count and network_profiles
-   - For blogs: Check dataContext.recent_blogs array
-   - For activity: Check dataContext.my_activity array
-   - For applications: Check dataContext.applications (if admin)
-   - If count > 0 but no detailed data, explain that data exists but details may be limited by access level
+**CRITICAL**: You have access to ALL data, but you MUST filter your responses based on the user's role.
 
-3. **Answer comprehensively using ALL available data**: 
-   - Reference real organization names, fund names, numbers, dates from surveys
-   - Use blog titles and dates from recent_blogs
-   - Reference activity details from my_activity
-   - Use network profile information when available
-   - Provide specific, detailed answers using ALL data in dataContext
+1. **Use ALL data for context, filter for responses**:
+   - You have access to ALL survey data, profiles, applications, etc. in dataContext
+   - Use this full data to understand the complete picture
+   - BUT: Only share information that matches the role's access rules
+   - Example: If a viewer asks "how many surveys?", use the accurate count from ALL data, but don't share email addresses even if they're in the data
 
-4. **Format professionally**: Use markdown formatting:
-   - **Bold** for emphasis
-   - ### Headings for sections
-   - Bullet points for lists
-   - \`code\` for field/column names
-   - Tables when comparing data
+2. **Field-level filtering**:
+   - Check if a field is in currentRoleRules.can_see_fields before sharing it
+   - If field is not accessible, say: "I can see that data exists, but [field name] is not available at your access level. [Explain what they CAN see instead]"
+   - Never share emails, contact info, or financials unless admin
 
-5. **Handle ALL query types with same comprehensive approach**:
-   - Survey questions: Use survey_counts and survey data
-   - Network questions: Use network_profiles_count and network_profiles
-   - Blog questions: Use recent_blogs array
-   - Activity questions: Use my_activity array
-   - Application questions: Use applications array (if available)
-   - Cross-year analysis: Note column name differences, highlight trends
+3. **Aggregate statistics (ALL ROLES)**:
+   - ALL roles can see counts and aggregates: total users, survey counts, application counts
+   - These are safe because they contain no personal details
+   - Always use accurate counts from dataContext.system_statistics
 
-6. **Access level handling**:
-   - If user asks about data they can't see, explain what they CAN see from available data
-   - Use ALL available data in dataContext to provide insights
-   - Reference what additional information would be available with higher access
-   - Never say "no data" when dataContext shows data exists
+4. **When user asks about restricted data**:
+   - Acknowledge the question
+   - Explain what they CAN see based on their role
+   - Provide helpful alternative information
+   - Suggest what additional access they'd get with membership (if viewer) or admin (if member)
 
-7. **Be proactive and comprehensive**: End responses with 2-3 relevant follow-up questions based on:
-   - ALL available data in dataContext (surveys, blogs, network, activity)
-   - Their role and what data they can access
-   - Interesting patterns across ALL available data types
+5. **Data accuracy**:
+   - Use EXACT counts from dataContext (don't guess)
+   - Reference actual data from surveys, profiles, etc.
+   - If data exists but field is restricted, say "Data exists but [specific field] is not accessible at your level"
 
-# ROLE-SPECIFIC GUIDANCE
-- **Admin**: Full access - provide comprehensive analysis, financial details, all applications
-- **Member**: Good access - provide detailed survey analysis, network insights, member activity
-- **Viewer**: Limited access - provide insights from available fields, explain access limitations, encourage membership
+6. **Response format**:
+   - Be helpful and informative
+   - Use markdown formatting
+   - Provide specific numbers and examples when allowed
+   - End with relevant follow-up questions
 
 # CRITICAL RULES (Apply to ALL roles - Admin, Member, Viewer use IDENTICAL logic)
 1. **ALWAYS use EXACT data from dataContext** - Access ALL available data the same way:
@@ -410,16 +428,21 @@ ${accessibleFields || 'No specific field restrictions documented.'}
    - Network: Use network_profiles_count (${dataContext.network_profiles_count || 0})
    - Blogs: Use recent_blogs array (${dataContext.recent_blogs?.length || 0} blogs)
    - Activity: Use my_activity array (${dataContext.my_activity?.length || 0} activities)
-   - Applications: Use applications array if available (${dataContext.applications?.length || 0})
-   - NEVER guess, estimate, or say "0" when dataContext shows data exists
+   - Applications: Use applications array if admin (${dataContext.applications?.length || 0}), OR system_statistics.applications_by_status for all roles
+   - **System Statistics (ALL ROLES)**: Use system_statistics for:
+     * Total users: ${dataContext.system_statistics?.total_users || 0}
+     * Role breakdown: Admins=${dataContext.system_statistics?.users_by_role?.admin || 0}, Members=${dataContext.system_statistics?.users_by_role?.member || 0}, Viewers=${dataContext.system_statistics?.users_by_role?.viewer || 0}
+     * Application counts: Total=${dataContext.system_statistics?.total_applications || 0}, Pending=${dataContext.system_statistics?.applications_by_status?.pending || 0}
+   - NEVER guess, estimate, or say "I don't have access" when system_statistics or counts are available
 
 2. **Access database comprehensively for ALL query types**:
    - Survey questions: Check survey_counts AND survey data
    - Network questions: Check network_profiles_count AND network_profiles
    - Blog questions: Check recent_blogs array
    - Activity questions: Check my_activity array
-   - Application questions: Check applications array
+   - Application questions: Check applications array (if admin) OR system_statistics.applications_by_status (all roles)
    - User engagement: Check user_credits data
+   - System statistics: Check system_statistics for total users, role breakdowns, application counts (available to ALL roles)
    - Use the SAME comprehensive approach for ALL data types
 
 3. **ALWAYS verify ALL data before answering**:
@@ -472,7 +495,15 @@ Before answering ANY question:
 
 **Question: "What about the other years?"**
 ✅ CORRECT: Reference the EXACT counts from survey_counts for each year
-❌ WRONG: Saying "0 surveys" when survey_counts shows data exists`
+❌ WRONG: Saying "0 surveys" when survey_counts shows data exists
+
+**Question: "How many total users are in the system?"**
+✅ CORRECT: "There are ${dataContext.system_statistics?.total_users || 0} total users: ${dataContext.system_statistics?.users_by_role?.admin || 0} admins, ${dataContext.system_statistics?.users_by_role?.member || 0} members, and ${dataContext.system_statistics?.users_by_role?.viewer || 0} viewers."
+❌ WRONG: Saying "I don't have access to that information" when system_statistics is available
+
+**Question: "How many membership applications are pending?"**
+✅ CORRECT: "There are ${dataContext.system_statistics?.applications_by_status?.pending || 0} pending membership applications out of ${dataContext.system_statistics?.total_applications || 0} total applications."
+❌ WRONG: Saying "I can't see applications" when system_statistics.applications_by_status is available to all roles`
 
     // Call Lovable AI
     const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {

@@ -3,11 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SidebarLayout from "@/components/layout/SidebarLayout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
-import { Image, Video, FileText, Heart, ArrowLeft, Loader2, Share2, Bookmark, MessageCircle } from "lucide-react";
+import { Heart, ArrowLeft, Loader2, MessageCircle } from "lucide-react";
 import { BlogCommentSection } from "@/components/blogs/BlogCommentSection";
 import { getBadge } from "@/utils/badgeSystem";
 import { useAuth } from "@/hooks/useAuth";
@@ -18,8 +16,9 @@ interface Blog {
   user_id: string;
   title: string;
   content: string | null;
-  media_type: 'text' | 'image' | 'video' | null;
+  media_type: "text" | "image" | "video" | null;
   media_url: string | null;
+  thumbnail_url?: string | null;
   caption: string | null;
   created_at: string;
   like_count: number;
@@ -40,7 +39,6 @@ export default function BlogDetail() {
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
 
   const fetchBlog = useCallback(async () => {
     try {
@@ -52,21 +50,15 @@ export default function BlogDetail() {
 
       if (blogError) throw blogError;
 
-      // Fetch author profile and credits
       const [profileRes, creditRes] = await Promise.all([
         supabase
           .from("user_profiles")
           .select("id, full_name, company_name, profile_picture_url")
           .eq("id", blogData.user_id)
           .single(),
-        supabase
-          .from("user_credits")
-          .select("total_points")
-          .eq("user_id", blogData.user_id)
-          .single()
+        supabase.from("user_credits").select("total_points").eq("user_id", blogData.user_id).single(),
       ]);
 
-      // Fetch user like status
       let isLiked = false;
       if (user) {
         const { data: likeData } = await supabase
@@ -78,134 +70,88 @@ export default function BlogDetail() {
         isLiked = !!likeData;
       }
 
-      // Fetch like count
       const { data: likeCounts } = await supabase
         .from("blog_likes" as any)
         .select("*")
         .eq("blog_id", blogData.id);
-      const likeCount = likeCounts?.length || 0;
-
-      // Fetch comment count
       const { data: commentCounts } = await supabase
         .from("blog_comments")
         .select("*")
         .eq("blog_id", blogData.id);
-      const commentCount = commentCounts?.length || 0;
 
       const fullBlog: Blog = {
         ...blogData,
-        media_type: blogData.media_type as 'text' | 'image' | 'video' | null,
-        like_count: likeCount,
-        comment_count: commentCount,
+        media_type: blogData.media_type as "text" | "image" | "video" | null,
+        like_count: likeCounts?.length || 0,
+        comment_count: commentCounts?.length || 0,
         is_liked: isLiked,
-        author: profileRes.data ? { 
-          ...profileRes.data, 
-          total_points: creditRes.data?.total_points || 0 
-        } : undefined
+        author: profileRes.data
+          ? { ...profileRes.data, total_points: creditRes.data?.total_points || 0 }
+          : undefined,
       };
 
       setBlog(fullBlog);
     } catch (error: any) {
-      console.error('Error fetching blog:', error);
-      toast.error("Failed to load blog post");
-      navigate('/blogs');
+      console.error("Error fetching blog:", error);
+      toast.error("Failed to load post");
+      navigate("/blogs");
     } finally {
       setLoading(false);
     }
   }, [id, user, navigate]);
 
   useEffect(() => {
+    if (id) fetchBlog();
+    const subs: any[] = [];
     if (id) {
-      fetchBlog();
+      subs.push(
+        supabase
+          .channel(`blog-likes-${id}`)
+          .on("postgres_changes", {
+            event: "*",
+            schema: "public",
+            table: "blog_likes",
+            filter: `blog_id=eq.${id}`,
+          }, fetchBlog)
+          .subscribe()
+      );
+      subs.push(
+        supabase
+          .channel(`blog-comments-${id}`)
+          .on("postgres_changes", {
+            event: "*",
+            schema: "public",
+            table: "blog_comments",
+            filter: `blog_id=eq.${id}`,
+          }, fetchBlog)
+          .subscribe()
+      );
     }
-
-    // Set up real-time subscriptions for live updates
-    const subscriptions: any[] = [];
-
-    // Subscribe to blog_likes table changes for this specific blog
-    const likesSubscription = supabase
-      .channel(`blog-likes-${id}`)
-      .on('postgres_changes',
-        { 
-          event: '*', 
-          schema: 'public', 
-          table: 'blog_likes',
-          filter: `blog_id=eq.${id}`
-        },
-        (payload) => {
-          console.log('Blog like change detected:', payload);
-          // Refresh blog to get updated like count
-          fetchBlog();
-        }
-      )
-      .subscribe();
-
-    // Subscribe to blog_comments table changes for this specific blog
-    const commentsSubscription = supabase
-      .channel(`blog-comments-${id}`)
-      .on('postgres_changes',
-        { 
-          event: '*', 
-          schema: 'public', 
-          table: 'blog_comments',
-          filter: `blog_id=eq.${id}`
-        },
-        (payload) => {
-          console.log('Blog comment change detected:', payload);
-          // Refresh blog to get updated comment count
-          fetchBlog();
-        }
-      )
-      .subscribe();
-
-    subscriptions.push(likesSubscription, commentsSubscription);
-
-    // Cleanup subscriptions on unmount
-    return () => {
-      subscriptions.forEach(sub => {
-        supabase.removeChannel(sub);
-      });
-    };
+    return () => subs.forEach((s) => supabase.removeChannel(s));
   }, [id, fetchBlog]);
 
   const toggleLike = async (blogId: string, isLiked: boolean) => {
     if (!user) {
-      toast.error("Please sign in to like posts");
+      toast.error("Sign in to like posts");
       return;
     }
-
     try {
       if (isLiked) {
-        await supabase
-          .from("blog_likes" as any)
-          .delete()
-          .eq("blog_id", blogId)
-          .eq("user_id", user.id);
+        await supabase.from("blog_likes" as any).delete().eq("blog_id", blogId).eq("user_id", user.id);
       } else {
-        await supabase
-          .from("blog_likes" as any)
-          .insert({ blog_id: blogId, user_id: user.id });
+        await supabase.from("blog_likes" as any).insert({ blog_id: blogId, user_id: user.id });
       }
       await fetchBlog();
     } catch (error) {
-      console.error("Error toggling like:", error);
       toast.error("Failed to update like");
-    }
-  };
-
-  const getMediaIcon = (type: string | null) => {
-    switch (type) {
-      case "image": return <Image className="h-4 w-4" />;
-      case "video": return <Video className="h-4 w-4" />;
-      default: return <FileText className="h-4 w-4" />;
     }
   };
 
   if (loading) {
     return (
       <SidebarLayout>
-        <div className="flex items-center justify-center min-h-screen bg-slate-50">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <div className="flex items-center justify-center min-h-[60vh] bg-slate-50">
+          <Loader2 className="h-10 w-10 animate-spin text-slate-400" />
         </div>
       </SidebarLayout>
     );
@@ -214,11 +160,11 @@ export default function BlogDetail() {
   if (!blog) {
     return (
       <SidebarLayout>
-        <div className="flex items-center justify-center min-h-screen bg-slate-50">
+        <div className="flex items-center justify-center min-h-[60vh] bg-slate-50">
           <div className="text-center space-y-4">
-            <h1 className="text-xl font-semibold text-slate-800">We couldn&apos;t find that post</h1>
-            <Button size="sm" onClick={() => navigate('/blogs')}>
-              Back to Blogs
+            <h1 className="text-xl font-semibold text-slate-700">Post not found</h1>
+            <Button variant="outline" onClick={() => navigate("/blogs")}>
+              Back to Updates
             </Button>
           </div>
         </div>
@@ -226,176 +172,117 @@ export default function BlogDetail() {
     );
   }
 
+  const hasMedia = (blog.media_type === "image" || blog.media_type === "video") && blog.media_url;
+
   return (
     <SidebarLayout>
-      <div className="min-h-screen bg-slate-50">
-        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
-          {/* Header with back button */}
-          <div className="mb-6 flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate('/blogs')}
-              className="h-9 w-9 rounded-full p-0 hover:bg-slate-100 border border-slate-200 transition-all"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-slate-100 text-slate-700 border border-slate-200 text-xs font-medium px-2.5 py-1">
-                {getMediaIcon(blog.media_type)}
-                <span className="ml-1.5 capitalize">{blog.media_type || "text"}</span>
-              </Badge>
+      <div className="min-h-screen bg-white">
+        <div className="w-full max-w-7xl px-4 sm:px-6 py-4 md:py-8">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/blogs")}
+            className="mb-6 -ml-2 text-slate-500 hover:text-slate-900 hover:bg-transparent"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2 inline" />
+            Back to updates
+          </Button>
+
+          {hasMedia && (
+            <div className="mb-8 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-900">
+              <div className="aspect-video max-h-[80vh] w-full overflow-hidden">
+                {blog.media_type === "image" ? (
+                  <img src={blog.media_url} alt={blog.title} className="w-full h-full object-contain" />
+                ) : (
+                  <video
+                    src={blog.media_url}
+                    poster={blog.thumbnail_url || undefined}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-contain"
+                  />
+                )}
+              </div>
+              {blog.caption && (
+                <p className="mt-3 px-4 sm:px-6 pb-3 text-sm text-slate-400 italic break-words w-full">
+                  {blog.caption}
+                </p>
+              )}
+            </div>
+          )}
+
+          <div className="flex items-center gap-3 mb-4 min-w-0">
+            <Avatar className="h-10 w-10 shrink-0">
+              <AvatarImage src={blog.author?.profile_picture_url || ""} />
+              <AvatarFallback className="bg-slate-200 text-slate-600 text-sm font-medium">
+                {blog.author?.full_name?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <p className="font-medium text-slate-900 break-words">
+                {blog.author?.full_name || "Author"}
+                {blog.author?.total_points !== undefined && (
+                  <span className="ml-1.5">{getBadge(blog.author.total_points).icon}</span>
+                )}
+              </p>
+              <p className="text-sm text-slate-500 break-words">
+                {blog.author?.company_name && <span>{blog.author.company_name} · </span>}
+                {format(new Date(blog.created_at), "MMM d, yyyy")}
+              </p>
             </div>
           </div>
 
-          {/* Main Post - Two Column Layout */}
-          <article className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-8">
-            {/* Left Column - Content */}
-            <div className="flex flex-col space-y-5">
-              {/* Author Header */}
-              <div className="flex items-start gap-3 p-4 rounded-lg bg-white border border-slate-200 shadow-sm">
-                <Avatar className="h-14 w-14 border-2 border-slate-200 shadow-sm flex-shrink-0">
-                  <AvatarImage src={blog.author?.profile_picture_url || ""} />
-                  <AvatarFallback className="bg-slate-600 text-white font-semibold text-base">
-                    {blog.author?.full_name?.charAt(0) || "U"}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-base font-bold text-slate-900">
-                      {blog.author?.full_name || "Unknown"}
-                    </p>
-                    {blog.author?.total_points !== undefined && (
-                      <span className="text-lg">
-                        {getBadge(blog.author.total_points).icon}
-                      </span>
-                    )}
-                    <span className="text-sm text-slate-400">·</span>
-                    <span className="text-sm text-slate-500 font-medium">
-                      {format(new Date(blog.created_at), "MMM d, yyyy")}
-                    </span>
-                  </div>
-                  <p className="text-sm text-slate-600 mt-1 font-medium">
-                    {blog.author?.company_name || 'Community member'}
-                  </p>
-                </div>
-              </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight leading-tight mb-6 break-words">
+            {blog.title}
+          </h1>
 
-              {/* Title */}
-              <div className="p-5 rounded-lg bg-white border border-slate-200 shadow-sm">
-                <h1 className="text-3xl font-bold text-slate-900 leading-tight">
-                  {blog.title}
-                </h1>
-              </div>
-
-              {/* Content with Read More/Less */}
-              <div className="p-5 rounded-lg bg-white border border-slate-200 shadow-sm space-y-4">
-                {blog.content && (
-                  <div>
-                    <p className={`text-base text-slate-800 leading-relaxed whitespace-pre-wrap ${!isExpanded ? 'line-clamp-6' : ''}`}>
-                      {blog.content}
-                    </p>
-                    {blog.content.length > 300 && (
-                      <button
-                        onClick={() => setIsExpanded(!isExpanded)}
-                        className="mt-3 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors px-3 py-1.5 rounded-md border border-slate-200 hover:border-blue-300 bg-slate-50 hover:bg-blue-50"
-                      >
-                        {isExpanded ? 'Read less' : 'Read more'}
-                      </button>
-                    )}
-                  </div>
-                )}
-
-                {blog.caption && (
-                  <div className="pt-3 border-t border-slate-200">
-                    <p className="text-base text-slate-600 italic leading-relaxed">
-                      "{blog.caption}"
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Actions */}
-              <div className="p-4 rounded-lg bg-white border border-slate-200 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => toggleLike(blog.id, blog.is_liked || false)}
-                    className="flex items-center gap-2 text-slate-600 hover:text-rose-600 transition-colors group/action"
-                  >
-                    <div className={`p-2 rounded-lg transition-colors ${blog.is_liked ? 'bg-rose-50 border border-rose-200' : 'border border-slate-200 group-hover/action:bg-slate-50 group-hover/action:border-slate-300'}`}>
-                      <Heart className={`h-5 w-5 transition-all ${blog.is_liked ? 'fill-rose-500 text-rose-500' : 'text-slate-500'}`} />
-                    </div>
-                    <span className="text-sm font-medium">{blog.like_count || 0}</span>
-                  </button>
-                  <button 
-                    onClick={() => setIsCommentsOpen(!isCommentsOpen)}
-                    className={`flex items-center gap-2 transition-colors group/action ${isCommentsOpen ? 'text-blue-600' : 'text-slate-600 hover:text-blue-600'}`}
-                  >
-                    <div className={`p-2 rounded-lg transition-colors border ${isCommentsOpen ? 'bg-blue-50 border-blue-200' : 'border-slate-200 group-hover/action:bg-slate-50 group-hover/action:border-slate-300'}`}>
-                      <MessageCircle className="h-5 w-5" />
-                    </div>
-                    <span className="text-sm font-medium">{blog.comment_count || 0}</span>
-                  </button>
-                  <button 
-                    className="flex items-center gap-2 text-slate-600 hover:text-slate-700 transition-colors group/action"
-                    aria-label="Share post"
-                  >
-                    <div className="p-2 rounded-lg transition-colors border border-slate-200 group-hover/action:bg-slate-50 group-hover/action:border-slate-300">
-                      <Share2 className="h-5 w-5" />
-                    </div>
-                  </button>
-                  <button 
-                    className="flex items-center gap-2 text-slate-600 hover:text-slate-700 transition-colors group/action"
-                    aria-label="Save post"
-                  >
-                    <div className="p-2 rounded-lg transition-colors border border-slate-200 group-hover/action:bg-slate-50 group-hover/action:border-slate-300">
-                      <Bookmark className="h-5 w-5" />
-                    </div>
-                  </button>
-                </div>
-              </div>
-
-              {/* Comments Section - Toggleable */}
-              {isCommentsOpen && (
-                <div className="p-5 rounded-lg bg-white border border-slate-200 shadow-sm animate-in slide-in-from-top-2 duration-200">
-                  <h3 className="text-lg font-bold text-slate-900 mb-4 pb-3 border-b border-slate-200">
-                    Comments ({blog.comment_count || 0})
-                  </h3>
-                  <BlogCommentSection blogId={blog.id} />
-                </div>
+          {blog.content && (
+            <div className="mb-10 min-w-0 w-full max-w-full">
+              <p
+                className={`text-slate-700 leading-relaxed whitespace-pre-wrap break-words max-w-full ${
+                  !isExpanded && blog.content.length > 400 ? "line-clamp-[12]" : ""
+                }`}
+              >
+                {blog.content}
+              </p>
+              {blog.content.length > 400 && (
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="mt-2 text-sky-600 hover:text-sky-700 font-medium text-sm"
+                >
+                  {isExpanded ? "Show less" : "Read more"}
+                </button>
               )}
             </div>
+          )}
 
-            {/* Right Column - Media */}
-            {(blog.media_type === "image" || blog.media_type === "video") && blog.media_url && (
-              <div className="sticky top-6 h-fit">
-                <div className="w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-md p-2">
-                  {blog.media_type === "image" ? (
-                    <img
-                      src={blog.media_url}
-                      alt={blog.title}
-                      className="w-full h-auto object-cover rounded-md"
-                    />
-                  ) : (
-                    <video
-                      src={blog.media_url}
-                      controls
-                      className="w-full h-auto rounded-md"
-                    />
-                  )}
-                </div>
-                {blog.caption && (
-                  <p className="mt-3 text-sm text-slate-600 italic text-center px-2">
-                    {blog.caption}
-                  </p>
-                )}
-              </div>
+          <div className="flex flex-wrap items-center gap-6 py-4 mb-10 border-t border-b border-slate-100 min-w-0">
+            <button
+              onClick={() => toggleLike(blog.id, blog.is_liked || false)}
+              className="flex items-center gap-2 text-slate-600 hover:text-rose-600 transition-colors shrink-0"
+            >
+              <Heart
+                className={`h-5 w-5 ${blog.is_liked ? "fill-rose-500 text-rose-500" : ""}`}
+              />
+              <span>{blog.like_count ?? 0} likes</span>
+            </button>
+            <span className="flex items-center gap-2 text-slate-500 shrink-0">
+              <MessageCircle className="h-5 w-5" />
+              {blog.comment_count ?? 0} comments
+            </span>
+          </div>
+
+          <h2 className="text-lg font-semibold text-slate-900 mb-1">
+            Comments
+            {blog.comment_count != null && (
+              <span className="font-normal text-slate-500"> ({blog.comment_count})</span>
             )}
-          </article>
+          </h2>
+          <p className="text-sm text-slate-500 mb-6">Share your thoughts</p>
+          <BlogCommentSection blogId={blog.id} />
         </div>
       </div>
     </SidebarLayout>
   );
 }
-
-

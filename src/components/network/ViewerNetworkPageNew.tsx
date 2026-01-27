@@ -177,9 +177,9 @@ export default function ViewerNetworkPageNew() {
           return (
             <Card 
               key={profile.id} 
-              className={`transition-shadow relative overflow-hidden min-h-[400px] backdrop-blur-sm ${
+              className={`transition-shadow relative overflow-hidden min-h-[400px] bg-slate-900 border-2 border-slate-600/80 shadow-xl ${
                 isClickable 
-                  ? 'hover:shadow-xl cursor-pointer hover:border-primary hover:scale-[1.02]' 
+                  ? 'hover:shadow-2xl cursor-pointer hover:border-primary hover:scale-[1.02]' 
                   : 'opacity-75'
               }`}
               onClick={() => handleCardClick(profile)}
@@ -192,8 +192,10 @@ export default function ViewerNetworkPageNew() {
                       <Building2 className="w-24 h-24" />
                     </AvatarFallback>
                   </Avatar>
-                  {/* Dark overlay for readability */}
-                  <div className="absolute inset-0 bg-black/60 group-hover:bg-black/50 transition-all duration-300"></div>
+                  {/* Strong dark overlay - nearly opaque for solid card feel */}
+                  <div className="absolute inset-0 bg-black/85 group-hover:bg-black/80 transition-all duration-300"></div>
+                  {/* Opaque content strip at bottom so text sits on solid background */}
+                  <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-slate-900 via-slate-900/98 to-transparent pointer-events-none" aria-hidden></div>
                 </div>
 
                                  {/* Content Overlay - Directly on Image */}
@@ -264,13 +266,13 @@ export default function ViewerNetworkPageNew() {
                       </div>
                     )}
 
-                   {/* Badges */}
+                   {/* Badges - solid opaque styling */}
                    <div className="flex flex-wrap gap-2 pt-2">
-                     <Badge className="bg-black/40 backdrop-blur-sm text-white border-white/20">
+                     <Badge className="bg-slate-700 text-white border-slate-500">
                        {profile.user_role}
                      </Badge>
                      {profile.has_surveys && (
-                       <Badge className="bg-green-500/30 backdrop-blur-sm text-green-100 border-green-400/30">
+                       <Badge className="bg-emerald-700 text-white border-emerald-600 font-medium">
                          <FileText className="w-3 h-3 mr-1" />
                          Has Surveys
                        </Badge>

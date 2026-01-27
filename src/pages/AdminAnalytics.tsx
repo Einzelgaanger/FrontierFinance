@@ -66,7 +66,7 @@ const SURVEY_SECTIONS = {
     { id: 7, title: 'Convening Objectives', fields: ['participate_mentoring_program'] },
   ],
   2022: [
-    { id: 1, title: 'Organization Details', fields: ['name', 'organisation', 'email', 'role_title'] },
+    { id: 1, title: 'Organization Details', fields: ['role_title'] },
     { id: 2, title: 'Fund Information', fields: ['legal_domicile', 'fund_operations', 'current_funds_raised', 'target_fund_size'] },
     { id: 3, title: 'Investment Strategy', fields: ['financial_instruments', 'sector_activities', 'business_stages'] },
     { id: 4, title: 'Team & Operations', fields: ['current_ftes', 'principals_count', 'team_based'] },
@@ -169,11 +169,14 @@ export default function AdminAnalytics() {
 
     // Use actual count for percentage calculation, not surveyData.length
     return Object.entries(distribution)
-      .map(([name, count]) => ({
-        name: name.length > 30 ? name.substring(0, 27) + '...' : name,
-        value: count,
-        percentage: totalCount > 0 ? ((count / totalCount) * 100).toFixed(1) : '0'
-      }))
+      .map(([raw, count]) => {
+        const name = formatValueLabel(fieldName, raw);
+        return {
+          name: name.length > 30 ? name.substring(0, 27) + '…' : name,
+          value: count,
+          percentage: totalCount > 0 ? ((count / totalCount) * 100).toFixed(1) : '0'
+        };
+      })
       .sort((a, b) => b.value - a.value)
       .slice(0, 10);
   }, [surveyData]);
@@ -214,6 +217,35 @@ export default function AdminAnalytics() {
       .split('_')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
+  };
+
+  /** Format raw survey values for chart labels (e.g. legal_domicile: kenya → Kenya, south_africa → South Africa). */
+  const formatValueLabel = (fieldName: string, raw: string): string => {
+    const s = String(raw).trim();
+    if (!s) return s;
+    if (fieldName === 'legal_domicile') {
+      const map: Record<string, string> = {
+        location_pending: 'Location Pending',
+        mauritius: 'Mauritius',
+        netherlands: 'Netherlands',
+        dutch_antilles: 'Dutch Antilles',
+        luxembourg: 'Luxembourg',
+        ireland: 'Ireland',
+        delaware: 'Delaware',
+        cayman_island: 'Cayman Island',
+        kenya: 'Kenya',
+        senegal: 'Senegal',
+        nigeria: 'Nigeria',
+        south_africa: 'South Africa',
+        ghana: 'Ghana',
+        other: 'Other'
+      };
+      const key = s.toLowerCase().replace(/\s+/g, '_');
+      if (map[key]) return map[key];
+    }
+    return s
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, c => c.toUpperCase());
   };
 
   const renderSectionAnalytics = () => {
@@ -301,7 +333,8 @@ export default function AdminAnalytics() {
             const stats = calculateNumericStats(field);
             const shouldHideNumericSummary = (
               (field === 'fund_stage' && selectedYear === 2021 && selectedSection === 1) ||
-              (field === 'current_fund_size' && selectedYear === 2021 && selectedSection === 2)
+              (field === 'current_fund_size' && selectedYear === 2021 && selectedSection === 2) ||
+              (selectedYear === 2022 && selectedSection === 2 && ['fund_operations', 'current_funds_raised', 'target_fund_size'].includes(field))
             );
             const hasNumericData = stats !== null && stats.count > 0 && !shouldHideNumericSummary;
 

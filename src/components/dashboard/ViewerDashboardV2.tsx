@@ -94,8 +94,7 @@ const ViewerDashboardV2 = () => {
     if (files.length > 5) {
       toast({
         title: "Too many files",
-        description: "Maximum 5 files allowed",
-        variant: "destructive"
+        description: "Maximum 5 files allowed"
       });
       return;
     }
@@ -107,8 +106,7 @@ const ViewerDashboardV2 = () => {
         if (file.size > 10 * 1024 * 1024) {
           toast({
             title: "File too large",
-            description: `${file.name} exceeds 10MB limit`,
-            variant: "destructive"
+            description: `${file.name} exceeds 10MB limit`
           });
           continue;
         }
@@ -128,8 +126,7 @@ const ViewerDashboardV2 = () => {
       console.error('Error uploading files:', error);
       toast({
         title: "Upload Failed",
-        description: "Failed to upload files. Please try again.",
-        variant: "destructive"
+        description: "Failed to upload files. Please try again."
       });
     } finally {
       setUploading(false);
@@ -163,8 +160,7 @@ const ViewerDashboardV2 = () => {
       console.error('Error adding link:', error);
       toast({
         title: "Link Addition Failed",
-        description: "Failed to add link. Please try again.",
-        variant: "destructive"
+        description: "Failed to add link. Please try again."
       });
     } finally {
       setUploading(false);
@@ -200,8 +196,7 @@ const ViewerDashboardV2 = () => {
     if (!validateSection(currentSection)) {
       toast({
         title: "Incomplete Section",
-        description: "Please fill in all required fields before proceeding.",
-        variant: "destructive"
+        description: "Please fill in all required fields before proceeding."
       });
       return;
     }
@@ -272,8 +267,7 @@ const ViewerDashboardV2 = () => {
       console.error('Error submitting application:', error);
       toast({
         title: "Submission Failed",
-        description: "Failed to submit application. Please try again.",
-        variant: "destructive"
+        description: "Failed to submit application. Please try again."
       });
     } finally {
       setLoading(false);

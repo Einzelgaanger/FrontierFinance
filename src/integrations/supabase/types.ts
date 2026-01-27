@@ -199,6 +199,7 @@ export type Database = {
           is_published: boolean | null
           media_type: string | null
           media_url: string | null
+          thumbnail_url: string | null
           title: string
           updated_at: string | null
           user_id: string
@@ -211,6 +212,7 @@ export type Database = {
           is_published?: boolean | null
           media_type?: string | null
           media_url?: string | null
+          thumbnail_url?: string | null
           title: string
           updated_at?: string | null
           user_id: string
@@ -223,6 +225,7 @@ export type Database = {
           is_published?: boolean | null
           media_type?: string | null
           media_url?: string | null
+          thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
           user_id?: string
@@ -435,10 +438,13 @@ export type Database = {
           id: string
           is_featured: boolean | null
           is_published: boolean | null
+          media_type: 'link' | 'image' | 'video' | null
           resource_type: string
           resource_url: string | null
           thumbnail_url: string | null
           title: string
+          topic: string | null
+          topic_other: string | null
           updated_at: string | null
         }
         Insert: {
@@ -452,10 +458,13 @@ export type Database = {
           id?: string
           is_featured?: boolean | null
           is_published?: boolean | null
+          media_type?: 'link' | 'image' | 'video' | null
           resource_type?: string
           resource_url?: string | null
           thumbnail_url?: string | null
           title: string
+          topic?: string | null
+          topic_other?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -469,11 +478,62 @@ export type Database = {
           id?: string
           is_featured?: boolean | null
           is_published?: boolean | null
+          media_type?: 'link' | 'image' | 'video' | null
           resource_type?: string
           resource_url?: string | null
           thumbnail_url?: string | null
           title?: string
+          topic?: string | null
+          topic_other?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      learning_resource_comments: {
+        Row: {
+          id: string
+          resource_id: string
+          user_id: string
+          content: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          resource_id: string
+          user_id: string
+          content: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          resource_id?: string
+          user_id?: string
+          content?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      learning_resource_likes: {
+        Row: {
+          id: string
+          resource_id: string
+          user_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          resource_id: string
+          user_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          resource_id?: string
+          user_id?: string
+          created_at?: string
         }
         Relationships: []
       }
