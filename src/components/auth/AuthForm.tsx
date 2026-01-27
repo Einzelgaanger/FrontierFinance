@@ -141,7 +141,7 @@ export default function AuthForm() {
     setIsLoading(true);
 
     try {
-      const { error } = await signUp(
+      const { error, warning, data } = await signUp(
         signUpForm.email, 
         signUpForm.password,
         {
@@ -153,11 +153,27 @@ export default function AuthForm() {
       
       if (error) {
         const errorMessage = getErrorMessage(error);
-        if (errorMessage.includes('already registered')) {
+        if (errorMessage.includes('already registered') || errorMessage.includes('already exists')) {
           toast({
             title: "Account Already Exists",
             description: "An account with this email already exists. Please sign in instead.",
             variant: "destructive",
+          });
+        } else if (errorMessage.includes('500') || errorMessage.toLowerCase().includes('email')) {
+          // Handle email service errors gracefully - account may still be created
+          toast({
+            title: "Account Created (Email Issue)",
+            description: "Your account was created, but there was an issue sending the confirmation email. Try signing in - your account may already be active. If not, contact support.",
+            variant: "default",
+          });
+          // Clear form on partial success
+          setSignUpForm({
+            email: '',
+            password: '',
+            confirmPassword: '',
+            firstName: '',
+            lastName: '',
+            companyName: ''
           });
         } else {
           toast({
@@ -167,10 +183,19 @@ export default function AuthForm() {
           });
         }
       } else {
-        toast({
-          title: "Account Created Successfully!",
-          description: "Please check your email to verify your account before signing in.",
-        });
+        // Success - show appropriate message
+        if (warning) {
+          toast({
+            title: "Account Created Successfully!",
+            description: warning,
+            variant: "default",
+          });
+        } else {
+          toast({
+            title: "Account Created Successfully!",
+            description: "Please check your email to verify your account before signing in.",
+          });
+        }
         setSignUpForm({
           email: '',
           password: '',

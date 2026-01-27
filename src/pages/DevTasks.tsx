@@ -19,9 +19,11 @@ import {
   FileText,
   User,
   Calendar,
-  ExternalLink
+  ExternalLink,
+  ShieldOff
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import { format } from 'date-fns';
 
 interface Feedback {
@@ -48,13 +50,26 @@ export default function DevTasks() {
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
   const [adminNotes, setAdminNotes] = useState('');
   const [updating, setUpdating] = useState(false);
+  const [tableMissing, setTableMissing] = useState(false);
   const { toast } = useToast();
+  const { userRole, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    fetchFeedback();
-  }, []);
+    // Only fetch feedback if user is an admin
+    if (!authLoading && userRole === 'admin') {
+      fetchFeedback();
+    } else if (!authLoading && userRole !== 'admin') {
+      setLoading(false);
+    }
+  }, [userRole, authLoading]);
 
   const fetchFeedback = async () => {
+    // Double-check admin status before fetching
+    if (userRole !== 'admin') {
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -62,15 +77,46 @@ export default function DevTasks() {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        // Handle "table doesn't exist" error (42P01)
+        if (error.code === '42P01' || error.message?.includes('relation') && error.message?.includes('does not exist')) {
+          console.warn('Feedback table does not exist. Migration needs to be applied:', error);
+          setTableMissing(true);
+          toast({
+            title: 'Database Migration Required',
+            description: 'The feedback table does not exist. Please run the migration: supabase/migrations/20260127000000_create_feedback_table.sql',
+            variant: 'destructive',
+          });
+          setFeedback([]);
+          return;
+        }
+        // Handle 404 errors gracefully (RLS blocking access)
+        if (error.code === 'PGRST116' || error.message?.includes('404')) {
+          console.warn('Feedback table not accessible (likely RLS restriction):', error);
+          setFeedback([]);
+          return;
+        }
+        throw error;
+      }
       setFeedback(data || []);
     } catch (error: any) {
       console.error('Error fetching feedback:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to load feedback',
-        variant: 'destructive',
-      });
+      // Handle "table doesn't exist" error
+      if (error.code === '42P01' || (error.message?.includes('relation') && error.message?.includes('does not exist'))) {
+        setTableMissing(true);
+        toast({
+          title: 'Database Migration Required',
+          description: 'The feedback table does not exist. Please run the migration: supabase/migrations/20260127000000_create_feedback_table.sql',
+          variant: 'destructive',
+        });
+      } else if (error.code !== 'PGRST116' && !error.message?.includes('404')) {
+        toast({
+          title: 'Error',
+          description: 'Failed to load feedback',
+          variant: 'destructive',
+        });
+      }
+      setFeedback([]);
     } finally {
       setLoading(false);
     }
@@ -180,10 +226,30 @@ export default function DevTasks() {
     closed: feedback.filter(f => f.status === 'closed').length,
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Show access denied message for non-admin users
+  if (userRole !== 'admin') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <Card className="max-w-md w-full">
+          <CardContent className="p-8 text-center">
+            <ShieldOff className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Access Restricted</h2>
+            <p className="text-gray-600 mb-4">
+              This page is only accessible to administrators. You need admin privileges to view and manage feedback.
+            </p>
+            <p className="text-sm text-gray-500">
+              Your current role: <span className="font-semibold">{userRole || 'unknown'}</span>
+            </p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -199,6 +265,48 @@ export default function DevTasks() {
           </h1>
           <p className="text-gray-600">Manage user feedback and track development tasks</p>
         </div>
+
+        {/* Migration Required Message */}
+        {tableMissing && (
+          <Card className="mb-6 border-red-200 bg-red-50">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-red-900 mb-2">Database Migration Required</h3>
+                  <p className="text-red-800 mb-4">
+                    The feedback table does not exist in your database. You need to apply the migration to create it.
+                  </p>
+                  <div className="bg-white p-4 rounded-md border border-red-200 mb-4">
+                    <p className="text-sm font-mono text-gray-800 mb-2">Migration file:</p>
+                    <code className="text-sm text-gray-700">supabase/migrations/20260127000000_create_feedback_table.sql</code>
+                  </div>
+                  <div className="space-y-2 text-sm text-red-800">
+                    <p className="font-semibold">To apply the migration:</p>
+                    <ol className="list-decimal list-inside space-y-1 ml-2">
+                      <li>Open your Supabase Dashboard</li>
+                      <li>Go to SQL Editor</li>
+                      <li>Copy and paste the contents of the migration file</li>
+                      <li>Click "Run" to execute the migration</li>
+                      <li>Refresh this page after the migration completes</li>
+                    </ol>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      setTableMissing(false);
+                      fetchFeedback();
+                    }}
+                    className="mt-4"
+                    variant="outline"
+                  >
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Retry After Migration
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">

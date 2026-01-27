@@ -211,15 +211,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, metadata?: Record<string, unknown>) => {
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
-          data: metadata,
+      // Use public signup edge function that bypasses email confirmation
+      const { data, error } = await supabase.functions.invoke('public-signup', {
+        body: {
+          email,
+          password,
+          first_name: metadata?.first_name as string || '',
+          last_name: metadata?.last_name as string || '',
+          company_name: metadata?.company_name as string || ''
         }
       });
-      return { error };
+
+      if (error) {
+        console.error('Public signup error:', error);
+        return { error };
+      }
+
+      if (data?.error) {
+        return { error: { message: data.error } };
+      }
+
+      if (data?.success) {
+        // Sign in the user automatically after successful signup
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (signInError) {
+          console.warn('Auto sign-in failed, but account was created:', signInError);
+          // Account is created, user can sign in manually
+          return { 
+            error: null, 
+            data: { user: { id: data.user.id, email: data.user.email } },
+            warning: 'Account created successfully! Please sign in with your email and password.'
+          };
+        }
+
+        return { error: null, data: { user: { id: data.user.id, email: data.user.email } } };
+      }
+
+      return { error: { message: 'Unknown error occurred' } };
     } catch (error) {
       console.error('Sign up error:', error);
       return { error };
