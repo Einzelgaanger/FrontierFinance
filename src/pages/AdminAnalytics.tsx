@@ -219,6 +219,47 @@ export default function AdminAnalytics() {
       .join(' ');
   };
 
+  /** Split label into max 2 lines, 2 words per line, for readable pie labels. */
+  const wrapLabelTwoWordsPerLine = (text: string): [string, string?] => {
+    const words = String(text || '')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+    if (words.length <= 2) return [words.join(' ') || ''];
+    const line1 = words.slice(0, 2).join(' ');
+    const rest = words.slice(2, 4);
+    const line2 = rest.length
+      ? rest.join(' ') + (words.length > 4 ? '…' : '')
+      : undefined;
+    return line2 != null ? [line1, line2] : [line1];
+  };
+
+  /** Custom pie label: 2 words per row (max 2 lines) + percentage, outside pie, medium weight. */
+  const renderPieLabelWrapped = (props: {
+    cx: number;
+    cy: number;
+    midAngle: number;
+    outerRadius: number;
+    percent: number;
+    name?: string;
+    percentage?: string;
+  }) => {
+    const { cx, cy, midAngle, outerRadius, percent, name = '', percentage } = props;
+    const RADIAN = Math.PI / 180;
+    const r = outerRadius + 42;
+    const x = cx + r * Math.cos(-midAngle * RADIAN);
+    const y = cy + r * Math.sin(-midAngle * RADIAN);
+    const [line1, line2] = wrapLabelTwoWordsPerLine(name);
+    const pct = percentage ?? `${(percent * 100).toFixed(1)}`;
+    return (
+      <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontWeight="500">
+        <tspan x={x} dy={line2 ? -7 : -3}>{line1 || '\u00A0'}</tspan>
+        {line2 && <tspan x={x} dy={14}>{line2}</tspan>}
+        <tspan x={x} dy={14}>{pct}%</tspan>
+      </text>
+    );
+  };
+
   /** Format raw survey values for chart labels (e.g. legal_domicile: kenya → Kenya, south_africa → South Africa). */
   const formatValueLabel = (fieldName: string, raw: string): string => {
     const s = String(raw).trim();
@@ -423,14 +464,14 @@ export default function AdminAnalytics() {
                             <Bar dataKey="value" fill={CHART_COLORS[idx % CHART_COLORS.length]} radius={[4, 4, 0, 0]} />
                           </BarChart>
                         ) : (
-                          <PieChart>
+                          <PieChart margin={{ top: 12, right: 12, bottom: 32, left: 12 }}>
                             <Pie
                               data={distribution}
                               cx="50%"
                               cy="50%"
-                              labelLine={true}
-                              label={({ name, percentage }) => `${name}: ${percentage}%`}
-                              outerRadius={90}
+                              labelLine={false}
+                              label={renderPieLabelWrapped}
+                              outerRadius={68}
                               dataKey="value"
                             >
                               {distribution.map((entry, index) => (
