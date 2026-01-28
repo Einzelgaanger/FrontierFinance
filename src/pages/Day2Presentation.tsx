@@ -1,5 +1,43 @@
 import { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, Check, Star, ArrowRight, Circle, Square, Target, BarChart3, Shield, Users, Globe, Zap, Calendar, TrendingUp, Clock, CheckCircle2, Rocket, Activity, PieChart, FileText, Settings, Brain, ArrowUp, ArrowDown, Building2, DollarSign, AlertTriangle, Eye, Gauge, Database, Network, Lock, BookOpen, Code, Palette } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  Star,
+  ArrowRight,
+  Circle,
+  Square,
+  Target,
+  BarChart3,
+  Shield,
+  Users,
+  Globe,
+  Zap,
+  Calendar,
+  TrendingUp,
+  Clock,
+  CheckCircle2,
+  Rocket,
+  Activity,
+  PieChart,
+  FileText,
+  Settings,
+  Brain,
+  ArrowUp,
+  ArrowDown,
+  Building2,
+  DollarSign,
+  AlertTriangle,
+  Eye,
+  Gauge,
+  Database,
+  Network,
+  Lock,
+  BookOpen,
+  Code,
+  Palette,
+  MessageSquare,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +53,7 @@ const BRAND = {
 
 const Day2Presentation = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = 11;
+  const totalSlides = 12;
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev < totalSlides - 1 ? prev + 1 : prev));
@@ -89,21 +127,25 @@ const Day2Presentation = () => {
         <div className="w-24 h-1 bg-[#f8b521] mb-8 mx-auto"></div>
         <h1 className="text-7xl md:text-8xl font-bold mb-6 text-center leading-tight">
           <span className="block">Data & Technology</span>
-          <span className="block text-[#f8b521]">Development Plans</span>
+          <span className="block text-[#f8b521]">Strategic Plan</span>
         </h1>
         <div className="bg-[#f8b521] text-[#28098d] px-6 py-2 rounded-full font-bold text-xl mb-8">
-          Strategic Roadmap 2026
+          DATA and TECHNOLOGY PLAN: ALFRED
         </div>
         <div className="flex items-center gap-6 mt-4 text-xl">
           <div className="flex items-center gap-2">
             <Calendar className="w-5 h-5 text-[#f8b521]" />
-            <span>Day 2 | 16:00 – 17:00</span>
+            <span>Session 3 | Day 2</span>
           </div>
           <div className="w-1 h-6 bg-[#f8b521]"></div>
           <div className="flex items-center gap-2">
             <Users className="w-5 h-5 text-[#f8b521]" />
-            <span>Lead: Alfred</span>
+            <span>Allie & Alfred</span>
           </div>
+        </div>
+        <div className="mt-8 text-center">
+          <p className="text-xl text-gray-300 mb-2">Platform Roadmap & Strategic Discussion</p>
+          <p className="text-lg text-gray-400">Fund Manager Portal • Launch+ • Learning Hub • Website</p>
         </div>
         <div className="mt-12 text-center space-y-2">
           <p className="text-lg">30th January 2026 | Fair Acres Nairobi</p>
@@ -113,8 +155,73 @@ const Day2Presentation = () => {
       <div className="absolute bottom-6 right-8 text-white/40 text-sm font-mono">01</div>
     </div>,
 
-    // Slide 2: Strategic Focus Areas with Chart
-    <div key="slide-2" className="min-h-full bg-white py-12 px-8">
+    // Slide 2: Session Agenda - Key Platforms
+    <div key="slide-2" className="min-h-full bg-gradient-to-br from-white via-[#fef9e7] to-white py-12 px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-10 text-center">
+          <div className="inline-flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 bg-[#28098d] rounded-xl flex items-center justify-center">
+              <FileText className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-5xl font-bold text-[#28098d]">Session Agenda</h2>
+          </div>
+          <div className="w-32 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
+        </div>
+        
+        {/* Key Platforms Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {[
+            { num: '01', icon: Network, title: 'Fund Manager Portal', desc: 'Core platform features & capabilities', color: 'from-blue-500 to-blue-600' },
+            { num: '02', icon: Users, title: 'Member Onboarding', desc: 'User journey & activation', color: 'from-purple-500 to-purple-600' },
+            { num: '03', icon: Rocket, title: 'Launch+ Platform', desc: 'New platform development', color: 'from-green-500 to-green-600' },
+            { num: '04', icon: BookOpen, title: 'Learning Hub', desc: 'Knowledge management & resources', color: 'from-orange-500 to-orange-600' },
+            { num: '05', icon: Database, title: 'Survey Database', desc: 'Data collection & analytics', color: 'from-pink-500 to-pink-600' },
+            { num: '06', icon: Globe, title: 'Refreshed Website', desc: 'Public presence & engagement', color: 'from-indigo-500 to-indigo-600' },
+          ].map((item, idx) => (
+            <Card key={idx} className="border-2 border-[#e8e5f5] hover:border-[#28098d] transition-all hover:shadow-xl">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}>
+                    <item.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Badge className="bg-[#28098d] text-white text-xs font-bold px-2 py-0.5">{item.num}</Badge>
+                      <h3 className="text-xl font-bold text-[#28098d]">{item.title}</h3>
+                    </div>
+                    <p className="text-gray-600 text-sm">{item.desc}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Discussion Topics */}
+        <Card className="bg-gradient-to-r from-[#28098d] to-[#1e0758] border-0 shadow-xl">
+          <CardContent className="p-8">
+            <div className="flex items-start gap-4">
+              <MessageSquare className="w-8 h-8 text-[#f8b521] flex-shrink-0 mt-1" />
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-white mb-4">Strategic Discussion Topics</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <p className="text-white text-base">• Data infrastructure & technology stack</p>
+                  <p className="text-white text-base">• Technology prioritization & roadmap</p>
+                  <p className="text-white text-base">• Data integrity & compliance</p>
+                  <p className="text-white text-base">• Cost-effectiveness & risk management</p>
+                  <p className="text-white text-base">• KPIs & success metrics</p>
+                  <p className="text-white text-base">• Feedback mechanisms & agility</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">02</div>
+      </div>
+    </div>,
+
+    // Slide 3: Strategic Focus Areas with Chart
+    <div key="slide-3" className="min-h-full bg-white py-12 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
@@ -174,11 +281,11 @@ const Day2Presentation = () => {
             </Card>
           ))}
         </div>
-        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">02</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">03</div>
       </div>
     </div>,
 
-    // Slide 3: Q1 Roadmap with Timeline
+    // Slide 4: Q1 Roadmap with Timeline
     <div key="slide-3" className="min-h-full bg-gradient-to-br from-[#fef9e7] to-white py-12 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 text-center">
@@ -255,11 +362,11 @@ const Day2Presentation = () => {
             </div>
           </CardContent>
         </Card>
-        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">03</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">04</div>
       </div>
     </div>,
 
-    // Slide 4: Q2 Roadmap
+    // Slide 5: Q2 Roadmap
     <div key="slide-4" className="min-h-full bg-white py-12 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 text-center">
@@ -320,11 +427,11 @@ const Day2Presentation = () => {
             </div>
           </CardContent>
         </Card>
-        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">04</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">05</div>
       </div>
     </div>,
 
-    // Slide 5: Q3 & Q4 Overview
+    // Slide 6: Q3 & Q4 Overview
     <div key="slide-5" className="min-h-full bg-gradient-to-br from-white to-[#e8e5f5] py-12 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 text-center">
@@ -426,11 +533,11 @@ const Day2Presentation = () => {
             </div>
           </CardContent>
         </Card>
-        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">05</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">06</div>
       </div>
     </div>,
 
-    // Slide 6: Platform Improvement Backlog
+    // Slide 7: Platform Improvement Backlog
     <div key="slide-6" className="min-h-full bg-white py-12 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 text-center">
@@ -468,11 +575,11 @@ const Day2Presentation = () => {
             </Card>
           ))}
         </div>
-        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">06</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">07</div>
       </div>
     </div>,
 
-    // Slide 7: Success Metrics with Charts
+    // Slide 8: Success Metrics with Charts
     <div key="slide-7" className="min-h-full bg-gradient-to-br from-[#e8e5f5] to-white py-12 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 text-center">
@@ -538,11 +645,11 @@ const Day2Presentation = () => {
             </Card>
           ))}
         </div>
-        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">07</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">08</div>
       </div>
     </div>,
 
-    // Slide 8: Resource Requirements with Cost Breakdown
+    // Slide 9: Resource Requirements with Cost Breakdown
     <div key="slide-8" className="min-h-full bg-white py-12 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 text-center">
@@ -658,11 +765,11 @@ const Day2Presentation = () => {
             </div>
           </CardContent>
         </Card>
-        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">08</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">09</div>
       </div>
     </div>,
 
-    // Slide 9: Engagement Strategy
+    // Slide 10: Engagement Strategy
     <div key="slide-9" className="min-h-full bg-gradient-to-br from-white to-[#fef9e7] py-12 px-8">
       <div className="max-w-6xl mx-auto">
         <div className="mb-10 text-center">
@@ -704,55 +811,133 @@ const Day2Presentation = () => {
             </Card>
           ))}
         </div>
-        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">09</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">10</div>
       </div>
     </div>,
 
-    // Slide 10: Next Steps
+    // Slide 11: Strategic Discussion Questions
     <div key="slide-10" className="min-h-full bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white py-12 px-8 relative">
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#f8b521] rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#f8b521] rounded-full blur-[120px]"></div>
+        <div className="absolute top-20 right-20 w-64 h-64 bg-[#f8b521] rounded-full blur-[120px]"></div>
       </div>
-      <div className="max-w-5xl mx-auto relative z-10">
+      <div className="max-w-6xl mx-auto relative z-10">
         <div className="mb-10 text-center">
-          <div className="w-20 h-1.5 bg-[#f8b521] mx-auto mb-6 rounded-full"></div>
-          <h2 className="text-6xl font-bold mb-4">Immediate Next Steps</h2>
-          <div className="w-52 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
+          <div className="w-16 h-1.5 bg-[#f8b521] mx-auto mb-6 rounded-full"></div>
+          <h2 className="text-6xl font-bold mb-4">Strategic Discussion Questions</h2>
+          <div className="w-48 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
         </div>
         
-        <div className="space-y-6">
-          {[
-            { num: '1', step: 'Finalize website upgrade specifications with team input', icon: Globe },
-            { num: '2', step: 'Complete Admin Dashboard V2 refinements', icon: Settings },
-            { num: '3', step: 'Deploy analytics infrastructure for member tracking', icon: BarChart3 },
-            { num: '4', step: 'Enable MFA for all admin accounts', icon: Shield },
-            { num: '5', step: 'Begin user onboarding campaign for active members', icon: Users },
-            { num: '6', step: 'Set up monthly technical support logging system', icon: FileText },
-          ].map((s) => (
-            <Card key={s.num} className="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 transition-all">
-              <CardContent className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="relative flex-shrink-0">
-                    <div className="w-16 h-16 bg-[#f8b521] rounded-full flex items-center justify-center shadow-lg">
-                      <s.icon className="w-8 h-8 text-[#28098d]" />
-                    </div>
-                    <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-[#28098d] rounded-full flex items-center justify-center border-2 border-white">
-                      <span className="text-white font-bold text-sm">{s.num}</span>
-                    </div>
-                  </div>
-                  <p className="text-xl flex-1 pt-3">{s.step}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {/* Infrastructure & Stack */}
+          <Card className="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 transition-all">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Database className="w-8 h-8 text-[#f8b521]" />
+                <h3 className="text-2xl font-bold">Infrastructure & Stack</h3>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>What is the current stage/level of our data infrastructure and technology stack?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>Which technologies are currently prioritized for development and why?</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          {/* Roadmap & Delivery */}
+          <Card className="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 transition-all">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Target className="w-8 h-8 text-[#f8b521]" />
+                <h3 className="text-2xl font-bold">Roadmap & Delivery</h3>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>What is the roadmap for delivery of various tech/tools and enablements?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>What mechanisms ensure agility and adaptability in our technology roadmap?</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          {/* Data Integrity & Compliance */}
+          <Card className="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 transition-all">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Shield className="w-8 h-8 text-[#f8b521]" />
+                <h3 className="text-2xl font-bold">Data Integrity & Compliance</h3>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>How do we ensure data integrity, accuracy, and compliance with best practices?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>How do we balance technology needs with cost-effectiveness and risk management?</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          {/* KPIs & Success Metrics */}
+          <Card className="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 transition-all">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Gauge className="w-8 h-8 text-[#f8b521]" />
+                <h3 className="text-2xl font-bold">KPIs & Success</h3>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>What KPIs will track progress and success for data and technology initiatives?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>How do we incorporate feedback and lessons learned into the development process?</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
-        <div className="absolute bottom-6 right-8 text-white/40 text-sm font-mono">10</div>
+
+        {/* Key Platforms Focus */}
+        <Card className="bg-[#f8b521] border-0 shadow-xl">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Network className="w-8 h-8 text-[#28098d]" />
+              <h3 className="text-2xl font-bold text-[#28098d]">Platform Focus Areas</h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[
+                'Fund Manager Portal',
+                'Member Onboarding',
+                'Launch+ Platform',
+                'Learning Hub',
+                'Survey Database',
+                'Refreshed Website',
+              ].map((platform, idx) => (
+                <div key={idx} className="bg-white/20 rounded-lg p-3 text-center">
+                  <p className="text-[#28098d] font-semibold">{platform}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+        <div className="absolute bottom-6 right-8 text-white/40 text-sm font-mono">11</div>
       </div>
     </div>,
 
-    // Slide 11: Thank You
-    <div key="slide-11" className="min-h-full flex flex-col bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white relative overflow-hidden py-12">
+    // Slide 12: Thank You
+    <div key="slide-12" className="min-h-full flex flex-col bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white relative overflow-hidden py-12">
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#f8b521] rounded-full blur-[150px] opacity-20"></div>
       </div>
@@ -770,7 +955,7 @@ const Day2Presentation = () => {
         </div>
       </div>
       <div className="absolute bottom-0 left-0 right-0 h-3 bg-gradient-to-r from-transparent via-[#f8b521] to-transparent"></div>
-      <div className="absolute bottom-6 right-8 text-white/40 text-sm font-mono">11</div>
+      <div className="absolute bottom-6 right-8 text-white/40 text-sm font-mono">12</div>
     </div>,
   ];
 

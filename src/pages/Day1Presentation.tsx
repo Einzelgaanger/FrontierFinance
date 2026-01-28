@@ -68,20 +68,20 @@ const Day1Presentation = () => {
 
   const slides = [
     // Slide 1: Hero Title
-    <div key="slide-1" className="min-h-full flex flex-col bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white relative overflow-hidden py-12">
+    <div key="slide-1" className="min-h-full flex flex-col bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white relative overflow-hidden py-6">
       <div className="absolute inset-0">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#f8b521] rounded-full blur-[120px] opacity-20"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#f8b521] rounded-full blur-[120px] opacity-20"></div>
         <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-5"></div>
       </div>
-      <div className="flex-1 flex flex-col justify-center items-center relative z-10 px-6 py-20">
+      <div className="flex-1 flex flex-col justify-start items-center relative z-10 px-6 pt-8">
         <div className="mb-8 animate-fade-in">
           <img src="/CCF_ColorLogoHorizontal (1).png" alt="CFF Logo" className="h-20 mx-auto drop-shadow-lg" onError={(e) => {(e.target as HTMLImageElement).style.display = 'none';}} />
         </div>
         <div className="w-24 h-1 bg-[#f8b521] mb-8 mx-auto"></div>
         <h1 className="text-7xl md:text-8xl font-bold mb-6 text-center leading-tight">
           <span className="block">CFF Tools, Website</span>
-          <span className="block text-[#f8b521]">& Team Efficiency</span>
+          <span className="block text-[#f8b521]">& Team Productivity</span>
         </h1>
         <div className="flex items-center gap-6 mt-8 text-xl">
           <div className="flex items-center gap-2">
@@ -94,6 +94,10 @@ const Day1Presentation = () => {
             <span>Allie & Alfred</span>
           </div>
         </div>
+        <div className="mt-8 text-center">
+          <p className="text-xl text-gray-300 mb-2">Strategic Discussion & Planning</p>
+          <p className="text-lg text-gray-400">Tools • Website • Productivity</p>
+        </div>
         <div className="mt-12 text-center space-y-2">
           <p className="text-lg">2026 Planning Meeting</p>
           <p className="text-gray-300">29th January 2026 | Fair Acres Nairobi</p>
@@ -104,9 +108,9 @@ const Day1Presentation = () => {
     </div>,
 
     // Slide 2: Agenda with Visual Flow
-    <div key="slide-2" className="min-h-full bg-gradient-to-br from-white via-[#fef9e7] to-white py-12 px-8">
+    <div key="slide-2" className="min-h-full bg-gradient-to-br from-white via-[#fef9e7] to-white py-6 px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 text-center">
+        <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-[#28098d] rounded-xl flex items-center justify-center">
               <FileText className="w-6 h-6 text-white" />
@@ -116,13 +120,33 @@ const Day1Presentation = () => {
           <div className="w-32 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Three Main Focus Areas */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          {[
+            { icon: Settings, title: 'Tools', desc: 'Assessment, gaps, integration & upgrades', color: 'from-blue-500 to-cyan-500', questions: 6 },
+            { icon: Globe, title: 'Website', desc: 'Effectiveness, metrics & 2026 enhancements', color: 'from-purple-500 to-violet-500', questions: 5 },
+            { icon: TrendingUp, title: 'Productivity', desc: 'Processes, collaboration & measurement', color: 'from-green-500 to-emerald-500', questions: 5 },
+          ].map((area, idx) => (
+            <Card key={idx} className={`border-2 border-[#e8e5f5] hover:border-[#28098d] transition-all hover:shadow-xl hover:scale-105`}>
+              <CardContent className="p-6 text-center">
+                <div className={`w-20 h-20 bg-gradient-to-br ${area.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                  <area.icon className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#28098d] mb-2">{area.title}</h3>
+                <p className="text-gray-600 mb-3">{area.desc}</p>
+                <Badge className="bg-[#28098d] text-white">{area.questions} Discussion Points</Badge>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {[
             { num: '01', icon: BarChart3, title: 'Current Tools Assessment', desc: 'Are our tools meeting team needs?', color: 'from-blue-500 to-blue-600' },
             { num: '02', icon: Globe, title: 'Website Effectiveness', desc: 'Value delivery & user experience', color: 'from-purple-500 to-purple-600' },
-            { num: '03', icon: TrendingUp, title: 'Productivity Analysis', desc: 'Bottlenecks & process improvements', color: 'from-green-500 to-green-600' },
+            { num: '03', title: 'Productivity Analysis', desc: 'Processes, collaboration, roles & measurement', icon: TrendingUp, color: 'from-green-500 to-green-600' },
             { num: '04', icon: Rocket, title: 'Platform Capabilities', desc: 'What we\'ve already built', color: 'from-orange-500 to-orange-600' },
-            { num: '05', icon: MessageSquare, title: 'Discussion & Feedback', desc: 'Open floor for team input', color: 'from-pink-500 to-pink-600', colSpan: 'lg:col-span-2' },
+            { num: '05', icon: MessageSquare, title: 'Discussion & Action Planning', desc: 'Open floor for team input & next steps', color: 'from-pink-500 to-pink-600', colSpan: 'lg:col-span-2' },
           ].map((item, idx) => (
             <Card key={idx} className={`border-2 border-[#e8e5f5] hover:border-[#28098d] transition-all hover:shadow-xl ${item.colSpan || ''}`}>
               <CardContent className="p-6">
@@ -167,9 +191,9 @@ const Day1Presentation = () => {
     </div>,
 
     // Slide 3: Current Tools Landscape with Charts
-    <div key="slide-3" className="min-h-full bg-white py-12 px-8">
+    <div key="slide-3" className="min-h-full bg-white py-6 px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 text-center">
+        <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-[#28098d] to-[#1e0758] rounded-xl flex items-center justify-center shadow-lg">
               <Settings className="w-6 h-6 text-white" />
@@ -180,7 +204,7 @@ const Day1Presentation = () => {
         </div>
 
         {/* Usage Chart */}
-        <Card className="mb-8 border-2 border-[#e8e5f5]">
+        <Card className="mb-6 border-2 border-[#e8e5f5]">
           <CardContent className="p-6">
             <h3 className="text-2xl font-bold text-[#28098d] mb-6">Tool Usage & Status</h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -203,7 +227,7 @@ const Day1Presentation = () => {
         </Card>
 
         {/* Tools Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           {toolsUsageData.map((tool, idx) => (
             <Card key={idx} className={`border-2 transition-all hover:shadow-xl hover:scale-105 ${
               tool.status === 'underutilized' ? 'border-[#f8b521] bg-[#fef9e7]' : 'border-[#28098d] bg-[#e8e5f5]'
@@ -232,14 +256,25 @@ const Day1Presentation = () => {
           ))}
         </div>
 
-        {/* Key Question */}
+        {/* Tools Discussion Questions */}
         <Card className="bg-gradient-to-r from-[#28098d] to-[#1e0758] border-0 shadow-xl">
           <CardContent className="p-8">
-            <div className="flex items-start gap-4">
-              <AlertCircle className="w-8 h-8 text-[#f8b521] flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">Key Question</h3>
-                <p className="text-white text-lg">Are use cases clearly defined? What gaps exist in functionality?</p>
+            <div className="flex items-start gap-4 mb-6">
+              <Settings className="w-8 h-8 text-[#f8b521] flex-shrink-0 mt-1" />
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-white mb-4">Tools Discussion Questions</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <p className="text-white text-base">✓ Are our tools meeting team & organization needs?</p>
+                    <p className="text-white text-base">✓ Which tools are underutilized, and why?</p>
+                    <p className="text-white text-base">✓ What gaps hinder productivity?</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-white text-base">✓ How well do tools integrate with workflows?</p>
+                    <p className="text-white text-base">✓ What new tools/upgrades should we consider?</p>
+                    <p className="text-white text-base">✓ Technology's role in fundraising?</p>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -249,9 +284,9 @@ const Day1Presentation = () => {
     </div>,
 
     // Slide 4: Identified Gaps with Visual Diagram
-    <div key="slide-4" className="min-h-full bg-gradient-to-br from-[#e8e5f5] via-white to-[#fef9e7] py-12 px-8">
+    <div key="slide-4" className="min-h-full bg-gradient-to-br from-[#e8e5f5] via-white to-[#fef9e7] py-6 px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 text-center">
+        <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
               <AlertTriangle className="w-6 h-6 text-white" />
@@ -261,7 +296,7 @@ const Day1Presentation = () => {
           <div className="w-24 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {[
             { icon: Eye, title: 'Cross-Project Visibility', desc: 'What\'s happening where, and when? Lack of unified view.', color: 'from-red-500 to-pink-500', impact: 'High' },
             { icon: BarChart3, title: 'Structured Data Capture', desc: 'Data needs to feed learning, fundraising, and reporting systematically.', color: 'from-blue-500 to-cyan-500', impact: 'High' },
@@ -314,9 +349,9 @@ const Day1Presentation = () => {
     </div>,
 
     // Slide 5: Website Assessment with Comparison
-    <div key="slide-5" className="min-h-full bg-white py-12 px-8">
+    <div key="slide-5" className="min-h-full bg-white py-6 px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 text-center">
+        <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-[#28098d] to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
               <Globe className="w-6 h-6 text-white" />
@@ -326,7 +361,7 @@ const Day1Presentation = () => {
           <div className="w-36 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
           {/* Current State */}
           <Card className="border-2 border-red-200 bg-gradient-to-br from-red-50 to-white">
             <CardContent className="p-8">
@@ -378,14 +413,21 @@ const Day1Presentation = () => {
           </Card>
         </div>
 
-        {/* Metrics Card */}
+        {/* Website Discussion Questions */}
         <Card className="bg-gradient-to-r from-[#28098d] to-[#1e0758] border-0 shadow-xl">
           <CardContent className="p-8">
             <div className="flex items-start gap-4">
-              <Activity className="w-8 h-8 text-[#f8b521] flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-2xl font-bold text-white mb-3">Key Metrics</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Globe className="w-8 h-8 text-[#f8b521] flex-shrink-0 mt-1" />
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-white mb-4">Website Discussion Questions</h3>
+                <div className="space-y-3 mb-6">
+                  <p className="text-white text-lg">• How effective is the website in delivering value to users and stakeholders?</p>
+                  <p className="text-white text-lg">• Are there usability issues or performance bottlenecks?</p>
+                  <p className="text-white text-lg">• How can we improve the website to align with strategic goals?</p>
+                  <p className="text-white text-lg">• What metrics indicate success, and how can we improve them?</p>
+                  <p className="text-white text-lg">• What enhancements should be prioritized for 2026?</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-white/20">
                   {[
                     { label: 'Engagement', value: 'Key Pages' },
                     { label: 'Time on Site', value: 'User Retention' },
@@ -393,7 +435,7 @@ const Day1Presentation = () => {
                   ].map((metric, idx) => (
                     <div key={idx} className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
                       <p className="text-[#f8b521] font-semibold mb-1">{metric.label}</p>
-                      <p className="text-white">{metric.value}</p>
+                      <p className="text-white text-sm">{metric.value}</p>
                     </div>
                   ))}
                 </div>
@@ -406,9 +448,9 @@ const Day1Presentation = () => {
     </div>,
 
     // Slide 6: Productivity Challenges with Chart
-    <div key="slide-6" className="min-h-full bg-gradient-to-br from-[#fef9e7] to-white py-12 px-8">
+    <div key="slide-6" className="min-h-full bg-gradient-to-br from-[#fef9e7] to-white py-6 px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 text-center">
+        <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
               <TrendingUp className="w-6 h-6 text-white" />
@@ -419,7 +461,7 @@ const Day1Presentation = () => {
         </div>
 
         {/* Impact Chart */}
-        <Card className="mb-8 border-2 border-[#e8e5f5]">
+        <Card className="mb-6 border-2 border-[#e8e5f5]">
           <CardContent className="p-6">
             <h3 className="text-2xl font-bold text-[#28098d] mb-6">Challenge Impact Analysis</h3>
             <ResponsiveContainer width="100%" height={350}>
@@ -473,9 +515,9 @@ const Day1Presentation = () => {
     </div>,
 
     // Slide 7: What We've Built - Platform Features
-    <div key="slide-7" className="min-h-full bg-gradient-to-br from-[#e8e5f5] via-white to-[#fef9e7] py-12 px-8">
+    <div key="slide-7" className="min-h-full bg-gradient-to-br from-[#e8e5f5] via-white to-[#fef9e7] py-6 px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 text-center">
+        <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-[#28098d] to-[#f8b521] rounded-xl flex items-center justify-center shadow-lg">
               <Rocket className="w-6 h-6 text-white" />
@@ -487,7 +529,7 @@ const Day1Presentation = () => {
         </div>
 
         {/* Platform Maturity Chart */}
-        <Card className="mb-8 border-2 border-[#28098d]">
+        <Card className="mb-6 border-2 border-[#28098d]">
           <CardContent className="p-6">
             <h3 className="text-2xl font-bold text-[#28098d] mb-6">Platform Feature Maturity</h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -544,9 +586,9 @@ const Day1Presentation = () => {
     </div>,
 
     // Slide 8: New Intelligent Features
-    <div key="slide-8" className="min-h-full bg-white py-12 px-8">
+    <div key="slide-8" className="min-h-full bg-white py-6 px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 text-center">
+        <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-[#f8b521] to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
               <Zap className="w-6 h-6 text-white" />
@@ -557,7 +599,7 @@ const Day1Presentation = () => {
         </div>
 
         {/* AI Company Checker */}
-        <Card className="mb-8 border-2 border-[#f8b521] bg-gradient-to-br from-[#fef9e7] to-white shadow-xl">
+        <Card className="mb-6 border-2 border-[#f8b521] bg-gradient-to-br from-[#fef9e7] to-white shadow-xl">
           <CardContent className="p-8">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-20 h-20 bg-gradient-to-br from-[#f8b521] to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
@@ -630,9 +672,9 @@ const Day1Presentation = () => {
     </div>,
 
     // Slide 9: How Technology Supports Strategy
-    <div key="slide-9" className="min-h-full bg-gradient-to-br from-white via-[#e8e5f5] to-[#fef9e7] py-12 px-8">
+    <div key="slide-9" className="min-h-full bg-gradient-to-br from-white via-[#e8e5f5] to-[#fef9e7] py-6 px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 text-center">
+        <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-[#28098d] to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
               <Target className="w-6 h-6 text-white" />
@@ -669,39 +711,91 @@ const Day1Presentation = () => {
       </div>
     </div>,
 
-    // Slide 10: Discussion Questions
-    <div key="slide-10" className="min-h-full bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white py-12 px-8 relative">
+    // Slide 10: Productivity Discussion Questions
+    <div key="slide-10" className="min-h-full bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white py-6 px-8 relative">
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#f8b521] rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#f8b521] rounded-full blur-[120px]"></div>
+        <div className="absolute top-20 right-20 w-64 h-64 bg-[#f8b521] rounded-full blur-[120px]"></div>
       </div>
-      <div className="max-w-5xl mx-auto relative z-10">
-        <div className="mb-10 text-center">
-          <div className="w-20 h-1.5 bg-[#f8b521] mx-auto mb-6 rounded-full"></div>
-          <h2 className="text-6xl font-bold mb-4">Discussion Questions</h2>
+      <div className="max-w-6xl mx-auto relative z-10">
+        <div className="mb-6 text-center">
+          <div className="w-16 h-1.5 bg-[#f8b521] mx-auto mb-6 rounded-full"></div>
+          <h2 className="text-6xl font-bold mb-4">Productivity Discussion</h2>
           <div className="w-48 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
         </div>
         
-        <div className="space-y-6 mb-8">
-          {[
-            'Which tools should we prioritize configuring vs. replacing?',
-            'What workflows need to be mapped before we can improve integration?',
-            'How can the platform better support your daily work?',
-            'What training or resources would help the team work more efficiently?',
-            'How do we measure and track team performance effectively?',
-          ].map((question, idx) => (
-            <Card key={idx} className="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 transition-all">
-              <CardContent className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 bg-[#f8b521] rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <span className="text-[#28098d] font-bold text-xl">{idx + 1}</span>
-                  </div>
-                  <p className="text-xl flex-1 pt-2">{question}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Processes & Collaboration */}
+          <Card className="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 transition-all">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <RefreshCw className="w-8 h-8 text-[#f8b521]" />
+                <h3 className="text-2xl font-bold">Processes & Collaboration</h3>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>What processes currently slow down team productivity?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>How can we improve collaboration and communication?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>Are roles and responsibilities clearly defined?</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          {/* Resources & Measurement */}
+          <Card className="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 transition-all">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Target className="w-8 h-8 text-[#f8b521]" />
+                <h3 className="text-2xl font-bold">Resources & Measurement</h3>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>What training or resources would help efficiency?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>How do we measure and track team performance?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#f8b521]">•</span>
+                  <span>Who is responsible/accountable for key outcomes?</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
+
+        {/* Tools & Technology Role */}
+        <Card className="bg-white/10 backdrop-blur-md border-2 border-white/20 mb-6">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Zap className="w-8 h-8 text-[#f8b521]" />
+              <h3 className="text-2xl font-bold">Technology & Fundraising</h3>
+            </div>
+            <p className="text-lg mb-3">What role should technology and data play in enhancing fundraising initiatives?</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+              {[
+                { icon: BarChart3, label: 'Data Insights', desc: 'Evidence-based storytelling' },
+                { icon: Users, label: 'Relationship Tracking', desc: 'CRM & engagement' },
+                { icon: TrendingUp, label: 'Impact Metrics', desc: 'Outcome visualization' },
+              ].map((item, idx) => (
+                <div key={idx} className="bg-white/5 rounded-lg p-4 text-center">
+                  <item.icon className="w-6 h-6 text-[#f8b521] mx-auto mb-2" />
+                  <p className="font-semibold text-white mb-1">{item.label}</p>
+                  <p className="text-sm text-gray-300">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         <Card className="bg-[#f8b521] border-0 shadow-xl">
           <CardContent className="p-6">
@@ -715,11 +809,11 @@ const Day1Presentation = () => {
     </div>,
 
     // Slide 11: Thank You
-    <div key="slide-11" className="min-h-full flex flex-col bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white relative overflow-hidden py-12">
+    <div key="slide-11" className="min-h-full flex flex-col bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white relative overflow-hidden py-6">
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#f8b521] rounded-full blur-[150px] opacity-20"></div>
       </div>
-      <div className="flex-1 flex flex-col items-center justify-center relative z-10 px-6 py-20">
+      <div className="flex-1 flex flex-col items-center justify-start relative z-10 px-6 pt-12">
         <div className="mb-8 animate-fade-in">
           <img src="/CCF_ColorLogoHorizontal (1).png" alt="CFF Logo" className="h-24 mx-auto drop-shadow-2xl" onError={(e) => {(e.target as HTMLImageElement).style.display = 'none';}} />
         </div>
@@ -728,7 +822,7 @@ const Day1Presentation = () => {
         <p className="text-4xl text-[#f8b521] mb-12 font-semibold">Questions & Discussion</p>
         <div className="text-center space-y-3">
           <p className="text-xl text-gray-300">Session 3 | Day 1</p>
-          <p className="text-lg text-gray-400">CFF Tools, Website & Team Efficiency</p>
+          <p className="text-lg text-gray-400">CFF Tools, Website & Team Productivity</p>
           <p className="text-base text-gray-500 mt-6">29th January 2026</p>
         </div>
       </div>
