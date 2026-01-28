@@ -9,7 +9,7 @@ interface AuthContextType {
   userRole: string | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: unknown }>;
-  signUp: (email: string, password: string, metadata?: Record<string, unknown>) => Promise<{ error: unknown }>;
+  signUp: (email: string, password: string, metadata?: Record<string, unknown>) => Promise<{ error: unknown; warning?: string; data?: unknown }>;
   signOut: () => Promise<void>;
   signInWithMagicLink: (email: string) => Promise<{ error: unknown }>;
   resetPassword: (email: string) => Promise<{ error: unknown }>;
