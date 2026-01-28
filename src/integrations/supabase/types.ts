@@ -291,6 +291,54 @@ export type Database = {
           },
         ]
       }
+      feedback: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          id: string
+          message: string
+          page_name: string | null
+          page_url: string
+          priority: string | null
+          resolved_at: string | null
+          status: string
+          updated_at: string
+          user_email: string | null
+          user_id: string | null
+          user_role: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          page_name?: string | null
+          page_url: string
+          priority?: string | null
+          resolved_at?: string | null
+          status?: string
+          updated_at?: string
+          user_email?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          page_name?: string | null
+          page_url?: string
+          priority?: string | null
+          resolved_at?: string | null
+          status?: string
+          updated_at?: string
+          user_email?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Relationships: []
+      }
       field_visibility: {
         Row: {
           admin_visible: boolean | null
@@ -426,6 +474,70 @@ export type Database = {
         }
         Relationships: []
       }
+      learning_resource_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          resource_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          resource_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          resource_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_resource_comments_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "learning_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_resource_likes: {
+        Row: {
+          created_at: string
+          id: string
+          resource_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          resource_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          resource_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_resource_likes_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "learning_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       learning_resources: {
         Row: {
           category: string
@@ -438,7 +550,7 @@ export type Database = {
           id: string
           is_featured: boolean | null
           is_published: boolean | null
-          media_type: 'link' | 'image' | 'video' | null
+          media_type: string | null
           resource_type: string
           resource_url: string | null
           thumbnail_url: string | null
@@ -458,7 +570,7 @@ export type Database = {
           id?: string
           is_featured?: boolean | null
           is_published?: boolean | null
-          media_type?: 'link' | 'image' | 'video' | null
+          media_type?: string | null
           resource_type?: string
           resource_url?: string | null
           thumbnail_url?: string | null
@@ -478,7 +590,7 @@ export type Database = {
           id?: string
           is_featured?: boolean | null
           is_published?: boolean | null
-          media_type?: 'link' | 'image' | 'video' | null
+          media_type?: string | null
           resource_type?: string
           resource_url?: string | null
           thumbnail_url?: string | null
@@ -486,54 +598,6 @@ export type Database = {
           topic?: string | null
           topic_other?: string | null
           updated_at?: string | null
-        }
-        Relationships: []
-      }
-      learning_resource_comments: {
-        Row: {
-          id: string
-          resource_id: string
-          user_id: string
-          content: string
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          resource_id: string
-          user_id: string
-          content: string
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          resource_id?: string
-          user_id?: string
-          content?: string
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      learning_resource_likes: {
-        Row: {
-          id: string
-          resource_id: string
-          user_id: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          resource_id: string
-          user_id: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          resource_id?: string
-          user_id?: string
-          created_at?: string
         }
         Relationships: []
       }
@@ -1971,6 +2035,54 @@ export type Database = {
           role?: string
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      website_feedback: {
+        Row: {
+          admin_notes: string | null
+          created_at: string | null
+          feedback_text: string
+          id: string
+          page_path: string
+          page_title: string | null
+          priority: string | null
+          resolved_at: string | null
+          status: string | null
+          updated_at: string | null
+          user_email: string | null
+          user_id: string | null
+          user_role: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string | null
+          feedback_text: string
+          id?: string
+          page_path: string
+          page_title?: string | null
+          priority?: string | null
+          resolved_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_email?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string | null
+          feedback_text?: string
+          id?: string
+          page_path?: string
+          page_title?: string | null
+          priority?: string | null
+          resolved_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_email?: string | null
+          user_id?: string | null
+          user_role?: string | null
         }
         Relationships: []
       }

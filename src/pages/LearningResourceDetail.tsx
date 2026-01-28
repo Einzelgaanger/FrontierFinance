@@ -89,10 +89,11 @@ export default function LearningResourceDetail() {
 
       setResource({
         ...row,
+        media_type: row.media_type as "link" | "image" | "video" | null,
         like_count: likes?.length ?? 0,
         comment_count: comments?.length ?? 0,
         is_liked: isLiked,
-      });
+      } as LearningResource);
     } catch {
       toast.error("Resource not found");
       navigate("/community", { state: { tab: "learning" } });
