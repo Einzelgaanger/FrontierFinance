@@ -27,8 +27,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { format } from 'date-fns';
-import { generateDay1Presentation } from '@/components/presentations/Day1ToolsPresentation';
-import { generateDay2Presentation } from '@/components/presentations/Day2TechnologyPresentation';
+import { Link } from 'react-router-dom';
 
 interface Feedback {
   id: string;
@@ -295,14 +294,15 @@ export default function DevTasks() {
                 <p className="text-xs text-gray-600 mb-3">
                   Current tools assessment, website effectiveness, productivity challenges, and platform capabilities overview.
                 </p>
-                <Button 
-                  onClick={generateDay1Presentation}
-                  className="w-full bg-blue-600 hover:bg-blue-700"
-                  size="sm"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download Day 1 PDF
-                </Button>
+                <Link to="/presentation/day1" className="block">
+                  <Button 
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    size="sm"
+                  >
+                    <Presentation className="w-4 h-4 mr-2" />
+                    View Day 1 Presentation
+                  </Button>
+                </Link>
               </div>
 
               {/* Day 2 Presentation */}
@@ -317,14 +317,15 @@ export default function DevTasks() {
                 <p className="text-xs text-gray-600 mb-3">
                   2026 strategic roadmap, quarterly milestones, success metrics, resource requirements, and next steps.
                 </p>
-                <Button 
-                  onClick={generateDay2Presentation}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700"
-                  size="sm"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download Day 2 PDF
-                </Button>
+                <Link to="/presentation/day2" className="block">
+                  <Button 
+                    className="w-full bg-indigo-600 hover:bg-indigo-700"
+                    size="sm"
+                  >
+                    <Presentation className="w-4 h-4 mr-2" />
+                    View Day 2 Presentation
+                  </Button>
+                </Link>
               </div>
             </div>
           </CardContent>

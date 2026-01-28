@@ -24,6 +24,18 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Handle optional canvg dependency - point to empty module if not installed
+      "canvg": path.resolve(__dirname, "./src/utils/canvg-stub.ts"),
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+    commonjsOptions: {
+      include: [/jspdf/, /node_modules/],
     },
   },
 }));
