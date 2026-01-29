@@ -23,79 +23,83 @@ const Drew = () => {
       num: "1",
       icon: Rocket,
       color: "from-orange-500 to-amber-500",
-      bg: "bg-orange-500/20",
       title: "Ingredients for World Class SGB Financing Vehicles",
-      items: ["Outline services that L+ offers, and value proposition (quantify)"],
+      items: ["a.\tOutline services that L+ offers, and value proposition (quantify)*"],
     },
     {
       num: "2",
       icon: TrendingUp,
       color: "from-emerald-500 to-teal-500",
-      bg: "bg-emerald-500/20",
       title: "Pathways to Capital Mobilization",
-      items: ["Role of FoFs", "Incentivizing Pension Funds", "Aligning patient capital"],
+      items: ["a.\tRole of FoFs*", "b.\tIncentivizing Pension Funds", "c.\tAligning patient capital"],
     },
     {
       num: "3",
       icon: BarChart3,
       color: "from-blue-500 to-cyan-500",
-      bg: "bg-blue-500/20",
       title: "Small Business Finance – LCP Performance",
-      items: ["SoP and L+ Assessment Tool for anonymous data trends", "Portfolio Technical Support data"],
+      items: ["a.\tUse of SoP and L+ Assessment Tool to provide anonymous data on trends*", "b.\tData on provision of portfolio Technical Support*"],
     },
     {
       num: "4",
       icon: Lightbulb,
       color: "from-purple-500 to-pink-500",
-      bg: "bg-purple-500/20",
-      title: "World Class Innovations & Solutions to SGB Finance",
-      items: ["Case studies on different LCP models with performance data"],
+      title: "World Class Innovations and Solutions to SGB Finance",
+      items: ["a.\tCase studies on different LCP models with supporting performance data*"],
     },
     {
       num: "5",
       icon: Coins,
       color: "from-yellow-500 to-orange-500",
-      bg: "bg-yellow-500/20",
-      title: "Smart Subsidies that Advance SGB Financing",
-      items: ["Operating overhead support", "Junior tranche capital", "Portfolio level TA"],
+      title: "Smart Subsidies that Advance the Financing of SGBs",
+      items: ["a.\tOperating overhead support in early years of fund establishment*", "b.\tJunior tranche capital to incentivize institutional capital*", "c.\tPortfolio level technical support*"],
     },
     {
       num: "6",
       icon: Users,
       color: "from-rose-500 to-red-500",
-      bg: "bg-rose-500/20",
-      title: "Youth & Women Underemployment via Sustainable SGBs",
-      items: ["ESCP network employment impact data", "Appropriate impact measures"],
+      title: "Addressing the Youth & Women underemployment through Sustainable SGBs",
+      items: ["a.\tData on ESCP network's impact on employment*", "b.\tWhat are most appropriate measures of impact*"],
     },
     {
       num: "7",
       icon: Building2,
       color: "from-indigo-500 to-violet-500",
-      bg: "bg-indigo-500/20",
-      title: "Public Markets – Liquidity & Scale for SGBs",
-      items: ["Secondary markets (equity & loans)", "BII's GIP restructuring", "Loan securitization"],
+      title: "Public Markets – Creating Liquidity and Scale for SGBs",
+      items: ["a.\tSecondary capital markets for loans and equity investments", "i.\tEquity - Include the restructuring of BII's GIP concept", "ii.\tLoan securitization"],
     },
     {
       num: "8",
       icon: Scale,
       color: "from-slate-500 to-zinc-500",
-      bg: "bg-slate-500/20",
-      title: "Regulatory Factors Constraining Small Business Finance",
-      items: ["Landscape analysis across Africa"],
+      title: "Regulatory Factors constraining small business funds",
+      items: ["a.\tLandscape analysis across Africa*"],
     },
   ];
 
   return (
-    <div className="fixed inset-0 bg-white p-4 overflow-hidden flex flex-col">
+    <div className="drew-scroll fixed inset-0 bg-white p-4 overflow-y-auto flex flex-col">
+      <style>{`
+        .drew-scroll {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .drew-scroll::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
       {/* Header */}
       <div className="text-center mb-3">
         <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-transparent">
-          CFF Thought Leadership — 2026 Topics
+          CFF Thought Leadership
         </h1>
+        <p className="text-xl md:text-2xl font-semibold text-gray-700 mt-1">
+          Potential 2026 Topics/Themes
+        </p>
       </div>
 
       {/* Content Grid - 2x4 */}
-      <div className="flex-1 grid grid-cols-2 gap-3 lg:gap-4">
+      <div className="grid grid-cols-2 gap-3 lg:gap-4 pb-8">
         {topics.map((topic) => {
           const Icon = topic.icon;
           return (
@@ -119,12 +123,15 @@ const Drew = () => {
                   </h3>
                 </div>
                 <ul className="space-y-0.5">
-                  {topic.items.map((item, idx) => (
-                    <li key={idx} className="text-base md:text-lg lg:text-xl text-gray-700 flex items-start gap-1">
-                      <span className="text-gray-400 font-bold">•</span>
-                      <span className="line-clamp-1">{item}</span>
-                    </li>
-                  ))}
+                  {topic.items.map((item, idx) => {
+                    const isSubItem = item.startsWith("i.\t") || item.startsWith("ii.\t");
+                    return (
+                      <li key={idx} className={`text-base md:text-lg lg:text-xl text-gray-700 flex items-start gap-1 ${isSubItem ? "pl-4" : ""}`}>
+                        <span className="text-gray-400 font-bold shrink-0">•</span>
+                        <span>{item}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </div>
@@ -134,8 +141,8 @@ const Drew = () => {
 
       {/* Footer */}
       <div className="mt-2 text-center">
-        <p className="text-gray-500 text-sm">
-          ✦ Data-driven content from ESCP Network & L+ Assessment Tools
+        <p className="text-gray-600 text-sm">
+          * = data extracted from revamped SoP survey in 2026 and L+ Assessment
         </p>
       </div>
     </div>
