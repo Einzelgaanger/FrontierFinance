@@ -40,6 +40,7 @@ import AdminLaunchPlusAnalytics from "./pages/AdminLaunchPlusAnalytics";
 import DevTasks from "./pages/DevTasks";
 import Day1Presentation from "./pages/Day1Presentation";
 import Day2Presentation from "./pages/Day2Presentation";
+import Drew from "./pages/Drew";
 import { FeedbackButton } from "./components/feedback/FeedbackButton";
 
 const queryClient = new QueryClient();
@@ -167,6 +168,7 @@ const App = () => {
             <Route path="/devtasks" element={<DevTasks />} />
             <Route path="/presentation/day1" element={<Day1Presentation />} />
             <Route path="/presentation/day2" element={<Day2Presentation />} />
+            <Route path="/drew" element={<Drew />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           {/* Floating Feedback Button - appears on all pages */}
