@@ -18,8 +18,9 @@ export function FeedbackButton() {
   const location = useLocation();
 
   // Hide feedback button on certain pages
-  const hiddenPages = ['/auth', '/devtasks', '/reset-password', '/forgot-password'];
-  if (hiddenPages.includes(location.pathname)) {
+  const hiddenPages = ['/auth', '/devtasks', '/reset-password', '/forgot-password', '/', '/launch-plus-intro'];
+  const isSurveyPage = location.pathname.startsWith('/survey');
+  if (hiddenPages.includes(location.pathname) || isSurveyPage) {
     return null;
   }
 
