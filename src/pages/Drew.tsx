@@ -2,121 +2,103 @@ import { useEffect } from "react";
 
 const Drew = () => {
   useEffect(() => {
-    // Prevent scrolling on this page
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "auto";
     };
   }, []);
 
-  const topics = [
-    {
-      num: "1",
-      title: "Ingredients for World Class SGB Financing Vehicles",
-      sub: "L+ services & value proposition",
-    },
-    {
-      num: "2",
-      title: "Pathways to Capital Mobilization",
-      sub: "FoFs, Pension Funds, Patient Capital",
-    },
-    {
-      num: "3",
-      title: "Small Business Finance – LCP Performance",
-      sub: "SoP & L+ Assessment Tool data trends",
-    },
-    {
-      num: "4",
-      title: "World Class Innovations & Solutions",
-      sub: "Case studies on LCP models",
-    },
-    {
-      num: "5",
-      title: "Smart Subsidies for SGBs",
-      sub: "Overhead support, Junior tranche, TA",
-    },
-    {
-      num: "6",
-      title: "Youth & Women Employment",
-      sub: "ESCP network impact data",
-    },
-    {
-      num: "7",
-      title: "Public Markets & Liquidity",
-      sub: "Secondary markets, BII GIP, Securitization",
-    },
-    {
-      num: "8",
-      title: "Regulatory Constraints",
-      sub: "Landscape analysis across Africa",
-    },
-  ];
-
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex flex-col items-center justify-center p-4 overflow-hidden">
+    <div className="fixed inset-0 bg-slate-900 text-white p-3 overflow-hidden flex flex-col">
       {/* Header */}
-      <div className="text-center mb-6">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight">
-          CFF Thought Leadership
+      <div className="text-center mb-2">
+        <h1 className="text-2xl md:text-3xl font-bold text-amber-400">
+          CFF Thought Leadership — 2026 Topics
         </h1>
-        <p className="text-xl md:text-2xl text-blue-300 mt-2 font-light">
-          Potential 2026 Topics & Themes
-        </p>
       </div>
 
-      {/* Circular Grid Layout */}
-      <div className="relative w-full max-w-7xl aspect-[16/9] flex items-center justify-center">
-        {/* Center Circle */}
-        <div className="absolute z-10 w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-2xl">
-          <span className="text-slate-900 font-bold text-lg md:text-xl text-center leading-tight">
-            2026<br />Vision
-          </span>
+      {/* Content Grid - 2 columns */}
+      <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] md:text-sm lg:text-base xl:text-lg leading-tight">
+        
+        {/* Topic 1 */}
+        <div className="flex gap-2">
+          <span className="text-amber-400 font-bold shrink-0">1.</span>
+          <div>
+            <p className="font-bold">Ingredients for World Class SGB Financing Vehicles</p>
+            <p className="text-blue-300">• Outline services that L+ offers, and value proposition (quantify)</p>
+          </div>
         </div>
 
-        {/* Topics arranged in a circle */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          {topics.map((topic, index) => {
-            const totalTopics = topics.length;
-            const angle = (index * 360) / totalTopics - 90;
-            const radius = 38; // percentage from center
-            const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
-            const y = 50 + radius * Math.sin((angle * Math.PI) / 180);
-
-            return (
-              <div
-                key={topic.num}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 w-[140px] md:w-[180px] lg:w-[200px]"
-                style={{
-                  left: `${x}%`,
-                  top: `${y}%`,
-                }}
-              >
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 cursor-default">
-                  <div className="flex items-start gap-2">
-                    <span className="flex-shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-full bg-amber-500 text-slate-900 font-bold text-sm md:text-base flex items-center justify-center">
-                      {topic.num}
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="text-white font-semibold text-xs md:text-sm lg:text-base leading-tight line-clamp-2">
-                        {topic.title}
-                      </h3>
-                      <p className="text-blue-200/80 text-[10px] md:text-xs mt-1 line-clamp-1">
-                        {topic.sub}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        {/* Topic 2 */}
+        <div className="flex gap-2">
+          <span className="text-amber-400 font-bold shrink-0">2.</span>
+          <div>
+            <p className="font-bold">Pathways to Capital Mobilization</p>
+            <p className="text-blue-300">• Role of FoFs</p>
+            <p className="text-blue-300">• Incentivizing Pension Funds</p>
+            <p className="text-blue-300">• Aligning patient capital</p>
+          </div>
         </div>
-      </div>
 
-      {/* Footer */}
-      <div className="mt-4 text-center">
-        <p className="text-blue-200/60 text-sm">
-          * Indicates data-driven content from ESCP Network
-        </p>
+        {/* Topic 3 */}
+        <div className="flex gap-2">
+          <span className="text-amber-400 font-bold shrink-0">3.</span>
+          <div>
+            <p className="font-bold">Small Business Finance – LCP Performance</p>
+            <p className="text-blue-300">• Use of SoP and L+ Assessment Tool to provide anonymous data on trends</p>
+            <p className="text-blue-300">• Data on provision of portfolio Technical Support</p>
+          </div>
+        </div>
+
+        {/* Topic 4 */}
+        <div className="flex gap-2">
+          <span className="text-amber-400 font-bold shrink-0">4.</span>
+          <div>
+            <p className="font-bold">World Class Innovations and Solutions to SGB Finance</p>
+            <p className="text-blue-300">• Case studies on different LCP models with supporting performance data</p>
+          </div>
+        </div>
+
+        {/* Topic 5 */}
+        <div className="flex gap-2">
+          <span className="text-amber-400 font-bold shrink-0">5.</span>
+          <div>
+            <p className="font-bold">Smart Subsidies that Advance the Financing of SGBs</p>
+            <p className="text-blue-300">• Operating overhead support in early years of fund establishment</p>
+            <p className="text-blue-300">• Junior tranche capital to incentivize institutional capital</p>
+            <p className="text-blue-300">• Portfolio level technical support</p>
+          </div>
+        </div>
+
+        {/* Topic 6 */}
+        <div className="flex gap-2">
+          <span className="text-amber-400 font-bold shrink-0">6.</span>
+          <div>
+            <p className="font-bold">Addressing Youth & Women Underemployment through Sustainable SGBs</p>
+            <p className="text-blue-300">• Data on ESCP network's impact on employment</p>
+            <p className="text-blue-300">• What are most appropriate measures of impact</p>
+          </div>
+        </div>
+
+        {/* Topic 7 */}
+        <div className="flex gap-2">
+          <span className="text-amber-400 font-bold shrink-0">7.</span>
+          <div>
+            <p className="font-bold">Public Markets – Creating Liquidity and Scale for SGBs</p>
+            <p className="text-blue-300">• Secondary capital markets for loans and equity investments</p>
+            <p className="text-blue-300 pl-3">– Equity: Include restructuring of BII's GIP concept</p>
+            <p className="text-blue-300 pl-3">– Loan securitization</p>
+          </div>
+        </div>
+
+        {/* Topic 8 */}
+        <div className="flex gap-2">
+          <span className="text-amber-400 font-bold shrink-0">8.</span>
+          <div>
+            <p className="font-bold">Regulatory Factors Constraining Small Business Finance</p>
+            <p className="text-blue-300">• Landscape analysis across Africa</p>
+          </div>
+        </div>
       </div>
     </div>
   );
