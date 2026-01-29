@@ -128,10 +128,10 @@ const Index = () => {
           />
         </div>
         
-        {/* Hero Content - Centered in the full screen */}
-        <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
-          <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
+        {/* Hero Content - Title/subtitle at top, buttons at bottom */}
+        <div className="relative z-10 flex flex-col min-h-screen px-4">
+          <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 text-center w-full flex-1 flex flex-col">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight pt-20 sm:pt-28 md:pt-36">
               Building a Better Financial Ecosystem
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/95 mb-3 sm:mb-4 max-w-4xl mx-auto font-medium px-2">
@@ -140,7 +140,7 @@ const Index = () => {
             <p className="text-sm sm:text-base md:text-lg text-white/90 mb-8 sm:mb-10 max-w-3xl mx-auto px-2">
               The Collaborative for Frontier Finance is a multi-stakeholder initiative that aims to increase access to capital for small and growing businesses in emerging markets
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mt-auto pb-12 sm:pb-16">
               <Link to="/auth" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
