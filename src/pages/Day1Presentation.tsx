@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, Check, Star, ArrowRight, Circle, Square, AlertTriangle, BarChart3, RefreshCw, Link2, Zap, MessageSquare, Target, TrendingUp, Users, Globe, Shield, FileText, Settings, Workflow, Brain, Rocket, ArrowDown, ArrowUpRight, PieChart, Activity, Clock, CheckCircle2, XCircle, AlertCircle, Calendar, Eye } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Star, ArrowRight, Circle, Square, AlertTriangle, BarChart3, RefreshCw, Link2, Zap, MessageSquare, Target, TrendingUp, Users, Globe, Shield, FileText, Settings, Workflow, Brain, Rocket, ArrowDown, ArrowUpRight, PieChart, Activity, Clock, CheckCircle2, XCircle, AlertCircle, Calendar, Eye, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell, LineChart, Line, AreaChart, Area } from 'recharts';
 
 const BRAND = {
   navy: '#28098d',
@@ -38,33 +37,6 @@ const Day1Presentation = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [currentSlide]);
 
-  // Chart data
-  const toolsUsageData = [
-    { name: 'Slack', usage: 95, status: 'active' },
-    { name: 'HubSpot', usage: 45, status: 'underutilized' },
-    { name: 'MailChimp', usage: 80, status: 'active' },
-    { name: 'Dropbox', usage: 70, status: 'active' },
-    { name: 'Google Workspace', usage: 35, status: 'underutilized' },
-    { name: 'ESCP Platform', usage: 100, status: 'active' },
-  ];
-
-  const productivityImpactData = [
-    { challenge: 'Context Switching', impact: 85, priority: 'High' },
-    { challenge: 'Unclear Handoffs', impact: 80, priority: 'High' },
-    { challenge: 'Rebuilding Work', impact: 60, priority: 'Medium' },
-    { challenge: 'Work in Heads', impact: 75, priority: 'High' },
-    { challenge: 'Too Many Channels', impact: 55, priority: 'Medium' },
-    { challenge: 'Undocumented Decisions', impact: 70, priority: 'High' },
-  ];
-
-  const platformFeaturesData = [
-    { name: 'Auth', value: 100 },
-    { name: 'Surveys', value: 100 },
-    { name: 'Analytics', value: 95 },
-    { name: 'Network', value: 100 },
-    { name: 'AI', value: 85 },
-    { name: 'Admin', value: 90 },
-  ];
 
   const slides = [
     // Slide 1: Hero Title
@@ -203,58 +175,115 @@ const Day1Presentation = () => {
           <div className="w-40 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
         </div>
 
-        {/* Usage Chart */}
-        <Card className="mb-6 border-2 border-[#e8e5f5]">
+        {/* Current Tools - How to Use Better */}
+        <Card className="mb-6 border-2 border-[#28098d] bg-gradient-to-r from-[#e8e5f5] to-white">
           <CardContent className="p-6">
-            <h3 className="text-2xl font-bold text-[#28098d] mb-6">Tool Usage & Status</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={toolsUsageData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e8e5f5" />
-                <XAxis dataKey="name" tick={{ fill: '#28098d', fontSize: 12 }} />
-                <YAxis tick={{ fill: '#28098d', fontSize: 12 }} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#28098d', border: 'none', borderRadius: '8px', color: '#fff' }}
-                  labelStyle={{ color: '#f8b521', fontWeight: 'bold' }}
-                />
-                <Bar dataKey="usage" fill="#f8b521" radius={[8, 8, 0, 0]}>
-                  {toolsUsageData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.status === 'underutilized' ? '#fbbf24' : '#f8b521'} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            <h3 className="text-2xl font-bold text-[#28098d] mb-4">Current Tools - Optimize Usage</h3>
+            <p className="text-gray-600 mb-6">Practical recommendations for tools we use and how to integrate them better into our workflows.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { 
+                  name: 'Slack', 
+                  status: 'Active',
+                  bullets: [
+                    'Use channels strategically: #general for announcements, #projects for specific work',
+                    'Set up platform notifications to Slack for new applications, survey completions',
+                    'Use Slack threads to keep conversations organized',
+                    'Consider: Can we reduce Slack noise by moving some notifications to platform?',
+                    'Use Slack for team coordination, not member communication'
+                  ],
+                  icon: MessageSquare
+                },
+                { 
+                  name: 'HubSpot', 
+                  status: 'Underutilized',
+                  bullets: [
+                    'Sync member profiles from ESCP Platform automatically via API',
+                    'Track member engagement (logins, survey completions) as HubSpot activities',
+                    'Create automated workflows: New member → HubSpot contact → Welcome sequence',
+                    'Use for email campaigns to members (newsletters, announcements)',
+                    'Replace manual contact management with automated sync from platform'
+                  ],
+                  icon: Users
+                },
+                { 
+                  name: 'MailChimp', 
+                  status: 'Active',
+                  bullets: [
+                    'Consider migrating to HubSpot for unified CRM + email',
+                    'If keeping: Use for external newsletters only, not member communication',
+                    'Member emails should come from platform (Resend) for better tracking',
+                    'Sync subscriber lists with HubSpot for unified contact management',
+                    'Use MailChimp for public-facing content, platform for member-specific'
+                  ],
+                  icon: Mail
+                },
+                { 
+                  name: 'Dropbox', 
+                  status: 'Active',
+                  bullets: [
+                    'Use for team file sharing and collaboration',
+                    'Consider: Can we move member documents to platform storage?',
+                    'Keep Dropbox for internal team files, use platform storage for member-facing docs',
+                    'Set up folder structure: /Team, /Members, /Public',
+                    'Use platform storage (Supabase) for survey attachments and member uploads'
+                  ],
+                  icon: FileText
+                },
+                { 
+                  name: 'Google Workspace', 
+                  status: 'Underutilized',
+                  bullets: [
+                    'Use Google Drive for collaborative document editing',
+                    'Google Sheets for data analysis and reporting',
+                    'Google Calendar for team scheduling and meetings',
+                    'Consider: Can we integrate Google Calendar with platform for member events?',
+                    'Use Google Docs for internal documentation, platform for member-facing content'
+                  ],
+                  icon: Globe
+                },
+                { 
+                  name: 'ESCP Platform', 
+                  status: 'Core System',
+                  bullets: [
+                    'This is our central hub - all member data lives here',
+                    'Use platform analytics instead of external analytics tools',
+                    'Member communication should happen through platform notifications',
+                    'Use platform for surveys, not external survey tools',
+                    'Build more features into platform to reduce tool sprawl'
+                  ],
+                  icon: Rocket
+                },
+              ].map((tool, idx) => (
+                <div key={idx} className={`bg-white rounded-lg p-4 border-2 ${
+                  tool.status === 'Underutilized' ? 'border-[#f8b521] bg-[#fef9e7]' : 
+                  tool.status === 'Core System' ? 'border-green-500 bg-green-50' :
+                  'border-[#28098d]'
+                }`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <tool.icon className="w-5 h-5 text-[#28098d]" />
+                      <h4 className="font-bold text-[#28098d]">{tool.name}</h4>
+                    </div>
+                    <Badge className={
+                      tool.status === 'Underutilized' ? 'bg-[#f8b521] text-[#28098d]' : 
+                      tool.status === 'Core System' ? 'bg-green-500 text-white' :
+                      'bg-[#28098d] text-white'
+                    }>{tool.status}</Badge>
+                  </div>
+                  <ul className="space-y-2">
+                    {tool.bullets.map((bullet, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                        <span className="text-[#f8b521] mt-1">•</span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
-
-        {/* Tools Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-          {toolsUsageData.map((tool, idx) => (
-            <Card key={idx} className={`border-2 transition-all hover:shadow-xl hover:scale-105 ${
-              tool.status === 'underutilized' ? 'border-[#f8b521] bg-[#fef9e7]' : 'border-[#28098d] bg-[#e8e5f5]'
-            }`}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold text-[#28098d]">{tool.name}</h3>
-                  <Badge className={tool.status === 'underutilized' ? 'bg-[#f8b521] text-[#28098d]' : 'bg-green-500 text-white'}>
-                    {tool.status === 'underutilized' ? 'Underutilized' : 'Active'}
-                  </Badge>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Usage</span>
-                    <span className="font-bold text-[#28098d]">{tool.usage}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className={`h-2 rounded-full ${tool.status === 'underutilized' ? 'bg-[#f8b521]' : 'bg-[#28098d]'}`}
-                      style={{ width: `${tool.usage}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
 
         {/* Tools Discussion Questions */}
         <Card className="bg-gradient-to-r from-[#28098d] to-[#1e0758] border-0 shadow-xl">
@@ -322,23 +351,71 @@ const Day1Presentation = () => {
           ))}
         </div>
 
-        {/* Gap Analysis Visual */}
-        <Card className="bg-white border-2 border-[#28098d]">
+        {/* Tools to Drop / Build Into Platform */}
+        <Card className="bg-white border-2 border-red-300">
           <CardContent className="p-8">
-            <h3 className="text-2xl font-bold text-[#28098d] mb-6 text-center">Gap Impact Matrix</h3>
-            <div className="grid grid-cols-4 gap-4">
+            <h3 className="text-2xl font-bold text-[#28098d] mb-4">Drop These - Build Into Platform Instead</h3>
+            <p className="text-gray-600 mb-6">These external tools can be replaced with features built directly into our platform, reducing costs and improving user experience.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { name: 'Visibility', impact: 90, effort: 60 },
-                { name: 'Data Capture', impact: 85, effort: 70 },
-                { name: 'Automation', impact: 65, effort: 50 },
-                { name: 'Integration', impact: 80, effort: 75 },
+                { 
+                  name: 'External Survey Tools', 
+                  current: 'Using Typeform/SurveyMonkey for some surveys',
+                  build: [
+                    'Use platform survey system (already built and superior)',
+                    'Multi-year survey tracking',
+                    'Conditional logic and validation',
+                    'Progress saving and auto-complete'
+                  ],
+                  benefit: 'Data stays in platform, better integration'
+                },
+                { 
+                  name: 'Separate Analytics Tools', 
+                  current: 'Using external analytics for member behavior',
+                  build: [
+                    'Use platform analytics dashboard (already built)',
+                    'Member activity tracking within platform',
+                    'Survey completion analytics',
+                    'Engagement metrics (logins, content views)'
+                  ],
+                  benefit: 'All data in one place, no external tool costs'
+                },
+                { 
+                  name: 'External Notification Tools', 
+                  current: 'Using Slack/Email for all notifications',
+                  build: [
+                    'In-platform notification center (already have basic version)',
+                    'Real-time notification bell with unread count',
+                    'Email digest option for members who prefer email',
+                    'Push notifications for mobile users (PWA)'
+                  ],
+                  benefit: 'Members stay in platform, better engagement tracking'
+                },
+                { 
+                  name: 'Manual Contact Management', 
+                  current: 'Managing contacts in spreadsheets or separate CRM',
+                  build: [
+                    'Member directory with advanced filtering (already built)',
+                    'Contact export functionality',
+                    'Member relationship tracking',
+                    'Communication history within member profiles'
+                  ],
+                  benefit: 'Single source of truth, automatic updates'
+                },
               ].map((item, idx) => (
-                <div key={idx} className="text-center">
-                  <div className="w-20 h-20 mx-auto mb-3 bg-gradient-to-br from-[#28098d] to-[#1e0758] rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                    {item.impact}%
-                  </div>
-                  <p className="font-semibold text-[#28098d] mb-1">{item.name}</p>
-                  <p className="text-xs text-gray-500">Impact: {item.impact}%</p>
+                <div key={idx} className="bg-red-50 rounded-lg p-4 border border-red-200">
+                  <h4 className="font-bold text-[#28098d] mb-2">{item.name}</h4>
+                  <p className="text-xs text-gray-600 mb-2 italic">Current: {item.current}</p>
+                  <p className="text-xs font-semibold text-gray-700 mb-2">Build instead:</p>
+                  <ul className="space-y-1 mb-2">
+                    {item.build.map((point, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs text-gray-700">
+                        <span className="text-red-600 mt-1">→</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Badge className="bg-green-100 text-green-700 text-xs">Benefit: {item.benefit}</Badge>
                 </div>
               ))}
             </div>
@@ -460,27 +537,6 @@ const Day1Presentation = () => {
           <div className="w-44 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
         </div>
 
-        {/* Impact Chart */}
-        <Card className="mb-6 border-2 border-[#e8e5f5]">
-          <CardContent className="p-6">
-            <h3 className="text-2xl font-bold text-[#28098d] mb-6">Challenge Impact Analysis</h3>
-            <ResponsiveContainer width="100%" height={350}>
-              <BarChart data={productivityImpactData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#e8e5f5" />
-                <XAxis type="number" domain={[0, 100]} tick={{ fill: '#28098d' }} />
-                <YAxis dataKey="challenge" type="category" width={150} tick={{ fill: '#28098d', fontSize: 12 }} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#28098d', border: 'none', borderRadius: '8px', color: '#fff' }}
-                />
-                <Bar dataKey="impact" fill="#f8b521" radius={[0, 8, 8, 0]}>
-                  {productivityImpactData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.priority === 'High' ? '#ef4444' : '#f59e0b'} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
 
         {/* Challenges Table */}
         <div className="space-y-4">
@@ -528,27 +584,6 @@ const Day1Presentation = () => {
           <div className="w-48 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
         </div>
 
-        {/* Platform Maturity Chart */}
-        <Card className="mb-6 border-2 border-[#28098d]">
-          <CardContent className="p-6">
-            <h3 className="text-2xl font-bold text-[#28098d] mb-6">Platform Feature Maturity</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={platformFeaturesData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e8e5f5" />
-                <XAxis dataKey="name" tick={{ fill: '#28098d' }} />
-                <YAxis domain={[0, 100]} tick={{ fill: '#28098d' }} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#28098d', border: 'none', borderRadius: '8px', color: '#fff' }}
-                />
-                <Bar dataKey="value" fill="#f8b521" radius={[8, 8, 0, 0]}>
-                  {platformFeaturesData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.value === 100 ? '#10b981' : entry.value >= 90 ? '#f8b521' : '#f59e0b'} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -712,61 +747,62 @@ const Day1Presentation = () => {
     </div>,
 
     // Slide 10: Productivity Discussion Questions
-    <div key="slide-10" className="min-h-full bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white py-6 px-8 relative">
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 right-20 w-64 h-64 bg-[#f8b521] rounded-full blur-[120px]"></div>
-      </div>
-      <div className="max-w-6xl mx-auto relative z-10">
+    <div key="slide-10" className="min-h-full bg-gradient-to-br from-white via-[#e8e5f5] to-[#fef9e7] py-6 px-8">
+      <div className="max-w-6xl mx-auto">
         <div className="mb-6 text-center">
-          <div className="w-16 h-1.5 bg-[#f8b521] mx-auto mb-6 rounded-full"></div>
-          <h2 className="text-6xl font-bold mb-4">Productivity Discussion</h2>
+          <div className="inline-flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#28098d] to-[#f8b521] rounded-xl flex items-center justify-center shadow-lg">
+              <RefreshCw className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-5xl font-bold text-[#28098d]">Productivity Discussion</h2>
+          </div>
           <div className="w-48 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Processes & Collaboration */}
-          <Card className="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 transition-all">
+          <Card className="border-2 border-[#28098d] bg-white hover:shadow-xl transition-all">
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-4">
-                <RefreshCw className="w-8 h-8 text-[#f8b521]" />
-                <h3 className="text-2xl font-bold">Processes & Collaboration</h3>
+                <RefreshCw className="w-8 h-8 text-[#28098d]" />
+                <h3 className="text-2xl font-bold text-[#28098d]">Processes & Collaboration</h3>
               </div>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
                   <span className="text-[#f8b521]">•</span>
-                  <span>What processes currently slow down team productivity?</span>
+                  <span className="text-gray-700">What processes currently slow down team productivity?</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#f8b521]">•</span>
-                  <span>How can we improve collaboration and communication?</span>
+                  <span className="text-gray-700">How can we improve collaboration and communication?</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#f8b521]">•</span>
-                  <span>Are roles and responsibilities clearly defined?</span>
+                  <span className="text-gray-700">Are roles and responsibilities clearly defined?</span>
                 </li>
               </ul>
             </CardContent>
           </Card>
 
           {/* Resources & Measurement */}
-          <Card className="bg-white/10 backdrop-blur-md border-2 border-white/20 hover:bg-white/20 transition-all">
+          <Card className="border-2 border-[#f8b521] bg-[#fef9e7] hover:shadow-xl transition-all">
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-4">
-                <Target className="w-8 h-8 text-[#f8b521]" />
-                <h3 className="text-2xl font-bold">Resources & Measurement</h3>
+                <Target className="w-8 h-8 text-[#28098d]" />
+                <h3 className="text-2xl font-bold text-[#28098d]">Resources & Measurement</h3>
               </div>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
                   <span className="text-[#f8b521]">•</span>
-                  <span>What training or resources would help efficiency?</span>
+                  <span className="text-gray-700">What training or resources would help efficiency?</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#f8b521]">•</span>
-                  <span>How do we measure and track team performance?</span>
+                  <span className="text-gray-700">How do we measure and track team performance?</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#f8b521]">•</span>
-                  <span>Who is responsible/accountable for key outcomes?</span>
+                  <span className="text-gray-700">Who is responsible/accountable for key outcomes?</span>
                 </li>
               </ul>
             </CardContent>
@@ -774,37 +810,37 @@ const Day1Presentation = () => {
         </div>
 
         {/* Tools & Technology Role */}
-        <Card className="bg-white/10 backdrop-blur-md border-2 border-white/20 mb-6">
+        <Card className="border-2 border-[#28098d] bg-[#e8e5f5] mb-6 hover:shadow-xl transition-all">
           <CardContent className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <Zap className="w-8 h-8 text-[#f8b521]" />
-              <h3 className="text-2xl font-bold">Technology & Fundraising</h3>
+              <Zap className="w-8 h-8 text-[#28098d]" />
+              <h3 className="text-2xl font-bold text-[#28098d]">Technology & Fundraising</h3>
             </div>
-            <p className="text-lg mb-3">What role should technology and data play in enhancing fundraising initiatives?</p>
+            <p className="text-gray-700 text-lg mb-4">What role should technology and data play in enhancing fundraising initiatives?</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
               {[
                 { icon: BarChart3, label: 'Data Insights', desc: 'Evidence-based storytelling' },
                 { icon: Users, label: 'Relationship Tracking', desc: 'CRM & engagement' },
                 { icon: TrendingUp, label: 'Impact Metrics', desc: 'Outcome visualization' },
               ].map((item, idx) => (
-                <div key={idx} className="bg-white/5 rounded-lg p-4 text-center">
-                  <item.icon className="w-6 h-6 text-[#f8b521] mx-auto mb-2" />
-                  <p className="font-semibold text-white mb-1">{item.label}</p>
-                  <p className="text-sm text-gray-300">{item.desc}</p>
+                <div key={idx} className="bg-white rounded-lg p-4 text-center border border-[#f8b521]">
+                  <item.icon className="w-6 h-6 text-[#28098d] mx-auto mb-2" />
+                  <p className="font-semibold text-[#28098d] mb-1">{item.label}</p>
+                  <p className="text-sm text-gray-600">{item.desc}</p>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-[#f8b521] border-0 shadow-xl">
+        <Card className="border-2 border-[#f8b521] bg-[#fef9e7] shadow-xl">
           <CardContent className="p-6">
             <p className="text-[#28098d] font-bold text-center text-lg">
               Focus: Cycle time | Rework | Bottlenecks — Not individual output volume
             </p>
           </CardContent>
         </Card>
-        <div className="absolute bottom-6 right-8 text-white/40 text-sm font-mono">10</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">10</div>
       </div>
     </div>,
 

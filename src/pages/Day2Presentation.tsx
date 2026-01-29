@@ -1,43 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Check,
-  Star,
-  ArrowRight,
-  Circle,
-  Square,
-  Target,
-  BarChart3,
-  Shield,
-  Users,
-  Globe,
-  Zap,
-  Calendar,
-  TrendingUp,
-  Clock,
-  CheckCircle2,
-  Rocket,
-  Activity,
-  PieChart,
-  FileText,
-  Settings,
-  Brain,
-  ArrowUp,
-  ArrowDown,
-  Building2,
-  DollarSign,
-  AlertTriangle,
-  Eye,
-  Gauge,
-  Database,
-  Network,
-  Lock,
-  BookOpen,
-  Code,
-  Palette,
-  MessageSquare,
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Star, ArrowRight, Circle, Square, Target, BarChart3, Shield, Users, Globe, Zap, Calendar, TrendingUp, Clock, CheckCircle2, Rocket, Activity, PieChart, FileText, Settings, Brain, ArrowUp, ArrowDown, Building2, DollarSign, AlertTriangle, Eye, Gauge, Database, Network, Lock, BookOpen, Code, Palette, MessageSquare, Mail, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -53,7 +15,7 @@ const BRAND = {
 
 const Day2Presentation = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = 12;
+  const totalSlides = 13;
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev < totalSlides - 1 ? prev + 1 : prev));
@@ -169,14 +131,17 @@ const Day2Presentation = () => {
         </div>
         
         {/* Key Platforms Overview */}
+        <div className="mb-6">
+          <p className="text-lg text-gray-700 text-center mb-6">Today we'll explore six key platforms that form the foundation of our technology ecosystem. Each platform serves a critical role in supporting our members and advancing our mission.</p>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {[
-            { num: '01', icon: Network, title: 'Fund Manager Portal', desc: 'Core platform features & capabilities', color: 'from-blue-500 to-blue-600' },
-            { num: '02', icon: Users, title: 'Member Onboarding', desc: 'User journey & activation', color: 'from-purple-500 to-purple-600' },
-            { num: '03', icon: Rocket, title: 'Launch+ Platform', desc: 'New platform development', color: 'from-green-500 to-green-600' },
-            { num: '04', icon: BookOpen, title: 'Learning Hub', desc: 'Knowledge management & resources', color: 'from-orange-500 to-orange-600' },
-            { num: '05', icon: Database, title: 'Survey Database', desc: 'Data collection & analytics', color: 'from-pink-500 to-pink-600' },
-            { num: '06', icon: Globe, title: 'Refreshed Website', desc: 'Public presence & engagement', color: 'from-indigo-500 to-indigo-600' },
+            { num: '01', icon: Network, title: 'Fund Manager Portal', desc: 'The central hub where fund managers access their profiles, manage data, and interact with the CFF network. Includes dashboard analytics, survey management, and member directory features.', color: 'from-blue-500 to-blue-600' },
+            { num: '02', icon: Users, title: 'Member Onboarding', desc: 'Streamlined process for welcoming new members into the CFF community. Focuses on user activation, profile completion, and initial engagement to ensure successful platform adoption.', color: 'from-purple-500 to-purple-600' },
+            { num: '03', icon: Rocket, title: 'Launch+ Platform', desc: 'Innovative new platform designed to support early-stage fund managers. Provides assessment tools, mentorship connections, and growth tracking capabilities for emerging fund managers.', color: 'from-green-500 to-green-600' },
+            { num: '04', icon: BookOpen, title: 'Learning Hub', desc: 'Comprehensive knowledge management system offering educational resources, training modules, webinars, and best practices. Enables continuous learning and professional development for our members.', color: 'from-orange-500 to-orange-600' },
+            { num: '05', icon: Database, title: 'Survey Database', desc: 'Robust data collection and analytics system for gathering member insights. Tracks fund performance, impact metrics, and network relationships to inform strategic decisions.', color: 'from-pink-500 to-pink-600' },
+            { num: '06', icon: Globe, title: 'Refreshed Website', desc: 'Public-facing website redesign to enhance CFF\'s online presence. Improved SEO, modern design, and better engagement tools to attract new members and showcase our impact.', color: 'from-indigo-500 to-indigo-600' },
           ].map((item, idx) => (
             <Card key={idx} className="border-2 border-[#e8e5f5] hover:border-[#28098d] transition-all hover:shadow-xl">
               <CardContent className="p-6">
@@ -189,7 +154,7 @@ const Day2Presentation = () => {
                       <Badge className="bg-[#28098d] text-white text-xs font-bold px-2 py-0.5">{item.num}</Badge>
                       <h3 className="text-xl font-bold text-[#28098d]">{item.title}</h3>
                     </div>
-                    <p className="text-gray-600 text-sm">{item.desc}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               </CardContent>
@@ -204,13 +169,32 @@ const Day2Presentation = () => {
               <MessageSquare className="w-8 h-8 text-[#f8b521] flex-shrink-0 mt-1" />
               <div className="flex-1">
                 <h3 className="text-2xl font-bold text-white mb-4">Strategic Discussion Topics</h3>
+                <p className="text-white/90 text-sm mb-4">We'll explore these critical areas to align on priorities and ensure our technology investments drive maximum impact.</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <p className="text-white text-base">• Data infrastructure & technology stack</p>
-                  <p className="text-white text-base">• Technology prioritization & roadmap</p>
-                  <p className="text-white text-base">• Data integrity & compliance</p>
-                  <p className="text-white text-base">• Cost-effectiveness & risk management</p>
-                  <p className="text-white text-base">• KPIs & success metrics</p>
-                  <p className="text-white text-base">• Feedback mechanisms & agility</p>
+                  <div className="bg-white/10 rounded-lg p-3">
+                    <p className="text-white text-base font-semibold mb-1">• Data Infrastructure & Technology Stack</p>
+                    <p className="text-white/80 text-sm">Assessing current capabilities and planning scalable solutions for future growth.</p>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-3">
+                    <p className="text-white text-base font-semibold mb-1">• Technology Prioritization & Roadmap</p>
+                    <p className="text-white/80 text-sm">Determining which features and platforms deliver the highest value first.</p>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-3">
+                    <p className="text-white text-base font-semibold mb-1">• Data Integrity & Compliance</p>
+                    <p className="text-white/80 text-sm">Ensuring accurate data collection and adherence to privacy regulations.</p>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-3">
+                    <p className="text-white text-base font-semibold mb-1">• Cost-Effectiveness & Risk Management</p>
+                    <p className="text-white/80 text-sm">Balancing innovation with budget constraints and managing technical risks.</p>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-3">
+                    <p className="text-white text-base font-semibold mb-1">• KPIs & Success Metrics</p>
+                    <p className="text-white/80 text-sm">Defining measurable outcomes to track progress and demonstrate impact.</p>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-3">
+                    <p className="text-white text-base font-semibold mb-1">• Feedback Mechanisms & Agility</p>
+                    <p className="text-white/80 text-sm">Creating responsive processes to adapt quickly to member needs and changing priorities.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -230,38 +214,28 @@ const Day2Presentation = () => {
             </div>
             <h2 className="text-5xl font-bold text-[#28098d]">2026 Strategic Focus Areas</h2>
           </div>
-          <div className="w-44 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
+          <div className="w-44 h-1.5 bg-[#f8b521] mx-auto rounded-full mb-4"></div>
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto">These seven focus areas represent our core priorities for 2026. Each area has specific targets and measurable outcomes to ensure we're building a robust, user-friendly, and impactful technology platform.</p>
         </div>
 
         {/* Progress Chart */}
         <Card className="mb-8 border-2 border-[#e8e5f5]">
           <CardContent className="p-6">
-            <h3 className="text-2xl font-bold text-[#28098d] mb-6">Current vs Target Progress</h3>
-            <ResponsiveContainer width="100%" height={400}>
-              <ComposedChart data={focusAreasData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#e8e5f5" />
-                <XAxis type="number" domain={[0, 100]} tick={{ fill: '#28098d' }} />
-                <YAxis dataKey="area" type="category" width={180} tick={{ fill: '#28098d', fontSize: 11 }} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#28098d', border: 'none', borderRadius: '8px', color: '#fff' }}
-                />
-                <Bar dataKey="target" fill="#e8e5f5" radius={[0, 4, 4, 0]} />
-                <Bar dataKey="current" fill="#f8b521" radius={[0, 4, 4, 0]} />
-              </ComposedChart>
-            </ResponsiveContainer>
+            <h3 className="text-2xl font-bold text-[#28098d] mb-2">Strategic Focus Areas</h3>
+            <p className="text-gray-600 mb-6">These seven focus areas guide our development priorities. Each area has specific targets and success criteria that we track through platform analytics and member feedback.</p>
           </CardContent>
         </Card>
 
         {/* Focus Areas Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
-            { num: '1', title: 'Platform Robustness & User Adoption', target: '>90% uptime, 80%+ MAU', icon: Gauge, color: 'from-blue-500 to-cyan-500' },
-            { num: '2', title: 'User Analytics & Behavioral Intelligence', target: 'Complete journey tracking', icon: BarChart3, color: 'from-purple-500 to-violet-500' },
-            { num: '3', title: 'Data Collection & System Integration', target: '95%+ data accuracy', icon: Database, color: 'from-green-500 to-emerald-500' },
-            { num: '4', title: 'Impact Measurement & Reporting', target: 'Automated KPI dashboards', icon: PieChart, color: 'from-orange-500 to-red-500' },
-            { num: '5', title: 'Admin Control & Operational Efficiency', target: '50% overhead reduction', icon: Settings, color: 'from-pink-500 to-rose-500' },
-            { num: '6', title: 'Website Development & Public Presence', target: 'SEO-optimized launch', icon: Globe, color: 'from-indigo-500 to-blue-500' },
-            { num: '7', title: 'Security, Privacy & Compliance', target: 'Zero breaches, GDPR ready', icon: Shield, color: 'from-red-500 to-orange-500' },
+            { num: '1', title: 'Platform Robustness & User Adoption', target: '>90% uptime, 80%+ MAU', desc: 'Ensuring the platform is reliable and actively used by our members. Focus on performance optimization and user engagement strategies.', icon: Gauge, color: 'from-blue-500 to-cyan-500' },
+            { num: '2', title: 'User Analytics & Behavioral Intelligence', target: 'Complete journey tracking', desc: 'Understanding how members interact with our platforms to improve user experience and identify areas for enhancement.', icon: BarChart3, color: 'from-purple-500 to-violet-500' },
+            { num: '3', title: 'Data Collection & System Integration', target: '95%+ data accuracy', desc: 'Building reliable data pipelines and ensuring seamless integration between different systems for accurate information flow.', icon: Database, color: 'from-green-500 to-emerald-500' },
+            { num: '4', title: 'Impact Measurement & Reporting', target: 'Automated KPI dashboards', desc: 'Creating comprehensive reporting tools that automatically track and visualize our impact metrics and program effectiveness.', icon: PieChart, color: 'from-orange-500 to-red-500' },
+            { num: '5', title: 'Admin Control & Operational Efficiency', target: '50% overhead reduction', desc: 'Streamlining administrative processes through automation and improved tools to reduce manual work and increase productivity.', icon: Settings, color: 'from-pink-500 to-rose-500' },
+            { num: '6', title: 'Website Development & Public Presence', target: 'SEO-optimized launch', desc: 'Enhancing our public website to better attract new members, showcase our work, and improve search engine visibility.', icon: Globe, color: 'from-indigo-500 to-blue-500' },
+            { num: '7', title: 'Security, Privacy & Compliance', target: 'Zero breaches, GDPR ready', desc: 'Implementing robust security measures, privacy controls, and compliance frameworks to protect member data and meet regulatory requirements.', icon: Shield, color: 'from-red-500 to-orange-500' },
           ].map((area) => (
             <Card key={area.num} className="border-2 border-[#e8e5f5] hover:border-[#28098d] transition-all hover:shadow-lg">
               <CardContent className="p-5">
@@ -274,6 +248,7 @@ const Day2Presentation = () => {
                       <Badge className="bg-[#f8b521] text-[#28098d] text-xs font-bold px-2 py-0.5">{area.num}</Badge>
                       <h3 className="text-lg font-bold text-[#28098d] leading-tight">{area.title}</h3>
                     </div>
+                    <p className="text-gray-600 text-sm mb-2 leading-relaxed">{area.desc}</p>
                     <p className="text-[#f8b521] font-semibold text-sm">Target: {area.target}</p>
                   </div>
                 </div>
@@ -302,18 +277,19 @@ const Day2Presentation = () => {
         {/* Timeline Visualization */}
         <Card className="mb-8 border-2 border-[#28098d] bg-white">
           <CardContent className="p-6">
-            <h3 className="text-2xl font-bold text-[#28098d] mb-6">Q1 Timeline Progress</h3>
+            <h3 className="text-2xl font-bold text-[#28098d] mb-2">Q1 Timeline Progress</h3>
+            <p className="text-gray-600 mb-6">Our Q1 roadmap focuses on core platform improvements and foundational infrastructure. We're making steady progress on key initiatives.</p>
             <div className="relative">
               {/* Timeline Line */}
               <div className="absolute left-8 top-0 bottom-0 w-1 bg-[#e8e5f5]"></div>
               <div className="space-y-6">
                 {[
-                  { week: '1-2', task: 'Fund Manager Portal launch readiness review', status: 'Done ✓', icon: CheckCircle2, color: 'green' },
-                  { week: '3-4', task: 'User onboarding flow redesign', status: 'Done ✓', icon: CheckCircle2, color: 'green' },
-                  { week: '5-6', task: 'Analytics infrastructure deployment', status: 'In Progress', icon: Clock, color: 'gold' },
-                  { week: '7-8', task: 'Admin Dashboard V2 polish and deployment', status: 'Pending', icon: Circle, color: 'gray' },
-                  { week: '9-10', task: 'Core security framework (MFA, audit logging)', status: 'Pending', icon: Circle, color: 'gray' },
-                  { week: '11-12', task: 'User migration and training', status: 'Pending', icon: Circle, color: 'gray' },
+                  { week: '1-2', task: 'Fund Manager Portal launch readiness review', desc: 'Comprehensive audit of portal features, user testing, and bug fixes to ensure smooth launch experience.', status: 'Done ✓', icon: CheckCircle2, color: 'green' },
+                  { week: '3-4', task: 'User onboarding flow redesign', desc: 'Streamlined registration process with improved UX, clearer instructions, and automated welcome sequences.', status: 'Done ✓', icon: CheckCircle2, color: 'green' },
+                  { week: '5-6', task: 'Analytics infrastructure deployment', desc: 'Setting up comprehensive tracking systems, dashboards, and reporting tools to monitor platform usage and engagement.', status: 'In Progress', icon: Clock, color: 'gold' },
+                  { week: '7-8', task: 'Admin Dashboard V2 polish and deployment', desc: 'Enhanced admin interface with better navigation, real-time updates, and improved data visualization capabilities.', status: 'Pending', icon: Circle, color: 'gray' },
+                  { week: '9-10', task: 'Core security framework (MFA, audit logging)', desc: 'Implementing multi-factor authentication for all admin accounts and comprehensive audit trails for security compliance.', status: 'Pending', icon: Circle, color: 'gray' },
+                  { week: '11-12', task: 'User migration and training', desc: 'Supporting existing users through platform updates, providing training materials, and ensuring smooth transition to new features.', status: 'Pending', icon: Circle, color: 'gray' },
                 ].map((item, idx) => (
                   <div key={idx} className="relative flex items-start gap-6">
                     <div className={`w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 z-10 ${
@@ -334,6 +310,7 @@ const Day2Presentation = () => {
                         </Badge>
                         <span className="font-semibold text-[#28098d]">{item.task}</span>
                       </div>
+                      <p className="text-sm text-gray-600 mb-2">{item.desc}</p>
                       <Badge className={item.color === 'green' ? 'bg-green-500 text-white' : item.color === 'gold' ? 'bg-[#f8b521] text-[#28098d]' : 'bg-gray-400 text-white'}>
                         {item.status}
                       </Badge>
@@ -350,13 +327,20 @@ const Day2Presentation = () => {
           <CardContent className="p-8">
             <div className="flex items-center gap-3 mb-4">
               <Star className="w-8 h-8 text-[#28098d]" />
-              <h3 className="text-2xl font-bold text-[#28098d]">Q1 Milestones</h3>
+              <h3 className="text-2xl font-bold text-[#28098d]">Q1 Key Milestones</h3>
             </div>
+            <p className="text-gray-600 mb-4">These milestones represent critical achievements that demonstrate progress toward our strategic goals.</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {['50+ active users', 'Admin dashboard operational', 'MFA for all admins', 'Website specs finalized'].map((milestone, idx) => (
+              {[
+                { text: '50+ active users', desc: 'Growing our active member base' },
+                { text: 'Admin dashboard operational', desc: 'Streamlined admin workflows' },
+                { text: 'MFA for all admins', desc: 'Enhanced security measures' },
+                { text: 'Website specs finalized', desc: 'Ready for development start' }
+              ].map((milestone, idx) => (
                 <div key={idx} className="bg-white rounded-lg p-4 border border-[#f8b521] text-center">
                   <Check className="w-6 h-6 text-green-500 mx-auto mb-2" />
-                  <p className="text-sm font-semibold text-[#28098d]">{milestone}</p>
+                  <p className="text-sm font-semibold text-[#28098d] mb-1">{milestone.text}</p>
+                  <p className="text-xs text-gray-600">{milestone.desc}</p>
                 </div>
               ))}
             </div>
@@ -377,15 +361,16 @@ const Day2Presentation = () => {
             <h2 className="text-5xl font-bold text-[#28098d]">Q2 2026 Roadmap</h2>
             <Badge className="bg-green-500 text-white text-lg px-3 py-1 ml-4">Apr - Jun</Badge>
           </div>
-          <div className="w-40 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
+          <div className="w-40 h-1.5 bg-[#f8b521] mx-auto rounded-full mb-4"></div>
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto">Q2 builds on Q1 foundations with advanced integrations, enhanced analytics, and new platform features. We'll focus on member engagement and data-driven improvements.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {[
-            { week: '1-3', task: 'WhatsApp and HubSpot CRM integration (Phase 1: Contacts sync)', icon: Network, color: 'from-blue-500 to-cyan-500' },
-            { week: '4-6', task: 'Advanced analytics dashboards with export (SNA, Network Survey)', icon: BarChart3, color: 'from-purple-500 to-violet-500' },
-            { week: '7-9', task: 'Learning Hub CMS & Impact tracking tool (Phase 1: KPI framework)', icon: FileText, color: 'from-green-500 to-emerald-500' },
-            { week: '10-12', task: 'User onboarding optimization based on Q1 data', icon: TrendingUp, color: 'from-orange-500 to-red-500' },
+            { week: '1-3', task: 'WhatsApp and HubSpot CRM Integration', desc: 'Phase 1: Synchronizing contacts between WhatsApp and HubSpot to streamline member communication and relationship management.', icon: Network, color: 'from-blue-500 to-cyan-500' },
+            { week: '4-6', task: 'Advanced Analytics Dashboards', desc: 'Building comprehensive dashboards with export capabilities for Social Network Analysis (SNA) and Network Survey data visualization.', icon: BarChart3, color: 'from-purple-500 to-violet-500' },
+            { week: '7-9', task: 'Learning Hub CMS & Impact Tracking', desc: 'Phase 1: Developing content management system for Learning Hub and establishing KPI framework for measuring educational impact.', icon: FileText, color: 'from-green-500 to-emerald-500' },
+            { week: '10-12', task: 'User Onboarding Optimization', desc: 'Using Q1 analytics data to refine onboarding process, reduce drop-off rates, and improve initial user experience based on actual usage patterns.', icon: TrendingUp, color: 'from-orange-500 to-red-500' },
           ].map((item, idx) => (
             <Card key={idx} className={`border-2 ${idx % 2 === 0 ? 'bg-[#e8e5f5] border-[#28098d]' : 'bg-white border-[#28098d]'} hover:shadow-xl transition-all`}>
               <CardContent className="p-6">
@@ -395,7 +380,8 @@ const Day2Presentation = () => {
                   </div>
                   <div className="flex-1">
                     <Badge className="bg-[#28098d] text-white mb-2">Week {item.week}</Badge>
-                    <p className="text-gray-700 text-lg leading-relaxed">{item.task}</p>
+                    <p className="text-gray-700 text-lg leading-relaxed font-semibold mb-2">{item.task}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               </CardContent>
@@ -407,21 +393,25 @@ const Day2Presentation = () => {
         <Card className="bg-[#e8e5f5] border-2 border-[#28098d] relative overflow-hidden">
           <div className="absolute left-0 top-0 bottom-0 w-2 bg-[#f8b521]"></div>
           <CardContent className="p-8 ml-4">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-4">
               <Target className="w-8 h-8 text-[#28098d]" />
-              <h3 className="text-2xl font-bold text-[#28098d]">Q2 Milestones</h3>
+              <h3 className="text-2xl font-bold text-[#28098d]">Q2 Key Milestones</h3>
             </div>
+            <p className="text-gray-600 mb-6">These achievements will demonstrate significant progress in platform capabilities and member engagement.</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                'WhatsApp and HubSpot contact sync operational',
-                'Data sharing rooms enabled for secure member collaboration',
-                'Member Blogs enabled with engagement reports',
-                'Learning Modules Hub live (text, visuals, videos, webinars)',
-                '80% user activation rate achieved',
+                { text: 'WhatsApp and HubSpot contact sync operational', desc: 'Seamless integration for member communication' },
+                { text: 'Data sharing rooms enabled', desc: 'Secure collaboration spaces for members' },
+                { text: 'Member Blogs with engagement reports', desc: 'Content creation and analytics tools' },
+                { text: 'Learning Modules Hub live', desc: 'Multi-format educational resources available' },
+                { text: '80% user activation rate achieved', desc: 'Strong member engagement metrics' },
               ].map((milestone, idx) => (
                 <div key={idx} className="flex items-start gap-3 bg-white rounded-lg p-4">
                   <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-                  <span className="text-gray-700">{milestone}</span>
+                  <div>
+                    <span className="text-gray-700 font-semibold block mb-1">{milestone.text}</span>
+                    <span className="text-gray-600 text-sm">{milestone.desc}</span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -457,22 +447,26 @@ const Day2Presentation = () => {
               </div>
               <ul className="space-y-4 mb-6">
                 {[
-                  'AI-powered features (PortIQ enhancements)',
-                  'Data sharing rooms deployment',
-                  'Impact tracking tool launch',
-                  'Community features expansion',
-                  'Website upgrade & polish',
+                  { text: 'AI-powered features (PortIQ enhancements)', desc: 'Expanding PortIQ capabilities with better AI responses and automated insights' },
+                  { text: 'Data sharing rooms deployment', desc: 'Enabling secure collaboration spaces where members can share data and insights' },
+                  { text: 'Impact tracking tool launch', desc: 'Comprehensive tool for measuring and reporting program effectiveness and member outcomes' },
+                  { text: 'Community features expansion', desc: 'Enhanced forums, discussion groups, and networking capabilities' },
+                  { text: 'Website upgrade & polish', desc: 'Modern design refresh with improved navigation and performance' },
                 ].map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <Star className="w-5 h-5 text-[#f8b521] mt-1 flex-shrink-0" />
-                    <span className="text-gray-700">{item}</span>
+                    <div>
+                      <span className="text-gray-700 font-semibold block">{item.text}</span>
+                      <span className="text-gray-600 text-sm">{item.desc}</span>
+                    </div>
                   </li>
                 ))}
               </ul>
               <div className="bg-[#fef9e7] rounded-lg p-4 border border-[#f8b521]">
-                <p className="text-sm font-semibold text-[#28098d]">
-                  🎯 Target: AI handles 70%+ queries, 30% engagement ↑
+                <p className="text-sm font-semibold text-[#28098d] mb-1">
+                  🎯 Q3 Target: AI handles 70%+ queries, 30% engagement increase
                 </p>
+                <p className="text-xs text-gray-600">Focus on automation and member engagement improvements</p>
               </div>
             </CardContent>
           </Card>
@@ -489,22 +483,26 @@ const Day2Presentation = () => {
               </div>
               <ul className="space-y-4 mb-6">
                 {[
-                  'Platform performance optimization',
-                  'Impact reporting system finalization',
-                  'Documentation & knowledge base',
-                  '2026 review and 2027 planning',
-                  'All contract deliverables complete',
+                  { text: 'Platform performance optimization', desc: 'Speed improvements, caching strategies, and infrastructure tuning' },
+                  { text: 'Impact reporting system finalization', desc: 'Complete automated reporting workflows for stakeholders' },
+                  { text: 'Documentation & knowledge base', desc: 'Comprehensive guides for users and administrators' },
+                  { text: '2026 review and 2027 planning', desc: 'Annual assessment and strategic planning for next year' },
+                  { text: 'All contract deliverables complete', desc: 'Finalizing all committed features and platform capabilities' },
                 ].map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <Target className="w-5 h-5 text-[#28098d] mt-1 flex-shrink-0" />
-                    <span className="text-gray-700">{item}</span>
+                    <div>
+                      <span className="text-gray-700 font-semibold block">{item.text}</span>
+                      <span className="text-gray-600 text-sm">{item.desc}</span>
+                    </div>
                   </li>
                 ))}
               </ul>
               <div className="bg-[#e8e5f5] rounded-lg p-4 border border-[#28098d]">
-                <p className="text-sm font-semibold text-[#28098d]">
-                  🎯 Target: &lt;150ms page load, 100% on-time reports
+                <p className="text-sm font-semibold text-[#28098d] mb-1">
+                  🎯 Q4 Target: &lt;150ms page load, 100% on-time reports
                 </p>
+                <p className="text-xs text-gray-600">Focus on performance excellence and reliability</p>
               </div>
             </CardContent>
           </Card>
@@ -517,17 +515,19 @@ const Day2Presentation = () => {
               <CheckCircle2 className="w-8 h-8 text-[#f8b521]" />
               <h3 className="text-2xl font-bold text-white">Year-End Deliverables</h3>
             </div>
+            <p className="text-white/90 text-sm mb-6">By end of 2026, we will have delivered these core components that form the foundation of our technology platform.</p>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               {[
-                'Revamped CFF website',
-                'Functional Fund Manager Portal',
-                'Accurate data dashboards',
-                'Well-structured CRM',
-                'Monthly support logs',
+                { text: 'Revamped CFF website', desc: 'Modern public site' },
+                { text: 'Functional Fund Manager Portal', desc: 'Core member platform' },
+                { text: 'Accurate data dashboards', desc: 'Analytics & insights' },
+                { text: 'Well-structured CRM', desc: 'Member management' },
+                { text: 'Monthly support logs', desc: 'Ongoing maintenance' },
               ].map((deliverable, idx) => (
                 <div key={idx} className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
                   <Check className="w-5 h-5 text-[#f8b521] mx-auto mb-2" />
-                  <p className="text-white text-sm">{deliverable}</p>
+                  <p className="text-white text-sm font-semibold mb-1">{deliverable.text}</p>
+                  <p className="text-white/70 text-xs">{deliverable.desc}</p>
                 </div>
               ))}
             </div>
@@ -547,22 +547,24 @@ const Day2Presentation = () => {
             </div>
             <h2 className="text-5xl font-bold text-[#28098d]">Platform Improvement Backlog</h2>
           </div>
-          <div className="w-48 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
+          <div className="w-48 h-1.5 bg-[#f8b521] mx-auto rounded-full mb-4"></div>
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto">Our improvement backlog contains prioritized enhancements across four key platform areas. These features will be developed based on user feedback and strategic priorities.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { title: 'Learning Hub', items: ['Resource editing/deletion', 'Progress tracking', 'Completion rewards', 'AI recommendations', 'Analytics (views, completion)'], icon: BookOpen, color: 'from-blue-500 to-cyan-500' },
-            { title: 'Admin Dashboard', items: ['Real-time refresh indicators', 'Advanced user search', 'Bulk operations', 'Survey detail polish', 'Pending action widget'], icon: Settings, color: 'from-purple-500 to-violet-500' },
-            { title: 'Analytics', items: ['Cross-year comparison', 'Geographic map view', 'Custom date filtering', 'Report scheduling', 'PDF/Excel exports'], icon: BarChart3, color: 'from-green-500 to-emerald-500' },
-            { title: 'Community', items: ['Blog scheduling', 'Content moderation', 'Comment threading', 'Featured rotation', 'Email digests'], icon: Users, color: 'from-orange-500 to-red-500' },
+            { title: 'Learning Hub', desc: 'Educational platform enhancements', items: ['Resource editing/deletion', 'Progress tracking', 'Completion rewards', 'AI recommendations', 'Analytics (views, completion)'], icon: BookOpen, color: 'from-blue-500 to-cyan-500' },
+            { title: 'Admin Dashboard', desc: 'Administrative tool improvements', items: ['Real-time refresh indicators', 'Advanced user search', 'Bulk operations', 'Survey detail polish', 'Pending action widget'], icon: Settings, color: 'from-purple-500 to-violet-500' },
+            { title: 'Analytics', desc: 'Data visualization and reporting', items: ['Cross-year comparison', 'Geographic map view', 'Custom date filtering', 'Report scheduling', 'PDF/Excel exports'], icon: BarChart3, color: 'from-green-500 to-emerald-500' },
+            { title: 'Community', desc: 'Member engagement features', items: ['Blog scheduling', 'Content moderation', 'Comment threading', 'Featured rotation', 'Email digests'], icon: Users, color: 'from-orange-500 to-red-500' },
           ].map((cat, idx) => (
             <Card key={idx} className={`border-2 ${idx % 2 === 0 ? 'bg-[#e8e5f5] border-[#28098d]' : 'bg-[#fef9e7] border-[#f8b521]'} hover:shadow-xl transition-all`}>
               <CardContent className="p-6">
                 <div className={`w-14 h-14 bg-gradient-to-br ${cat.color} rounded-xl flex items-center justify-center mb-4 shadow-lg`}>
                   <cat.icon className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-[#28098d] mb-4">{cat.title}</h3>
+                <h3 className="text-xl font-bold text-[#28098d] mb-1">{cat.title}</h3>
+                <p className="text-sm text-gray-600 mb-4">{cat.desc}</p>
                 <ul className="space-y-2">
                   {cat.items.map((item, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
@@ -579,8 +581,231 @@ const Day2Presentation = () => {
       </div>
     </div>,
 
-    // Slide 8: Success Metrics with Charts
-    <div key="slide-7" className="min-h-full bg-gradient-to-br from-[#e8e5f5] to-white py-12 px-8">
+    // Slide 8: Tool Optimization & Integration Strategy
+    <div key="slide-7-tools" className="min-h-full bg-white py-12 px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-10 text-center">
+          <div className="inline-flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+              <Code className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-5xl font-bold text-[#28098d]">Tool Optimization Strategy</h2>
+          </div>
+          <div className="w-56 h-1.5 bg-[#f8b521] mx-auto rounded-full mb-4"></div>
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto">Practical recommendations for tools we use and how to integrate them better into our platform. Focus on reducing tool sprawl and improving workflows.</p>
+        </div>
+
+        {/* Current Tools - How to Use Better */}
+        <Card className="mb-6 border-2 border-[#28098d] bg-gradient-to-r from-[#e8e5f5] to-white">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Settings className="w-6 h-6 text-[#28098d]" />
+              <h3 className="text-xl font-bold text-[#28098d]">Current Tools - Optimize Usage</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { 
+                  name: 'Supabase', 
+                  bullets: [
+                    'Use Edge Functions for background jobs (email sending, data processing)',
+                    'Set up database webhooks to trigger platform actions automatically',
+                    'Enable real-time subscriptions for live updates (member activity, new applications)',
+                    'Use Supabase Storage webhooks to auto-process uploaded documents',
+                    'Implement RLS policies for all tables to ensure data security'
+                  ],
+                  icon: Database
+                },
+                { 
+                  name: 'Resend', 
+                  bullets: [
+                    'Create email templates for common notifications (welcome, survey reminders)',
+                    'Set up webhooks to track email delivery and bounces',
+                    'Use Resend React Email for better template management',
+                    'Implement retry logic for failed email sends',
+                    'Track email engagement (opens, clicks) for member communication'
+                  ],
+                  icon: Mail
+                },
+                { 
+                  name: 'Slack (if used)', 
+                  bullets: [
+                    'Integrate platform notifications into Slack channels',
+                    'Set up alerts for new member applications, survey completions',
+                    'Use Slack webhooks to post updates from platform',
+                    'Consider: Can we replace Slack notifications with in-platform notifications?',
+                    'If keeping Slack: Use it for team coordination only, not member communication'
+                  ],
+                  icon: MessageSquare
+                },
+              ].map((tool, idx) => (
+                <div key={idx} className="bg-white rounded-lg p-4 border border-[#28098d]">
+                  <div className="flex items-start gap-3 mb-3">
+                    <tool.icon className="w-5 h-5 text-[#28098d] mt-1 flex-shrink-0" />
+                    <h4 className="font-bold text-[#28098d] text-lg">{tool.name}</h4>
+                  </div>
+                  <ul className="space-y-2">
+                    {tool.bullets.map((bullet, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                        <span className="text-[#f8b521] mt-1">•</span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Tools to Integrate */}
+        <Card className="mb-6 border-2 border-[#f8b521] bg-[#fef9e7]">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Rocket className="w-6 h-6 text-[#f8b521]" />
+              <h3 className="text-xl font-bold text-[#28098d]">Tools to Integrate</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { 
+                  name: 'HubSpot CRM', 
+                  bullets: [
+                    'Sync member profiles automatically from platform to HubSpot',
+                    'Track member engagement (logins, survey completions) as HubSpot activities',
+                    'Create automated workflows: New member → HubSpot contact → Welcome email sequence',
+                    'Use HubSpot for email campaigns to members (newsletters, announcements)',
+                    'Replace manual contact management with automated sync'
+                  ],
+                  action: 'Integrate via API',
+                  icon: Users
+                },
+                { 
+                  name: 'WhatsApp Business API', 
+                  bullets: [
+                    'Send survey reminders via WhatsApp instead of email',
+                    'Notify members of application status updates',
+                    'Send platform notifications (new blog posts, learning resources)',
+                    'Use for member support and quick responses',
+                    'Integrate with Supabase Edge Functions for automated messaging'
+                  ],
+                  action: 'Q2 2026 integration',
+                  icon: MessageSquare
+                },
+                { 
+                  name: 'Error Monitoring (Sentry)', 
+                  bullets: [
+                    'Track platform errors and performance issues automatically',
+                    'Get alerts when critical errors occur',
+                    'Monitor API response times and slow queries',
+                    'Track user-reported issues from feedback system',
+                    'Replace manual error checking with automated monitoring'
+                  ],
+                  action: 'Set up now',
+                  icon: AlertTriangle
+                },
+              ].map((tool, idx) => (
+                <div key={idx} className="bg-white rounded-lg p-4 border border-[#f8b521]">
+                  <div className="flex items-start gap-3 mb-3">
+                    <tool.icon className="w-5 h-5 text-[#f8b521] mt-1 flex-shrink-0" />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-bold text-[#28098d]">{tool.name}</h4>
+                        <Badge className="bg-[#f8b521] text-[#28098d] text-xs">{tool.action}</Badge>
+                      </div>
+                      <ul className="space-y-2">
+                        {tool.bullets.map((bullet, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                            <span className="text-[#f8b521] mt-1">•</span>
+                            <span>{bullet}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Tools to Drop / Build Into Platform */}
+        <Card className="border-2 border-red-300 bg-red-50">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <XCircle className="w-6 h-6 text-red-600" />
+              <h3 className="text-xl font-bold text-[#28098d]">Drop These - Build Into Platform Instead</h3>
+            </div>
+            <p className="text-sm text-gray-700 mb-4">These external tools can be replaced with features built directly into our platform, reducing costs and improving user experience.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { 
+                  name: 'External Notification Tools', 
+                  current: 'Using Slack/Email for all notifications',
+                  build: [
+                    'In-platform notification center (already have basic version)',
+                    'Real-time notification bell with unread count',
+                    'Email digest option for members who prefer email',
+                    'Push notifications for mobile users (PWA)'
+                  ],
+                  benefit: 'Members stay in platform, better engagement tracking'
+                },
+                { 
+                  name: 'Separate Analytics Tools', 
+                  current: 'Using external analytics for member behavior',
+                  build: [
+                    'Enhanced analytics dashboard (already built, can expand)',
+                    'Member activity tracking within platform',
+                    'Survey completion analytics',
+                    'Engagement metrics (logins, content views, interactions)'
+                  ],
+                  benefit: 'All data in one place, no external tool costs'
+                },
+                { 
+                  name: 'Manual Contact Management', 
+                  current: 'Managing contacts in spreadsheets or separate CRM',
+                  build: [
+                    'Member directory with advanced filtering (already built)',
+                    'Contact export functionality',
+                    'Member relationship tracking',
+                    'Communication history within member profiles'
+                  ],
+                  benefit: 'Single source of truth, automatic updates'
+                },
+                { 
+                  name: 'External Survey Tools', 
+                  current: 'Using Typeform/SurveyMonkey for some surveys',
+                  build: [
+                    'Custom survey system (already built and superior)',
+                    'Multi-year survey tracking',
+                    'Conditional logic and validation',
+                    'Progress saving and auto-complete'
+                  ],
+                  benefit: 'Data stays in platform, better integration'
+                },
+              ].map((item, idx) => (
+                <div key={idx} className="bg-white rounded-lg p-4 border border-red-200">
+                  <h4 className="font-bold text-[#28098d] mb-2">{item.name}</h4>
+                  <p className="text-xs text-gray-600 mb-2 italic">Current: {item.current}</p>
+                  <p className="text-xs font-semibold text-gray-700 mb-2">Build instead:</p>
+                  <ul className="space-y-1 mb-2">
+                    {item.build.map((point, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs text-gray-700">
+                        <span className="text-red-600 mt-1">→</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Badge className="bg-green-100 text-green-700 text-xs">Benefit: {item.benefit}</Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">08</div>
+      </div>
+    </div>,
+
+    // Slide 9: Success Metrics with Charts
+    <div key="slide-8" className="min-h-full bg-gradient-to-br from-[#e8e5f5] to-white py-12 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
@@ -589,26 +814,15 @@ const Day2Presentation = () => {
             </div>
             <h2 className="text-5xl font-bold text-[#28098d]">Success Metrics</h2>
           </div>
-          <div className="w-32 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
+          <div className="w-32 h-1.5 bg-[#f8b521] mx-auto rounded-full mb-4"></div>
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto">We track key performance indicators across seven critical areas to measure our progress and ensure we're meeting strategic objectives.</p>
         </div>
 
         {/* Metrics Comparison Chart */}
         <Card className="mb-8 border-2 border-[#e8e5f5]">
           <CardContent className="p-6">
-            <h3 className="text-2xl font-bold text-[#28098d] mb-6">Current Performance vs Targets</h3>
-            <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={metricsData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e8e5f5" />
-                <XAxis dataKey="metric" tick={{ fill: '#28098d', fontSize: 11 }} />
-                <YAxis tick={{ fill: '#28098d' }} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#28098d', border: 'none', borderRadius: '8px', color: '#fff' }}
-                />
-                <Legend />
-                <Bar dataKey="target" fill="#e8e5f5" name="Target" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="current" fill="#f8b521" name="Current" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            <h3 className="text-2xl font-bold text-[#28098d] mb-2">Success Metrics Framework</h3>
+            <p className="text-gray-600 mb-6">We track these key performance indicators to measure platform effectiveness and member engagement. Metrics are collected through platform analytics and user activity tracking.</p>
           </CardContent>
         </Card>
 
@@ -645,12 +859,12 @@ const Day2Presentation = () => {
             </Card>
           ))}
         </div>
-        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">08</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">09</div>
       </div>
     </div>,
 
-    // Slide 9: Resource Requirements with Cost Breakdown
-    <div key="slide-8" className="min-h-full bg-white py-12 px-8">
+    // Slide 10: Resource Requirements with Cost Breakdown
+    <div key="slide-9" className="min-h-full bg-white py-12 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
@@ -667,21 +881,23 @@ const Day2Presentation = () => {
           <Card className="bg-[#e8e5f5] border-2 border-[#28098d] relative overflow-hidden">
             <div className="absolute left-0 top-0 bottom-0 w-2 bg-[#28098d]"></div>
             <CardContent className="p-8 ml-4">
-              <div className="flex items-center gap-3 mb-6">
-                <Users className="w-8 h-8 text-[#28098d]" />
-                <h3 className="text-2xl font-bold text-[#28098d]">Technical Resources</h3>
-              </div>
-              <div className="space-y-4">
-                {[
-                  { role: 'Full-stack Developer', type: 'Dedicated', icon: Code },
-                  { role: 'DevOps/Security Engineer', type: 'Part-time', icon: Shield },
-                  { role: 'Design Support', type: 'As needed', icon: Palette },
-                ].map((resource, idx) => (
-                  <div key={idx} className="flex items-center gap-4 bg-white rounded-lg p-4">
-                    <resource.icon className="w-6 h-6 text-[#28098d]" />
+            <div className="flex items-center gap-3 mb-4">
+              <Users className="w-8 h-8 text-[#28098d]" />
+              <h3 className="text-2xl font-bold text-[#28098d]">Technical Resources</h3>
+            </div>
+            <p className="text-gray-600 mb-6">Our team structure ensures we have the right expertise at the right time, balancing dedicated resources with flexible support.</p>
+            <div className="space-y-4">
+              {[
+                { role: 'Full-stack Developer', type: 'Dedicated', desc: 'Primary development resource for platform features and maintenance', icon: Code },
+                { role: 'DevOps/Security Engineer', type: 'Part-time', desc: 'Infrastructure management, security audits, and deployment processes', icon: Shield },
+                { role: 'Design Support', type: 'As needed', desc: 'UI/UX design assistance for new features and platform improvements', icon: Palette },
+              ].map((resource, idx) => (
+                  <div key={idx} className="flex items-start gap-4 bg-white rounded-lg p-4">
+                    <resource.icon className="w-6 h-6 text-[#28098d] mt-1 flex-shrink-0" />
                     <div className="flex-1">
-                      <p className="font-semibold text-[#28098d]">{resource.role}</p>
-                      <p className="text-sm text-gray-600">{resource.type}</p>
+                      <p className="font-semibold text-[#28098d] mb-1">{resource.role}</p>
+                      <p className="text-sm text-gray-600 font-medium mb-1">{resource.type}</p>
+                      <p className="text-xs text-gray-500">{resource.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -693,33 +909,12 @@ const Day2Presentation = () => {
           <Card className="bg-[#fef9e7] border-2 border-[#f8b521] relative overflow-hidden">
             <div className="absolute left-0 top-0 bottom-0 w-2 bg-[#f8b521]"></div>
             <CardContent className="p-8 ml-4">
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-4">
                 <DollarSign className="w-8 h-8 text-[#28098d]" />
                 <h3 className="text-2xl font-bold text-[#28098d]">Est. Monthly Infrastructure</h3>
               </div>
+              <p className="text-gray-600 mb-6">Our infrastructure costs are predictable and scalable, allowing us to plan effectively while maintaining high performance and reliability.</p>
               
-              {/* Cost Pie Chart */}
-              <div className="mb-6">
-                <ResponsiveContainer width="100%" height={200}>
-                  <RechartsPieChart>
-                    <Pie
-                      data={resourceCostsData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, cost }) => `${name}: $${cost}`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="cost"
-                    >
-                      {resourceCostsData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </RechartsPieChart>
-                </ResponsiveContainer>
-              </div>
 
               <div className="space-y-3 mb-6">
                 {resourceCostsData.map((item, idx) => (
@@ -741,23 +936,25 @@ const Day2Presentation = () => {
         <Card className="bg-[#e8e5f5] border-2 border-[#28098d] relative overflow-hidden">
           <div className="absolute left-0 top-0 bottom-0 w-2 bg-[#28098d]"></div>
           <CardContent className="p-8 ml-4">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-4">
               <Shield className="w-8 h-8 text-[#28098d]" />
               <h3 className="text-2xl font-bold text-[#28098d]">Risk Mitigation</h3>
             </div>
+            <p className="text-gray-600 mb-6">We proactively identify potential risks and have mitigation strategies in place to ensure project success and platform stability.</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { risk: 'User adoption below target', mitigation: 'Admin monitoring, onboarding redesign, efficient feedback loop', icon: Users },
-                { risk: 'Data quality issues', mitigation: 'Automated validation, quality dashboards, admin alerts', icon: Database },
-                { risk: 'Security breach', mitigation: 'MFA, audit logging, regular security reviews', icon: Lock },
-                { risk: 'Scope creep', mitigation: 'Monthly priority review, clear documentation, stakeholder alignment', icon: AlertTriangle },
+                { risk: 'User adoption below target', mitigation: 'Admin monitoring, onboarding redesign, efficient feedback loop', desc: 'Early detection and rapid response to engagement issues', icon: Users },
+                { risk: 'Data quality issues', mitigation: 'Automated validation, quality dashboards, admin alerts', desc: 'Preventive measures and real-time monitoring', icon: Database },
+                { risk: 'Security breach', mitigation: 'MFA, audit logging, regular security reviews', desc: 'Multi-layered security approach with continuous monitoring', icon: Lock },
+                { risk: 'Scope creep', mitigation: 'Monthly priority review, clear documentation, stakeholder alignment', desc: 'Structured processes to maintain focus and control', icon: AlertTriangle },
               ].map((r, idx) => (
                 <div key={idx} className="bg-white rounded-lg p-4">
                   <div className="flex items-start gap-3">
                     <r.icon className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-[#28098d] mb-1">• {r.risk}:</p>
-                      <p className="text-sm text-gray-600">{r.mitigation}</p>
+                      <p className="text-sm text-gray-700 mb-1">{r.mitigation}</p>
+                      <p className="text-xs text-gray-500">{r.desc}</p>
                     </div>
                   </div>
                 </div>
@@ -765,12 +962,12 @@ const Day2Presentation = () => {
             </div>
           </CardContent>
         </Card>
-        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">09</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">10</div>
       </div>
     </div>,
 
-    // Slide 10: Engagement Strategy
-    <div key="slide-9" className="min-h-full bg-gradient-to-br from-white to-[#fef9e7] py-12 px-8">
+    // Slide 11: Engagement Strategy
+    <div key="slide-10" className="min-h-full bg-gradient-to-br from-white to-[#fef9e7] py-12 px-8">
       <div className="max-w-6xl mx-auto">
         <div className="mb-10 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
@@ -780,17 +977,18 @@ const Day2Presentation = () => {
             <h2 className="text-5xl font-bold text-[#28098d]">Engagement & Communication Strategy</h2>
           </div>
           <p className="text-xl text-[#f8b521] font-semibold mb-4">How We Keep Members Active & Informed</p>
-          <div className="w-56 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
+          <div className="w-56 h-1.5 bg-[#f8b521] mx-auto rounded-full mb-4"></div>
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto">Regular engagement activities ensure members stay connected, informed, and actively using our platforms. These routines help us maintain high satisfaction and identify improvement opportunities.</p>
         </div>
 
         <div className="space-y-6">
           {[
-            { freq: 'Weekly', action: 'Content posts on blog/learning hub to drive engagement', icon: Star, color: 'from-blue-500 to-cyan-500' },
-            { freq: 'Weekly', action: 'Monitor platform analytics for drop-off patterns', icon: BarChart3, color: 'from-green-500 to-emerald-500' },
-            { freq: 'Bi-weekly', action: 'Review DevTasks feedback and prioritize fixes', icon: CheckCircle2, color: 'from-purple-500 to-violet-500' },
-            { freq: 'Monthly', action: 'Technical support logs and system health report', icon: FileText, color: 'from-orange-500 to-red-500' },
-            { freq: 'Monthly', action: 'User engagement summary for leadership', icon: TrendingUp, color: 'from-pink-500 to-rose-500' },
-            { freq: 'Quarterly', action: 'Platform performance review and optimization sprint', icon: Rocket, color: 'from-indigo-500 to-blue-500' },
+            { freq: 'Weekly', action: 'Content posts on blog/learning hub', desc: 'Regular educational content and updates to drive member engagement and provide value', icon: Star, color: 'from-blue-500 to-cyan-500' },
+            { freq: 'Weekly', action: 'Monitor platform analytics for drop-off patterns', desc: 'Track user behavior to identify friction points and opportunities for improvement', icon: BarChart3, color: 'from-green-500 to-emerald-500' },
+            { freq: 'Bi-weekly', action: 'Review DevTasks feedback and prioritize fixes', desc: 'Systematic review of user-reported issues and feature requests to guide development priorities', icon: CheckCircle2, color: 'from-purple-500 to-violet-500' },
+            { freq: 'Monthly', action: 'Technical support logs and system health report', desc: 'Comprehensive review of platform stability, performance metrics, and support ticket trends', icon: FileText, color: 'from-orange-500 to-red-500' },
+            { freq: 'Monthly', action: 'User engagement summary for leadership', desc: 'Executive dashboard showing key metrics, user growth, and platform adoption trends', icon: TrendingUp, color: 'from-pink-500 to-rose-500' },
+            { freq: 'Quarterly', action: 'Platform performance review and optimization sprint', desc: 'Deep dive analysis and focused improvement sprint to enhance platform capabilities', icon: Rocket, color: 'from-indigo-500 to-blue-500' },
           ].map((item, idx) => (
             <Card key={idx} className={`border-2 ${idx % 2 === 0 ? 'bg-[#e8e5f5] border-[#28098d]' : 'bg-[#fef9e7] border-[#f8b521]'} hover:shadow-xl transition-all`}>
               <CardContent className="p-6">
@@ -803,20 +1001,21 @@ const Day2Presentation = () => {
                       <Badge className="bg-[#28098d] text-white text-lg px-4 py-1">
                         {item.freq}
                       </Badge>
-                      <span className="text-gray-700 text-lg">{item.action}</span>
+                      <span className="text-gray-700 text-lg font-semibold">{item.action}</span>
                     </div>
+                    <p className="text-gray-600 text-sm">{item.desc}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
-        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">10</div>
+        <div className="absolute bottom-6 right-8 text-gray-400 text-sm font-mono">11</div>
       </div>
     </div>,
 
-    // Slide 11: Strategic Discussion Questions
-    <div key="slide-10" className="min-h-full bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white py-12 px-8 relative">
+    // Slide 12: Strategic Discussion Questions
+    <div key="slide-11" className="min-h-full bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white py-12 px-8 relative">
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 right-20 w-64 h-64 bg-[#f8b521] rounded-full blur-[120px]"></div>
       </div>
@@ -824,7 +1023,8 @@ const Day2Presentation = () => {
         <div className="mb-10 text-center">
           <div className="w-16 h-1.5 bg-[#f8b521] mx-auto mb-6 rounded-full"></div>
           <h2 className="text-6xl font-bold mb-4">Strategic Discussion Questions</h2>
-          <div className="w-48 h-1.5 bg-[#f8b521] mx-auto rounded-full"></div>
+          <div className="w-48 h-1.5 bg-[#f8b521] mx-auto rounded-full mb-4"></div>
+          <p className="text-xl text-white/90 max-w-4xl mx-auto">These questions guide our strategic conversation today. We'll explore each area to align on priorities, clarify expectations, and ensure our technology roadmap supports CFF's mission effectively.</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -837,12 +1037,18 @@ const Day2Presentation = () => {
               </div>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#f8b521]">•</span>
-                  <span>What is the current stage/level of our data infrastructure and technology stack?</span>
+                  <span className="text-[#f8b521] mt-1">•</span>
+                  <div>
+                    <span className="block mb-1">What is the current stage/level of our data infrastructure and technology stack?</span>
+                    <span className="text-white/70 text-sm">Understanding where we are today helps us plan realistic improvements and set appropriate expectations.</span>
+                  </div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#f8b521]">•</span>
-                  <span>Which technologies are currently prioritized for development and why?</span>
+                  <span className="text-[#f8b521] mt-1">•</span>
+                  <div>
+                    <span className="block mb-1">Which technologies are currently prioritized for development and why?</span>
+                    <span className="text-white/70 text-sm">Clarifying priorities ensures we allocate resources to the highest-impact initiatives.</span>
+                  </div>
                 </li>
               </ul>
             </CardContent>
@@ -857,12 +1063,18 @@ const Day2Presentation = () => {
               </div>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#f8b521]">•</span>
-                  <span>What is the roadmap for delivery of various tech/tools and enablements?</span>
+                  <span className="text-[#f8b521] mt-1">•</span>
+                  <div>
+                    <span className="block mb-1">What is the roadmap for delivery of various tech/tools and enablements?</span>
+                    <span className="text-white/70 text-sm">A clear timeline helps stakeholders plan and sets expectations for when features will be available.</span>
+                  </div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#f8b521]">•</span>
-                  <span>What mechanisms ensure agility and adaptability in our technology roadmap?</span>
+                  <span className="text-[#f8b521] mt-1">•</span>
+                  <div>
+                    <span className="block mb-1">What mechanisms ensure agility and adaptability in our technology roadmap?</span>
+                    <span className="text-white/70 text-sm">Flexibility allows us to respond to changing needs and emerging opportunities.</span>
+                  </div>
                 </li>
               </ul>
             </CardContent>
@@ -877,12 +1089,18 @@ const Day2Presentation = () => {
               </div>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#f8b521]">•</span>
-                  <span>How do we ensure data integrity, accuracy, and compliance with best practices?</span>
+                  <span className="text-[#f8b521] mt-1">•</span>
+                  <div>
+                    <span className="block mb-1">How do we ensure data integrity, accuracy, and compliance with best practices?</span>
+                    <span className="text-white/70 text-sm">Reliable data is essential for making informed decisions and maintaining trust with members.</span>
+                  </div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#f8b521]">•</span>
-                  <span>How do we balance technology needs with cost-effectiveness and risk management?</span>
+                  <span className="text-[#f8b521] mt-1">•</span>
+                  <div>
+                    <span className="block mb-1">How do we balance technology needs with cost-effectiveness and risk management?</span>
+                    <span className="text-white/70 text-sm">Strategic investment decisions ensure we maximize value while managing constraints.</span>
+                  </div>
                 </li>
               </ul>
             </CardContent>
@@ -897,12 +1115,18 @@ const Day2Presentation = () => {
               </div>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#f8b521]">•</span>
-                  <span>What KPIs will track progress and success for data and technology initiatives?</span>
+                  <span className="text-[#f8b521] mt-1">•</span>
+                  <div>
+                    <span className="block mb-1">What KPIs will track progress and success for data and technology initiatives?</span>
+                    <span className="text-white/70 text-sm">Measurable outcomes help us demonstrate impact and make data-driven decisions.</span>
+                  </div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#f8b521]">•</span>
-                  <span>How do we incorporate feedback and lessons learned into the development process?</span>
+                  <span className="text-[#f8b521] mt-1">•</span>
+                  <div>
+                    <span className="block mb-1">How do we incorporate feedback and lessons learned into the development process?</span>
+                    <span className="text-white/70 text-sm">Continuous improvement ensures our platforms evolve to meet member needs effectively.</span>
+                  </div>
                 </li>
               </ul>
             </CardContent>
@@ -916,6 +1140,7 @@ const Day2Presentation = () => {
               <Network className="w-8 h-8 text-[#28098d]" />
               <h3 className="text-2xl font-bold text-[#28098d]">Platform Focus Areas</h3>
             </div>
+            <p className="text-[#28098d] text-sm mb-4">These six platforms represent our core technology investments for 2026, each serving distinct but interconnected purposes.</p>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
                 'Fund Manager Portal',
@@ -932,12 +1157,12 @@ const Day2Presentation = () => {
             </div>
           </CardContent>
         </Card>
-        <div className="absolute bottom-6 right-8 text-white/40 text-sm font-mono">11</div>
+        <div className="absolute bottom-6 right-8 text-white/40 text-sm font-mono">12</div>
       </div>
     </div>,
 
-    // Slide 12: Thank You
-    <div key="slide-12" className="min-h-full flex flex-col bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white relative overflow-hidden py-12">
+    // Slide 13: Thank You
+    <div key="slide-13" className="min-h-full flex flex-col bg-gradient-to-br from-[#28098d] via-[#1e0758] to-[#28098d] text-white relative overflow-hidden py-12">
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#f8b521] rounded-full blur-[150px] opacity-20"></div>
       </div>
