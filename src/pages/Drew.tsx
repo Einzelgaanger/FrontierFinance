@@ -86,10 +86,10 @@ const Drew = () => {
   ];
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-4 overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-white p-4 overflow-hidden flex flex-col">
       {/* Header */}
       <div className="text-center mb-3">
-        <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 bg-clip-text text-transparent">
+        <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-transparent">
           CFF Thought Leadership — 2026 Topics
         </h1>
       </div>
@@ -101,9 +101,9 @@ const Drew = () => {
           return (
             <div
               key={topic.num}
-              className={`${topic.bg} backdrop-blur-sm rounded-xl p-3 border border-white/10 flex gap-3 items-start hover:scale-[1.02] transition-transform`}
+              className="bg-white rounded-xl p-3 border-2 border-gray-200 shadow-sm flex gap-3 items-start hover:scale-[1.02] hover:shadow-md transition-all"
             >
-              {/* Icon & Number */}
+              {/* Icon & Number - coloured */}
               <div className={`shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br ${topic.color} flex items-center justify-center shadow-lg`}>
                 <Icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
@@ -114,14 +114,14 @@ const Drew = () => {
                   <span className={`text-xs font-bold px-2 py-0.5 rounded-full bg-gradient-to-r ${topic.color} text-white`}>
                     {topic.num}
                   </span>
-                  <h3 className="font-bold text-lg md:text-xl lg:text-2xl leading-tight line-clamp-2">
+                  <h3 className={`font-bold text-lg md:text-xl lg:text-2xl leading-tight line-clamp-2 bg-gradient-to-r ${topic.color} bg-clip-text text-transparent`}>
                     {topic.title}
                   </h3>
                 </div>
                 <ul className="space-y-0.5">
                   {topic.items.map((item, idx) => (
-                    <li key={idx} className="text-base md:text-lg lg:text-xl text-blue-200/90 flex items-start gap-1">
-                      <span className="text-amber-400">•</span>
+                    <li key={idx} className="text-base md:text-lg lg:text-xl text-gray-700 flex items-start gap-1">
+                      <span className="text-gray-400 font-bold">•</span>
                       <span className="line-clamp-1">{item}</span>
                     </li>
                   ))}
@@ -134,7 +134,7 @@ const Drew = () => {
 
       {/* Footer */}
       <div className="mt-2 text-center">
-        <p className="text-blue-300/60 text-xs">
+        <p className="text-gray-500 text-sm">
           ✦ Data-driven content from ESCP Network & L+ Assessment Tools
         </p>
       </div>
