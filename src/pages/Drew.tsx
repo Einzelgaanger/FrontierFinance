@@ -114,13 +114,13 @@ const Drew = () => {
                   <span className={`text-xs font-bold px-2 py-0.5 rounded-full bg-gradient-to-r ${topic.color} text-white`}>
                     {topic.num}
                   </span>
-                  <h3 className="font-bold text-sm md:text-base lg:text-lg leading-tight line-clamp-2">
+                  <h3 className="font-bold text-lg md:text-xl lg:text-2xl leading-tight line-clamp-2">
                     {topic.title}
                   </h3>
                 </div>
                 <ul className="space-y-0.5">
                   {topic.items.map((item, idx) => (
-                    <li key={idx} className="text-xs md:text-sm text-blue-200/90 flex items-start gap-1">
+                    <li key={idx} className="text-base md:text-lg lg:text-xl text-blue-200/90 flex items-start gap-1">
                       <span className="text-amber-400">•</span>
                       <span className="line-clamp-1">{item}</span>
                     </li>
