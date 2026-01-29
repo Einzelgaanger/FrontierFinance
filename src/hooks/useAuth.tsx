@@ -24,22 +24,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserRole = async (userId: string) => {
+  const fetchUserRole = async (userId: string, isRetry = false): Promise<void> => {
     try {
-      console.log('Fetching user role for:', userId);
-      
       // Use the safe SECURITY DEFINER function to get role (bypasses RLS)
       const { data, error } = await supabase
         .rpc('get_user_role', { _user_id: userId });
 
       if (error) {
+        // JWT expired (PGRST301): refresh session and retry once
+        const isJwtExpired = error.code === 'PGRST301' || (error as { message?: string }).message === 'JWT expired';
+        if (isJwtExpired && !isRetry) {
+          const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+          if (!refreshError && refreshData?.session?.user?.id) {
+            return fetchUserRole(refreshData.session.user.id, true);
+          }
+        }
         console.error('Error fetching user role:', error);
         setUserRole('viewer');
         return;
       }
 
       const role = data || 'viewer';
-      console.log('User role fetched:', role);
       setUserRole(role);
     } catch (error) {
       console.error('Error in fetchUserRole:', error);
@@ -62,8 +67,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
-        
         if (!mounted) return;
         
         setSession(session);
@@ -135,41 +138,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     );
 
-    // Check for existing session
+    // Check for existing session and ensure token is fresh (avoids 401 JWT expired)
     const checkSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
-        
+
         if (error) {
           console.error('Error getting session:', error);
-          if (mounted) {
-            setLoading(false);
-          }
+          if (mounted) setLoading(false);
           return;
         }
 
+        let effectiveSession = session;
+        if (session?.user) {
+          const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+          if (!refreshError && refreshData?.session) {
+            effectiveSession = refreshData.session;
+          }
+        }
+
         if (mounted) {
-          setSession(session);
-          setUser(session?.user ?? null);
-          
-          if (session?.user && !isFetchingRole) {
-            lastUserId = session.user.id;
+          setSession(effectiveSession ?? null);
+          setUser(effectiveSession?.user ?? null);
+
+          if (effectiveSession?.user && !isFetchingRole) {
+            lastUserId = effectiveSession.user.id;
             isFetchingRole = true;
-            // Debounce the initial role fetch
             roleFetchTimeout = setTimeout(async () => {
               if (mounted) {
-                await fetchUserRole(session.user.id);
+                await fetchUserRole(effectiveSession!.user.id);
                 isFetchingRole = false;
               }
-            }, 500);
+            }, 300);
           }
           setLoading(false);
         }
       } catch (error) {
         console.error('Error in checkSession:', error);
-        if (mounted) {
-          setLoading(false);
-        }
+        if (mounted) setLoading(false);
       }
     };
 
@@ -260,9 +266,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      await supabase.auth.signOut();
+      await supabase.auth.signOut({ scope: 'local' });
     } catch (error) {
       console.error('Sign out error:', error);
+    } finally {
+      // Always clear local state so UI shows signed out (e.g. when server returns 403 with expired JWT)
+      setSession(null);
+      setUser(null);
+      setUserRole(null);
     }
   };
 
