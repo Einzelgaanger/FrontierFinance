@@ -20,14 +20,11 @@ import {
   User,
   Calendar,
   ExternalLink,
-  ShieldOff,
-  Download,
-  Presentation
+  ShieldOff
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { format } from 'date-fns';
-import { Link } from 'react-router-dom';
 
 interface Feedback {
   id: string;
@@ -268,68 +265,6 @@ export default function DevTasks() {
           </h1>
           <p className="text-gray-600">Manage user feedback and track development tasks</p>
         </div>
-
-        {/* Presentation Downloads Section */}
-        <Card className="mb-6 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Presentation className="w-5 h-5 text-blue-600" />
-              CFF 2026 Planning Meeting Presentations
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-600 mb-4">
-              Download presentation PDFs for the 2026 Planning Meeting (29th - 30th January, Fair Acres Nairobi)
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Day 1 Presentation */}
-              <div className="p-4 bg-white rounded-lg border border-blue-100 shadow-sm">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">1</div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Day 1: Tools, Website & Efficiency</h3>
-                    <p className="text-xs text-gray-500">Session 3 | 11:45 – 13:00 | With Allie</p>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-600 mb-3">
-                  Current tools assessment, website effectiveness, productivity challenges, and platform capabilities overview.
-                </p>
-                <Link to="/presentation/day1" className="block">
-                  <Button 
-                    className="w-full bg-blue-600 hover:bg-blue-700"
-                    size="sm"
-                  >
-                    <Presentation className="w-4 h-4 mr-2" />
-                    View Day 1 Presentation
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Day 2 Presentation */}
-              <div className="p-4 bg-white rounded-lg border border-indigo-100 shadow-sm">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm">2</div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Day 2: Technology Development Plans</h3>
-                    <p className="text-xs text-gray-500">Session | 16:00 – 17:00 | Discussion Lead</p>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-600 mb-3">
-                  2026 strategic roadmap, quarterly milestones, success metrics, resource requirements, and next steps.
-                </p>
-                <Link to="/presentation/day2" className="block">
-                  <Button 
-                    className="w-full bg-indigo-600 hover:bg-indigo-700"
-                    size="sm"
-                  >
-                    <Presentation className="w-4 h-4 mr-2" />
-                    View Day 2 Presentation
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
         {tableMissing && (
           <Card className="mb-6 border-red-200 bg-red-50">
             <CardContent className="p-6">
