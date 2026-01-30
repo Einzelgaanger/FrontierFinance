@@ -1,8 +1,6 @@
 import { Resend } from 'https://esm.sh/resend@4.0.0'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3'
 
-const resend = new Resend(Deno.env.get('RESEND_API_KEY') as string)
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -14,6 +12,17 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const resendApiKey = Deno.env.get('RESEND_API_KEY')
+    if (!resendApiKey) {
+      console.error('RESEND_API_KEY not configured')
+      return new Response(
+        JSON.stringify({ error: 'Email service not configured', success: false }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const resend = new Resend(resendApiKey)
+
     const { applicationId, status, adminNotes, cooldownDate } = await req.json()
 
     if (!applicationId || !status) {
@@ -36,14 +45,13 @@ Deno.serve(async (req) => {
     if (appError || !application) {
       console.error('Error fetching application:', appError)
       return new Response(
-        JSON.stringify({ error: 'Application not found' }),
-        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Application not found', success: false }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
     const applicantName = application.applicant_name || application.company_name || 'Applicant'
     const vehicleName = application.vehicle_name || application.company_name || 'your vehicle'
-    const dashboardLink = `${supabaseUrl.replace('.supabase.co', '')}/dashboard`
     const isApproved = status === 'approved'
     const cooldownFormatted = cooldownDate ? new Date(cooldownDate).toLocaleDateString('en-US', { 
       weekday: 'long', 
@@ -137,7 +145,11 @@ Deno.serve(async (req) => {
 
     if (emailError) {
       console.error('Resend error:', emailError)
-      throw emailError
+      // Return success false but 200 status so the main operation doesn't fail
+      return new Response(
+        JSON.stringify({ success: false, error: emailError.message }),
+        { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      )
     }
 
     console.log('Application status email sent to:', application.email, 'Status:', status)
@@ -152,9 +164,9 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Error in send-application-status function:', error)
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error.message, success: false }),
       {
-        status: 500,
+        status: 200, // Return 200 to avoid breaking the approval flow
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       }
     )

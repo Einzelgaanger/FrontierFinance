@@ -124,22 +124,41 @@ const ApplicationManagement = () => {
 
       if (appError) throw appError;
 
-      // Update user role to member
+      // Update user role in BOTH tables (user_roles and user_profiles)
+      // The get_user_role() function primarily checks user_profiles.user_role
       const { error: roleError } = await supabase
         .from('user_roles' as any)
         .update({ role: 'member' })
         .eq('user_id', selectedApp.user_id);
 
-      if (roleError) throw roleError;
+      if (roleError) {
+        console.warn('Failed to update user_roles:', roleError);
+      }
 
-      // Send email notification
-      await supabase.functions.invoke('send-application-status', {
-        body: {
-          applicationId: selectedApp.id,
-          status: 'approved',
-          adminNotes
-        }
-      });
+      // CRITICAL: Also update user_profiles.user_role (this is what get_user_role() checks first)
+      const { error: profileRoleError } = await supabase
+        .from('user_profiles')
+        .update({ user_role: 'member' })
+        .eq('id', selectedApp.user_id);
+
+      if (profileRoleError) {
+        console.error('Failed to update user_profiles role:', profileRoleError);
+        throw profileRoleError;
+      }
+
+      // Send email notification (don't throw on email failure - approval already succeeded)
+      try {
+        await supabase.functions.invoke('send-application-status', {
+          body: {
+            applicationId: selectedApp.id,
+            status: 'approved',
+            adminNotes
+          }
+        });
+      } catch (emailError) {
+        console.warn('Email notification failed:', emailError);
+        // Don't fail the whole approval if email fails
+      }
 
       toast({
         title: "Application Approved",
@@ -416,10 +435,12 @@ const ApplicationManagement = () => {
               )}
               <div>
                 <DialogTitle className="text-xl">{selectedApp?.applicant_name}</DialogTitle>
-                <DialogDescription className="flex items-center gap-2">
-                  <Building2 className="w-4 h-4" />
-                  {selectedApp?.vehicle_name}
-                  {getStatusBadge(selectedApp?.status || '')}
+                <DialogDescription asChild>
+                  <div className="flex items-center gap-2">
+                    <Building2 className="w-4 h-4" />
+                    <span>{selectedApp?.vehicle_name}</span>
+                    {getStatusBadge(selectedApp?.status || '')}
+                  </div>
                 </DialogDescription>
               </div>
             </div>
