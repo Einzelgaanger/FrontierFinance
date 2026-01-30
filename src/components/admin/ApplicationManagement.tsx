@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -425,160 +424,164 @@ const ApplicationManagement = () => {
 
       {/* Full Review Dialog */}
       <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] p-0">
-          <DialogHeader className="p-6 pb-0">
+        <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden rounded-xl border-2 border-slate-200 shadow-2xl">
+          {/* Formal header band */}
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-6 py-5">
             <div className="flex items-center gap-4">
               {selectedApp?.profile_picture_url ? (
                 <img 
                   src={selectedApp.profile_picture_url} 
                   alt={selectedApp.applicant_name} 
-                  className="w-16 h-16 rounded-full object-cover border-2 border-primary"
+                  className="w-16 h-16 rounded-full object-cover border-2 border-white/30 shadow-lg"
                 />
               ) : (
-                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-                  <User className="w-8 h-8 text-muted-foreground" />
+                <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center border border-white/20">
+                  <User className="w-8 h-8 text-white/90" />
                 </div>
               )}
-              <div>
-                <DialogTitle className="text-xl">{selectedApp?.applicant_name}</DialogTitle>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium uppercase tracking-widest text-slate-300 mb-0.5">Membership Application</p>
+                <DialogTitle className="text-xl font-semibold text-white tracking-tight">{selectedApp?.applicant_name}</DialogTitle>
                 <DialogDescription asChild>
-                  <span className="flex items-center gap-2">
-                    <Building2 className="w-4 h-4 shrink-0" />
+                  <span className="flex items-center gap-2 mt-1.5 text-slate-200 text-sm">
+                    <Building2 className="w-4 h-4 shrink-0 opacity-90" />
                     <span>{selectedApp?.vehicle_name}</span>
-                    {getStatusBadge(selectedApp?.status || '')}
                   </span>
                 </DialogDescription>
+                <div className="mt-2">{getStatusBadge(selectedApp?.status || '')}</div>
               </div>
             </div>
-          </DialogHeader>
+          </div>
 
-          <ScrollArea className="max-h-[60vh] px-6">
+          <ScrollArea className="max-h-[60vh]">
             {selectedApp && (
-              <div className="space-y-6 py-4">
-                {/* Basic Info */}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div>
-                    <Label className="text-xs text-muted-foreground">Email</Label>
-                    <p className="text-sm font-medium">{selectedApp.email}</p>
-                  </div>
-                  <div>
-                    <Label className="text-xs text-muted-foreground">Website</Label>
-                    <a 
-                      href={selectedApp.organization_website} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-sm font-medium text-primary hover:underline flex items-center gap-1"
-                    >
-                      {selectedApp.organization_website || 'N/A'}
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-                  <div>
-                    <Label className="text-xs text-muted-foreground">Submitted</Label>
-                    <p className="text-sm font-medium">{new Date(selectedApp.created_at).toLocaleDateString()}</p>
+              <div className="p-6 space-y-6 bg-slate-50/50">
+                {/* Contact & submission */}
+                <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <h4 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-slate-400" />
+                    Contact & Submission
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                      <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Email</Label>
+                      <p className="text-sm font-medium text-slate-800 mt-1">{selectedApp.email}</p>
+                    </div>
+                    <div>
+                      <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Website</Label>
+                      <a 
+                        href={selectedApp.organization_website} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1 mt-1"
+                      >
+                        {selectedApp.organization_website || '—'}
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                    <div>
+                      <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Submitted</Label>
+                      <p className="text-sm font-medium text-slate-800 mt-1">{new Date(selectedApp.created_at).toLocaleDateString(undefined, { dateStyle: 'medium' })}</p>
+                    </div>
                   </div>
                 </div>
-
-                <Separator />
 
                 {/* Role & Team */}
-                <div className="space-y-4">
-                  <h4 className="font-semibold flex items-center gap-2">
-                    <Briefcase className="w-4 h-4" />
+                <div className="rounded-xl border-l-4 border-l-amber-500 border border-slate-200 bg-white p-5 shadow-sm">
+                  <h4 className="text-xs font-semibold uppercase tracking-widest text-amber-700/90 mb-4 flex items-center gap-2">
+                    <Briefcase className="w-4 h-4 text-amber-600" />
                     Role & Team
                   </h4>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div>
-                      <Label className="text-xs text-muted-foreground">Role/Job Title</Label>
-                      <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
-                        {selectedApp.role_job_title || 'Not provided'}
+                      <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Role / Job Title</Label>
+                      <p className="text-sm text-slate-800 bg-amber-50/60 p-3 rounded-lg mt-1 border border-amber-100 whitespace-pre-wrap">
+                        {selectedApp.role_job_title || '—'}
                       </p>
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Team Size & Structure</Label>
-                      <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
-                        {selectedApp.team_size || selectedApp.team_overview || 'Not provided'}
+                      <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Team Size & Structure</Label>
+                      <p className="text-sm text-slate-800 bg-amber-50/60 p-3 rounded-lg mt-1 border border-amber-100 whitespace-pre-wrap">
+                        {selectedApp.team_size || selectedApp.team_overview || '—'}
                       </p>
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Location</Label>
-                      <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
-                        {selectedApp.location || 'Not provided'}
+                      <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Location</Label>
+                      <p className="text-sm text-slate-800 bg-amber-50/60 p-3 rounded-lg mt-1 border border-amber-100 whitespace-pre-wrap">
+                        {selectedApp.location || '—'}
                       </p>
                     </div>
                   </div>
                 </div>
-
-                <Separator />
 
                 {/* Investment Details */}
-                <div className="space-y-4">
-                  <h4 className="font-semibold flex items-center gap-2">
-                    <Target className="w-4 h-4" />
+                <div className="rounded-xl border-l-4 border-l-emerald-600 border border-slate-200 bg-white p-5 shadow-sm">
+                  <h4 className="text-xs font-semibold uppercase tracking-widest text-emerald-700/90 mb-4 flex items-center gap-2">
+                    <Target className="w-4 h-4 text-emerald-600" />
                     Investment Details
                   </h4>
-                  <div>
-                    <Label className="text-xs text-muted-foreground">Investment Thesis</Label>
-                    <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
-                      {selectedApp.investment_thesis || 'Not provided'}
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="space-y-4">
                     <div>
-                      <Label className="text-xs text-muted-foreground">Ticket Size</Label>
-                      <p className="text-sm font-medium">{selectedApp.typical_check_size || 'N/A'}</p>
+                      <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Investment Thesis</Label>
+                      <p className="text-sm text-slate-800 bg-emerald-50/60 p-3 rounded-lg mt-1 border border-emerald-100 whitespace-pre-wrap">
+                        {selectedApp.investment_thesis || '—'}
+                      </p>
                     </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Portfolio Size</Label>
-                      <p className="text-sm font-medium">{selectedApp.number_of_investments || 'N/A'}</p>
-                    </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Capital Raised</Label>
-                      <p className="text-sm font-medium">{selectedApp.amount_raised_to_date || 'N/A'}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-
-                {/* Network Expectations */}
-                <div className="space-y-4">
-                  <h4 className="font-semibold flex items-center gap-2">
-                    <Users className="w-4 h-4" />
-                    Network Expectations
-                  </h4>
-                  {selectedApp.information_sharing_topics && selectedApp.information_sharing_topics.length > 0 && (
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Topics Willing to Contribute</Label>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {selectedApp.information_sharing_topics.map((topic, idx) => (
-                          <Badge key={idx} variant="secondary" className="text-xs">
-                            {topic}
-                          </Badge>
-                        ))}
+                    <div className="grid grid-cols-3 gap-4 pt-1">
+                      <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
+                        <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Ticket Size</Label>
+                        <p className="text-sm font-semibold text-slate-800 mt-1">{selectedApp.typical_check_size || '—'}</p>
+                      </div>
+                      <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
+                        <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Portfolio Size</Label>
+                        <p className="text-sm font-semibold text-slate-800 mt-1">{selectedApp.number_of_investments || '—'}</p>
+                      </div>
+                      <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
+                        <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Capital Raised</Label>
+                        <p className="text-sm font-semibold text-slate-800 mt-1">{selectedApp.amount_raised_to_date || '—'}</p>
                       </div>
                     </div>
-                  )}
-                  <div>
-                    <Label className="text-xs text-muted-foreground">Expectations from Network</Label>
-                    <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
-                      {selectedApp.expectations_from_network || 'Not provided'}
-                    </p>
-                  </div>
-                  <div>
-                    <Label className="text-xs text-muted-foreground">How They Heard About Us</Label>
-                    <p className="text-sm bg-muted/50 p-3 rounded-lg whitespace-pre-wrap">
-                      {selectedApp.how_heard_about_network || 'Not provided'}
-                    </p>
                   </div>
                 </div>
 
-                <Separator />
+                {/* Network Expectations */}
+                <div className="rounded-xl border-l-4 border-l-blue-600 border border-slate-200 bg-white p-5 shadow-sm">
+                  <h4 className="text-xs font-semibold uppercase tracking-widest text-blue-700/90 mb-4 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-blue-600" />
+                    Network Expectations
+                  </h4>
+                  <div className="space-y-4">
+                    {selectedApp.information_sharing_topics && selectedApp.information_sharing_topics.length > 0 && (
+                      <div>
+                        <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Topics Willing to Contribute</Label>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {selectedApp.information_sharing_topics.map((topic, idx) => (
+                            <Badge key={idx} variant="secondary" className="text-xs bg-blue-100 text-blue-800 border-blue-200 font-medium">
+                              {topic}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <div>
+                      <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Expectations from Network</Label>
+                      <p className="text-sm text-slate-800 bg-blue-50/60 p-3 rounded-lg mt-1 border border-blue-100 whitespace-pre-wrap">
+                        {selectedApp.expectations_from_network || '—'}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-[10px] font-medium uppercase tracking-wider text-slate-400">How They Heard About Us</Label>
+                      <p className="text-sm text-slate-800 bg-blue-50/60 p-3 rounded-lg mt-1 border border-blue-100 whitespace-pre-wrap">
+                        {selectedApp.how_heard_about_network || '—'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Supporting Documents */}
-                <div className="space-y-4">
-                  <h4 className="font-semibold flex items-center gap-2">
-                    <FileText className="w-4 h-4" />
+                <div className="rounded-xl border-l-4 border-l-violet-600 border border-slate-200 bg-white p-5 shadow-sm">
+                  <h4 className="text-xs font-semibold uppercase tracking-widest text-violet-700/90 mb-4 flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-violet-600" />
                     Supporting Documents
                   </h4>
                   {parseDocuments(selectedApp.supporting_documents).length > 0 ? (
@@ -589,18 +592,18 @@ const ApplicationManagement = () => {
                           href={doc.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-between bg-muted/50 p-3 rounded-lg hover:bg-muted transition-colors"
+                          className="flex items-center justify-between bg-violet-50/80 p-3 rounded-lg border border-violet-100 hover:bg-violet-100/80 transition-colors"
                         >
                           <div className="flex items-center gap-2">
                             {doc.type === 'file' ? (
-                              <FileText className="w-4 h-4 text-primary" />
+                              <FileText className="w-4 h-4 text-violet-600" />
                             ) : (
-                              <LinkIcon className="w-4 h-4 text-blue-600" />
+                              <LinkIcon className="w-4 h-4 text-violet-600" />
                             )}
-                            <span className="text-sm">{doc.name}</span>
+                            <span className="text-sm font-medium text-slate-800">{doc.name}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-muted-foreground">
-                            <span className="text-xs">{doc.type === 'file' ? 'Download' : 'Open'}</span>
+                          <div className="flex items-center gap-2 text-violet-600 text-xs font-medium">
+                            <span>{doc.type === 'file' ? 'Download' : 'Open'}</span>
                             {doc.type === 'file' ? (
                               <Download className="w-4 h-4" />
                             ) : (
@@ -611,29 +614,14 @@ const ApplicationManagement = () => {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-sm text-muted-foreground">No documents uploaded</p>
+                    <p className="text-sm text-slate-500 italic">No documents uploaded</p>
                   )}
-                </div>
-
-                <Separator />
-
-                {/* Admin Notes */}
-                <div className="space-y-3">
-                  <Label htmlFor="admin-notes" className="font-semibold">Admin Notes</Label>
-                  <Textarea
-                    id="admin-notes"
-                    value={adminNotes}
-                    onChange={(e) => setAdminNotes(e.target.value)}
-                    placeholder="Add notes about your decision (will be included in the email to applicant)..."
-                    rows={4}
-                    disabled={selectedApp.status !== 'pending'}
-                  />
                 </div>
               </div>
             )}
           </ScrollArea>
 
-          <DialogFooter className="p-6 pt-0 border-t">
+          <DialogFooter className="p-6 bg-white border-t border-slate-200">
             <Button variant="outline" onClick={() => setReviewDialogOpen(false)} disabled={!!processingAction}>
               Close
             </Button>
