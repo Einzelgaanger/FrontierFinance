@@ -163,10 +163,11 @@ Deno.serve(async (req) => {
     )
   } catch (error) {
     console.error('Error in send-application-status function:', error)
+    const message = error instanceof Error ? error.message : String(error)
     return new Response(
-      JSON.stringify({ error: error.message, success: false }),
+      JSON.stringify({ error: message, success: false }),
       {
-        status: 200, // Return 200 to avoid breaking the approval flow
+        status: 200, // Always 200 so the client approval flow never sees 500
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       }
     )

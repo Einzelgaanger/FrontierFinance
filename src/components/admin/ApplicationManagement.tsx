@@ -60,7 +60,7 @@ const ApplicationManagement = () => {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [adminNotes, setAdminNotes] = useState('');
-  const [reviewing, setReviewing] = useState(false);
+  const [processingAction, setProcessingAction] = useState<'approve' | 'reject' | null>(null);
 
   useEffect(() => {
     fetchApplications();
@@ -110,7 +110,7 @@ const ApplicationManagement = () => {
     if (!selectedApp || !user) return;
 
     try {
-      setReviewing(true);
+      setProcessingAction('approve');
 
       const { error: appError } = await supabase
         .from('applications')
@@ -143,29 +143,32 @@ const ApplicationManagement = () => {
 
       if (profileRoleError) {
         console.error('Failed to update user_profiles role:', profileRoleError);
+        toast({
+          title: "Role update failed",
+          description: "Application was marked approved but the user could not be upgraded to member. Check RLS: admins need permission to update user_profiles.",
+          variant: "destructive"
+        });
         throw profileRoleError;
       }
 
-      // Send email notification (don't throw on email failure - approval already succeeded)
-      try {
-        await supabase.functions.invoke('send-application-status', {
-          body: {
-            applicationId: selectedApp.id,
-            status: 'approved',
-            adminNotes
-          }
-        });
-      } catch (emailError) {
+      // Send email notification in background (never block or fail approval)
+      supabase.functions.invoke('send-application-status', {
+        body: {
+          applicationId: selectedApp.id,
+          status: 'approved',
+          adminNotes
+        }
+      }).catch((emailError) => {
         console.warn('Email notification failed:', emailError);
-        // Don't fail the whole approval if email fails
-      }
+      });
 
       toast({
         title: "Application Approved",
-        description: "The user has been granted member access and notified via email."
+        description: "The user has been granted member access. They can refresh the page to see member features."
       });
 
       setReviewDialogOpen(false);
+      setSelectedApp(null);
       fetchApplications();
     } catch (error) {
       console.error('Error approving application:', error);
@@ -175,7 +178,7 @@ const ApplicationManagement = () => {
         variant: "destructive"
       });
     } finally {
-      setReviewing(false);
+      setProcessingAction(null);
     }
   };
 
@@ -183,7 +186,7 @@ const ApplicationManagement = () => {
     if (!selectedApp || !user) return;
 
     try {
-      setReviewing(true);
+      setProcessingAction('reject');
 
       // Calculate 5 business days cooldown
       const cooldownDate = new Date();
@@ -209,22 +212,25 @@ const ApplicationManagement = () => {
 
       if (error) throw error;
 
-      // Send email notification
-      await supabase.functions.invoke('send-application-status', {
+      // Send email notification in background (never block reject flow)
+      supabase.functions.invoke('send-application-status', {
         body: {
           applicationId: selectedApp.id,
           status: 'rejected',
           adminNotes,
           cooldownDate: cooldownDate.toISOString()
         }
+      }).catch((emailError) => {
+        console.warn('Email notification failed:', emailError);
       });
 
       toast({
         title: "Application Rejected",
-        description: "The applicant has been notified via email. They can reapply after 5 business days."
+        description: "The applicant has been notified. They can reapply after 5 business days."
       });
 
       setReviewDialogOpen(false);
+      setSelectedApp(null);
       fetchApplications();
     } catch (error) {
       console.error('Error rejecting application:', error);
@@ -234,7 +240,7 @@ const ApplicationManagement = () => {
         variant: "destructive"
       });
     } finally {
-      setReviewing(false);
+      setProcessingAction(null);
     }
   };
 
@@ -436,11 +442,11 @@ const ApplicationManagement = () => {
               <div>
                 <DialogTitle className="text-xl">{selectedApp?.applicant_name}</DialogTitle>
                 <DialogDescription asChild>
-                  <div className="flex items-center gap-2">
-                    <Building2 className="w-4 h-4" />
+                  <span className="flex items-center gap-2">
+                    <Building2 className="w-4 h-4 shrink-0" />
                     <span>{selectedApp?.vehicle_name}</span>
                     {getStatusBadge(selectedApp?.status || '')}
-                  </div>
+                  </span>
                 </DialogDescription>
               </div>
             </div>
@@ -628,7 +634,7 @@ const ApplicationManagement = () => {
           </ScrollArea>
 
           <DialogFooter className="p-6 pt-0 border-t">
-            <Button variant="outline" onClick={() => setReviewDialogOpen(false)} disabled={reviewing}>
+            <Button variant="outline" onClick={() => setReviewDialogOpen(false)} disabled={!!processingAction}>
               Close
             </Button>
             {selectedApp?.status === 'pending' && (
@@ -636,9 +642,9 @@ const ApplicationManagement = () => {
                 <Button
                   variant="destructive"
                   onClick={handleReject}
-                  disabled={reviewing}
+                  disabled={!!processingAction}
                 >
-                  {reviewing ? 'Processing...' : (
+                  {processingAction === 'reject' ? 'Processing...' : (
                     <>
                       <XCircle className="w-4 h-4 mr-2" />
                       Reject (5-day cooldown)
@@ -647,10 +653,10 @@ const ApplicationManagement = () => {
                 </Button>
                 <Button
                   onClick={handleApprove}
-                  disabled={reviewing}
+                  disabled={!!processingAction}
                   className="bg-emerald-600 hover:bg-emerald-700"
                 >
-                  {reviewing ? 'Processing...' : (
+                  {processingAction === 'approve' ? 'Processing...' : (
                     <>
                       <CheckCircle className="w-4 h-4 mr-2" />
                       Approve
