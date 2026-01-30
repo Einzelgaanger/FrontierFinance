@@ -41,6 +41,7 @@ import DevTasks from "./pages/DevTasks";
 import Day1Presentation from "./pages/Day1Presentation";
 import Day2Presentation from "./pages/Day2Presentation";
 import Drew from "./pages/Drew";
+import PlaceholderPage from "./pages/PlaceholderPage";
 import { FeedbackButton } from "./components/feedback/FeedbackButton";
 
 const queryClient = new QueryClient();
@@ -169,6 +170,12 @@ const App = () => {
             <Route path="/presentation/day1" element={<Day1Presentation />} />
             <Route path="/presentation/day2" element={<Day2Presentation />} />
             <Route path="/drew" element={<Drew />} />
+            <Route path="/about" element={<PlaceholderPage title="About" />} />
+            <Route path="/learning-hub" element={<PlaceholderPage title="Learning Hub" />} />
+            <Route path="/our-events" element={<PlaceholderPage title="Our Events" />} />
+            <Route path="/escp-network" element={<PlaceholderPage title="ESCP Network" />} />
+            <Route path="/partnership" element={<PlaceholderPage title="Partnership" />} />
+            <Route path="/contact" element={<PlaceholderPage title="Contact" />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           {/* Floating Feedback Button - appears on all pages */}

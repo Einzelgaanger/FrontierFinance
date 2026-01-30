@@ -117,16 +117,29 @@ const Index = () => {
         
         {/* Top Left Logo - Responsive */}
         <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20">
-          <img 
-            src="/CFF%20LOGO.png" 
-            alt="CFF Logo" 
-            className="h-12 sm:h-16 md:h-20 w-auto object-contain"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-            }}
-          />
+          <Link to="/">
+            <img 
+              src="/CFF%20LOGO.png" 
+              alt="CFF Logo" 
+              className="h-12 sm:h-16 md:h-20 w-auto object-contain"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
+            />
+          </Link>
         </div>
+
+        {/* Top Nav - About, Network, Learning Hub, etc. */}
+        <nav className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex flex-wrap items-center justify-end gap-2 sm:gap-3">
+          <Link to="/about" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">About</Link>
+          <Link to="/network" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">Network</Link>
+          <Link to="/learning-hub" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">Learning Hub</Link>
+          <Link to="/our-events" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">Our Events</Link>
+          <Link to="/escp-network" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">ESCP Network</Link>
+          <Link to="/partnership" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">Partnership</Link>
+          <Link to="/contact" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">Contact</Link>
+        </nav>
         
         {/* Hero Content - Title/subtitle at top, buttons at bottom */}
         <div className="relative z-10 flex flex-col min-h-screen px-4">
@@ -140,7 +153,7 @@ const Index = () => {
             <p className="text-sm sm:text-base md:text-lg text-white/90 mb-8 sm:mb-10 max-w-3xl mx-auto px-2">
               The Collaborative for Frontier Finance is a multi-stakeholder initiative that aims to increase access to capital for small and growing businesses in emerging markets
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mt-auto pb-12 sm:pb-16">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mt-auto pb-20 sm:pb-24">
               <Link to="/auth" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
@@ -709,6 +722,13 @@ const Index = () => {
                 Quick Links
               </h3>
               <ul className="space-y-2">
+                <li><Link to="/about" className="text-blue-300 hover:text-blue-200 transition-colors">About</Link></li>
+                <li><Link to="/network" className="text-blue-300 hover:text-blue-200 transition-colors">Network</Link></li>
+                <li><Link to="/learning-hub" className="text-blue-300 hover:text-blue-200 transition-colors">Learning Hub</Link></li>
+                <li><Link to="/our-events" className="text-blue-300 hover:text-blue-200 transition-colors">Our Events</Link></li>
+                <li><Link to="/escp-network" className="text-blue-300 hover:text-blue-200 transition-colors">ESCP Network</Link></li>
+                <li><Link to="/partnership" className="text-blue-300 hover:text-blue-200 transition-colors">Partnership</Link></li>
+                <li><Link to="/contact" className="text-blue-300 hover:text-blue-200 transition-colors">Contact</Link></li>
                 <li>
                   <Link to="/auth" className="text-blue-300 hover:text-blue-200 transition-colors flex items-center group">
                     <ExternalLink className="w-3 h-3 mr-2 group-hover:scale-110 transition-transform" />

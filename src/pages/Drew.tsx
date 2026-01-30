@@ -37,15 +37,15 @@ const Drew = () => {
       num: "3",
       icon: BarChart3,
       color: "from-blue-500 to-cyan-500",
-      title: "Small Business Finance – LCP Performance",
+      title: "Small Business Survey",
       items: ["a.\tUse of SoP and L+ Assessment Tool to provide anonymous data on trends*", "b.\tData on provision of portfolio Technical Support*"],
     },
     {
       num: "4",
       icon: Lightbulb,
       color: "from-purple-500 to-pink-500",
-      title: "World Class Innovations and Solutions to SGB Finance",
-      items: ["a.\tCase studies on different LCP models with supporting performance data*"],
+      title: "World Class Innovations and Solutions and Performance in SGB Finance",
+      items: ["a.\tCase studies on different LCP models with supporting performance data*", "b.\tPerfomance for funds at porfolio level*"],
     },
     {
       num: "5",
