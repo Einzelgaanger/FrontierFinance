@@ -336,8 +336,8 @@ const AdminNetworkCards = () => {
         userSurveyMap.set(survey.user_id, {
           user_id: survey.user_id,
           year: 2021,
-          fund_name: survey.firm_name || 'Unnamed Fund',
-          firm_name: survey.firm_name,
+          fund_name: survey.firm_name || '',
+          firm_name: survey.firm_name || '',
           participant_name: survey.participant_name,
           email_address: survey.email_address,
           geographic_focus: survey.geographic_focus || [],
@@ -352,8 +352,8 @@ const AdminNetworkCards = () => {
         userSurveyMap.set(survey.user_id, {
           user_id: survey.user_id,
           year: 2022,
-          fund_name: survey.organisation || 'Unnamed Fund',
-          firm_name: survey.organisation,
+          fund_name: survey.organisation || '',
+          firm_name: survey.organisation || '',
           participant_name: survey.name,
           email_address: survey.email,
           geographic_focus: survey.geographic_markets || [],
@@ -368,8 +368,8 @@ const AdminNetworkCards = () => {
         userSurveyMap.set(survey.user_id, {
           user_id: survey.user_id,
           year: 2023,
-          fund_name: survey.fund_name || survey.organisation_name || 'Unnamed Fund',
-          firm_name: survey.organisation_name,
+          fund_name: survey.fund_name || survey.organisation_name || '',
+          firm_name: survey.organisation_name || '',
           participant_name: survey.fund_name,
           email_address: survey.email_address,
           geographic_focus: survey.geographic_markets || [],
@@ -384,8 +384,8 @@ const AdminNetworkCards = () => {
         userSurveyMap.set(survey.user_id, {
           user_id: survey.user_id,
           year: 2024,
-          fund_name: survey.fund_name || survey.organisation_name || 'Unnamed Fund',
-          firm_name: survey.organisation_name,
+          fund_name: survey.fund_name || survey.organisation_name || '',
+          firm_name: survey.organisation_name || '',
           participant_name: survey.fund_name,
           email_address: survey.email_address,
           geographic_focus: survey.geographic_markets || [],
@@ -409,15 +409,15 @@ const AdminNetworkCards = () => {
           id: survey.user_id,
           user_id: survey.user_id,
           year: survey.year,
-          fund_name: survey.fund_name || profile?.company_name || 'Unnamed Fund',
-          firm_name: survey.firm_name || profile?.company_name || 'Unnamed Fund',
-          participant_name: survey.participant_name || profile?.company_name || 'Unknown Member',
-          email_address: survey.email_address || profile?.email || 'No email provided',
+          fund_name: survey.fund_name || profile?.company_name || '',
+          firm_name: survey.firm_name || profile?.company_name || '',
+          participant_name: survey.participant_name || profile?.company_name || '',
+          email_address: survey.email_address || profile?.email || '',
           has_survey: true,
           profile: {
-            first_name: survey.participant_name?.split(' ')[0] || 'Unknown',
-            last_name: survey.participant_name?.split(' ').slice(1).join(' ') || 'Member',
-            email: survey.email_address || profile?.email || 'No email provided'
+            first_name: survey.participant_name?.split(' ')[0] || '',
+            last_name: survey.participant_name?.split(' ').slice(1).join(' ') || '',
+            email: survey.email_address || profile?.email || ''
           },
           geographic_focus: survey.geographic_focus,
           vehicle_type: survey.vehicle_type || 'Investment Fund',
@@ -984,21 +984,23 @@ const AdminNetworkCards = () => {
                         </Avatar>
                       </div>
                       
-                      {/* Firm Name - Prominent */}
-                      <div className="text-center mb-6">
-                        <h3 className="font-bold text-gray-900 text-xl leading-tight mb-2">
-                          {manager.firm_name || manager.fund_name || 'Unnamed Firm'}
-                        </h3>
-                      </div>
-                      
-                      {/* Team Based - Clean Display */}
-                      <div className="space-y-3 mb-4">
-                        <div className="flex items-center space-x-2">
-                          <Users className={`w-5 h-5 ${colorScheme.accent}`} />
-                          <span className="text-sm font-semibold text-gray-700">Team Based</span>
+                      {/* Firm Name - only show when provided */}
+                      {(manager.firm_name || manager.fund_name) && (
+                        <div className="text-center mb-6">
+                          <h3 className="font-bold text-gray-900 text-xl leading-tight mb-2">
+                            {manager.firm_name || manager.fund_name}
+                          </h3>
                         </div>
-                        <div className="pl-7">
-                          {manager.team_based && manager.team_based.length > 0 ? (
+                      )}
+                      
+                      {/* Team Based - only show when provided */}
+                      {manager.team_based && manager.team_based.length > 0 && (
+                        <div className="space-y-3 mb-4">
+                          <div className="flex items-center space-x-2">
+                            <Users className={`w-5 h-5 ${colorScheme.accent}`} />
+                            <span className="text-sm font-semibold text-gray-700">Team Based</span>
+                          </div>
+                          <div className="pl-7">
                             <div className="flex flex-wrap gap-1">
                               {manager.team_based.slice(0, 3).map((location, idx) => (
                                 <Badge key={idx} variant="secondary" className="text-xs bg-gray-100 text-gray-700">
@@ -1011,20 +1013,18 @@ const AdminNetworkCards = () => {
                                 </Badge>
                               )}
                             </div>
-                          ) : (
-                            <p className="text-sm text-gray-500">Not specified</p>
-                          )}
+                          </div>
                         </div>
-                      </div>
+                      )}
                       
-                      {/* Geographic Focus - Clean Display */}
-                      <div className="space-y-3">
-                        <div className="flex items-center space-x-2">
-                          <Globe className={`w-5 h-5 ${colorScheme.accent}`} />
-                          <span className="text-sm font-semibold text-gray-700">Geographic Focus</span>
-                        </div>
-                        <div className="pl-7">
-                          {manager.geographic_focus && manager.geographic_focus.length > 0 ? (
+                      {/* Geographic Focus - only show when provided */}
+                      {manager.geographic_focus && manager.geographic_focus.length > 0 && (
+                        <div className="space-y-3">
+                          <div className="flex items-center space-x-2">
+                            <Globe className={`w-5 h-5 ${colorScheme.accent}`} />
+                            <span className="text-sm font-semibold text-gray-700">Geographic Focus</span>
+                          </div>
+                          <div className="pl-7">
                             <div className="flex flex-wrap gap-1">
                               {manager.geographic_focus.slice(0, 3).map((region, idx) => (
                                 <Badge key={idx} variant="secondary" className="text-xs bg-gray-100 text-gray-700">
@@ -1037,11 +1037,9 @@ const AdminNetworkCards = () => {
                                 </Badge>
                               )}
                             </div>
-                          ) : (
-                            <p className="text-sm text-gray-500">Not specified</p>
-                          )}
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </CardContent>
                   </Card>
                 );

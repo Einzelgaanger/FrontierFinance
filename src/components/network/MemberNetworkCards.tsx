@@ -336,8 +336,8 @@ const MemberNetworkCards = () => {
         userSurveyMap.set(survey.user_id, {
           user_id: survey.user_id,
           year: 2021,
-          fund_name: survey.firm_name || 'Unnamed Fund',
-          firm_name: survey.firm_name,
+          fund_name: survey.firm_name || '',
+          firm_name: survey.firm_name || '',
           participant_name: survey.participant_name,
           email_address: survey.email_address,
           geographic_focus: survey.geographic_focus || [],
@@ -352,8 +352,8 @@ const MemberNetworkCards = () => {
         userSurveyMap.set(survey.user_id, {
           user_id: survey.user_id,
           year: 2022,
-          fund_name: survey.organisation || 'Unnamed Fund',
-          firm_name: survey.organisation,
+          fund_name: survey.organisation || '',
+          firm_name: survey.organisation || '',
           participant_name: survey.name,
           email_address: survey.email,
           geographic_focus: survey.geographic_markets || [],
@@ -368,8 +368,8 @@ const MemberNetworkCards = () => {
         userSurveyMap.set(survey.user_id, {
           user_id: survey.user_id,
           year: 2023,
-          fund_name: survey.fund_name || survey.organisation_name || 'Unnamed Fund',
-          firm_name: survey.organisation_name,
+          fund_name: survey.fund_name || survey.organisation_name || '',
+          firm_name: survey.organisation_name || '',
           participant_name: survey.fund_name,
           email_address: survey.email_address,
           geographic_focus: survey.geographic_markets || [],
@@ -384,8 +384,8 @@ const MemberNetworkCards = () => {
         userSurveyMap.set(survey.user_id, {
           user_id: survey.user_id,
           year: 2024,
-          fund_name: survey.fund_name || survey.organisation_name || 'Unnamed Fund',
-          firm_name: survey.organisation_name,
+          fund_name: survey.fund_name || survey.organisation_name || '',
+          firm_name: survey.organisation_name || '',
           participant_name: survey.fund_name,
           email_address: survey.email_address,
           geographic_focus: survey.geographic_markets || [],
@@ -416,15 +416,15 @@ const MemberNetworkCards = () => {
           id: survey.user_id,
           user_id: survey.user_id,
           year: survey.year,
-          fund_name: survey.fund_name || profile?.company_name || 'Unnamed Fund',
-          firm_name: survey.firm_name || profile?.company_name || 'Unnamed Fund',
-          participant_name: survey.participant_name || profile?.company_name || 'Unknown Member',
-          email_address: survey.email_address || profile?.email || 'No email provided',
+          fund_name: survey.fund_name || profile?.company_name || '',
+          firm_name: survey.firm_name || profile?.company_name || '',
+          participant_name: survey.participant_name || profile?.company_name || '',
+          email_address: survey.email_address || profile?.email || '',
           has_survey: true,
           profile: {
-            first_name: survey.participant_name?.split(' ')[0] || 'Unknown',
-            last_name: survey.participant_name?.split(' ').slice(1).join(' ') || 'Member',
-            email: survey.email_address || profile?.email || 'No email provided'
+            first_name: survey.participant_name?.split(' ')[0] || '',
+            last_name: survey.participant_name?.split(' ').slice(1).join(' ') || '',
+            email: survey.email_address || profile?.email || ''
           },
           geographic_focus: survey.geographic_focus,
           vehicle_type: survey.vehicle_type || 'Investment Fund',
@@ -974,10 +974,21 @@ const MemberNetworkCards = () => {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                            {manager.fund_name}
-                          </h3>
-                          <p className="text-sm text-gray-600">{manager.participant_name}</p>
+                          {(() => {
+                            const name = manager.fund_name || manager.firm_name || manager.participant_name;
+                            const isPlaceholder = !name || !name.trim() || /^(not\s*provided|no\s+email\s+provided|unknown\s+member)$/i.test(name.trim());
+                            if (!name || isPlaceholder) return null;
+                            return (
+                              <>
+                                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                  {name}
+                                </h3>
+                                {manager.participant_name && (manager.fund_name || manager.firm_name) && manager.participant_name !== name && manager.participant_name.trim().toLowerCase() !== 'not provided' && (
+                                  <p className="text-sm text-gray-600">{manager.participant_name}</p>
+                                )}
+                              </>
+                            );
+                          })()}
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">

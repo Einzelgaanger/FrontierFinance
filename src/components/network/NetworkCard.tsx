@@ -273,8 +273,11 @@ export function NetworkCard({ manager, userRole, showDetails = false }: NetworkC
   };
 
   const profileName = manager.profile ? 
-    `${manager.profile.first_name} ${manager.profile.last_name}` : 
-    manager.participant_name || 'Unknown User';
+    `${(manager.profile.first_name || '').trim()} ${(manager.profile.last_name || '').trim()}`.trim() : 
+    manager.participant_name || manager.fund_name || manager.firm_name || '';
+  const isPlaceholderText = (s: string) => !s || !s.trim() || /^(not\s*provided|no\s+email\s+provided|unknown\s+member|unknown\s+user)$/i.test(s.trim());
+  const displayTitle = (manager.fund_name || manager.firm_name || profileName).trim();
+  const showTitle = displayTitle && !isPlaceholderText(displayTitle);
 
   const profilePicture = manager.profile_picture_url || 
     manager.profile?.profile_picture_url || 
@@ -291,13 +294,13 @@ export function NetworkCard({ manager, userRole, showDetails = false }: NetworkC
               <Avatar className="w-16 h-16 ring-4 ring-white/30 shadow-lg">
                 <AvatarImage src={profilePicture} />
                 <AvatarFallback className="text-lg font-bold bg-white/20 text-white">
-                  {profileName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  {(profileName.split(' ').map(n => n[0]).join('').toUpperCase() || displayTitle[0] || '?').slice(0, 2)}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="text-xl font-bold mb-1">{manager.fund_name || 'Unnamed Fund'}</h3>
-                <p className="text-white/90 text-sm font-medium">{profileName}</p>
-                <p className="text-white/80 text-xs">{manager.role_title || 'Fund Manager'}</p>
+                {showTitle && <h3 className="text-xl font-bold mb-1">{displayTitle}</h3>}
+                {profileName && !isPlaceholderText(profileName) && <p className="text-white/90 text-sm font-medium">{profileName}</p>}
+                {manager.role_title && manager.role_title.trim().toLowerCase() !== 'not provided' && <p className="text-white/80 text-xs">{manager.role_title}</p>}
               </div>
             </div>
             <div className="flex items-center space-x-2">
@@ -340,7 +343,7 @@ export function NetworkCard({ manager, userRole, showDetails = false }: NetworkC
       <CardContent className="p-6 flex-1 flex flex-col">
         {/* Key Information */}
         <div className="space-y-4 mb-6">
-          {manager.firm_name && (
+          {manager.firm_name && !isPlaceholderText(manager.firm_name) && (
             <div className="flex items-center space-x-3">
               <Building2 className={`w-4 h-4 text-${colors.icon}`} />
               <span className="text-sm text-gray-700 font-medium">{manager.firm_name}</span>

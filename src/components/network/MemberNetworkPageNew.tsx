@@ -457,17 +457,21 @@ export default function MemberNetworkPageNew() {
 
                                  {/* Content Overlay - Directly on Image */}
                  <div className="relative z-[1] h-full flex flex-col justify-end p-6 space-y-1">
-                   {/* Company Name */}
-                   <div className="flex items-center gap-2">
-                     <Building2 className="w-5 h-5 text-blue-400 flex-shrink-0" />
-                     <CardTitle className="text-lg text-white drop-shadow-md">{profile.company_name || 'No Company Name'}</CardTitle>
-                   </div>
+                   {/* Company Name - only show when provided (not placeholder) */}
+                   {profile.company_name && profile.company_name.trim().toLowerCase() !== 'not provided' && (
+                     <div className="flex items-center gap-2">
+                       <Building2 className="w-5 h-5 text-blue-400 flex-shrink-0" />
+                       <CardTitle className="text-lg text-white drop-shadow-md">{profile.company_name}</CardTitle>
+                     </div>
+                   )}
 
-                   {/* Email */}
-                   <div className="flex items-center gap-2 text-sm text-gray-100">
-                     <Mail className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                     <span className="truncate drop-shadow">{profile.email}</span>
-                   </div>
+                   {/* Email - only show when provided */}
+                   {profile.email && profile.email.trim().toLowerCase() !== 'no email provided' && (
+                     <div className="flex items-center gap-2 text-sm text-gray-100">
+                       <Mail className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                       <span className="truncate drop-shadow">{profile.email}</span>
+                     </div>
+                   )}
 
                    {/* Website */}
                    {profile.website && (

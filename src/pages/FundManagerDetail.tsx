@@ -175,9 +175,9 @@ const FundManagerDetail = () => {
       const processedProfile: FundManagerProfile = {
         id: profileData.id,
         user_id: profileData.id,
-        fund_name: profileData.company_name || 'Unnamed Fund',
-        firm_name: profileData.company_name,
-        participant_name: profileData.company_name,
+        fund_name: profileData.company_name && profileData.company_name.trim().toLowerCase() !== 'not provided' ? profileData.company_name : '',
+        firm_name: profileData.company_name && profileData.company_name.trim().toLowerCase() !== 'not provided' ? profileData.company_name : '',
+        participant_name: profileData.company_name && profileData.company_name.trim().toLowerCase() !== 'not provided' ? profileData.company_name : '',
         role_title: 'Fund Manager',
         email_address: profileData.email,
         phone: profileData.phone || '',
@@ -554,30 +554,34 @@ const FundManagerDetail = () => {
                     </div>
 
                    <div className="space-y-4">
-                     {/* Company Name */}
-                     <div className="flex items-center space-x-3">
-                       <Building2 className="w-5 h-5 text-blue-600" />
-                       <div>
-                         <p className="text-sm font-medium text-gray-700">Company Name</p>
-                         <p className="text-sm text-gray-900 font-semibold">{fundManager.firm_name || 'Not specified'}</p>
+                     {/* Company Name - only show when provided */}
+                     {fundManager.firm_name && (
+                       <div className="flex items-center space-x-3">
+                         <Building2 className="w-5 h-5 text-blue-600" />
+                         <div>
+                           <p className="text-sm font-medium text-gray-700">Company Name</p>
+                           <p className="text-sm text-gray-900 font-semibold">{fundManager.firm_name}</p>
+                         </div>
                        </div>
-                     </div>
+                     )}
 
-                     {/* Email */}
-                     <div className="flex items-center space-x-3">
-                       <Mail className="w-5 h-5 text-blue-600" />
-                       <div>
-                         <p className="text-sm font-medium text-gray-700">Email</p>
-                         <p className="text-sm text-gray-900">{fundManager.email_address || 'Not specified'}</p>
+                     {/* Email - only show when provided */}
+                     {fundManager.email_address && (
+                       <div className="flex items-center space-x-3">
+                         <Mail className="w-5 h-5 text-blue-600" />
+                         <div>
+                           <p className="text-sm font-medium text-gray-700">Email</p>
+                           <p className="text-sm text-gray-900">{fundManager.email_address}</p>
+                         </div>
                        </div>
-                     </div>
+                     )}
 
-                     {/* Website */}
-                     <div className="flex items-center space-x-3">
-                       <Globe className="w-5 h-5 text-blue-600" />
-                       <div>
-                         <p className="text-sm font-medium text-gray-700">Website</p>
-                         {fundManager.website ? (
+                     {/* Website - only show when provided */}
+                     {fundManager.website && (
+                       <div className="flex items-center space-x-3">
+                         <Globe className="w-5 h-5 text-blue-600" />
+                         <div>
+                           <p className="text-sm font-medium text-gray-700">Website</p>
                            <a 
                              href={fundManager.website.startsWith('http') ? fundManager.website : `https://${fundManager.website}`}
                              target="_blank" 
@@ -586,20 +590,20 @@ const FundManagerDetail = () => {
                            >
                              {fundManager.website}
                            </a>
-                         ) : (
-                           <p className="text-sm text-gray-500">No website provided</p>
-                         )}
+                         </div>
                        </div>
-                     </div>
+                     )}
 
-                     {/* Description */}
-                     <div className="flex items-start space-x-3">
-                       <FileText className="w-5 h-5 text-blue-600 mt-0.5" />
-                       <div>
-                         <p className="text-sm font-medium text-gray-700">Description</p>
-                         <p className="text-sm text-gray-900">{fundManager.description || 'No description provided'}</p>
+                     {/* Description - only show when provided */}
+                     {fundManager.description && (
+                       <div className="flex items-start space-x-3">
+                         <FileText className="w-5 h-5 text-blue-600 mt-0.5" />
+                         <div>
+                           <p className="text-sm font-medium text-gray-700">Description</p>
+                           <p className="text-sm text-gray-900">{fundManager.description}</p>
+                         </div>
                        </div>
-                     </div>
+                     )}
                    </div>
                  </div>
 

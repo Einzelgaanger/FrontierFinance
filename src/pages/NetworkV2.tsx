@@ -186,10 +186,10 @@ const NetworkV2 = React.memo(() => {
         const userSurveys = surveyDataMap.get(userProfile.user_id) || [];
         
         // Use profile data for company information
-        const companyName = userProfile.company_name || 'CFF Network User';
-        const email = userProfile.email || 'No email provided';
-        const fullName = userProfile.full_name || 'Network User';
-        const roleTitle = userProfile.role_title || 'Network Member';
+        const companyName = userProfile.company_name || '';
+        const email = userProfile.email || '';
+        const fullName = userProfile.full_name || '';
+        const roleTitle = userProfile.role_title || '';
         const profilePhoto = userProfile.profile_picture_url || '';
         const userRole = rolesMap.get(userProfile.user_id) || 'viewer'; // Get role from user_roles table
         const isActive = userProfile.is_active !== false;
@@ -208,8 +208,8 @@ const NetworkV2 = React.memo(() => {
           surveys_completed: userSurveys.length,
           survey_data: userSurveys,
           profile: {
-            first_name: fullName.split(' ')[0] || 'Unknown',
-            last_name: fullName.split(' ').slice(1).join(' ') || 'User',
+            first_name: fullName.split(' ')[0] || '',
+            last_name: fullName.split(' ').slice(1).join(' ') || '',
             email: email
           },
           geographic_focus: ['Global'], // Simplified
@@ -947,23 +947,25 @@ const NetworkV2 = React.memo(() => {
                         </div>
                       </div>
                       
-                      {/* Firm Name - Compact */}
-                      <div className="text-center mb-4">
-                        <h3 className="font-bold text-gray-900 text-lg leading-tight group-hover:text-gray-800 transition-colors duration-300">
-                          {manager.firm_name || manager.fund_name || 'Unnamed Firm'}
-                        </h3>
-                      </div>
-                      
-                      {/* Geographic Focus - Compact */}
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center justify-center space-x-2">
-                          <div className="p-1.5 rounded-full bg-blue-500/10">
-                            <Globe className="w-3 h-3 text-blue-500" />
-                          </div>
-                          <span className="text-xs font-semibold text-gray-600">Geographic Focus</span>
+                      {/* Firm Name - only show when provided */}
+                      {(manager.firm_name || manager.fund_name) && (
+                        <div className="text-center mb-4">
+                          <h3 className="font-bold text-gray-900 text-lg leading-tight group-hover:text-gray-800 transition-colors duration-300">
+                            {manager.firm_name || manager.fund_name}
+                          </h3>
                         </div>
-                        <div className="text-center">
-                          {manager.geographic_focus && manager.geographic_focus.length > 0 ? (
+                      )}
+                      
+                      {/* Geographic Focus - only show when provided */}
+                      {manager.geographic_focus && manager.geographic_focus.length > 0 && (
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center justify-center space-x-2">
+                            <div className="p-1.5 rounded-full bg-blue-500/10">
+                              <Globe className="w-3 h-3 text-blue-500" />
+                            </div>
+                            <span className="text-xs font-semibold text-gray-600">Geographic Focus</span>
+                          </div>
+                          <div className="text-center">
                             <div className="flex flex-wrap justify-center gap-1">
                               {manager.geographic_focus.slice(0, 2).map((region, idx) => (
                                 <Badge 
@@ -983,11 +985,9 @@ const NetworkV2 = React.memo(() => {
                                 </Badge>
                               )}
                             </div>
-                          ) : (
-                            <p className="text-xs text-gray-400 italic">Not specified</p>
-                          )}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       {/* Survey Year Buttons */}
                       <div className="space-y-2">

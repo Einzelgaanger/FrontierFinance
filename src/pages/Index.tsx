@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Shield, Users, BarChart3, Search, Database, FileText, TrendingUp, Globe, Building2, Mail, Phone, MapPin, ExternalLink, Github, Twitter, Linkedin, Facebook, Instagram, Target, Rocket, Lightbulb, Network, NetworkIcon, Award, DollarSign, Briefcase } from "lucide-react";
+import { ArrowRight, Shield, Users, BarChart3, Search, Database, FileText, TrendingUp, Globe, Building2, Mail, Phone, MapPin, ExternalLink, Github, Twitter, Linkedin, Facebook, Instagram, Target, Rocket, Lightbulb, Network, NetworkIcon, Award, DollarSign, Briefcase, Info, BookOpen, Calendar, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
@@ -130,15 +130,56 @@ const Index = () => {
           </Link>
         </div>
 
-        {/* Top Nav - About, Network, Learning Hub, etc. */}
-        <nav className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex flex-wrap items-center justify-end gap-2 sm:gap-3">
-          <Link to="/about" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">About</Link>
-          <Link to="/network" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">Network</Link>
-          <Link to="/learning-hub" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">Learning Hub</Link>
-          <Link to="/our-events" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">Our Events</Link>
-          <Link to="/escp-network" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">ESCP Network</Link>
-          <Link to="/partnership" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">Partnership</Link>
-          <Link to="/contact" className="text-white/90 hover:text-white text-xs sm:text-sm font-medium px-2 py-1 rounded transition-colors">Contact</Link>
+        {/* Top Nav - Exact same UI/UX as hero Launch Plus button, 50% smaller */}
+        <nav className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex flex-wrap items-center justify-end gap-1 sm:gap-1.5">
+          <Link to="/about" className="shrink-0">
+            <Button variant="outline" size="sm" className="group border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 bg-white/5 backdrop-blur-md px-1.5 sm:px-2.5 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold shadow-xl hover:shadow-white/10 transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 rounded-full min-h-0">
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <Info className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover:scale-110 transition-transform duration-300" />
+                <span>About</span>
+              </div>
+            </Button>
+          </Link>
+          <Link to="/escp-network" className="shrink-0">
+            <Button variant="outline" size="sm" className="group border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 bg-white/5 backdrop-blur-md px-1.5 sm:px-2.5 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold shadow-xl hover:shadow-white/10 transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 rounded-full min-h-0">
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <Network className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover:scale-110 transition-transform duration-300" />
+                <span>Network</span>
+              </div>
+            </Button>
+          </Link>
+          <Link to="/learning-hub" className="shrink-0">
+            <Button variant="outline" size="sm" className="group border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 bg-white/5 backdrop-blur-md px-1.5 sm:px-2.5 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold shadow-xl hover:shadow-white/10 transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 rounded-full min-h-0">
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <BookOpen className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover:scale-110 transition-transform duration-300" />
+                <span>Learning Hub</span>
+              </div>
+            </Button>
+          </Link>
+          <Link to="/our-events" className="shrink-0">
+            <Button variant="outline" size="sm" className="group border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 bg-white/5 backdrop-blur-md px-1.5 sm:px-2.5 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold shadow-xl hover:shadow-white/10 transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 rounded-full min-h-0">
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <Calendar className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover:scale-110 transition-transform duration-300" />
+                <span>Our Events</span>
+              </div>
+            </Button>
+          </Link>
+          <Link to="/launch-plus-intro" className="shrink-0">
+            <Button variant="outline" size="sm" className="group border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 bg-white/5 backdrop-blur-md px-1.5 sm:px-2.5 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold shadow-xl hover:shadow-white/10 transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 rounded-full min-h-0">
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <Rocket className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover:scale-110 transition-transform duration-300" />
+                <span>Explore LAUNCH+</span>
+              </div>
+            </Button>
+          </Link>
+          <Link to="/auth" className="shrink-0" title="Sign in to your account">
+            <Button variant="outline" size="sm" className="group border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 bg-white/5 backdrop-blur-md px-1.5 sm:px-2.5 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold shadow-xl hover:shadow-white/10 transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 rounded-full min-h-0">
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <LogIn className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover:scale-110 transition-transform duration-300" />
+                <span>Sign in</span>
+              </div>
+            </Button>
+          </Link>
         </nav>
         
         {/* Hero Content - Title/subtitle at top, buttons at bottom */}
@@ -151,34 +192,27 @@ const Index = () => {
               for Small and Growing Businesses in Frontier Markets
             </p>
             <p className="text-sm sm:text-base md:text-lg text-white/90 mb-8 sm:mb-10 max-w-3xl mx-auto px-2">
-              The Collaborative for Frontier Finance is a multi-stakeholder initiative that aims to increase access to capital for small and growing businesses in emerging markets
+              We are building a better financial ecosystem for small and growing businesses in frontier markets. The Collaborative for Frontier Finance is a multi-stakeholder initiative that aims to increase access to capital for small and growing businesses in emerging markets.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mt-auto pb-20 sm:pb-24">
-              <Link to="/auth" className="w-full sm:w-auto">
-                <Button 
-                  size="lg" 
-                  className="group w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full"
-                >
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    <Users className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform duration-300" />
-                    <span className="text-sm sm:text-base">Join ESCP Network</span>
-                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  </div>
-                </Button>
-              </Link>
-              <Link to="/launch-plus-intro" className="w-full sm:w-auto">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="group w-full sm:w-auto border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 bg-white/5 backdrop-blur-md px-6 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold shadow-xl hover:shadow-white/10 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full"
-                >
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    <Rocket className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300" />
-                    <span className="text-sm sm:text-base">Explore LAUNCH+</span>
-                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform duration-300" />
-                  </div>
-                </Button>
-              </Link>
+            <div className="flex flex-col gap-4 justify-center items-center px-4 mt-auto pb-20 sm:pb-24">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
+                <Link to="/auth" className="w-full sm:w-auto">
+                  <Button 
+                    size="lg" 
+                    className="group w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full"
+                  >
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform duration-300" />
+                      <span className="text-sm sm:text-base">Join ESCP Network</span>
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                    </div>
+                  </Button>
+                </Link>
+              </div>
+              <p className="text-white/95 text-sm sm:text-base text-center">
+                Already a member?{" "}
+                <Link to="/auth" className="font-semibold underline underline-offset-2 hover:text-white transition-colors">Sign in</Link>
+              </p>
             </div>
           </div>
         </div>
@@ -430,9 +464,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* How Does CFF Work Section */}
       <section className="py-24 bg-amber-50 relative overflow-hidden">
-        {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-amber-200/20 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-100/20 rounded-full blur-3xl"></div>
         
@@ -444,63 +477,65 @@ const Index = () => {
               </span>
             </div>
             <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-6">
-              How Does the Collaborative Work?
+              How Does the Collaborative for Frontier Finance Work?
             </h2>
             <div className="w-24 h-1.5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 mb-4"></div>
-            <p className="text-base text-gray-700 leading-relaxed mb-6">
-              We work with diverse stakeholders to set common action agendas, test and scale financing models, and facilitate capital flow to the SGB market
+            <p className="text-base text-gray-700 leading-relaxed mb-8 max-w-4xl">
+              The Collaborative for Frontier Finance works with diverse stakeholders – including fund managers, funders, and fieldbuilders – to accelerate financing solutions that target SGBs. We aim to set a common action agenda for SGB finance; to test and scale promising financing models; and to facilitate the flow of capital to the SGB market. With a bias to action, CFF works with stakeholders to identify, co-design and launch initiatives – or specific solutions that table SGB financing challenges – that are too complex for any one stakeholder to launch on their own.
             </p>
+            <p className="text-base font-semibold text-gray-800 mb-8">We do this in three ways:</p>
           </div>
           
-          {/* Image and Points Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr,1fr] gap-8 items-start">
-            {/* Left: Image */}
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-all duration-500 h-[500px]">
-              <img 
-                src="/12.png" 
-                alt="CFF Collaborative Work" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            
-            {/* Right: Points in Column */}
-            <div className="space-y-6">
-              <div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-700 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
-                    <Users className="w-4 h-4 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-blue-800">Networks</h3>
-                </div>
+          {/* Three Pillars - Homepage UI/UX with colourful names and images */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+              <div className="aspect-[4/3] overflow-hidden">
+                <img src="/home.png" alt="Networks" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div className="p-6">
+                <div className="w-12 h-1 bg-gradient-to-r from-blue-600 to-blue-400 mb-3"></div>
+                <h3 className="text-xl font-bold bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent mb-2">Networks</h3>
                 <p className="text-sm text-gray-700 leading-relaxed">
                   Connect stakeholders facing similar challenges to a peer network of actors operating with shared principles, values, and ambitions to learn from and support one another.
                 </p>
+              </div>
             </div>
-
-              <div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-700 to-purple-800 rounded-lg flex items-center justify-center shadow-lg">
-                    <Lightbulb className="w-4 h-4 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-purple-800">Actionable Research</h3>
-                </div>
+            <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+              <div className="aspect-[4/3] overflow-hidden">
+                <img src="/eeee.png" alt="Actionable Research" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div className="p-6">
+                <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-purple-400 mb-3"></div>
+                <h3 className="text-xl font-bold bg-gradient-to-r from-purple-700 to-purple-500 bg-clip-text text-transparent mb-2">Actionable Research</h3>
                 <p className="text-sm text-gray-700 leading-relaxed">
                   Facilitate research on hot topics to improve transparency, provide practical guidance, and dispel common misconceptions within the small business finance sector.
                 </p>
               </div>
-              
-              <div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-orange-700 to-orange-800 rounded-lg flex items-center justify-center shadow-lg">
-                    <Rocket className="w-4 h-4 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-orange-800">Initiatives</h3>
-                </div>
+            </div>
+            <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+              <div className="aspect-[4/3] overflow-hidden">
+                <img src="/12.png" alt="Initiatives" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div className="p-6">
+                <div className="w-12 h-1 bg-gradient-to-r from-amber-600 to-orange-500 mb-3"></div>
+                <h3 className="text-xl font-bold bg-gradient-to-r from-amber-700 to-orange-600 bg-clip-text text-transparent mb-2">Initiatives</h3>
                 <p className="text-sm text-gray-700 leading-relaxed">
                   Identify concrete initiatives to provide tangible support to early-stage investors. We leverage CFF network resources to amplify the voices of local capital providers.
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* How we work CTA */}
+          <div className="text-center">
+            <Link to="/about">
+              <Button className="group border-2 border-blue-600 text-blue-700 hover:bg-blue-50 bg-white/80 backdrop-blur-md px-8 py-4 text-base font-semibold shadow-xl hover:shadow-blue-500/20 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full">
+                <span className="flex items-center gap-2">
+                  How we work
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </span>
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -605,6 +640,32 @@ const Index = () => {
                   </svg>
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Who's Involved Section */}
+      <section className="py-20 relative bg-amber-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-block mb-3">
+                <span className="px-6 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full text-blue-700 text-sm font-semibold">
+                  Our Community
+                </span>
+              </div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-4">
+                Who&apos;s Involved in the Collaborative for Frontier Finance?
+              </h2>
+              <div className="w-20 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 mb-6"></div>
+              <p className="text-base text-gray-700 leading-relaxed mb-8">
+                With input from 80+ fund managers, funders, and fieldbuilders over the past year, the Collaborative for Frontier Finance is a multi-stakeholder initiative.
+              </p>
+            </div>
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[300px] sm:h-[400px]">
+              <img src="/home.png" alt="CFF Stakeholders" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
             </div>
           </div>
         </div>
@@ -723,18 +784,12 @@ const Index = () => {
               </h3>
               <ul className="space-y-2">
                 <li><Link to="/about" className="text-blue-300 hover:text-blue-200 transition-colors">About</Link></li>
-                <li><Link to="/network" className="text-blue-300 hover:text-blue-200 transition-colors">Network</Link></li>
+                <li><Link to="/escp-network" className="text-blue-300 hover:text-blue-200 transition-colors">Network</Link></li>
                 <li><Link to="/learning-hub" className="text-blue-300 hover:text-blue-200 transition-colors">Learning Hub</Link></li>
                 <li><Link to="/our-events" className="text-blue-300 hover:text-blue-200 transition-colors">Our Events</Link></li>
                 <li><Link to="/escp-network" className="text-blue-300 hover:text-blue-200 transition-colors">ESCP Network</Link></li>
                 <li><Link to="/partnership" className="text-blue-300 hover:text-blue-200 transition-colors">Partnership</Link></li>
-                <li><Link to="/contact" className="text-blue-300 hover:text-blue-200 transition-colors">Contact</Link></li>
-                <li>
-                  <Link to="/auth" className="text-blue-300 hover:text-blue-200 transition-colors flex items-center group">
-                    <ExternalLink className="w-3 h-3 mr-2 group-hover:scale-110 transition-transform" />
-                    Login / Sign Up
-                  </Link>
-                </li>
+                <li><Link to="/auth" className="text-blue-300 hover:text-blue-200 transition-colors">Sign in</Link></li>
                 <li>
                   <Link to="/network" className="text-blue-300 hover:text-blue-200 transition-colors flex items-center group">
                     <Globe className="w-3 h-3 mr-2 group-hover:scale-110 transition-transform" />

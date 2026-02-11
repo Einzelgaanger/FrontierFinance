@@ -203,9 +203,9 @@ const MemberNetwork = React.memo(() => {
         const userSurveys = surveyDataMap.get(userProfile.user_id) || [];
         
         // Use profile data for company information
-        const companyName = userProfile.company_name || 'CFF Network User';
-        const email = userProfile.email || 'No email provided';
-        const fullName = userProfile.full_name || 'Network User';
+        const companyName = userProfile.company_name || '';
+        const email = userProfile.email || '';
+        const fullName = userProfile.full_name || '';
         const roleTitle = userProfile.role_title || 'Network Member';
         const profilePhoto = userProfile.profile_picture_url || '';
         const userRole = userProfile.user_role || 'viewer';
@@ -237,8 +237,8 @@ const MemberNetwork = React.memo(() => {
           surveys_completed: userSurveys.length,
           survey_data: userSurveys, // Store all survey data for viewing
           profile: {
-            first_name: fullName.split(' ')[0] || 'Unknown',
-            last_name: fullName.split(' ').slice(1).join(' ') || 'User',
+            first_name: fullName.split(' ')[0] || '',
+            last_name: fullName.split(' ').slice(1).join(' ') || '',
             email: email
           },
           geographic_focus: ['Global'], // Simplified
@@ -1138,26 +1138,30 @@ const MemberNetwork = React.memo(() => {
                     <div className="relative z-10 h-full flex flex-col justify-end">
                       <div className="bg-black/60 backdrop-blur-sm rounded-b-2xl p-4 m-2">
                         
-                        {/* Company Name with Icon */}
-                        <div className="flex items-center mb-2">
-                          <Building2 className="w-3 h-3 text-white mr-2 flex-shrink-0" />
-                          <h3 className="font-semibold text-white text-sm leading-tight drop-shadow-lg">
-                            {manager.firm_name || manager.fund_name || 'CFF Network User'}
-                          </h3>
-                        </div>
+                        {/* Company / Firm Name - only show when provided */}
+                        {(manager.firm_name || manager.fund_name) && (manager.firm_name || manager.fund_name).trim().toLowerCase() !== 'not provided' && (
+                          <div className="flex items-center mb-2">
+                            <Building2 className="w-3 h-3 text-white mr-2 flex-shrink-0" />
+                            <h3 className="font-semibold text-white text-sm leading-tight drop-shadow-lg">
+                              {manager.firm_name || manager.fund_name}
+                            </h3>
+                          </div>
+                        )}
 
-                        {/* Email with Icon */}
-                        <div className="flex items-center mb-1">
-                          <Mail className="w-3 h-3 text-white/80 mr-2 flex-shrink-0" />
-                          <p className="text-xs text-white/90 drop-shadow-md break-all">
-                            {manager.email_address}
-                          </p>
-                        </div>
+                        {/* Email - only show when provided */}
+                        {manager.email_address && manager.email_address.trim().toLowerCase() !== 'no email provided' && (
+                          <div className="flex items-center mb-1">
+                            <Mail className="w-3 h-3 text-white/80 mr-2 flex-shrink-0" />
+                            <p className="text-xs text-white/90 drop-shadow-md break-all">
+                              {manager.email_address}
+                            </p>
+                          </div>
+                        )}
 
-                        {/* Website with Icon - Always show */}
-                        <div className="flex items-center mb-1">
-                          <Globe className="w-3 h-3 text-blue-200 mr-2 flex-shrink-0" />
-                          {manager.website ? (
+                        {/* Website - only show when provided */}
+                        {manager.website && (
+                          <div className="flex items-center mb-1">
+                            <Globe className="w-3 h-3 text-blue-200 mr-2 flex-shrink-0" />
                             <a 
                               href={manager.website.startsWith('http') ? manager.website : `https://${manager.website}`}
                               target="_blank"
@@ -1167,40 +1171,31 @@ const MemberNetwork = React.memo(() => {
                             >
                               {manager.website}
                             </a>
-                          ) : (
-                            <span className="text-xs text-white/60 drop-shadow-md">No website provided</span>
-                          )}
-                        </div>
-
-                        {/* Description with Icon and More functionality - Always show */}
-                        <div className="flex items-start">
-                          <MessageSquare className="w-3 h-3 text-white/80 mr-2 flex-shrink-0 mt-0.5" />
-                          <div className="flex-1">
-                            {manager.description ? (
-                              <>
-                                <p className="text-xs text-white/80 leading-relaxed drop-shadow-md line-clamp-2">
-                                  {manager.description}
-                                </p>
-                                {manager.description.length > 100 && (
-                                  <button 
-                                    className="text-xs text-blue-200 hover:text-blue-100 hover:underline mt-1"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      // You can add a modal or expand functionality here
-                                      alert(manager.description);
-                                    }}
-                                  >
-                                    More...
-                                  </button>
-                                )}
-                              </>
-                            ) : (
-                              <p className="text-xs text-white/60 leading-relaxed drop-shadow-md">
-                                No description provided
-                              </p>
-                            )}
                           </div>
-                        </div>
+                        )}
+
+                        {/* Description - only show when provided */}
+                        {manager.description && (
+                          <div className="flex items-start">
+                            <MessageSquare className="w-3 h-3 text-white/80 mr-2 flex-shrink-0 mt-0.5" />
+                            <div className="flex-1">
+                              <p className="text-xs text-white/80 leading-relaxed drop-shadow-md line-clamp-2">
+                                {manager.description}
+                              </p>
+                              {manager.description.length > 100 && (
+                                <button 
+                                  className="text-xs text-blue-200 hover:text-blue-100 hover:underline mt-1"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    alert(manager.description);
+                                  }}
+                                >
+                                  More...
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
