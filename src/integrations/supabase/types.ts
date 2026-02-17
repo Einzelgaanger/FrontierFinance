@@ -2018,6 +2018,7 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
+          is_super_admin: boolean
           role: string
           updated_at: string | null
           user_id: string
@@ -2025,6 +2026,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           id?: string
+          is_super_admin?: boolean
           role?: string
           updated_at?: string | null
           user_id: string
@@ -2032,6 +2034,7 @@ export type Database = {
         Update: {
           created_at?: string | null
           id?: string
+          is_super_admin?: boolean
           role?: string
           updated_at?: string | null
           user_id?: string
@@ -2100,6 +2103,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      get_user_is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       get_user_role: { Args: { _user_id: string }; Returns: string }
       get_user_role_safe: { Args: { user_uuid: string }; Returns: string }
       has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }

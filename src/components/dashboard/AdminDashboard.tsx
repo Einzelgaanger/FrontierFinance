@@ -32,6 +32,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Badge } from "@/components/ui/badge";
 import AIAssistant from './AIAssistant';
 import { Leaderboard } from './Leaderboard';
+import { fetchCompletedSurveysThisMonth, fetchRecentCompletedSurveys } from '@/utils/surveyDataHelpers';
 
 interface ActivityItem {
   id: string;
@@ -78,14 +79,8 @@ const AdminDashboard = () => {
       const pendingRequestsCount = requests && !reqError ? requests.length : 0;
       setPendingRequests(pendingRequestsCount);
 
-      // 3. Active Surveys (completed this month)
-      const startOfMonth = new Date();
-      startOfMonth.setDate(1); startOfMonth.setHours(0,0,0,0);
-      const { data: surveys, error: surveysError } = await supabase
-        .from('survey_responses')
-        .select('id, completed_at')
-        .gte('completed_at', startOfMonth.toISOString());
-      const activeSurveys = surveys && !surveysError ? surveys.length : 0;
+      // 3. Active Surveys (completed this month) - query all year-specific tables
+      const activeSurveys = await fetchCompletedSurveysThisMonth();
 
       // 4. Invitation Codes Expiring Today
       const startOfDay = new Date();
@@ -127,22 +122,17 @@ const AdminDashboard = () => {
           });
         }
 
-        // Get recent survey completions
-        const { data: recentSurveys } = await supabase
-          .from('survey_responses')
-          .select('id, completed_at, user_id')
-          .not('completed_at', 'is', null)
-          .order('completed_at', { ascending: false })
-          .limit(2);
+        // Get recent survey completions from year-specific tables
+        const recentSurveys = await fetchRecentCompletedSurveys(2);
 
-        if (recentSurveys) {
+        if (recentSurveys.length > 0) {
           recentSurveys.forEach((survey) => {
             const timeAgo = getTimeAgo(new Date(survey.completed_at));
             activities.push({
               id: survey.id,
               type: 'survey_completed',
               title: 'Survey Completed',
-              description: 'A member completed their profile survey',
+              description: `${survey.fund_name} completed their ${survey.survey_year} survey`,
               timestamp: timeAgo,
               icon: CheckCircle,
               color: 'bg-green-50 border-green-200'

@@ -13,30 +13,14 @@ import {
   Loader2
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-
-interface SurveyResponse {
-  response_id: number;
-  company_id: number;
-  company_name: string;
-  survey_year: number;
-  table_name: string;
-  created_at: string;
-}
-
-interface ResponseData {
-  id: number;
-  question_column: string;
-  original_question: string;
-  response_value: string;
-  data_type: string;
-}
+import { SURVEY_TABLES } from '@/utils/surveyDataHelpers';
 
 const SurveyResponseDetail = () => {
   const { responseId } = useParams<{ responseId: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [surveyResponse, setSurveyResponse] = useState<SurveyResponse | null>(null);
-  const [responseData, setResponseData] = useState<ResponseData[]>([]);
+  const [surveyData, setSurveyData] = useState<any>(null);
+  const [surveyYear, setSurveyYear] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -50,27 +34,22 @@ const SurveyResponseDetail = () => {
       setLoading(true);
       setError(null);
 
-      // Fetch metadata from survey_responses table
-      const { data: metadata, error: metadataError } = await supabase
-        .from('survey_responses')
-        .select('*')
-        .eq('response_id', responseId)
-        .single();
+      // Search across all year-specific tables for this response ID
+      for (const { year, table, nameField } of SURVEY_TABLES) {
+        const { data, error: fetchError } = await supabase
+          .from(table as any)
+          .select('*')
+          .eq('id', responseId)
+          .maybeSingle();
 
-      if (metadataError) throw metadataError;
-      if (!metadata) throw new Error('Survey response not found');
+        if (!fetchError && data) {
+          setSurveyData({ ...data, _fund_name: data[nameField] });
+          setSurveyYear(year);
+          return;
+        }
+      }
 
-      setSurveyResponse(metadata);
-
-      // Fetch actual response data from the dynamic table
-      const { data: responses, error: responsesError } = await supabase
-        .from(metadata.table_name)
-        .select('*')
-        .order('id');
-
-      if (responsesError) throw responsesError;
-
-      setResponseData(responses || []);
+      throw new Error('Survey response not found in any year table');
     } catch (err: any) {
       console.error('Error fetching survey response:', err);
       setError(err.message || 'Failed to load survey response');
@@ -92,7 +71,7 @@ const SurveyResponseDetail = () => {
     );
   }
 
-  if (error || !surveyResponse) {
+  if (error || !surveyData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-teal-50">
         <Header />
@@ -115,11 +94,18 @@ const SurveyResponseDetail = () => {
     );
   }
 
+  // Get all non-null, non-internal fields as key-value pairs
+  const responseFields = Object.entries(surveyData)
+    .filter(([key, value]) => 
+      value !== null && 
+      value !== '' && 
+      !['id', 'user_id', 'created_at', 'updated_at', 'completed_at', 'submission_status', 'form_data', '_fund_name', '_survey_year'].includes(key)
+    );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-teal-50">
       <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
         <div className="mb-6">
           <Button 
             variant="outline" 
@@ -134,84 +120,61 @@ const SurveyResponseDetail = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-slate-800 mb-2">
-                {surveyResponse.company_name}
+                {surveyData._fund_name}
               </h1>
               <div className="flex items-center space-x-4 text-sm text-slate-600">
                 <div className="flex items-center">
-                  <Building2 className="w-4 h-4 mr-1" />
-                  Company ID: {surveyResponse.company_id}
-                </div>
-                <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-1" />
-                  Survey Year: {surveyResponse.survey_year}
-                </div>
-                <div className="flex items-center">
-                  <FileText className="w-4 h-4 mr-1" />
-                  Response ID: {surveyResponse.response_id}
+                  Survey Year: {surveyYear}
                 </div>
               </div>
             </div>
             <Badge className="bg-emerald-600 text-white text-lg px-4 py-2">
-              {surveyResponse.survey_year}
+              {surveyYear}
             </Badge>
           </div>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <Card className="bg-white/80 backdrop-blur-sm">
             <CardContent className="p-4">
-              <p className="text-sm text-slate-600 mb-1">Total Questions</p>
-              <p className="text-2xl font-bold text-slate-800">{responseData.length}</p>
+              <p className="text-sm text-slate-600 mb-1">Total Fields</p>
+              <p className="text-2xl font-bold text-slate-800">{responseFields.length}</p>
             </CardContent>
           </Card>
           <Card className="bg-white/80 backdrop-blur-sm">
             <CardContent className="p-4">
-              <p className="text-sm text-slate-600 mb-1">Submitted</p>
+              <p className="text-sm text-slate-600 mb-1">Completed</p>
               <p className="text-lg font-semibold text-slate-800">
-                {new Date(surveyResponse.created_at).toLocaleDateString()}
+                {surveyData.completed_at ? new Date(surveyData.completed_at).toLocaleDateString() : 'N/A'}
               </p>
             </CardContent>
           </Card>
           <Card className="bg-white/80 backdrop-blur-sm">
             <CardContent className="p-4">
-              <p className="text-sm text-slate-600 mb-1">Table Name</p>
-              <p className="text-sm font-mono text-slate-800">{surveyResponse.table_name}</p>
+              <p className="text-sm text-slate-600 mb-1">Status</p>
+              <Badge>{surveyData.submission_status}</Badge>
             </CardContent>
           </Card>
         </div>
 
-        {/* Survey Responses */}
         <Card className="bg-white/80 backdrop-blur-sm">
           <CardHeader>
             <CardTitle>Survey Responses</CardTitle>
           </CardHeader>
           <CardContent>
-            {responseData.length === 0 ? (
+            {responseFields.length === 0 ? (
               <p className="text-slate-600 text-center py-8">No responses found</p>
             ) : (
               <div className="space-y-4">
-                {responseData.map((item) => (
-                  <div 
-                    key={item.id}
-                    className="border-b border-slate-200 pb-4 last:border-0"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <p className="font-medium text-slate-800 mb-1">
-                          {item.original_question}
-                        </p>
-                        <p className="text-sm text-slate-500 mb-2">
-                          Column: {item.question_column}
-                        </p>
-                      </div>
-                      <Badge variant="outline" className="ml-4">
-                        {item.data_type}
-                      </Badge>
-                    </div>
+                {responseFields.map(([key, value]) => (
+                  <div key={key} className="border-b border-slate-200 pb-4 last:border-0">
+                    <p className="font-medium text-slate-800 mb-1">
+                      {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </p>
                     <div className="bg-slate-50 rounded-md p-3">
                       <p className="text-slate-700">
-                        {item.response_value || <span className="italic text-slate-400">No response</span>}
+                        {typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)}
                       </p>
                     </div>
                   </div>
