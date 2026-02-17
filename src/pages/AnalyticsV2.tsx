@@ -94,22 +94,8 @@ const AnalyticsV2 = () => {
         console.warn('Could not fetch 2021 survey data:', survey2021Error);
       }
 
-      // Fetch regular survey data
-      const { data: surveyData, error: surveyError } = await supabase
-        .from('survey_responses')
-        .select('*');
-
-      if (surveyError) {
-        console.warn('Could not fetch regular survey data:', surveyError);
-      }
-
-      // Combine data based on selected year
-      let combinedData = [];
-      if (selectedYear === 2021) {
-        combinedData = survey2021Data || [];
-      } else {
-        combinedData = surveyData || [];
-      }
+      // Use the year-specific data directly
+      const combinedData = survey2021Data || [];
 
       setSurveyData(combinedData);
       setLastUpdated(new Date());

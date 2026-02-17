@@ -180,9 +180,9 @@ const Admin = () => {
         await new Promise(resolve => setTimeout(resolve, 100));
 
         const membersResult = await supabase
-          .from('survey_responses')
-          .select('id, user_id, vehicle_name, vehicle_websites')
-          .not('completed_at', 'is', null)
+          .from('survey_responses_2024' as any)
+          .select('id, user_id, fund_name')
+          .eq('submission_status', 'completed')
           .limit(20);
 
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -230,8 +230,8 @@ const Admin = () => {
         setFundManagers((membersResult.data || []).map(member => ({
           id: member.id,
           user_id: member.user_id,
-          fund_name: member.vehicle_name || '',
-          website: member.vehicle_websites?.[0] || '',
+          fund_name: (member as any).fund_name || '',
+          website: '',
           status: 'active'
         })));
         setCreatedViewers(viewersWithProfiles);
@@ -275,12 +275,13 @@ const Admin = () => {
       try {
         setAnalyticsLoading(true);
         
+        // Query the year-specific survey table
+        const tableMap: Record<number, string> = { 2021: 'survey_responses_2021', 2022: 'survey_responses_2022', 2023: 'survey_responses_2023', 2024: 'survey_responses_2024' };
+        const tableName = tableMap[selectedYear] || 'survey_responses_2024';
         const { data: surveys, error } = await supabase
-          .from('survey_responses')
-          .select('target_capital, ticket_size_min, ticket_size_max, legal_domicile, vehicle_type, created_at, equity_investments_made, equity_investments_exited, self_liquidating_made, self_liquidating_exited')
-          .not('completed_at', 'is', null)
-          .gte('created_at', `${selectedYear}-01-01`)
-          .lt('created_at', `${selectedYear + 1}-01-01`)
+          .from(tableName as any)
+          .select('*')
+          .eq('submission_status', 'completed')
           .limit(50);
 
         if (error) throw error;

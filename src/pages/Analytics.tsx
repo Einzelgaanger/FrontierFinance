@@ -60,6 +60,7 @@ import { useToast } from '@/hooks/use-toast';
 import Analytics2022 from './Analytics2022';
 import Analytics2023 from './Analytics2023';
 import Analytics2024 from './Analytics2024';
+import { fetchSurveyDataForYear } from '@/utils/surveyDataHelpers';
 
 // Custom CSS for improved typography and organization
 const analyticsStyles = `
@@ -127,51 +128,17 @@ const Analytics = () => {
   const fetchSurveyData = useCallback(async () => {
     setLoading(true);
     try {
-      // Fetch data directly from Supabase instead of API server
-      const { data: surveyData, error } = await supabase
-        .from('survey_responses')
-        .select(`
-          id,
-          user_id,
-          vehicle_name,
-          vehicle_type,
-          target_capital,
-          capital_raised,
-          capital_in_market,
-          ticket_size_min,
-          ticket_size_max,
-          team_size_min,
-          team_size_max,
-          legal_domicile,
-          markets_operated,
-          sectors_allocation,
-          investment_instruments_priority,
-          fund_stage,
-          equity_investments_made,
-          equity_investments_exited,
-          self_liquidating_made,
-          self_liquidating_exited,
-          completed_at,
-          created_at
-        `)
-        .not('completed_at', 'is', null)
-        .gte('created_at', `${selectedYear}-01-01`)
-        .lt('created_at', `${selectedYear + 1}-01-01`);
-
-      if (error) throw error;
-      
-      // Set the survey data
-      setSurveyData(surveyData || []);
+      // Fetch from year-specific tables
+      const data = await fetchSurveyDataForYear(selectedYear);
+      setSurveyData(data);
       setLastUpdated(new Date());
       
-      // Calculate data quality metrics
-      const totalRecords = surveyData?.length || 0;
+      const totalRecords = data.length;
       setDataQuality({
         completeness: totalRecords > 0 ? 95 : 0,
         accuracy: totalRecords > 0 ? 92 : 0,
         freshness: totalRecords > 0 ? 88 : 0
       });
-      
     } catch (error) {
       console.error('Error fetching analytics data:', error);
       toast({
