@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Upload, Mail, Globe, Building2, FileText, Lock, Eye, EyeOff, CheckCircle, XCircle, Shield } from 'lucide-react';
+import MyApplicationSection from '@/components/profile/MyApplicationSection';
 
 export default function MyProfile() {
   const { user } = useAuth();
@@ -450,6 +451,9 @@ export default function MyProfile() {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Application Profile Section */}
+              <MyApplicationSection />
 
               {/* Password Change Card */}
               <Card className="bg-white border-gray-200 shadow-lg">
