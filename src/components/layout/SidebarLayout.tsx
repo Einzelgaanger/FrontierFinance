@@ -170,6 +170,15 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
       badge: null,
       color: "indigo"
     },
+    { 
+      name: "Admin Chat", 
+      href: "/admin-chat", 
+      icon: Brain, 
+      roles: ["admin"],
+      description: "Personal AI chat assistant",
+      badge: null,
+      color: "purple"
+    },
   ];
 
 
@@ -199,6 +208,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     if (href === "/admin" && location.pathname === "/admin") return true;
     if (href === "/portiq" && location.pathname === "/portiq") return true;
     if (href === "/application" && location.pathname === "/application") return true;
+    if (href === "/admin-chat" && location.pathname === "/admin-chat") return true;
     if (href === "/community" && (location.pathname === "/community" || location.pathname === "/blogs")) return true;
     return false;
   };

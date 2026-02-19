@@ -37,6 +37,7 @@ import PortIQ from "./pages/PortIQ";
 import LaunchPlusIntro from "./pages/LaunchPlusIntro";
 import LaunchPlusAssessment from "./pages/LaunchPlusAssessment";
 import AdminLaunchPlusAnalytics from "./pages/AdminLaunchPlusAnalytics";
+import AdminChat from "./pages/AdminChat";
 import DevTasks from "./pages/DevTasks";
 import Day1Presentation from "./pages/Day1Presentation";
 import Day2Presentation from "./pages/Day2Presentation";
@@ -141,6 +142,11 @@ const App = () => {
             <Route path="/portiq" element={
               <ProtectedRoute>
                 <PortIQ />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin-chat" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminChat />
               </ProtectedRoute>
             } />
             <Route path="/community" element={
