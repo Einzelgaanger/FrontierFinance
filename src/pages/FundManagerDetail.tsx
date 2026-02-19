@@ -31,10 +31,12 @@ import {
   Star,
   Shield,
   BarChart3,
-  ArrowLeft
+  ArrowLeft,
+  Pencil
 } from 'lucide-react';
 import { getSurveySections } from '@/utils/surveySectionMappings';
 import { getQuestionLabel } from '@/utils/surveyQuestionLabels';
+import AdminEditProfileDialog from '@/components/network/AdminEditProfileDialog';
 
 interface FundManager {
   id: string;
@@ -147,6 +149,7 @@ const FundManagerDetail = () => {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [selectedSection, setSelectedSection] = useState<number>(1);
   const [fieldVisibility, setFieldVisibility] = useState<Record<string, { viewer: boolean; member: boolean; admin: boolean }>>({});
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
 
   const fetchFundManagerData = useCallback(async () => {
@@ -546,11 +549,17 @@ const FundManagerDetail = () => {
                 <div className="relative flex items-start justify-between gap-4">
                   {/* Left side - Content */}
                   <div className="flex-1 p-6 max-w-[60%] lg:max-w-[65%]">
-                    <div className="flex items-center space-x-3 mb-6">
+                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-sm">
                         <Building2 className="w-4 h-4 text-white" />
                       </div>
                       <h2 className="text-lg font-bold text-gray-800">Company Information</h2>
+                      {userRole === 'admin' && (
+                        <Button size="sm" variant="outline" className="ml-auto" onClick={(e) => { e.stopPropagation(); setEditDialogOpen(true); }}>
+                          <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                          Edit
+                        </Button>
+                      )}
                     </div>
 
                    <div className="space-y-4">
@@ -720,7 +729,16 @@ const FundManagerDetail = () => {
             ) : null}
            </div>
         </div>
-      </div>
+       </div>
+
+      {userRole === 'admin' && id && (
+        <AdminEditProfileDialog
+          open={editDialogOpen}
+          onClose={() => setEditDialogOpen(false)}
+          userId={id}
+          onSaved={() => fetchFundManagerData()}
+        />
+      )}
     </SidebarLayout>
   );
 };
