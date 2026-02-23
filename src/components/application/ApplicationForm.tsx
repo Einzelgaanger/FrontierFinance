@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Send, Clock, CheckCircle, XCircle, ArrowLeft, ArrowRight, 
-  Upload, X, FileText, Link as LinkIcon, User, Image
+  Upload, X, FileText, Link as LinkIcon, User, Image, Building2
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
@@ -211,10 +211,10 @@ const ApplicationForm = () => {
         .update({ profile_picture_url: urlData.publicUrl })
         .eq('id', user.id);
 
-      toast({ title: "Success", description: "Profile picture uploaded" });
+      toast({ title: "Success", description: "Company logo uploaded" });
     } catch (error) {
-      console.error('Profile picture upload error:', error);
-      toast({ title: "Error", description: "Failed to upload profile picture" });
+      console.error('Company logo upload error:', error);
+      toast({ title: "Error", description: "Failed to upload company logo" });
     } finally {
       setUploadingProfilePic(false);
     }
@@ -718,23 +718,23 @@ const ApplicationForm = () => {
             {currentStep === 4 && (
               <div className="space-y-6">
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold">4. Profile & Documents</h3>
-                  <p className="text-sm text-muted-foreground">Upload your profile picture and supporting documents</p>
+                  <h3 className="text-lg font-semibold">4. Company Logo & Documents</h3>
+                  <p className="text-sm text-muted-foreground">Upload your company logo and supporting documents</p>
                 </div>
 
-                {/* Profile Picture */}
+                {/* Company Logo */}
                 <div className="border rounded-lg p-4 bg-muted/30">
                   <Label className="flex items-center gap-2 mb-3">
-                    <User className="w-4 h-4" />
-                    Profile Picture
+                    <Building2 className="w-4 h-4" />
+                    Company Logo
                   </Label>
                   <div className="flex items-center gap-4">
                     {profilePicture ? (
                       <div className="relative">
                         <img 
                           src={profilePicture} 
-                          alt="Profile" 
-                          className="w-20 h-20 rounded-full object-cover border-2 border-sky-600"
+                          alt="Company logo" 
+                          className="w-20 h-20 rounded-lg object-contain border-2 border-sky-600 bg-white"
                         />
                         <button
                           type="button"
@@ -745,8 +745,8 @@ const ApplicationForm = () => {
                         </button>
                       </div>
                     ) : (
-                      <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center border-2 border-dashed">
-                        <Image className="w-8 h-8 text-muted-foreground" />
+                      <div className="w-20 h-20 rounded-lg bg-muted flex items-center justify-center border-2 border-dashed">
+                        <Building2 className="w-8 h-8 text-muted-foreground" />
                       </div>
                     )}
                     <div>
@@ -760,11 +760,11 @@ const ApplicationForm = () => {
                         />
                         <Button type="button" variant="outline" size="sm" disabled={uploadingProfilePic} asChild>
                           <span>
-                            {uploadingProfilePic ? 'Uploading...' : 'Upload Photo'}
+                            {uploadingProfilePic ? 'Uploading...' : 'Upload logo'}
                           </span>
                         </Button>
                       </label>
-                      <p className="text-xs text-muted-foreground mt-1">This will also be set as your profile picture</p>
+                      <p className="text-xs text-muted-foreground mt-1">This will be used as your company logo</p>
                     </div>
                   </div>
                 </div>

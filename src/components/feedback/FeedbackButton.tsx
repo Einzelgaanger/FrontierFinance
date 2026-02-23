@@ -17,8 +17,13 @@ export function FeedbackButton() {
   const { toast } = useToast();
   const location = useLocation();
 
-  // Hide feedback button on certain pages
-  const hiddenPages = ['/auth', '/devtasks', '/reset-password', '/forgot-password', '/', '/launch-plus-intro', '/drew'];
+  // Hide feedback button on external pages, auth pages, and a few others
+  const hiddenPages = [
+    '/', '/about', '/escp-network', '/learning-hub', '/our-events', '/contact', '/partnership',
+    '/auth', '/reset-password', '/forgot-password',
+    '/launch-plus-intro', '/launch-plus-assessment',
+    '/devtasks', '/drew',
+  ];
   const isSurveyPage = location.pathname.startsWith('/survey');
   if (hiddenPages.includes(location.pathname) || isSurveyPage) {
     return null;

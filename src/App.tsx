@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import LoadingScreen from "@/components/ui/loading-screen";
@@ -47,13 +47,157 @@ import About from "./pages/About";
 import ESCPNetwork from "./pages/ESCPNetwork";
 import LearningHub from "./pages/LearningHub";
 import OurEvents from "./pages/OurEvents";
+import Partnership from "./pages/Partnership";
+import Contact from "./pages/Contact";
 import { FeedbackButton } from "./components/feedback/FeedbackButton";
+import Navbar from "./components/layout/Navbar";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
+const AUTH_ROUTES = ['/auth', '/forgot-password', '/reset-password'];
+
+const AppRoutes = () => {
+  const location = useLocation();
+  const isAuthPage = AUTH_ROUTES.includes(location.pathname);
+
+  return (
+    <>
+      {!isAuthPage && <Navbar />}
+      <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/network" element={
+                  <ProtectedRoute>
+                    <NetworkWrapper />
+                  </ProtectedRoute>
+                } />
+                <Route path="/network/fund-manager/:id" element={
+                  <ProtectedRoute>
+                    <FundManagerDetail />
+                  </ProtectedRoute>
+                } />
+                <Route path="/survey-response/:userId/:year" element={
+                  <ProtectedRoute>
+                    <SurveyResponseViewer />
+                  </ProtectedRoute>
+                } />
+                <Route path="/survey" element={
+                  <ProtectedRoute>
+                    <Survey />
+                  </ProtectedRoute>
+                } />
+                <Route path="/survey/2021" element={
+                  <ProtectedRoute>
+                    <Survey2021 />
+                  </ProtectedRoute>
+                } />
+                <Route path="/survey/2022" element={
+                  <ProtectedRoute>
+                    <Survey2022 />
+                  </ProtectedRoute>
+                } />
+                <Route path="/survey/2023" element={
+                  <ProtectedRoute>
+                    <Survey2023 />
+                  </ProtectedRoute>
+                } />
+                <Route path="/survey/2024" element={
+                  <ProtectedRoute>
+                    <Survey2024 />
+                  </ProtectedRoute>
+                } />
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <MyProfile />
+                  </ProtectedRoute>
+                } />
+                {/* Onboarding route removed */}
+                <Route path="/viewer-settings" element={
+                  <ProtectedRoute requiredRole="viewer">
+                    <ViewerSettings />
+                  </ProtectedRoute>
+                } />
+                <Route path="/application" element={
+                  <ProtectedRoute requiredRole="viewer">
+                    <Application />
+                  </ProtectedRoute>
+                } />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/admin" element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminWrapper />
+                  </ProtectedRoute>
+                } />
+                <Route path="/analytics" element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminAnalytics />
+                  </ProtectedRoute>
+                } />
+                <Route path="/portiq" element={
+                  <ProtectedRoute>
+                    <PortIQ />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin-chat" element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminChat />
+                  </ProtectedRoute>
+                } />
+                <Route path="/community" element={
+                  <ProtectedRoute>
+                    <Community />
+                  </ProtectedRoute>
+                } />
+                <Route path="/blogs" element={
+                  <ProtectedRoute>
+                    <Community />
+                  </ProtectedRoute>
+                } />
+                <Route path="/blogs/:id" element={
+                  <ProtectedRoute>
+                    <BlogDetail />
+                  </ProtectedRoute>
+                } />
+                <Route path="/community/learning/:id" element={
+                  <ProtectedRoute>
+                    <LearningResourceDetail />
+                  </ProtectedRoute>
+                } />
+                <Route path="/launch-plus-intro" element={<LaunchPlusIntro />} />
+                <Route path="/launch-plus-assessment" element={<LaunchPlusAssessment />} />
+                <Route path="/admin/launch-plus-analytics" element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminLaunchPlusAnalytics />
+                  </ProtectedRoute>
+                } />
+                <Route path="/devtasks" element={<DevTasks />} />
+                <Route path="/presentation/day1" element={<Day1Presentation />} />
+                <Route path="/presentation/day2" element={<Day2Presentation />} />
+                <Route path="/drew" element={<Drew />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/learning-hub" element={<LearningHub />} />
+                <Route path="/our-events" element={<OurEvents />} />
+                <Route path="/escp-network" element={<ESCPNetwork />} />
+                <Route path="/partnership" element={<Partnership />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="*" element={<NotFound />} />
+      </Routes>
+      {/* Floating Feedback Button - appears on all pages */}
+      <FeedbackButton />
+    </>
+  );
+};
+
 const App = () => {
   const isLoading = useLoadingStore((state) => state.isLoading);
-  
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -61,136 +205,12 @@ const App = () => {
         <Toaster />
         <Sonner />
         <AuthProvider>
-        <BrowserRouter>
-          <div className="font-rubik">
-            <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/network" element={
-              <ProtectedRoute>
-                <NetworkWrapper />
-              </ProtectedRoute>
-            } />
-            <Route path="/network/fund-manager/:id" element={
-              <ProtectedRoute>
-                <FundManagerDetail />
-              </ProtectedRoute>
-            } />
-            <Route path="/survey-response/:userId/:year" element={
-              <ProtectedRoute>
-                <SurveyResponseViewer />
-              </ProtectedRoute>
-            } />
-            <Route path="/survey" element={
-              <ProtectedRoute>
-                <Survey />
-              </ProtectedRoute>
-            } />
-            <Route path="/survey/2021" element={
-              <ProtectedRoute>
-                <Survey2021 />
-              </ProtectedRoute>
-            } />
-            <Route path="/survey/2022" element={
-              <ProtectedRoute>
-                <Survey2022 />
-              </ProtectedRoute>
-            } />
-            <Route path="/survey/2023" element={
-              <ProtectedRoute>
-                <Survey2023 />
-              </ProtectedRoute>
-            } />
-            <Route path="/survey/2024" element={
-              <ProtectedRoute>
-                <Survey2024 />
-              </ProtectedRoute>
-            } />
-            <Route path="/profile" element={
-              <ProtectedRoute>
-                <MyProfile />
-              </ProtectedRoute>
-            } />
-            {/* Onboarding route removed */}
-            <Route path="/viewer-settings" element={
-              <ProtectedRoute requiredRole="viewer">
-                <ViewerSettings />
-              </ProtectedRoute>
-            } />
-            <Route path="/application" element={
-              <ProtectedRoute requiredRole="viewer">
-                <Application />
-              </ProtectedRoute>
-            } />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/admin" element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminWrapper />
-              </ProtectedRoute>
-            } />
-            <Route path="/analytics" element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminAnalytics />
-              </ProtectedRoute>
-            } />
-            <Route path="/portiq" element={
-              <ProtectedRoute>
-                <PortIQ />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin-chat" element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminChat />
-              </ProtectedRoute>
-            } />
-            <Route path="/community" element={
-              <ProtectedRoute>
-                <Community />
-              </ProtectedRoute>
-            } />
-            <Route path="/blogs" element={
-              <ProtectedRoute>
-                <Community />
-              </ProtectedRoute>
-            } />
-            <Route path="/blogs/:id" element={
-              <ProtectedRoute>
-                <BlogDetail />
-              </ProtectedRoute>
-            } />
-            <Route path="/community/learning/:id" element={
-              <ProtectedRoute>
-                <LearningResourceDetail />
-              </ProtectedRoute>
-            } />
-            <Route path="/launch-plus-intro" element={<LaunchPlusIntro />} />
-            <Route path="/launch-plus-assessment" element={<LaunchPlusAssessment />} />
-            <Route path="/admin/launch-plus-analytics" element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminLaunchPlusAnalytics />
-              </ProtectedRoute>
-            } />
-            <Route path="/devtasks" element={<DevTasks />} />
-            <Route path="/presentation/day1" element={<Day1Presentation />} />
-            <Route path="/presentation/day2" element={<Day2Presentation />} />
-            <Route path="/drew" element={<Drew />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/learning-hub" element={<LearningHub />} />
-            <Route path="/our-events" element={<OurEvents />} />
-            <Route path="/escp-network" element={<ESCPNetwork />} />
-            <Route path="/partnership" element={<PlaceholderPage title="Partnership" />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          {/* Floating Feedback Button - appears on all pages */}
-          <FeedbackButton />
-          </div>
-        </BrowserRouter>
+          <BrowserRouter>
+            <ScrollToTop />
+            <div className="font-rubik">
+              <AppRoutes />
+            </div>
+          </BrowserRouter>
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>

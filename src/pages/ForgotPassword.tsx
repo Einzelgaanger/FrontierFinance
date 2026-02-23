@@ -1,13 +1,13 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Mail, ArrowLeft, CheckCircle, AlertCircle, Home } from 'lucide-react';
+import { Mail, CheckCircle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import AuthLayout from '@/components/auth/AuthLayout';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -62,154 +62,110 @@ const ForgotPassword = () => {
 
   if (emailSent) {
     return (
-      <div className="min-h-screen bg-cover bg-center bg-fixed flex items-center justify-center p-3 sm:p-4 font-rubik" style={{ backgroundImage: 'url(/auth.jpg)' }}>
-        <Card className="w-full max-w-md border border-blue-600/40 bg-blue-700/30 backdrop-blur-md relative z-10 shadow-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto scrollbar-hide select-none">
-          <CardHeader className="text-center pb-4 sm:pb-6 pt-6 sm:pt-8">
-            <div className="flex justify-center mb-3 sm:mb-4">
-              <img 
-                src="/CFF%20LOGO.png" 
-                alt="CFF Logo" 
-                className="h-12 sm:h-14 md:h-16 w-auto object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                }}
-              />
-            </div>
-            <CardTitle className="text-xl sm:text-2xl font-bold text-white">Email Sent!</CardTitle>
-            <CardDescription className="text-white/90 text-sm sm:text-base">
-              We've sent password reset instructions to {email}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4 text-center px-4 sm:px-6">
-            <div className="bg-blue-50/20 border border-blue-500/50 rounded-lg p-4 backdrop-blur-sm">
-              <p className="text-sm text-white/90">
-                Check your email and click the reset link to create a new password. 
-                The link will expire in 1 hour for security reasons.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <Button 
-                onClick={() => navigate('/auth')}
-                className="w-full bg-blue-600/80 hover:bg-blue-600 text-white backdrop-blur-sm rounded-full"
-              >
-                Back to Sign In
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  setEmailSent(false);
-                  setEmail('');
-                  setError('');
-                }}
-                className="w-full border-blue-600/40 text-blue-100 hover:bg-blue-700/30 hover:text-white rounded-full"
-              >
-                Send Another Email
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => navigate('/')}
-                className="w-full text-blue-100 hover:text-white hover:bg-blue-700/30 rounded-full"
-              >
-                <Home className="w-4 h-4 mr-2" />
-                Go to Homepage
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <AuthLayout
+        title="Email Sent!"
+        description={`We've sent password reset instructions to ${email}`}
+      >
+        <div className="flex justify-center mb-3">
+          <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+            <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <div className="bg-slate-50 dark:bg-navy-800/30 rounded-lg p-3 border border-slate-200 dark:border-navy-600/50">
+            <p className="text-xs text-slate-600 dark:text-slate-300 text-center leading-relaxed">
+              Check your email and click the reset link to create a new password.
+              The link will expire in 1 hour.
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Button
+              onClick={() => navigate('/auth')}
+              className="w-full h-9 min-h-[36px] bg-slate-900 hover:bg-slate-800 dark:bg-gold-500 dark:hover:bg-gold-400 text-white rounded-lg text-sm font-medium touch-manipulation"
+            >
+              Back to Sign In
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEmailSent(false);
+                setEmail('');
+                setError('');
+              }}
+              className="w-full h-9 min-h-[36px] border-slate-200 dark:border-navy-600 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-navy-800 rounded-lg text-sm touch-manipulation"
+            >
+              Send Another Email
+            </Button>
+          </div>
+        </div>
+      </AuthLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-fixed flex items-center justify-center p-3 sm:p-4 font-rubik" style={{ backgroundImage: 'url(/auth.jpg)' }}>
-      <Card className="w-full max-w-md border border-blue-600/40 bg-blue-700/30 backdrop-blur-md relative z-10 shadow-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto scrollbar-hide select-none">
-        <CardHeader className="text-center pb-4 sm:pb-6 pt-6 sm:pt-8">
-          <div className="flex justify-center mb-3 sm:mb-4">
-            <img 
-              src="/CFF%20LOGO.png" 
-              alt="CFF Logo" 
-              className="h-12 sm:h-14 md:h-16 w-auto object-contain"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-              }}
-            />
+    <AuthLayout
+      title="Reset Password"
+      description="Enter your email address and we'll send you a link to reset your password"
+    >
+      <div className="space-y-4">
+        {error && (
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 rounded-lg p-2.5 text-xs flex items-start gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0 mt-1" />
+            <span className="min-w-0">{error}</span>
           </div>
-                      <CardTitle className="text-xl sm:text-2xl font-bold text-white">Reset Your Password</CardTitle>
-          <CardDescription className="text-white/90 text-sm sm:text-base">
-            Enter your email address and we'll send you a link to reset your password
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
-          {error && (
-            <Alert variant="destructive" className="bg-red-500/20 border-red-500/50">
-              <AlertCircle className="h-4 w-4 text-red-300" />
-              <AlertDescription className="text-red-100">{error}</AlertDescription>
-            </Alert>
-          )}
+        )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-white font-medium">
-                Email Address
-              </Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-100/90 w-4 h-4" />
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
-                  className="pl-10 bg-blue-700/20 border-blue-600/40 text-white placeholder:text-blue-100/70 focus:bg-blue-700/30 focus:border-blue-500/60 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full select-text autofill:bg-blue-700/20 autofill:text-white"
-                  disabled={loading}
-                  required
-                  autoComplete="email"
-                />
-              </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="email" className="text-xs font-medium text-slate-600 dark:text-slate-400">
+              Email address
+            </Label>
+            <div className="relative group">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-3.5 h-3.5 pointer-events-none" />
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@company.com"
+                className="pl-9 h-9 min-h-[36px] bg-slate-50/80 dark:bg-navy-800/30 border-slate-200 dark:border-navy-600/80 focus:border-slate-400 focus:ring-2 focus:ring-slate-400/20 rounded-lg text-sm"
+                disabled={loading}
+                required
+                autoComplete="email"
+              />
             </div>
-
-            <Button
-              type="submit"
-              className="w-full bg-blue-600/80 hover:bg-blue-600 text-white backdrop-blur-sm rounded-full"
-              disabled={loading || !email.trim()}
-            >
-              {loading ? (
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Sending Reset Email...</span>
-                </div>
-              ) : (
-                'Send Reset Instructions'
-              )}
-            </Button>
-          </form>
-
-          <div className="space-y-2">
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/auth')}
-              className="w-full text-blue-100 hover:text-white hover:bg-blue-700/30 rounded-full"
-              disabled={loading}
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Sign In
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/')}
-              className="w-full text-blue-100 hover:text-white hover:bg-blue-700/30 rounded-full"
-              disabled={loading}
-            >
-              <Home className="w-4 h-4 mr-2" />
-              Go to Homepage
-            </Button>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+
+          <Button
+            type="submit"
+            className="w-full h-9 min-h-[36px] bg-slate-900 hover:bg-slate-800 dark:bg-gold-500 dark:hover:bg-gold-400 text-white rounded-lg text-sm font-medium touch-manipulation"
+            disabled={loading || !email.trim()}
+          >
+            {loading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span className="text-sm">Sending…</span>
+              </div>
+            ) : (
+              'Send reset instructions'
+            )}
+          </Button>
+        </form>
+
+        <div className="pt-3 border-t border-slate-200 dark:border-navy-700">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/auth')}
+            className="w-full h-9 min-h-[36px] text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-navy-800 rounded-lg text-sm touch-manipulation"
+            disabled={loading}
+          >
+            <ArrowLeft className="w-3.5 h-3.5 mr-2 shrink-0" />
+            Back to Sign In
+          </Button>
+        </div>
+      </div>
+    </AuthLayout>
   );
 };
 

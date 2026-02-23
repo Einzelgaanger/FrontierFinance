@@ -1,375 +1,267 @@
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Users, TrendingUp, Rocket, Mail, Globe, ExternalLink, Twitter, Linkedin, Shield } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState, useRef } from "react";
+import Footer from "@/components/layout/Footer";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Rocket, Users, Building2, LineChart, Target, CheckCircle2, ChevronRight, BarChart3, PieChart, Wallet, TrendingUp, Shield } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 
 const LaunchPlusIntro = () => {
-  const navigate = useNavigate();
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-          }
-        });
-      },
-      { threshold: 0.2, rootMargin: '0px 0px -100px 0px' }
-    );
-
-    const currentRef = sectionRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
+  const services = [
+    {
+      icon: <Building2 className="w-8 h-8 text-gold-500" />,
+      title: "Shared Back-Office",
+      description: "Access to world-class accounting, finance, tax, legal, and HR services at a fraction of the cost.",
+      features: ["Accounting & Finance", "Legal & Compliance", "HR & Payroll"]
+    },
+    {
+      icon: <Wallet className="w-8 h-8 text-gold-500" />,
+      title: "Fund Administration",
+      description: "Streamlined fund operations and reporting to ensure transparency and efficiency.",
+      features: ["NAV Calculation", "Investor Reporting", "KYC/AML"]
+    },
+    {
+      icon: <LineChart className="w-8 h-8 text-gold-500" />,
+      title: "Capacity Building",
+      description: "Knowledge services and mentorship to help managers refine their investment thesis and operations.",
+      features: ["Mentorship", "Workshops", "Resource Library"]
     }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, []);
+  ];
 
   return (
-    <div className="min-h-screen bg-white scrollbar-hide overflow-x-hidden">
-      {/* Hero Section with Background Image */}
-      <section className="relative min-h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url(/home.png)' }}>
-        <div className="absolute inset-0 bg-black/50"></div>
-        
-        {/* Hero Content - Distributed Left and Right */}
-        <div className="relative z-10 flex items-start min-h-screen px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 md:pt-8">
-          <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
+    <div className="min-h-screen bg-navy-950 font-sans selection:bg-gold-500/30 overflow-x-hidden">
+      {/* Hero Section - Tech/Finance Aesthetic */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+        {/* Abstract Tech Background */}
+        <div className="absolute inset-0 bg-navy-950">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+          <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-gold-500/20 opacity-20 blur-[100px]"></div>
+        </div>
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left Column */}
-            <div className="px-2 sm:px-6 lg:px-8 text-left">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-5 leading-tight">
-                LAUNCH+ Capital Facility
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-left"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gold-500/10 border border-gold-500/30 rounded-full text-gold-400 text-xs font-mono font-semibold mb-6 uppercase tracking-wider backdrop-blur-md">
+                <Rocket className="w-3 h-3" /> Capital Facility
+              </div>
+              <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif font-bold text-white mb-6 leading-tight">
+                LAUNCH+ <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 to-gold-600">Accelerating Growth</span>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 mb-4 sm:mb-5 max-w-3xl font-medium">
-                Accelerating Small Business Growth Funds Across Africa
-              </p>
-              <p className="text-xs sm:text-sm md:text-base text-white/90 mb-8 sm:mb-10 max-w-2xl leading-relaxed">
-                An integrated fund administration platform designed to accelerate the flow of "fit for purpose" financing to Africa's growth-oriented small businesses
+              <p className="text-xl md:text-2xl text-navy-100 mb-10 font-light leading-relaxed max-w-xl">
+                An integrated platform designed to accelerate the flow of "fit for purpose" financing to Africa's growth-oriented small businesses.
               </p>
 
-              {/* CTA Content */}
-              <div className="space-y-4">
-                <div className="inline-block">
-                  <span className="px-4 py-1.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs sm:text-sm font-semibold">
-                    Join Us
-                  </span>
-                </div>
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-white via-green-200 to-emerald-300 bg-clip-text text-transparent">
-                  Are You an Early Stage Fund Manager?
-                </h3>
-                <p className="text-sm sm:text-base text-white/90 max-w-2xl leading-relaxed">
-                  If you are fundraising with an existing investment vehicle and struggling with 
-                  fund setup, administration, and achieving first close, we would like to hear from you.
-                </p>
-              </div>
-            </div>
-
-            {/* Right Column */}
-            <div className="px-2 sm:px-6 lg:px-8 text-left">
-              {/* Shared Services */}
-              <div className="mb-8 sm:mb-10">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-700 to-purple-800 rounded-lg flex items-center justify-center shadow-lg">
-                    <Users className="w-4 h-4 text-white" />
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white via-purple-200 to-purple-300 bg-clip-text text-transparent">
-                    Shared Services
-                  </h3>
-                </div>
-                <div className="inline-block px-4 py-1.5 bg-white/20 backdrop-blur-sm rounded-full mb-3">
-                  <p className="text-xs sm:text-sm font-semibold text-white">
-                    Mandatory, Phase I (Partially Subsidized)
-                  </p>
-                </div>
-                <ul className="space-y-2 text-sm sm:text-base text-white/90 leading-relaxed ml-11">
-                  <li className="flex items-start">
-                    <span className="text-purple-300 mr-3 text-lg font-bold">•</span>
-                    <span>Shared back-office services (accounting, finance, tax, legal, HR)</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-purple-300 mr-3 text-lg font-bold">•</span>
-                    <span>Fund administration services</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-purple-300 mr-3 text-lg font-bold">•</span>
-                    <span>Capacity building and knowledge services</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Capital Support */}
-              <div className="mb-8 sm:mb-10">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-green-700 to-green-800 rounded-lg flex items-center justify-center shadow-lg">
-                    <TrendingUp className="w-4 h-4 text-white" />
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white via-green-200 to-green-300 bg-clip-text text-transparent">
-                    Capital Support
-                  </h3>
-                </div>
-                <div className="inline-block px-4 py-1.5 bg-white/20 backdrop-blur-sm rounded-full mb-3">
-                  <p className="text-xs sm:text-sm font-semibold text-white">
-                    Optional, Phase II (Repayable)
-                  </p>
-                </div>
-                <ul className="space-y-2 text-sm sm:text-base text-white/90 leading-relaxed ml-11">
-                  <li className="flex items-start">
-                    <span className="text-green-300 mr-3 text-lg font-bold">•</span>
-                    <span>Op-Ex line of credit</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-300 mr-3 text-lg font-bold">•</span>
-                    <span>Warehousing line of credit</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Start Questionnaire Button */}
-              <div>
-                <Button
-                  size="lg"
-                  onClick={() => navigate('/launch-plus-assessment')}
-                  className="group w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full"
-                >
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    <Rocket className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform duration-300" />
-                    <span className="text-sm sm:text-base">Start Questionnaire</span>
-                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button className="bg-gold-500 hover:bg-gold-400 text-navy-950 px-8 py-6 text-lg rounded-full font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all">
+                  Apply Now
+                </Button>
+                <Button variant="outline" className="border-navy-700 text-white hover:bg-navy-800 rounded-full px-8 py-6 text-lg">
+                  Learn More
                 </Button>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
+            </motion.div>
 
-      {/* About Section */}
-      <section ref={sectionRef} className="relative py-8 sm:py-12 md:py-16 overflow-hidden rounded-t-[1.5rem] sm:rounded-t-[2rem] md:rounded-t-[2.5rem] bg-amber-50 -mt-8 sm:-mt-10 md:-mt-12">
-        {/* Extra padding at the top to compensate for the negative margin */}
-        <div className="absolute top-0 left-0 right-0 h-10 sm:h-14 md:h-18 bg-amber-50 rounded-t-[1.5rem] sm:rounded-t-[2rem] md:rounded-t-[2.5rem]"></div>
-        
-        {/* Floating Orbs Animation - Hidden on mobile */}
-        <div className="hidden md:block absolute top-20 left-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="hidden md:block absolute top-40 right-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="hidden md:block absolute -bottom-8 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-
-        <div className="relative max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 mt-0 sm:mt-2 md:mt-4">
-          {/* Top Section: Title and Image Side by Side */}
-          <div className={`grid grid-cols-1 lg:grid-cols-[1fr,1fr] gap-6 sm:gap-8 mb-8 sm:mb-12 transition-all duration-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            {/* Title and Content on the Left */}
-            <div className="order-1 lg:order-1 flex flex-col justify-center">
-              <div className="inline-block mb-2 sm:mb-3">
-                <span className="px-3 sm:px-4 md:px-6 py-1 sm:py-1.5 md:py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full text-blue-700 text-xs sm:text-sm font-semibold">
-                  About LAUNCH+
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-3 sm:mb-4 md:mb-6">
-                Accelerating Small Business Growth Funds
-              </h2>
-              <div className="w-16 sm:w-20 md:w-24 h-1 sm:h-1.5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 mb-2 sm:mb-3 md:mb-4"></div>
-              
-              <div className="space-y-4 sm:space-y-6 text-sm sm:text-base text-gray-700 leading-relaxed">
-                <p>
-                  <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">LAUNCH+</span> is an integrated Mauritius domiciled fund administration platform, 
-                  structured as a registered Variable Capital Company (VCC) vehicle, developed by the 
-                  Collaborative for Frontier Finance (CFF) together with its network of Small Business 
-                  Growth Fund Managers.
-                </p>
-
-                <p>
-                  The platform is designed to accelerate the flow of "fit for purpose" financing to Africa's 
-                  growth-oriented small businesses - key drivers of job creation and economic resilience. 
-                  CFF research shows there are now over <span className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">100 Small Business Growth Funds (GFs)</span> aiming 
-                  to deploy <span className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">$2.25bn</span> in funding to support the growth of Africa's "missing middle," 
-                  yet to date, these funds have only been able to secure 1/3rd of the institutional and 
-                  development capital they are targeting.
-                </p>
-              </div>
-            </div>
-            
-            {/* Large Image on the Right */}
-            <div className="order-2 lg:order-2">
-              <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-0 shadow-2xl border border-white/20 overflow-hidden group hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2">
-                <div className="relative h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px]">
-                  <img 
-                    src="/Launch%2B1.jpg" 
-                    alt="LAUNCH+ Network Gathering" 
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "/Launch+1.jpg";
-                    }}
-                  />
+            {/* Right Column - Interactive Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="relative z-10 bg-navy-900/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+                <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-6">
+                  <div>
+                    <h3 className="text-2xl font-bold text-white">Platform Services</h3>
+                    <p className="text-navy-300 text-sm">Comprehensive support for fund managers</p>
+                  </div>
+                  <div className="w-12 h-12 bg-gold-500/20 rounded-full flex items-center justify-center">
+                    <BarChart3 className="w-6 h-6 text-gold-500" />
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Bottom Section: Image and Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 -mt-6 sm:-mt-8 md:-mt-12">
-            {/* Left Column: Second Image */}
-            <div className="space-y-4 sm:space-y-6">
-              <div className={`transition-all duration-500 delay-100 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-0 shadow-xl border border-white/20 overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 mt-8 sm:mt-12">
-                  <div className="relative h-[200px] sm:h-[250px] md:h-[280px]">
-                    <img 
-                      src="/Launch%2B2.jpg" 
-                      alt="LAUNCH+ Convening Event" 
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = "/Launch+2.jpg";
-                      }}
-                    />
+                <div className="space-y-4">
+                  {['Shared Services', 'Fund Administration', 'Capacity Building'].map((item, i) => (
+                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-navy-950/50 border border-white/5 hover:border-gold-500/30 hover:bg-navy-900 transition-all cursor-default group">
+                      <div className="flex items-center gap-4">
+                        <div className="w-8 h-8 rounded-lg bg-navy-800 flex items-center justify-center text-xs font-mono text-gold-500 group-hover:bg-gold-500 group-hover:text-navy-950 transition-colors">
+                          0{i + 1}
+                        </div>
+                        <span className="text-white font-medium">{item}</span>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-navy-500 group-hover:text-gold-500 transition-colors" />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-white/5">
+                  <div className="flex items-center justify-between text-xs text-navy-400 font-mono">
+                    <span>STATUS: ACTIVE</span>
+                    <span className="text-gold-500">PHASE 1 DEPLOYED</span>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Right Column: Platform Description */}
-            <div className={`-mt-4 sm:-mt-6 transition-all duration-500 delay-150 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
-                Platform Benefits
-              </h3>
-              <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-4">
-                The platform is designed to accelerate cohorts of GFs, providing support needed to refine 
-                their investment strategies, attract institutional and development capital and scale more 
-                rapidly. By offering cost-efficient shared services, LAUNCH+ ensures world class governance 
-                and operational performance.
-              </p>
-              <p className="text-xs sm:text-sm text-gray-600">
-                Join a network of fund managers working together to bridge the financing gap for Africa's growing businesses.
-              </p>
-            </div>
+              {/* Decorative Elements */}
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-gold-500/10 rounded-full blur-2xl"></div>
+              <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+            </motion.div>
           </div>
         </div>
-
-        {/* Custom Animations CSS */}
-        <style>{`
-          @keyframes blob {
-            0%, 100% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-          }
-          
-          .animate-blob {
-            animation: blob 7s infinite;
-          }
-
-          .animation-delay-2000 {
-            animation-delay: 2s;
-          }
-
-          .animation-delay-4000 {
-            animation-delay: 4s;
-          }
-        `}</style>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gradient-to-br from-black via-blue-950 to-black py-12">
+      {/* Services Grid */}
+      <section className="py-32 bg-navy-900 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Company Info */}
-            <div className="col-span-1 lg:col-span-2">
-              <div className="flex justify-start mb-4">
-                <img src="/CFF%20LOGO.png" alt="CFF Logo" className="h-16 w-auto object-contain" onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                }} />
-              </div>
-              <p className="text-gray-300 mb-6 text-base leading-relaxed max-w-md">
-                LAUNCH+ is an integrated fund administration platform designed to accelerate the flow of "fit for purpose" financing to Africa's growth-oriented small businesses.
-              </p>
-              <div className="space-y-3">
-                <a 
-                  href="mailto:info@frontierfinance.org" 
-                  className="flex items-center space-x-3 text-blue-300 hover:text-blue-200 transition-colors group"
-                >
-                  <div className="w-8 h-8 bg-blue-600/20 rounded-full flex items-center justify-center group-hover:bg-blue-600/30 transition-colors">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <span className="text-sm font-medium">info@frontierfinance.org</span>
-                </a>
-              </div>
-            </div>
-            
-            {/* Quick Links */}
-            <div>
-              <h3 className="text-white font-semibold mb-4 text-base flex items-center">
-                <Globe className="w-4 h-4 mr-2" />
-                Quick Links
-              </h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link to="/launch-plus-assessment" className="text-blue-300 hover:text-blue-200 transition-colors flex items-center group">
-                    <Rocket className="w-3 h-3 mr-2 group-hover:scale-110 transition-transform" />
-                    Start Questionnaire
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/auth" className="text-blue-300 hover:text-blue-200 transition-colors flex items-center group">
-                    <ExternalLink className="w-3 h-3 mr-2 group-hover:scale-110 transition-transform" />
-                    Login / Sign Up
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/network" className="text-blue-300 hover:text-blue-200 transition-colors flex items-center group">
-                    <Users className="w-3 h-3 mr-2 group-hover:scale-110 transition-transform" />
-                    Fund Manager Directory
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            
-            {/* Social Media */}
-            <div>
-              <h3 className="text-white font-semibold mb-4 text-base flex items-center">
-                <Shield className="w-4 h-4 mr-2" />
-                Connect With Us
-              </h3>
-              <p className="text-gray-400 text-sm mb-4">
-                Follow us for updates on LAUNCH+ and small business finance news
-              </p>
-              <div className="flex space-x-3">
-                <a href="https://twitter.com/CollabFFinance" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                  <Twitter className="w-5 h-5 text-white" />
-                </a>
-                <a href="https://www.linkedin.com/company/collaborative-for-frontier-finance/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 hover:bg-blue-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                  <Linkedin className="w-5 h-5 text-white" />
-                </a>
-              </div>
-            </div>
+          <div className="text-center mb-20">
+            <span className="text-gold-500 font-mono text-xs tracking-wider uppercase">Our Offering</span>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mt-3">Integrated Solutions</h2>
           </div>
-          
-          <div className="border-t border-blue-800 mt-8 pt-6">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <p className="text-blue-300 text-sm mb-2 md:mb-0">
-                © 2025 Collaborative for Frontier Finance. All rights reserved.
-              </p>
-              <div className="flex space-x-4 text-sm">
-                <a href="#" className="text-blue-300 hover:text-blue-200 transition-colors">Privacy Policy</a>
-                <span className="text-blue-600">•</span>
-                <a href="#" className="text-blue-300 hover:text-blue-200 transition-colors">Terms of Service</a>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {services.map((service, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ y: -10 }}
+                className="bg-navy-800/50 border border-white/5 p-8 rounded-3xl hover:bg-navy-800 transition-colors group relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-gold-500/0 via-transparent to-transparent opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                <div className="w-16 h-16 bg-navy-900 rounded-2xl flex items-center justify-center mb-6 border border-white/5 group-hover:border-gold-500/30 transition-colors">
+                  {service.icon}
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">{service.title}</h3>
+                <p className="text-navy-200 mb-8 leading-relaxed">
+                  {service.description}
+                </p>
+                <ul className="space-y-3">
+                  {service.features.map((feature, j) => (
+                    <li key={j} className="flex items-center gap-2 text-sm text-navy-300">
+                      <div className="w-1.5 h-1.5 rounded-full bg-gold-500"></div>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Bridging the Gap Section - Visualized */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-gold-600 font-semibold tracking-wider uppercase text-sm">Challenge</span>
+            <h2 className="text-4xl font-serif font-bold text-navy-900 mt-2">Bridging the Gap</h2>
+            <p className="text-gray-600 mt-4 max-w-2xl mx-auto text-lg">
+              Small and local capital providers are key to financing Africa&apos;s "missing middle," but they face significant operational hurdles.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="p-8 bg-gray-50 rounded-2xl border border-gray-100 h-full">
+              <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6">
+                <Target className="w-6 h-6 text-navy-900" />
               </div>
+              <h3 className="text-xl font-bold text-navy-900 mb-4">High Setup Costs</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Establishing a fund involves high fixed costs for legal, administration, and compliance, which can be prohibitive for smaller funds.
+              </p>
+            </div>
+            <div className="p-8 bg-gray-50 rounded-2xl border border-gray-100 h-full">
+              <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6">
+                <LineChart className="w-6 h-6 text-navy-900" />
+              </div>
+              <h3 className="text-xl font-bold text-navy-900 mb-4">Operational Drag</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Managing back-office functions distracts fund managers from their core competency: sourcing and supporting deals.
+              </p>
+            </div>
+            <div className="p-8 bg-gold-500/10 rounded-2xl border border-gold-500/20 h-full relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gold-500/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+              <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 relative z-10">
+                <CheckCircle2 className="w-6 h-6 text-gold-600" />
+              </div>
+              <h3 className="text-xl font-bold text-navy-900 mb-4 relative z-10">The Solution</h3>
+              <p className="text-navy-800 leading-relaxed relative z-10">
+                LAUNCH+ provides a shared services platform to reduce costs, streamline operations, and accelerate fund launch and growth.
+              </p>
             </div>
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Questionnaire Section */}
+      <section className="py-32 bg-navy-900 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('/noise.png')] opacity-5"></div>
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-gold-500/10 rounded-full blur-[100px]"></div>
+
+        <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
+          <div className="bg-gradient-to-br from-navy-800 to-navy-900 rounded-[2.5rem] p-8 md:p-16 border border-white/10 shadow-2xl relative overflow-hidden text-left">
+
+            <div className="relative z-10">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Interested in LAUNCH+?</h2>
+                <p className="text-navy-200 text-lg">Help us understand your needs by answering a few quick questions.</p>
+              </div>
+
+              <form className="space-y-8">
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-white font-medium">Full Name</Label>
+                      <Input id="name" placeholder="John Doe" className="bg-navy-950/50 border-navy-700 text-white focus:border-gold-500 focus:ring-gold-500/20 py-6" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-white font-medium">Email Address</Label>
+                      <Input id="email" type="email" placeholder="john@example.com" className="bg-navy-950/50 border-navy-700 text-white focus:border-gold-500 focus:ring-gold-500/20 py-6" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-white font-medium mb-2 block">Are you currently managing a fund?</Label>
+                    <RadioGroup defaultValue="no" className="flex flex-col space-y-2">
+                      <div className="flex items-center space-x-3 p-4 rounded-xl border border-navy-700 hover:border-gold-500 hover:bg-navy-800 transition-all bg-navy-950/30 cursor-pointer">
+                        <RadioGroupItem value="yes" id="r1" className="text-gold-500 border-gray-600" />
+                        <Label htmlFor="r1" className="cursor-pointer font-normal text-gray-300">Yes, I am currently managing a fund</Label>
+                      </div>
+                      <div className="flex items-center space-x-3 p-4 rounded-xl border border-navy-700 hover:border-gold-500 hover:bg-navy-800 transition-all bg-navy-950/30 cursor-pointer">
+                        <RadioGroupItem value="no" id="r2" className="text-gold-500 border-gray-600" />
+                        <Label htmlFor="r2" className="cursor-pointer font-normal text-gray-300">No, I am in the process of setting one up</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="challenges" className="text-white font-medium">What are your biggest operational challenges?</Label>
+                    <Textarea id="challenges" placeholder="Tell us about the hurdles you are facing..." className="bg-navy-950/50 border-navy-700 text-white focus:border-gold-500 focus:ring-gold-500/20 min-h-[120px]" />
+                  </div>
+                </div>
+
+                <div className="flex justify-center pt-4">
+                  <Button className="bg-gold-500 hover:bg-gold-600 text-navy-950 px-10 py-7 text-lg rounded-full font-bold shadow-lg shadow-gold-500/20 transition-all w-full md:w-auto">
+                    Submit Interest
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 };

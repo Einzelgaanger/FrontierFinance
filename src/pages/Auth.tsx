@@ -34,12 +34,6 @@ const Auth = () => {
     const refreshToken = params.get('refresh_token');
     const type = params.get('type');
 
-    console.log('Auth component - URL params:', { 
-      hasAccessToken: !!accessToken, 
-      hasRefreshToken: !!refreshToken, 
-      type 
-    });
-
     if (accessToken && refreshToken && type === 'recovery') {
       navigate(`/reset-password${location.search}`, { replace: true });
       return;
