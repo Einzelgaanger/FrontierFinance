@@ -291,6 +291,45 @@ export type Database = {
           },
         ]
       }
+      company_members: {
+        Row: {
+          company_user_id: string
+          created_at: string | null
+          id: string
+          invited_by: string | null
+          is_active: boolean | null
+          member_email: string
+          member_name: string | null
+          member_user_id: string
+          role_in_company: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_user_id: string
+          created_at?: string | null
+          id?: string
+          invited_by?: string | null
+          is_active?: boolean | null
+          member_email: string
+          member_name?: string | null
+          member_user_id: string
+          role_in_company?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          company_user_id?: string
+          created_at?: string | null
+          id?: string
+          invited_by?: string | null
+          is_active?: boolean | null
+          member_email?: string
+          member_name?: string | null
+          member_user_id?: string
+          role_in_company?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           admin_notes: string | null
