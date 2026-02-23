@@ -551,7 +551,7 @@ Before answering ANY question:
       p_activity_type: 'ai_usage',
       p_points: 5,
       p_description: 'Used AI assistant'
-    }).then(() => console.log('Points awarded')).catch(e => console.error('Failed to award points:', e))
+    }).then(() => console.log('Points awarded')).then(undefined, (e: unknown) => console.error('Failed to award points:', e))
 
     return new Response(
       JSON.stringify({ reply, response: reply, message: reply }),
@@ -560,7 +560,7 @@ Before answering ANY question:
   } catch (error) {
     console.error('Error in ai-chat function:', error)
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: (error as Error).message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }

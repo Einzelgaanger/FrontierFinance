@@ -15,7 +15,8 @@ interface LogEntry {
 }
 
 export default function AccountabilityTracker() {
-  const { user, isSuperAdmin } = useAuth();
+  const { user, userRole } = useAuth();
+  const isSuperAdmin = userRole === 'admin';
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +37,7 @@ export default function AccountabilityTracker() {
         setLoading(false);
         return;
       }
-      setLogs((data as LogEntry[]) || []);
+      setLogs((data as unknown as LogEntry[]) || []);
       setLoading(false);
     };
     fetchLogs();
