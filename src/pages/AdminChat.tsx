@@ -282,7 +282,7 @@ const AdminChat = () => {
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto">
                   <Brain className="w-8 h-8 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800">Admin Chat</h3>
+                <h3 className="text-xl font-semibold text-gray-800">Portiq</h3>
                 <p className="text-gray-500 max-w-md mx-auto">Start a new conversation or select an existing one from the sidebar. Your chats are private to your account.</p>
               </div>
             ) : messages.length === 0 ? (

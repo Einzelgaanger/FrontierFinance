@@ -46,7 +46,7 @@ export function FeedbackButton() {
       '/blogs': 'Blogs',
       '/admin': 'Admin Dashboard',
       '/analytics': 'Analytics',
-      '/portiq': 'PortIQ',
+      '/admin-chat': 'Portiq',
     };
 
     // Check for dynamic routes

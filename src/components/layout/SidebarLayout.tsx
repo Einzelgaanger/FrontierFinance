@@ -117,15 +117,6 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
       color: "orange"
     },
     { 
-      name: "PortIQ", 
-      href: "/portiq", 
-      icon: Sparkles, 
-      roles: ["admin", "member", "viewer"],
-      description: "AI Assistant for data insights",
-      badge: null,
-      color: "purple"
-    },
-    { 
       name: "Community hub", 
       href: "/community", 
       icon: Newspaper, 
@@ -171,7 +162,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
       color: "indigo"
     },
     { 
-      name: "Admin Chat", 
+      name: "Portiq", 
       href: "/admin-chat", 
       icon: Brain, 
       roles: ["admin"],
@@ -206,7 +197,6 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     if (href === "/analytics" && location.pathname === "/analytics") return true;
     if (href === "/admin/launch-plus-analytics" && location.pathname === "/admin/launch-plus-analytics") return true;
     if (href === "/admin" && location.pathname === "/admin") return true;
-    if (href === "/portiq" && location.pathname === "/portiq") return true;
     if (href === "/application" && location.pathname === "/application") return true;
     if (href === "/admin-chat" && location.pathname === "/admin-chat") return true;
     if (href === "/community" && (location.pathname === "/community" || location.pathname === "/blogs")) return true;
@@ -285,7 +275,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
             {filteredNavItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.href);
-              const isPortIQ = item.name === "PortIQ";
+              const isPortiq = item.name === "Portiq";
               
               return (
                 <button
@@ -299,10 +289,10 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                   )}
                   title={item.name}
                 >
-                  {isPortIQ ? (
+                  {isPortiq ? (
                     <img 
                       src="/robot.png" 
-                      alt="PortIQ" 
+                      alt="Portiq" 
                       className="w-5 h-5 flex-shrink-0 object-contain"
                     />
                   ) : (
@@ -442,7 +432,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                         {location.pathname === '/analytics' && 'Analytics Hub'}
                         {location.pathname === '/admin/launch-plus-analytics' && 'Launch + Analytics'}
                         {(location.pathname === '/admin' || (location.pathname.startsWith('/admin') && location.pathname !== '/admin/launch-plus-analytics')) && 'Admin Panel'}
-                        {location.pathname === '/portiq' && 'PortIQ - AI Assistant'}
+                        {location.pathname === '/admin-chat' && 'Portiq - AI Assistant'}
                       </h2>
                       <p className="text-sm text-white/70 transition-colors">
                         {location.pathname.startsWith('/survey') && 'Complete and view survey responses'}
@@ -450,7 +440,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                         {location.pathname === '/analytics' && 'Data insights and comprehensive reports'}
                         {location.pathname === '/admin/launch-plus-analytics' && 'View and analyze LAUNCH+ assessment submissions'}
                         {(location.pathname === '/admin' || (location.pathname.startsWith('/admin') && location.pathname !== '/admin/launch-plus-analytics')) && 'Manage users, content, and system settings'}
-                        {location.pathname === '/portiq' && 'Your intelligent assistant for data insights and analysis'}
+                        {location.pathname === '/admin-chat' && 'Your intelligent assistant for data insights and analysis'}
                       </p>
                     </>
                   )}
