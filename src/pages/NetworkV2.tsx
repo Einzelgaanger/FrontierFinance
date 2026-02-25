@@ -131,15 +131,21 @@ const NetworkV2 = React.memo(() => {
       }
       console.log('Fetching network data...');
 
-      // Fetch user profiles, roles and survey data
-      const [userProfilesResult, userRolesResult, survey2021Result, survey2022Result, survey2023Result, survey2024Result] = await Promise.all([
+      // Fetch user profiles, roles, survey data, and company members (to exclude secondary members)
+      const [userProfilesResult, userRolesResult, companyMembersResult, survey2021Result, survey2022Result, survey2023Result, survey2024Result] = await Promise.all([
         supabase.from('user_profiles').select('id, company_name, email, full_name, role_title, profile_picture_url, user_role, is_active, created_at'),
         supabase.from('user_roles' as any).select('user_id, role'),
+        supabase.from('company_members').select('member_user_id'),
         supabase.from('survey_responses_2021').select('id, user_id, email_address, firm_name, participant_name, role_title, company_name, completed_at'),
         supabase.from('survey_responses_2022').select('id, user_id, email_address, organisation_name, participant_name, role_title, completed_at'),
         supabase.from('survey_responses_2023').select('id, user_id, email_address, organisation_name, completed_at'),
         supabase.from('survey_responses_2024').select('id, user_id, email_address, organisation_name, completed_at')
       ]);
+
+      // Build set of secondary member user IDs to exclude from directory
+      const secondaryMemberIds = new Set(
+        (companyMembersResult.data || []).map((m: any) => m.member_user_id)
+      );
 
       // Handle errors gracefully
       if (userProfilesResult.error) {
@@ -182,8 +188,13 @@ const NetworkV2 = React.memo(() => {
       });
 
       // Process all users to create network profiles from user_profiles
-      let processedManagers = allUserProfiles.map(userProfile => {
-        const userSurveys = surveyDataMap.get(userProfile.user_id) || [];
+      // Exclude secondary members (they should not appear in the directory)
+      const filteredProfiles = allUserProfiles.filter(
+        (p: any) => !secondaryMemberIds.has(p.id)
+      );
+      let processedManagers = filteredProfiles.map(userProfile => {
+        const userId = userProfile.id;
+        const userSurveys = surveyDataMap.get(userId) || [];
         
         // Use profile data for company information
         const companyName = userProfile.company_name || '';
@@ -191,12 +202,12 @@ const NetworkV2 = React.memo(() => {
         const fullName = userProfile.full_name || '';
         const roleTitle = userProfile.role_title || '';
         const profilePhoto = userProfile.profile_picture_url || '';
-        const userRole = rolesMap.get(userProfile.user_id) || 'viewer'; // Get role from user_roles table
+        const userRole = rolesMap.get(userId) || 'viewer'; // Get role from user_roles table
         const isActive = userProfile.is_active !== false;
         
         return {
-          id: userProfile.user_id || userProfile.id,
-          user_id: userProfile.user_id || userProfile.id,
+          id: userId,
+          user_id: userId,
           fund_name: companyName,
           firm_name: companyName,
           participant_name: fullName,
