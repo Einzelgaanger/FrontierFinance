@@ -19,7 +19,7 @@ export function FeedbackButton() {
 
   // Hide feedback button on external pages, auth pages, and a few others
   const hiddenPages = [
-    '/', '/about', '/escp-network', '/learning-hub', '/our-events', '/contact', '/partnership',
+    '/', '/about', '/escp-network', '/learning-hub', '/our-events', '/partnership',
     '/auth', '/reset-password', '/forgot-password',
     '/launch-plus-intro', '/launch-plus-assessment',
     '/devtasks', '/drew',

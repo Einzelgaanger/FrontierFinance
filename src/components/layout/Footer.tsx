@@ -26,7 +26,7 @@ const quickLinks = [
   { to: '/escp-network', label: 'Network', accent: 'sky' },
   { to: '/learning-hub', label: 'Learning Hub', accent: 'amber' },
   { to: '/our-events', label: 'Events', accent: 'violet' },
-  { to: '/contact', label: 'Contact', accent: 'rose' },
+  { to: '/partnership', label: 'Partnerships', accent: 'rose' },
 ];
 
 const linkAccentClasses: Record<string, string> = {
@@ -104,8 +104,8 @@ export default function Footer() {
                 <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-sky-500/20 text-sky-400 shrink-0 group-hover:bg-sky-500/30 transition-all duration-300" aria-hidden>
                   <Mail className="w-4 h-4" />
                 </span>
-                <a href="mailto:info@frontierfinance.org" className="text-slate-400 hover:text-sky-400 transition-colors leading-relaxed">
-                  info@frontierfinance.org
+                <a href="mailto:hello@frontierfinance.org" className="text-slate-400 hover:text-sky-400 transition-colors leading-relaxed">
+                  hello@frontierfinance.org
                 </a>
               </li>
               <li className="flex items-center gap-2.5 group">

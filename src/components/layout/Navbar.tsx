@@ -40,7 +40,6 @@ const Navbar = () => {
         { name: 'Network', path: '/escp-network' },
         { name: 'Learning Hub', path: '/learning-hub' },
         { name: 'Events', path: '/our-events' },
-        { name: 'Contact', path: '/contact' },
         { name: 'Partnerships', path: '/partnership' },
     ];
 

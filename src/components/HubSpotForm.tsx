@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Mail, X } from 'lucide-react';
 
-const CONTACT_EMAIL = 'info@frontierfinance.org';
+const CONTACT_EMAIL = 'hello@frontierfinance.org';
 
 export default function HubSpotForm() {
   const [open, setOpen] = useState(false);

@@ -14,21 +14,22 @@ const LearningHub = () => {
   const marketInsights = [
     {
       title: "Empowering Emerging Fund Managers in Underserved Markets",
+      subtitle: "The Role of Development Finance Technical Assistance",
       excerpt: "Established in 2020 as a business-to-business marketplace connecting African producers to global buyers, Kwely quickly established traction with a revenue-generating model. But within 18 months it was caught in the \"missing middle\" funding gap, a challenge faced by small and growing businesses that are too big for microfinance and too small or risky for traditional bank lending.",
       date: "Dec 20, 2023",
-      link: "#",
+      link: "/learning-hub/article/empowering-emerging-fund-managers",
     },
     {
       title: "Funds of funds provide more than capital for local investors in small and growing businesses",
       excerpt: "An expanding range of financing mechanisms and vehicles are emerging to help private capital providers direct money and resources to their small business communities. Among these, fund of funds are proving to be an instrumental early supply of capital for fund managers investing in small and growing businesses in Africa and the Middle East.",
       date: "Dec 4, 2023",
-      link: "#",
+      link: "/learning-hub/article/funds-of-funds-provide-more-than-capital",
     },
     {
       title: "Tapping the creativity of local fund managers to scale small business finance",
       excerpt: "Small businesses are the growth engine for inclusive and resilient development in Africa. Yet the $330 billion annual financing gap remains stubbornly sticky because few financial institutions and investors are prepared to fund small businesses.",
       date: "Oct 17, 2023",
-      link: "#",
+      link: "/learning-hub/article/tapping-creativity-local-fund-managers",
     },
   ];
 
@@ -88,7 +89,7 @@ const LearningHub = () => {
               </p>
               <p className="text-sm text-slate-300 font-sans mt-4 mx-auto lg:mx-0 max-w-xl">
                 To recommend a resource,{' '}
-                <a href="mailto:info@frontierfinance.org" className="text-gold-400 hover:text-gold-300 transition-colors">get in touch</a>.
+                <a href="mailto:hello@frontierfinance.org" className="text-gold-400 hover:text-gold-300 underline underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 rounded transition-colors">get in touch</a>.
               </p>
             </motion.div>
 
@@ -115,9 +116,9 @@ const LearningHub = () => {
                     initial={{ opacity: 0, x: 16 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.15 + i * 0.08, duration: 0.4 }}
-                    className="group flex items-start gap-4 text-left"
+                    className="group flex items-start gap-4 text-left rounded-xl p-2 -m-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 transition-colors"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center shrink-0 group-hover:bg-gold-500/20 group-hover:border-gold-400/40 transition-colors">
+                    <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center shrink-0 group-hover:bg-gold-500/20 group-hover:border-gold-400/40 group-hover:scale-105 transition-all duration-300">
                       <item.icon className="w-5 h-5 text-gold-400" />
                     </div>
                     <div>
@@ -137,7 +138,7 @@ const LearningHub = () => {
       </section>
 
       {/* Fund Manager Portal – protrudes into hero with rounded top (same as About/Network) */}
-      <section id="fund-manager-portal" className="py-24 bg-white rounded-t-[2.5rem] sm:rounded-t-[3rem] overflow-hidden -mt-8 sm:-mt-12 z-10 relative shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
+      <section id="fund-manager-portal" className="scroll-mt-24 py-24 bg-white rounded-t-[2.5rem] sm:rounded-t-[3rem] overflow-hidden -mt-8 sm:-mt-12 z-10 relative shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -158,8 +159,8 @@ const LearningHub = () => {
                 <a href="https://youtu.be/jTKHwZnMztM" target="_blank" rel="noopener noreferrer" className="text-gold-600 hover:text-gold-700 font-semibold underline underline-offset-2 transition-colors">watch the video</a>
                 {' '}to learn more, and share feedback on how we can improve the tool going forward.
               </p>
-              <Button className="bg-navy-900 text-white hover:bg-navy-800 rounded-full px-8 py-6 text-lg shadow-finance-lg">
-                Access Portal
+              <Button asChild className="bg-navy-900 text-white hover:bg-navy-800 hover:shadow-xl active:scale-[0.98] rounded-full px-8 py-6 text-lg shadow-finance-lg transition-all duration-200 focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2">
+                <Link to="/auth">Access Portal</Link>
               </Button>
             </motion.div>
 
@@ -187,7 +188,7 @@ const LearningHub = () => {
       </section>
 
       {/* Market Insights */}
-      <section id="market-insights" className="py-24 bg-navy-50">
+      <section id="market-insights" className="scroll-mt-24 py-24 bg-navy-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="section-label text-gold-600">Latest Updates</span>
@@ -203,35 +204,39 @@ const LearningHub = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-2xl overflow-hidden shadow-finance border border-slate-100 hover:shadow-card-hover transition-all group flex flex-col h-full"
+                className="bg-white rounded-2xl overflow-hidden shadow-finance border border-slate-100 hover:shadow-card-hover hover:-translate-y-1 hover:border-gold-200/50 transition-all duration-300 ease-out group flex flex-col h-full"
               >
                 <div className="p-8 flex-1">
                   <span className="text-xs text-slate-500 font-sans">{item.date}</span>
-                  <h3 className="text-xl font-display font-normal text-navy-900 mb-4 mt-2 group-hover:text-gold-600 transition-colors">
+                  <h3 className="text-xl font-display font-normal text-navy-900 mb-1 mt-2 group-hover:text-gold-600 transition-colors">
                     {item.title}
                   </h3>
+                  {'subtitle' in item && item.subtitle && (
+                    <p className="text-sm text-gold-600 font-sans font-medium mb-3">{item.subtitle}</p>
+                  )}
                   <p className="text-slate-600 leading-relaxed text-sm mb-6 line-clamp-4 font-sans">
                     {item.excerpt}
                   </p>
                 </div>
-                <div className="p-6 border-t border-slate-100">
-                  <a href={item.link} className="text-navy-900 font-semibold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
-                    Read More <ArrowRight className="w-4 h-4 text-gold-500" />
-                  </a>
+                <div className="p-6 border-t border-slate-100 bg-slate-50/50 group-hover:bg-white transition-colors duration-300">
+                  {item.link.startsWith("/") ? (
+                    <Link to={item.link} className="text-navy-900 font-semibold text-sm flex items-center gap-2 group-hover:gap-3 transition-all rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 w-fit">
+                      Read More <ArrowRight className="w-4 h-4 text-gold-500 group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                  ) : (
+                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-navy-900 font-semibold text-sm flex items-center gap-2 group-hover:gap-3 transition-all rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 w-fit">
+                      Read More <ArrowRight className="w-4 h-4 text-gold-500 group-hover:translate-x-0.5 transition-transform" />
+                    </a>
+                  )}
                 </div>
               </motion.div>
             ))}
-          </div>
-          <div className="mt-12 text-center">
-            <Link to="/blogs">
-              <Button variant="outline" className="border-navy-200 text-navy-700 hover:bg-navy-50 rounded-full">See all</Button>
-            </Link>
           </div>
         </div>
       </section>
 
       {/* Publications – compact, creative */}
-      <section id="publications" className="py-16 sm:py-20 bg-slate-50/80">
+      <section id="publications" className="scroll-mt-24 py-16 sm:py-20 bg-slate-50/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-10">
             <span className="section-label text-gold-600">Research</span>
@@ -250,10 +255,10 @@ const LearningHub = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-16px" }}
                 transition={{ duration: 0.35, delay: Math.min(i * 0.02, 0.25) }}
-                className={`group relative flex flex-col min-w-0 overflow-hidden transition-all duration-300
-                  ${i % 3 === 0 ? "bg-white rounded-2xl border-l-4 border-l-gold-500/70 shadow-sm hover:shadow-md hover:border-l-gold-500" : ""}
-                  ${i % 3 === 1 ? "bg-white rounded-2xl ring-1 ring-slate-200/80 hover:ring-gold-300/50" : ""}
-                  ${i % 3 === 2 ? "bg-white rounded-2xl shadow-sm hover:shadow-md before:content-[''] before:absolute before:top-0 before:right-0 before:w-10 before:h-10 before:bg-gold-500/10 before:rounded-bl-full" : ""}`}
+                className={`group relative flex flex-col min-w-0 overflow-hidden transition-all duration-300 ease-out
+                  ${i % 3 === 0 ? "bg-white rounded-2xl border-l-4 border-l-gold-500/70 shadow-sm hover:shadow-md hover:border-l-gold-500 hover:-translate-y-0.5" : ""}
+                  ${i % 3 === 1 ? "bg-white rounded-2xl ring-1 ring-slate-200/80 hover:ring-gold-300/50 hover:-translate-y-0.5 hover:shadow-md" : ""}
+                  ${i % 3 === 2 ? "bg-white rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 before:content-[''] before:absolute before:top-0 before:right-0 before:w-10 before:h-10 before:bg-gold-500/10 before:rounded-bl-full" : ""}`}
               >
                 <div className="relative p-4 flex flex-col flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2 flex-wrap">

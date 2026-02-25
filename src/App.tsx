@@ -46,9 +46,9 @@ import PlaceholderPage from "./pages/PlaceholderPage";
 import About from "./pages/About";
 import ESCPNetwork from "./pages/ESCPNetwork";
 import LearningHub from "./pages/LearningHub";
+import MarketInsightArticle from "./pages/MarketInsightArticle";
 import OurEvents from "./pages/OurEvents";
 import Partnership from "./pages/Partnership";
-import Contact from "./pages/Contact";
 import { FeedbackButton } from "./components/feedback/FeedbackButton";
 import Navbar from "./components/layout/Navbar";
 import ScrollToTop from "./components/ScrollToTop";
@@ -183,10 +183,10 @@ const AppRoutes = () => {
                 <Route path="/drew" element={<Drew />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/learning-hub" element={<LearningHub />} />
+                <Route path="/learning-hub/article/:slug" element={<MarketInsightArticle />} />
                 <Route path="/our-events" element={<OurEvents />} />
                 <Route path="/escp-network" element={<ESCPNetwork />} />
                 <Route path="/partnership" element={<Partnership />} />
-                <Route path="/contact" element={<Contact />} />
                 <Route path="*" element={<NotFound />} />
       </Routes>
       {/* Floating Feedback Button - appears on all pages */}
