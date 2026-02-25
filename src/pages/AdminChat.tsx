@@ -1,20 +1,40 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import SidebarLayout from '@/components/layout/SidebarLayout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Send, Brain, Plus, Trash2, Edit3, Check, X, MessageSquare, 
-  Loader2, ChevronLeft, ChevronRight 
+import {
+  Send,
+  Brain,
+  Plus,
+  Trash2,
+  Edit3,
+  Check,
+  X,
+  MessageSquare,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+  Shield,
+  BarChart3,
+  Zap
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 
 interface Message {
@@ -47,9 +67,22 @@ const AdminChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
   };
 
-  useEffect(() => { scrollToBottom(); }, [messages]);
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-  // Load profile and conversations
+  useEffect(() => {
+    if (!input.trim()) resetTextareaHeight();
+  }, [input]);
+
+  const resetTextareaHeight = () => {
+    const textarea = document.querySelector('textarea[placeholder*="Ask Portiq"]') as HTMLTextAreaElement;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = '36px';
+    }
+  };
+
   useEffect(() => {
     if (!user) return;
     const init = async () => {
@@ -110,7 +143,6 @@ const AdminChat = () => {
   };
 
   const deleteConversation = async (id: string) => {
-    // Delete messages first, then conversation
     await supabase.from('chat_messages').delete().eq('conversation_id', id);
     await supabase.from('chat_conversations').delete().eq('id', id);
     setConversations(prev => prev.filter(c => c.id !== id));
@@ -124,7 +156,7 @@ const AdminChat = () => {
   const renameConversation = async (id: string) => {
     if (!editTitle.trim()) return;
     await supabase.from('chat_conversations').update({ title: editTitle.trim() }).eq('id', id);
-    setConversations(prev => prev.map(c => c.id === id ? { ...c, title: editTitle.trim() } : c));
+    setConversations(prev => prev.map(c => (c.id === id ? { ...c, title: editTitle.trim() } : c)));
     setEditingId(null);
     setEditTitle('');
   };
@@ -134,7 +166,6 @@ const AdminChat = () => {
 
     let convId = activeConversationId;
     if (!convId) {
-      // Auto-create conversation
       const { data, error } = await supabase
         .from('chat_conversations')
         .insert({ user_id: user.id, title: input.trim().slice(0, 50) })
@@ -152,6 +183,7 @@ const AdminChat = () => {
 
     const userMessage = input.trim();
     setInput('');
+    resetTextareaHeight();
     const userMsg: Message = { role: 'user', content: userMessage };
     setMessages(prev => [...prev, userMsg]);
     setLoading(true);
@@ -200,167 +232,333 @@ const AdminChat = () => {
   };
 
   return (
-    <SidebarLayout>
-      <div className="h-[calc(100vh-5rem)] flex bg-white">
-        {/* Conversations Sidebar */}
-        <div className={`${sidebarOpen ? 'w-72' : 'w-0'} transition-all duration-300 overflow-hidden border-r border-gray-200 bg-gray-50 flex flex-col`}>
-          <div className="p-3 border-b border-gray-200 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-700">Conversations</h3>
-            <Button variant="ghost" size="sm" onClick={createNewChat} title="New Chat">
-              <Plus className="w-4 h-4" />
-            </Button>
-          </div>
-          <div className="flex-1 overflow-y-auto">
-            {loadingConversations ? (
-              <div className="p-4 text-center"><Loader2 className="w-5 h-5 animate-spin mx-auto text-gray-400" /></div>
-            ) : conversations.length === 0 ? (
-              <div className="p-4 text-center text-sm text-gray-500">No conversations yet</div>
-            ) : (
-              conversations.map(conv => (
-                <div
-                  key={conv.id}
-                  className={`group flex items-center gap-2 px-3 py-2.5 cursor-pointer hover:bg-gray-100 transition-colors ${activeConversationId === conv.id ? 'bg-blue-50 border-r-2 border-blue-500' : ''}`}
-                  onClick={() => selectConversation(conv.id)}
-                >
-                  <MessageSquare className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  {editingId === conv.id ? (
-                    <div className="flex-1 flex items-center gap-1">
-                      <Input
-                        value={editTitle}
-                        onChange={(e) => setEditTitle(e.target.value)}
-                        className="h-7 text-sm bg-white"
-                        onClick={(e) => e.stopPropagation()}
-                        onKeyDown={(e) => { if (e.key === 'Enter') renameConversation(conv.id); if (e.key === 'Escape') setEditingId(null); }}
-                        autoFocus
-                      />
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={(e) => { e.stopPropagation(); renameConversation(conv.id); }}><Check className="w-3 h-3" /></Button>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={(e) => { e.stopPropagation(); setEditingId(null); }}><X className="w-3 h-3" /></Button>
+    <div className="h-screen overflow-hidden">
+      <SidebarLayout>
+        <div
+          className="h-screen bg-cover bg-center bg-fixed overflow-hidden"
+          style={{ backgroundImage: 'url(/auth.jpg)' }}
+        >
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="relative z-10 h-full flex p-4 pt-20">
+            {/* Conversations sidebar - polished panel */}
+            <div
+              className={`${sidebarOpen ? 'w-72' : 'w-0'
+                } transition-all duration-300 overflow-hidden flex flex-col shrink-0`}
+            >
+              <Card className="h-full border-2 border-white/20 bg-white/25 backdrop-blur-md shadow-xl flex flex-col">
+                <div className="p-3 border-b border-white/30 flex items-center justify-between flex-shrink-0">
+                  <h3 className="text-sm font-semibold text-slate-800">Conversations</h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={createNewChat}
+                    title="New Chat"
+                    className="text-slate-700 hover:bg-white/40 rounded-lg"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="flex-1 overflow-y-auto p-2">
+                  {loadingConversations ? (
+                    <div className="p-4 text-center">
+                      <Loader2 className="w-5 h-5 animate-spin mx-auto text-slate-500" />
                     </div>
+                  ) : conversations.length === 0 ? (
+                    <div className="p-4 text-center text-sm text-slate-600">No conversations yet</div>
                   ) : (
-                    <>
-                      <span className="flex-1 text-sm text-gray-700 truncate">{conv.title}</span>
-                      <div className="hidden group-hover:flex items-center gap-0.5">
-                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={(e) => { e.stopPropagation(); setEditingId(conv.id); setEditTitle(conv.title); }}><Edit3 className="w-3 h-3 text-gray-400" /></Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={(e) => e.stopPropagation()}><Trash2 className="w-3 h-3 text-gray-400 hover:text-red-500" /></Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Delete conversation?</AlertDialogTitle>
-                              <AlertDialogDescription>This will permanently delete this conversation and all its messages.</AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => deleteConversation(conv.id)} className="bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                    conversations.map(conv => (
+                      <div
+                        key={conv.id}
+                        className={`group flex items-center gap-2 px-3 py-2.5 rounded-xl cursor-pointer transition-all ${activeConversationId === conv.id
+                            ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-300/50'
+                            : 'hover:bg-white/40 border border-transparent'
+                          }`}
+                        onClick={() => selectConversation(conv.id)}
+                      >
+                        <MessageSquare className="w-4 h-4 text-slate-500 flex-shrink-0" />
+                        {editingId === conv.id ? (
+                          <div className="flex-1 flex items-center gap-1">
+                            <Input
+                              value={editTitle}
+                              onChange={e => setEditTitle(e.target.value)}
+                              className="h-7 text-sm bg-white border-slate-200"
+                              onClick={e => e.stopPropagation()}
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') renameConversation(conv.id);
+                                if (e.key === 'Escape') setEditingId(null);
+                              }}
+                              autoFocus
+                            />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0"
+                              onClick={e => {
+                                e.stopPropagation();
+                                renameConversation(conv.id);
+                              }}
+                            >
+                              <Check className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0"
+                              onClick={e => {
+                                e.stopPropagation();
+                                setEditingId(null);
+                              }}
+                            >
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <>
+                            <span className="flex-1 text-sm text-slate-800 truncate">{conv.title}</span>
+                            <div className="hidden group-hover:flex items-center gap-0.5">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  setEditingId(conv.id);
+                                  setEditTitle(conv.title);
+                                }}
+                              >
+                                <Edit3 className="w-3 h-3 text-slate-500" />
+                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0"
+                                    onClick={e => e.stopPropagation()}
+                                  >
+                                    <Trash2 className="w-3 h-3 text-slate-500 hover:text-red-600" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete conversation?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This will permanently delete this conversation and all its messages.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => deleteConversation(conv.id)}
+                                      className="bg-red-600 hover:bg-red-700"
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </>
+                        )}
                       </div>
-                    </>
+                    ))
                   )}
                 </div>
-              ))
-            )}
-          </div>
-        </div>
+              </Card>
+            </div>
 
-        {/* Toggle sidebar */}
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="flex items-center justify-center w-6 bg-gray-100 hover:bg-gray-200 transition-colors border-r border-gray-200"
-        >
-          {sidebarOpen ? <ChevronLeft className="w-4 h-4 text-gray-500" /> : <ChevronRight className="w-4 h-4 text-gray-500" />}
-        </button>
+            {/* Toggle sidebar */}
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="flex items-center justify-center w-8 bg-white/30 hover:bg-white/50 backdrop-blur-sm border border-white/30 rounded-r-lg transition-colors shrink-0"
+            >
+              {sidebarOpen ? (
+                <ChevronLeft className="w-4 h-4 text-slate-700" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-slate-700" />
+              )}
+            </button>
 
-        {/* Chat Area */}
-        <div className="flex-1 flex flex-col min-w-0">
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
-            {messages.length === 0 && !activeConversationId ? (
-              <div className="text-center py-20 space-y-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto">
-                  <Brain className="w-8 h-8 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-800">Portiq</h3>
-                <p className="text-gray-500 max-w-md mx-auto">Start a new conversation or select an existing one from the sidebar. Your chats are private to your account.</p>
-              </div>
-            ) : messages.length === 0 ? (
-              <div className="text-center py-20">
-                <p className="text-gray-500">Send a message to start the conversation</p>
-              </div>
-            ) : (
-              messages.map((message, index) => (
-                <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`flex ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'} items-start gap-3 max-w-[75%]`}>
-                    <Avatar className="w-8 h-8 flex-shrink-0">
-                      {message.role === 'user' ? (
-                        <>
-                          <AvatarImage src={userProfile?.profile_picture_url} />
-                          <AvatarFallback className="bg-blue-600 text-white text-xs">
-                            {userProfile?.full_name?.charAt(0) || user?.email?.charAt(0)?.toUpperCase() || 'U'}
-                          </AvatarFallback>
-                        </>
-                      ) : (
-                        <>
-                          <AvatarImage src="/robot.png" />
-                          <AvatarFallback className="bg-purple-600 text-white"><Brain className="w-4 h-4" /></AvatarFallback>
-                        </>
-                      )}
-                    </Avatar>
-                    <div className={`rounded-2xl px-4 py-3 ${
-                      message.role === 'user'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {message.role === 'assistant' ? (
-                        <div className="text-sm prose prose-sm max-w-none whitespace-pre-wrap break-words">
-                          <ReactMarkdown>{message.content}</ReactMarkdown>
+            {/* Main chat card - PortIQ-style */}
+            <div className="flex-1 min-w-0 flex items-stretch ml-2">
+              <Card className="flex-1 shadow-2xl border-2 border-blue-100 bg-white/30 backdrop-blur-sm flex flex-col relative min-h-0">
+                <CardHeader className="border-b bg-gradient-to-r from-blue-50 to-purple-50 flex-shrink-0 py-3 px-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <Brain className="w-4 h-4 text-purple-600 shrink-0" />
+                        Chat with Portiq
+                      </CardTitle>
+                      <CardDescription className="text-xs mt-1">
+                        Ask about surveys, applications, network data, and more. Your conversations are private.
+                      </CardDescription>
+                    </div>
+                    <div className="flex gap-3 shrink-0">
+                      <div className="text-center">
+                        <Zap className="w-3 h-3 text-blue-600 mx-auto mb-0.5" />
+                        <p className="text-[10px] font-medium text-blue-900 leading-tight">Multi-Table</p>
+                        <p className="text-[10px] text-blue-700 leading-tight">Access</p>
+                      </div>
+                      <div className="text-center">
+                        <Shield className="w-3 h-3 text-purple-600 mx-auto mb-0.5" />
+                        <p className="text-[10px] font-medium text-purple-900 leading-tight">Secure</p>
+                        <p className="text-[10px] text-purple-700 leading-tight">Admin</p>
+                      </div>
+                      <div className="text-center">
+                        <BarChart3 className="w-3 h-3 text-pink-600 mx-auto mb-0.5" />
+                        <p className="text-[10px] font-medium text-pink-900 leading-tight">Smart</p>
+                        <p className="text-[10px] text-pink-700 leading-tight">Insights</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                <div className="flex-1 overflow-y-auto min-h-0 p-6 pb-24">
+                  <div className="space-y-4">
+                    {messages.length === 0 && !activeConversationId ? (
+                      <div className="text-center py-12 space-y-4">
+                        <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto">
+                          <Brain className="w-10 h-10 text-blue-600" />
                         </div>
-                      ) : (
-                        <div className="text-sm whitespace-pre-wrap break-words">{message.content}</div>
-                      )}
-                    </div>
+                        <div>
+                          <h3 className="text-xl font-semibold text-gray-800 mb-2">Welcome to Portiq</h3>
+                          <p className="text-gray-600 max-w-md mx-auto">
+                            Start a conversation by typing a question below, or open an existing chat from the sidebar.
+                          </p>
+                        </div>
+                      </div>
+                    ) : messages.length === 0 ? (
+                      <div className="text-center py-12">
+                        <p className="text-gray-500">Send a message to start the conversation</p>
+                      </div>
+                    ) : (
+                      messages.map((message, index) => (
+                        <div
+                          key={index}
+                          className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        >
+                          <div
+                            className={`flex ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
+                              } items-start gap-3 max-w-[80%] w-full`}
+                          >
+                            <Avatar className="w-8 h-8 flex-shrink-0">
+                              {message.role === 'user' ? (
+                                <>
+                                  <AvatarImage src={userProfile?.profile_picture_url} />
+                                  <AvatarFallback className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs">
+                                    {userProfile?.company_name?.charAt(0).toUpperCase() ||
+                                      userProfile?.full_name?.charAt(0).toUpperCase() ||
+                                      user?.email?.charAt(0).toUpperCase() ||
+                                      'U'}
+                                  </AvatarFallback>
+                                </>
+                              ) : (
+                                <>
+                                  <AvatarImage src="/robot.png" />
+                                  <AvatarFallback className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                                    <Brain className="w-4 h-4" />
+                                  </AvatarFallback>
+                                </>
+                              )}
+                            </Avatar>
+                            <div className="flex flex-col">
+                              <div
+                                className={`text-xs font-medium mb-1 ${message.role === 'user' ? 'text-right' : 'text-left'
+                                  }`}
+                              >
+                                {message.role === 'user'
+                                  ? userProfile?.company_name || userProfile?.full_name || user?.email?.split('@')[0] || 'You'
+                                  : 'Portiq'}
+                              </div>
+                              <div
+                                className={`rounded-2xl px-4 py-3 ${message.role === 'user'
+                                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg max-w-[600px]'
+                                    : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 text-gray-800 shadow-lg border border-blue-200/50 backdrop-blur-sm max-w-[700px]'
+                                  }`}
+                              >
+                                {message.role === 'assistant' ? (
+                                  <div className="text-sm prose prose-sm max-w-none prose-headings:mt-3 prose-headings:mb-2 prose-p:my-2 prose-ul:my-2 prose-li:my-0.5 prose-strong:text-gray-900 prose-strong:font-semibold whitespace-pre-wrap break-words">
+                                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                                  </div>
+                                ) : (
+                                  <div className="text-sm whitespace-pre-wrap break-words">{message.content}</div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                    {loading && (
+                      <div className="flex justify-start">
+                        <div className="flex items-start gap-3">
+                          <Avatar className="w-8 h-8 flex-shrink-0">
+                            <AvatarImage src="/robot.png" />
+                            <AvatarFallback className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                              <Brain className="w-4 h-4" />
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col">
+                            <div className="text-xs font-medium mb-1 text-left">Portiq</div>
+                            <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-2xl px-4 py-3 shadow-lg border border-blue-200/50 backdrop-blur-sm">
+                              <div className="flex items-center gap-2">
+                                <div className="flex gap-1">
+                                  <div
+                                    className="w-2 h-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full animate-bounce"
+                                    style={{ animationDelay: '0ms' }}
+                                  />
+                                  <div
+                                    className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-bounce"
+                                    style={{ animationDelay: '150ms' }}
+                                  />
+                                  <div
+                                    className="w-2 h-2 bg-gradient-to-r from-pink-500 to-red-500 rounded-full animate-bounce"
+                                    style={{ animationDelay: '300ms' }}
+                                  />
+                                </div>
+                                <span className="text-sm text-gray-600">Portiq is thinking...</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div ref={messagesEndRef} />
                   </div>
                 </div>
-              ))
-            )}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="flex items-start gap-3">
-                  <Avatar className="w-8 h-8"><AvatarImage src="/robot.png" /><AvatarFallback className="bg-purple-600 text-white"><Brain className="w-4 h-4" /></AvatarFallback></Avatar>
-                  <div className="bg-gray-100 rounded-2xl px-4 py-3">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
 
-          {/* Input */}
-          <div className="border-t border-gray-200 p-4">
-            <div className="flex items-end gap-2 max-w-4xl mx-auto">
-              <Textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyPress}
-                placeholder="Type your message..."
-                className="resize-none min-h-[44px] max-h-[200px] bg-white border-gray-300"
-                rows={1}
-              />
-              <Button onClick={sendMessage} disabled={!input.trim() || loading} className="bg-blue-600 hover:bg-blue-700 h-11 px-4">
-                <Send className="w-4 h-4" />
-              </Button>
+                {/* Floating input */}
+                <div className="absolute bottom-4 left-4 right-4 md:left-1/2 md:right-auto md:transform md:-translate-x-1/2 md:w-[min(600px,100%)] z-10">
+                  <div className="relative bg-white rounded-2xl border-2 border-slate-200 shadow-lg min-h-[44px] max-h-[200px] focus-within:border-blue-400 focus-within:shadow-xl transition-all">
+                    <Textarea
+                      value={input}
+                      onChange={e => {
+                        setInput(e.target.value);
+                        const ta = e.target;
+                        ta.style.height = 'auto';
+                        ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
+                      }}
+                      onKeyDown={handleKeyPress}
+                      placeholder="Ask Portiq about surveys, network data, applications, and more..."
+                      rows={1}
+                      className="resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent pr-12 py-3 pl-4 min-h-[40px] max-h-[184px] overflow-y-auto"
+                      disabled={loading}
+                    />
+                    <Button
+                      onClick={sendMessage}
+                      disabled={loading || !input.trim()}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full w-8 h-8 p-0 shadow-md"
+                    >
+                      <Send className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </Card>
             </div>
           </div>
         </div>
-      </div>
-    </SidebarLayout>
+      </SidebarLayout>
+    </div>
   );
 };
 

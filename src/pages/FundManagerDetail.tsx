@@ -133,6 +133,7 @@ interface FundManagerProfile {
   role_badge?: string;
   has_survey?: boolean;
   profile_picture_url?: string;
+  description?: string;
 }
 
 const FundManagerDetail = () => {
@@ -174,22 +175,27 @@ const FundManagerDetail = () => {
         return;
       }
 
-      // Process the data
+      const companyName = profileData.company_name && String(profileData.company_name).trim().toLowerCase() !== 'not provided' ? profileData.company_name : '';
+      const fullName = profileData.full_name || '';
+      const nameParts = fullName.trim().split(/\s+/);
+      const first = nameParts[0] || companyName?.split(' ')[0] || '';
+      const last = nameParts.slice(1).join(' ') || companyName?.split(' ').slice(1).join(' ') || '';
+
       const processedProfile: FundManagerProfile = {
         id: profileData.id,
         user_id: profileData.id,
-        fund_name: profileData.company_name && profileData.company_name.trim().toLowerCase() !== 'not provided' ? profileData.company_name : '',
-        firm_name: profileData.company_name && profileData.company_name.trim().toLowerCase() !== 'not provided' ? profileData.company_name : '',
-        participant_name: profileData.company_name && profileData.company_name.trim().toLowerCase() !== 'not provided' ? profileData.company_name : '',
-        role_title: 'Fund Manager',
+        fund_name: companyName,
+        firm_name: companyName,
+        participant_name: fullName || companyName,
+        role_title: profileData.role_title || 'Fund Manager',
         email_address: profileData.email,
         phone: profileData.phone || '',
         website: profileData.website || '',
         linkedin: '',
-        first_name: profileData.company_name?.split(' ')[0] || '',
-        last_name: profileData.company_name?.split(' ').slice(1).join(' ') || '',
+        first_name: first,
+        last_name: last,
         email: profileData.email || '',
-        profile_picture_url: profileData.profile_photo_url || '',
+        profile_picture_url: profileData.profile_picture_url || '',
         description: profileData.description || ''
       };
 
@@ -349,11 +355,10 @@ const FundManagerDetail = () => {
   if (loading) {
     return (
       <SidebarLayout>
-        <div className="p-6">
-          <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-            <div className="h-64 bg-gray-200 rounded"></div>
-            <div className="h-32 bg-gray-200 rounded"></div>
+        <div className="min-h-screen bg-gradient-to-b from-navy-50/40 to-white flex items-center justify-center p-6">
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-10 w-10 rounded-full border-2 border-gold-500/60 border-t-gold-500 animate-spin" />
+            <p className="text-slate-600">Loading profile...</p>
           </div>
         </div>
       </SidebarLayout>
@@ -363,11 +368,12 @@ const FundManagerDetail = () => {
   if (!fundManager) {
     return (
       <SidebarLayout>
-        <div className="p-6">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Fund Manager Not Found</h1>
-            <p className="text-gray-600 mb-6">The requested fund manager could not be found.</p>
-            <Button onClick={() => navigate('/network')} className="inline-flex items-center">
+        <div className="min-h-screen bg-gradient-to-b from-navy-50/40 to-white flex items-center justify-center p-6">
+          <div className="text-center max-w-md">
+            <span className="section-label text-gold-600">Network</span>
+            <h1 className="text-2xl font-display font-normal text-navy-900 mt-1 mb-2">Profile not found</h1>
+            <p className="text-slate-600 mb-6">The requested fund manager could not be found.</p>
+            <Button onClick={() => navigate('/network')} className="rounded-xl bg-navy-900 hover:bg-navy-800 text-white">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Network
             </Button>
@@ -538,14 +544,19 @@ const FundManagerDetail = () => {
 
   return (
     <SidebarLayout headerActions={yearSelectionActions}>
-       <div className="min-h-screen bg-gradient-to-br from-[#f5f5dc] to-[#f0f0e6]">
+       <div className="min-h-screen bg-gradient-to-b from-navy-50/30 via-white to-slate-50/50">
 
-         {/* Main Content - Proper spacing below header */}
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-12">
+            <div className="mb-6">
+              <Button variant="ghost" onClick={() => navigate('/network')} className="text-navy-700 hover:text-navy-900 hover:bg-navy-100 rounded-xl -ml-2">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Network
+              </Button>
+            </div>
 
             {/* Company Information Section */}
             <div className="mb-8">
-              <div className="group relative overflow-hidden rounded-lg bg-[#f5f5dc] border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
+              <div className="group relative overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
                 <div className="relative flex items-start justify-between gap-4">
                   {/* Left side - Content */}
                   <div className="flex-1 p-6 max-w-[60%] lg:max-w-[65%]">

@@ -10,7 +10,8 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "create-team-admins": "node scripts/create-team-admins.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

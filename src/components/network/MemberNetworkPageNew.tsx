@@ -46,12 +46,13 @@ export default function MemberNetworkPageNew() {
     try {
       setLoading(true);
 
-      const [profilesResult, survey2021Result, survey2022Result, survey2023Result, survey2024Result] = await Promise.all([
+      const [profilesResult, companyMembersResult, survey2021Result, survey2022Result, survey2023Result, survey2024Result] = await Promise.all([
         supabase
           .from('user_profiles')
           .select('id, email, company_name, description, website, profile_picture_url, user_role')
           .not('email', 'like', '%.test@escpnetwork.net')
           .order('company_name'),
+        supabase.from('company_members').select('member_user_id'),
         supabase.from('survey_responses_2021').select('user_id').eq('submission_status', 'completed'),
         supabase.from('survey_responses_2022').select('user_id').eq('submission_status', 'completed'),
         supabase.from('survey_responses_2023').select('user_id').eq('submission_status', 'completed'),
@@ -59,6 +60,9 @@ export default function MemberNetworkPageNew() {
       ]);
 
       if (profilesResult.error) throw profilesResult.error;
+
+      const secondaryMemberIds = new Set((companyMembersResult.data || []).map((m: { member_user_id: string }) => m.member_user_id));
+      const allProfiles = (profilesResult.data || []).filter((p: { id: string }) => !secondaryMemberIds.has(p.id));
 
       const userSurveyYears = new Map<string, string[]>();
 
@@ -76,7 +80,7 @@ export default function MemberNetworkPageNew() {
       processSurveys(survey2023Result.data || [], '2023');
       processSurveys(survey2024Result.data || [], '2024');
 
-      const profilesWithSurveys = (profilesResult.data || []).map(profile => ({
+      const profilesWithSurveys = allProfiles.map((profile: any) => ({
         ...profile,
         completed_surveys: userSurveyYears.get(profile.id) || []
       }));
@@ -150,8 +154,10 @@ export default function MemberNetworkPageNew() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
-            <h1 className="text-3xl font-serif font-bold text-white mb-2">Member Directory</h1>
-            <p className="text-navy-200">Connect with fund managers participating in the CFF Network</p>
+            <span className="section-label text-gold-400/90">Network</span>
+            <h1 className="text-2xl sm:text-3xl font-display font-normal text-white mt-1 tracking-tight">Network Directory</h1>
+            <div className="w-14 h-0.5 bg-gold-500/60 mt-3 rounded-full" />
+            <p className="text-navy-200 mt-3">Connect with fund managers participating in the CFF Network. Only primary account holders are listed.</p>
           </div>
           <Button
             onClick={fetchProfiles}

@@ -33,44 +33,26 @@ export default function CompanyMembersSection() {
   const [newMember, setNewMember] = useState({ email: '', name: '', password: '' });
   const [editForm, setEditForm] = useState({ name: '', role: '' });
 
-  // For admins: company selector
-  const [companies, setCompanies] = useState<{ id: string; company_name: string }[]>([]);
-  const [selectedCompany, setSelectedCompany] = useState('');
-
-  const isAdmin = userRole === 'admin';
   const isMember = userRole === 'member';
 
   useEffect(() => {
-    if (!isAdmin && !isMember) return;
+    if (!isMember) return;
     fetchMembers();
-    if (isAdmin) fetchCompanies();
-  }, [user, isAdmin, isMember]);
+  }, [user, isMember]);
 
-  // Both admins and primary members can see this section
-  if (!isAdmin && !isMember) return null;
-
-  const fetchCompanies = async () => {
-    const { data } = await supabase
-      .from('user_profiles')
-      .select('id, company_name')
-      .order('company_name');
-    if (data) {
-      setCompanies(data.filter(c => c.company_name && c.company_name !== 'Not provided' && c.company_name !== 'Individual'));
-    }
-  };
+  // Only primary members see this section — they manage their own company's team.
+  // Admins don't have "their" company; they manage users via Admin Panel / directory.
+  if (!isMember) return null;
 
   const fetchMembers = async () => {
     if (!user) return;
     try {
       setLoading(true);
-      let query = supabase.from('company_members').select('*').order('created_at', { ascending: false });
-      
-      // Members only see their own company's team
-      if (!isAdmin) {
-        query = query.eq('company_user_id', user.id);
-      }
-
-      const { data, error } = await query;
+      const { data, error } = await supabase
+        .from('company_members')
+        .select('*')
+        .eq('company_user_id', user.id)
+        .order('created_at', { ascending: false });
       if (error) throw error;
       setMembers((data as CompanyMember[]) || []);
     } catch (err) {
@@ -81,8 +63,7 @@ export default function CompanyMembersSection() {
   };
 
   const handleAddMember = async () => {
-    const companyId = isAdmin ? selectedCompany : user?.id;
-    if (!companyId || !newMember.email || !newMember.password) {
+    if (!user?.id || !newMember.email || !newMember.password) {
       toast({ title: 'Missing fields', description: 'Email and password are required', variant: 'destructive' });
       return;
     }
@@ -91,7 +72,7 @@ export default function CompanyMembersSection() {
       setAdding(true);
       const { data, error } = await supabase.functions.invoke('add-company-member', {
         body: {
-          company_user_id: companyId,
+          company_user_id: user.id,
           member_email: newMember.email,
           member_name: newMember.name,
           password: newMember.password
@@ -165,9 +146,7 @@ export default function CompanyMembersSection() {
               Company Team Members
             </CardTitle>
             <CardDescription className="text-gray-600">
-              {isAdmin
-                ? 'Add secondary members to company accounts. These members can log in and access the platform but won\'t appear in the directory.'
-                : 'Manage your team members. They can log in and access the platform but won\'t appear in the directory.'}
+              Manage your team members. They can log in and access the platform but won&apos;t appear in the directory.
             </CardDescription>
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -181,25 +160,10 @@ export default function CompanyMembersSection() {
               <DialogHeader>
                 <DialogTitle>Add Team Member</DialogTitle>
                 <DialogDescription>
-                  Create a secondary account{isAdmin ? ' linked to a company' : ' for your team'}. This member can log in but won't be listed in the network directory.
+                  Create a secondary account for your team. This member can log in but won&apos;t be listed in the network directory.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 pt-4">
-                {isAdmin && (
-                  <div className="space-y-2">
-                    <Label>Company</Label>
-                    <select
-                      value={selectedCompany}
-                      onChange={(e) => setSelectedCompany(e.target.value)}
-                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
-                    >
-                      <option value="">Select a company...</option>
-                      {companies.map(c => (
-                        <option key={c.id} value={c.id}>{c.company_name}</option>
-                      ))}
-                    </select>
-                  </div>
-                )}
                 <div className="space-y-2">
                   <Label>Member Name</Label>
                   <Input
@@ -240,7 +204,7 @@ export default function CompanyMembersSection() {
                 </div>
                 <Button
                   onClick={handleAddMember}
-                  disabled={adding || (isAdmin && !selectedCompany) || !newMember.email || !newMember.password}
+                  disabled={adding || !newMember.email || !newMember.password}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   {adding ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Adding...</> : <><UserPlus className="w-4 h-4 mr-2" />Add Member</>}

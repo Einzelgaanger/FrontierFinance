@@ -227,21 +227,25 @@ const AdminLaunchPlusAnalytics = () => {
 
   return (
     <SidebarLayout headerActions={headerActions}>
-      <div className="min-h-screen bg-slate-50/90">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="min-h-screen bg-gradient-to-b from-navy-50/40 via-white to-slate-50/60 font-sans">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
           {/* Page header */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Launch+ Analytics</h1>
-            <p className="text-sm text-slate-500 mt-1">View and analyze LAUNCH+ assessment submissions</p>
+          <div className="mb-10">
+            <span className="section-label text-gold-600">Launch+</span>
+            <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">
+              Launch+ Analytics
+            </h1>
+            <div className="w-14 h-0.5 bg-gold-500/60 mt-3 rounded-full" />
+            <p className="text-sm text-slate-600 mt-3">View and analyze LAUNCH+ assessment submissions</p>
           </div>
 
           <Tabs defaultValue="analytics" className="w-full">
-            <TabsList className="grid w-full max-w-md grid-cols-2 mb-8 bg-white border border-slate-200 shadow-sm rounded-xl p-1.5 h-12">
-              <TabsTrigger value="analytics" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 font-medium">
+            <TabsList className="grid w-full max-w-md grid-cols-2 mb-8 bg-white border border-slate-100 shadow-sm rounded-2xl p-1.5 h-12">
+              <TabsTrigger value="analytics" className="flex items-center gap-2 rounded-xl data-[state=active]:bg-navy-900 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-600 font-medium transition-all">
                 <BarChart3 className="w-4 h-4" />
                 Analytics
               </TabsTrigger>
-              <TabsTrigger value="submissions" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 font-medium">
+              <TabsTrigger value="submissions" className="flex items-center gap-2 rounded-xl data-[state=active]:bg-navy-900 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-600 font-medium transition-all">
                 <Users className="w-4 h-4" />
                 Submissions
               </TabsTrigger>
@@ -254,7 +258,7 @@ const AdminLaunchPlusAnalytics = () => {
               {loading ? (
                 <>
                   {[1, 2, 3, 4].map((i) => (
-                    <Card key={i} className="bg-white border border-slate-200 shadow-sm">
+                    <Card key={i} className="bg-white border border-slate-100 shadow-sm rounded-2xl">
                       <CardHeader>
                         <Skeleton className="h-4 w-24" />
                       </CardHeader>
@@ -266,7 +270,7 @@ const AdminLaunchPlusAnalytics = () => {
                 </>
               ) : (
                 <>
-                  <Card className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+                  <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
@@ -281,7 +285,7 @@ const AdminLaunchPlusAnalytics = () => {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+                  <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
@@ -296,7 +300,7 @@ const AdminLaunchPlusAnalytics = () => {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+                  <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
@@ -311,7 +315,7 @@ const AdminLaunchPlusAnalytics = () => {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+                  <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
@@ -335,7 +339,7 @@ const AdminLaunchPlusAnalytics = () => {
                 <Activity className="w-4 h-4 text-slate-500" />
                 Fund Stage Distribution
               </h2>
-              <Card className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+              <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                 <CardContent className="p-6">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center p-5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-indigo-50/80 hover:border-indigo-200 transition-colors">
@@ -366,7 +370,7 @@ const AdminLaunchPlusAnalytics = () => {
                   <Coins className="w-4 h-4 text-emerald-600" />
                   Capital Raised by Type
                 </h2>
-                <Card className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+                <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                   <CardContent className="p-6 space-y-3">
                     {Object.entries(capitalByType).map(([type, amount]) => (
                       <div key={type} className="flex items-center justify-between p-3 rounded-lg bg-slate-50/80 border border-slate-100 hover:bg-emerald-50/50 hover:border-emerald-100 transition-colors">
@@ -383,7 +387,7 @@ const AdminLaunchPlusAnalytics = () => {
                   <Target className="w-4 h-4 text-amber-600" />
                   Service Interests
                 </h2>
-                <Card className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+                <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                   <CardContent className="p-6 space-y-3">
                     {Object.entries(serviceInterests).map(([service, count]) => (
                       <div key={service} className="flex items-center justify-between gap-3 p-3 rounded-lg bg-slate-50/80 border border-slate-100 hover:bg-amber-50/50 hover:border-amber-100 transition-colors">
@@ -411,7 +415,7 @@ const AdminLaunchPlusAnalytics = () => {
                   <Globe className="w-4 h-4 text-violet-600" />
                   Geographic Focus
                 </h2>
-                <Card className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+                <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                   <CardContent className="p-6">
                     <div className="grid grid-cols-2 gap-3">
                       {Object.entries(geographicFocus).map(([region, count]) => (
@@ -430,7 +434,7 @@ const AdminLaunchPlusAnalytics = () => {
                   <TrendingUp className="w-4 h-4 text-indigo-600" />
                   Investment Activity
                 </h2>
-                <Card className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+                <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                   <CardContent className="p-6 space-y-3">
                     <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/50 hover:border-indigo-100 transition-colors">
                       <span className="text-sm font-medium text-slate-700">Capital Committed</span>
@@ -459,7 +463,7 @@ const AdminLaunchPlusAnalytics = () => {
                 <Users className="w-4 h-4 text-indigo-600" />
                 All Assessment Responses
               </h2>
-              <Card className="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+              <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                 <CardContent className="p-6">
                 {/* Search and Filter */}
                 <div className="mb-6 flex flex-col sm:flex-row gap-4">

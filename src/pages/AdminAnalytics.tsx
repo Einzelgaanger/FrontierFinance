@@ -107,9 +107,8 @@ export default function AdminAnalytics() {
           <Button
             key={year}
             variant={isActive ? 'default' : 'secondary'}
-            className={`h-8 px-3 text-xs ${
-              isActive ? 'shadow-md' : 'opacity-80 hover:opacity-100'
-            }`}
+            className={`h-8 px-3 text-xs ${isActive ? 'shadow-md' : 'opacity-80 hover:opacity-100'
+              }`}
             onClick={() => setSelectedYear(year)}
             aria-pressed={isActive}
           >
@@ -292,7 +291,7 @@ export default function AdminAnalytics() {
   const renderSectionAnalytics = () => {
     const sections = SURVEY_SECTIONS[selectedYear as keyof typeof SURVEY_SECTIONS] || [];
     const currentSection = sections[selectedSection - 1];
-    
+
     if (!currentSection) return null;
 
     return (
@@ -421,14 +420,14 @@ export default function AdminAnalytics() {
                         <ResponsiveContainer width="100%" height={200}>
                           <BarChart data={distribution}>
                             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                            <XAxis 
-                              dataKey="name" 
-                              tick={{ fontSize: 11 }} 
+                            <XAxis
+                              dataKey="name"
+                              tick={{ fontSize: 11 }}
                               stroke="hsl(var(--muted-foreground))"
                             />
                             <YAxis stroke="hsl(var(--muted-foreground))" />
-                            <Tooltip 
-                              contentStyle={{ 
+                            <Tooltip
+                              contentStyle={{
                                 backgroundColor: 'hsl(var(--card))',
                                 border: '1px solid hsl(var(--border))',
                                 borderRadius: '6px'
@@ -445,17 +444,17 @@ export default function AdminAnalytics() {
                         {distribution.length > 6 ? (
                           <BarChart data={distribution}>
                             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                            <XAxis 
-                              dataKey="name" 
-                              tick={{ fontSize: 10 }} 
-                              angle={-45} 
-                              textAnchor="end" 
+                            <XAxis
+                              dataKey="name"
+                              tick={{ fontSize: 10 }}
+                              angle={-45}
+                              textAnchor="end"
                               height={100}
                               stroke="hsl(var(--muted-foreground))"
                             />
                             <YAxis stroke="hsl(var(--muted-foreground))" />
-                            <Tooltip 
-                              contentStyle={{ 
+                            <Tooltip
+                              contentStyle={{
                                 backgroundColor: 'hsl(var(--card))',
                                 border: '1px solid hsl(var(--border))',
                                 borderRadius: '6px'
@@ -478,8 +477,8 @@ export default function AdminAnalytics() {
                                 <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
                               ))}
                             </Pie>
-                            <Tooltip 
-                              contentStyle={{ 
+                            <Tooltip
+                              contentStyle={{
                                 backgroundColor: 'hsl(var(--card))',
                                 border: '1px solid hsl(var(--border))',
                                 borderRadius: '6px'
@@ -492,8 +491,8 @@ export default function AdminAnalytics() {
                         {distribution.slice(0, 5).map((item, i) => (
                           <div key={i} className="flex items-center justify-between text-sm">
                             <div className="flex items-center gap-2">
-                              <div 
-                                className="w-3 h-3 rounded-full" 
+                              <div
+                                className="w-3 h-3 rounded-full"
                                 style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
                               />
                               <span className="text-muted-foreground">{item.name}</span>
@@ -603,42 +602,51 @@ export default function AdminAnalytics() {
 
   return (
     <SidebarLayout headerActions={yearSelectionActions}>
-      <div className="container mx-auto p-6 space-y-6">
-        <div className="rounded-2xl border border-blue-900/15 bg-white shadow-md p-5">
-          <div className="flex items-center justify-between flex-wrap gap-3 mb-2">
-            <div className="flex items-center gap-2">
-              <Briefcase className="h-4 w-4 text-blue-900" />
-              <span className="text-xs font-semibold text-blue-900 uppercase tracking-[0.18em]">Survey Sections</span>
+      <div className="min-h-screen bg-gradient-to-b from-navy-50/40 via-white to-slate-50/60">
+        <div className="container mx-auto p-6 sm:p-8 space-y-6">
+          <div className="mb-8">
+            <span className="section-label text-gold-600">Analytics</span>
+            <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">
+              Survey Analytics
+            </h1>
+            <div className="w-14 h-0.5 bg-gold-500/60 mt-3 rounded-full" />
+            <p className="text-sm text-slate-600 mt-3">Explore survey responses by year and section</p>
+          </div>
+          <div className="rounded-2xl border border-slate-100 bg-white shadow-sm p-5 hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
+            <div className="flex items-center justify-between flex-wrap gap-3 mb-2">
+              <div className="flex items-center gap-2">
+                <Briefcase className="h-4 w-4 text-navy-900" />
+                <span className="text-xs font-semibold text-navy-900 uppercase tracking-[0.18em]">Survey Sections</span>
+              </div>
+              <span className="text-[11px] text-slate-500">Choose a focus area to explore metrics</span>
             </div>
-            <span className="text-[11px] text-slate-500">Choose a focus area to explore metrics</span>
+            <div className="flex flex-wrap gap-2">
+              {sections.map((section) => {
+                const isActive = selectedSection === section.id;
+                return (
+                  <Button
+                    key={section.id}
+                    size="sm"
+                    variant="ghost"
+                    className={`h-9 px-4 text-[11px] font-medium tracking-wide transition-all rounded-full ${isActive
+                        ? 'bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white shadow-md hover:brightness-110'
+                        : 'bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100'
+                      }`}
+                    onClick={() => setSelectedSection(section.id)}
+                    aria-pressed={isActive}
+                  >
+                    <span className="mr-2 font-semibold">{section.id}.</span>
+                    <span className="truncate max-w-[140px]">{section.title}</span>
+                  </Button>
+                );
+              })}
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {sections.map((section) => {
-              const isActive = selectedSection === section.id;
-              return (
-                <Button
-                  key={section.id}
-                  size="sm"
-                  variant="ghost"
-                  className={`h-9 px-4 text-[11px] font-medium tracking-wide transition-all rounded-full ${
-                    isActive
-                      ? 'bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white shadow-md hover:brightness-110'
-                      : 'bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100'
-                  }`}
-                  onClick={() => setSelectedSection(section.id)}
-                  aria-pressed={isActive}
-                >
-                  <span className="mr-2 font-semibold">{section.id}.</span>
-                  <span className="truncate max-w-[140px]">{section.title}</span>
-                </Button>
-              );
-            })}
-          </div>
-        </div>
 
-        {/* Analytics Content */}
-        <div className="space-y-6">
-          {renderSectionAnalytics()}
+          {/* Analytics Content */}
+          <div className="space-y-6">
+            {renderSectionAnalytics()}
+          </div>
         </div>
       </div>
     </SidebarLayout>

@@ -1,16 +1,19 @@
 -- ============================================================
 -- CFF Team Admins Setup
 -- ============================================================
--- Run this AFTER creating the 6 team members in Supabase:
---   Dashboard > Authentication > Users > Add user (x6)
---   Email + default password (e.g. ChangeMe123!). They can change it in My Profile.
+-- STEP 1 - Create all 6 team accounts in Supabase Auth (one command):
+--   From project root:  npm run create-team-admins
+--   (Uses scripts/create-team-admins.js; requires .env with SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY)
+--   Default password for all: ChangeMe123!
 --
--- Team members:
---   Lisa Mwende       <lisa@frontierfinance.org>
---   Alfred Mulinge   <alfred@frontierfinance.org>  (super admin)
---   Arnold Byarugaba <arnold@frontierfinance.org>
---   Drew von Glahn   <drew@frontierfinance.org>
---   Gila Norich      <gila@frontierfinance.org>
+-- STEP 2 - Run this SQL in Supabase SQL Editor (assigns admin role and user_profiles).
+--
+-- Team members created by the script:
+--   Lisa Mwende        <lisa@frontierfinance.org>
+--   Alfred Mulinge    <alfred@frontierfinance.org>  (super admin)
+--   Arnold Byarugaba  <arnold@frontierfinance.org>
+--   Drew von Glahn    <drew@frontierfinance.org>
+--   Gila Norich       <gila@frontierfinance.org>
 --   Alexandra von Glahn <alexandra@frontierfinance.org>
 -- ============================================================
 

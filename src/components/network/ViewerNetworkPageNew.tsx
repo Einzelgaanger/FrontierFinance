@@ -4,8 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Building2, Mail, Globe, User, Loader2, FileText, ChevronDown, ChevronUp } from 'lucide-react';
-import FundManagerDetailModal from './FundManagerDetailModal';
+import { Building2, Mail, Globe, User, Loader2, FileText, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface UserProfile {
@@ -39,46 +38,33 @@ export default function ViewerNetworkPageNew() {
   const fetchProfiles = async () => {
     try {
       setLoading(true);
-      
-      // Fetch profiles and all survey data in parallel (optimized: only 5 queries total)
-      const [profilesResult, survey2021Result, survey2022Result, survey2023Result, survey2024Result] = await Promise.all([
+
+      const [profilesResult, companyMembersResult, survey2021Result, survey2022Result, survey2023Result, survey2024Result] = await Promise.all([
         supabase
           .from('user_profiles')
           .select('id, email, company_name, description, website, profile_picture_url, user_role')
           .not('email', 'like', '%.test@escpnetwork.net')
           .order('company_name'),
-        supabase
-          .from('survey_responses_2021')
-          .select('user_id')
-          .eq('submission_status', 'completed'),
-        supabase
-          .from('survey_responses_2022')
-          .select('user_id')
-          .eq('submission_status', 'completed'),
-        supabase
-          .from('survey_responses_2023')
-          .select('user_id')
-          .eq('submission_status', 'completed'),
-        supabase
-          .from('survey_responses_2024')
-          .select('user_id')
-          .eq('submission_status', 'completed')
+        supabase.from('company_members').select('member_user_id'),
+        supabase.from('survey_responses_2021').select('user_id').eq('submission_status', 'completed'),
+        supabase.from('survey_responses_2022').select('user_id').eq('submission_status', 'completed'),
+        supabase.from('survey_responses_2023').select('user_id').eq('submission_status', 'completed'),
+        supabase.from('survey_responses_2024').select('user_id').eq('submission_status', 'completed')
       ]);
 
       if (profilesResult.error) throw profilesResult.error;
 
-      // Create a Set of user_ids that have completed surveys (fast lookup)
+      const secondaryMemberIds = new Set((companyMembersResult.data || []).map((m: { member_user_id: string }) => m.member_user_id));
+      const allProfiles = (profilesResult.data || []).filter((p: { id: string }) => !secondaryMemberIds.has(p.id));
+
       const usersWithSurveys = new Set<string>();
       [survey2021Result.data, survey2022Result.data, survey2023Result.data, survey2024Result.data].forEach(surveyData => {
-        (surveyData || []).forEach(survey => {
-          if (survey.user_id) {
-            usersWithSurveys.add(survey.user_id);
-          }
+        (surveyData || []).forEach((survey: { user_id?: string }) => {
+          if (survey.user_id) usersWithSurveys.add(survey.user_id);
         });
       });
 
-      // Map profiles and check survey status in memory (no additional queries)
-      const profilesWithSurveys = (profilesResult.data || []).map(profile => ({
+      const profilesWithSurveys = allProfiles.map((profile: any) => ({
         ...profile,
         has_surveys: usersWithSurveys.has(profile.id)
       }));
@@ -122,27 +108,10 @@ export default function ViewerNetworkPageNew() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 px-4">
-        <div className="mb-8">
-          <div className="h-10 bg-gray-200 rounded-md animate-pulse max-w-md"></div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <Card key={i} className="relative overflow-hidden min-h-[400px] animate-pulse">
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400"></div>
-              <div className="relative z-10 h-full flex flex-col justify-end p-6 space-y-4">
-                <div className="h-6 bg-gray-500/50 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-500/40 rounded w-1/2"></div>
-                <div className="h-4 bg-gray-500/40 rounded w-2/3"></div>
-                <div className="h-3 bg-gray-500/30 rounded w-full"></div>
-                <div className="h-3 bg-gray-500/30 rounded w-5/6"></div>
-                <div className="flex gap-2 pt-2">
-                  <div className="h-6 bg-gray-500/40 rounded-full w-16"></div>
-                  <div className="h-6 bg-gray-500/40 rounded-full w-24"></div>
-                </div>
-              </div>
-            </Card>
-          ))}
+      <div className="min-h-screen bg-navy-950 font-sans p-6 sm:p-8 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-12 w-12 text-gold-500 animate-spin" />
+          <p className="text-navy-300 animate-pulse">Loading Network...</p>
         </div>
       </div>
     );
@@ -150,37 +119,37 @@ export default function ViewerNetworkPageNew() {
 
   return (
     <>
-      <div 
-        className="min-h-screen"
-        style={{
-          backgroundImage: 'url(/member.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-        }}
-      >
-        <div className="container mx-auto py-8 px-4 relative z-10">
-        <div className="mb-8">
-          <Input
-            placeholder="Search by company name, email, or description..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="max-w-md bg-white/95 backdrop-blur-sm border-gray-300/50 shadow-lg"
-          />
-        </div>
+      <div className="min-h-screen bg-navy-950 font-sans p-6 sm:p-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div>
+              <span className="section-label text-gold-400/90">Network</span>
+              <h1 className="text-2xl sm:text-3xl font-display font-normal text-white mt-1 tracking-tight">Network Directory</h1>
+              <div className="w-14 h-0.5 bg-gold-500/60 mt-3 rounded-full" />
+              <p className="text-navy-200 mt-3">Browse fund managers in the CFF Network. Only primary account holders are listed.</p>
+            </div>
+          </div>
+
+          <div className="glass-card rounded-2xl p-4 sm:p-6">
+            <div className="relative w-full max-w-md">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-navy-400" />
+              <Input
+                placeholder="Search by company name, email, or description..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-12 bg-navy-900/50 border-navy-700 text-white placeholder:text-navy-400 focus:border-gold-500/50 focus:ring-gold-500/20 rounded-xl h-12"
+              />
+            </div>
+          </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProfiles.map((profile) => {
           const isClickable = profile.has_surveys;
-          
           return (
-            <Card 
-              key={profile.id} 
-              className={`transition-shadow relative overflow-hidden min-h-[400px] bg-slate-900 border-2 border-slate-600/80 shadow-xl ${
-                isClickable 
-                  ? 'hover:shadow-2xl cursor-pointer hover:border-primary hover:scale-[1.02]' 
-                  : 'opacity-75'
+            <Card
+              key={profile.id}
+              className={`transition-all duration-300 relative overflow-hidden min-h-[380px] bg-navy-900/60 backdrop-blur-sm border border-navy-700 hover:border-gold-500/30 ${
+                isClickable ? 'cursor-pointer hover:shadow-xl hover:shadow-gold-900/10 hover:-translate-y-0.5' : 'opacity-80'
               }`}
               onClick={() => handleCardClick(profile)}
             >
@@ -289,9 +258,10 @@ export default function ViewerNetworkPageNew() {
       </div>
 
       {filteredProfiles.length === 0 && (
-        <div className="text-center py-12">
-          <User className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-          <p className="text-muted-foreground">No profiles found matching your search</p>
+        <div className="text-center py-20 bg-navy-900/30 rounded-2xl border border-navy-800 border-dashed">
+          <User className="w-16 h-16 mx-auto text-navy-600 mb-4" />
+          <h3 className="text-xl font-semibold text-white mb-2">No profiles found</h3>
+          <p className="text-navy-300">Try adjusting your search</p>
         </div>
       )}
         </div>

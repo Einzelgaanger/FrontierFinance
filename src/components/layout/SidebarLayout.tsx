@@ -89,82 +89,82 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
   };
 
   const navigationItems = [
-    { 
-      name: "Dashboard", 
-      href: "/dashboard", 
-      icon: Home, 
+    {
+      name: "Dashboard",
+      href: "/dashboard",
+      icon: Home,
       roles: ["admin", "member", "viewer"],
       description: (userRole === "viewer" || !userRole) ? "Your overview and insights" : userRole === "member" ? "Your member dashboard and activity" : "Overview and analytics",
       badge: null,
       color: "blue"
     },
-    { 
-      name: "Network", 
-      href: "/network", 
-      icon: Users, 
+    {
+      name: "Network",
+      href: "/network",
+      icon: Users,
       roles: ["admin", "member", "viewer"],
       description: (userRole === "viewer" || !userRole) ? "Browse approved fund managers" : "Fund manager directory",
       badge: null,
       color: "green"
     },
-    { 
-      name: "Application", 
-      href: "/application", 
-      icon: ClipboardList, 
+    {
+      name: "Application",
+      href: "/application",
+      icon: ClipboardList,
       roles: ["viewer"],
       description: "Submit membership application",
       badge: null,
       color: "orange"
     },
-    { 
-      name: "Community hub", 
-      href: "/community", 
-      icon: Newspaper, 
+    {
+      name: "Community hub",
+      href: "/community",
+      icon: Newspaper,
       roles: ["admin", "member", "viewer"],
       description: "Network updates & learning resources",
       badge: null,
       color: "teal"
     },
-    { 
-      name: "Analytics", 
-      href: "/analytics", 
-      icon: BarChart3, 
+    {
+      name: "Analytics",
+      href: "/analytics",
+      icon: BarChart3,
       roles: ["admin"],
       description: "Data insights and reports",
       badge: null,
       color: "red"
     },
-    { 
-      name: "Launch +", 
-      href: "/admin/launch-plus-analytics", 
-      icon: Rocket, 
+    {
+      name: "Launch +",
+      href: "/admin/launch-plus-analytics",
+      icon: Rocket,
       roles: ["admin"],
       description: "LAUNCH+ assessment submissions",
       badge: null,
       color: "purple"
     },
-    { 
-      name: "Admin Panel", 
-      href: "/admin", 
-      icon: LockKeyhole, 
+    {
+      name: "Admin Panel",
+      href: "/admin",
+      icon: LockKeyhole,
       roles: ["admin"],
       description: "User and system management",
       badge: null,
       color: "black"
     },
-    { 
-      name: "My Profile", 
-      href: "/profile", 
-      icon: UserCircle, 
+    {
+      name: "My Profile",
+      href: "/profile",
+      icon: UserCircle,
       roles: ["admin", "member", "viewer"],
       description: "Manage your company information and profile",
       badge: null,
       color: "indigo"
     },
-    { 
-      name: "Portiq", 
-      href: "/admin-chat", 
-      icon: Brain, 
+    {
+      name: "Portiq",
+      href: "/admin-chat",
+      icon: Brain,
       roles: ["admin"],
       description: "Personal AI chat assistant",
       badge: null,
@@ -173,7 +173,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
   ];
 
 
-  const filteredNavItems = navigationItems.filter(item => 
+  const filteredNavItems = navigationItems.filter(item =>
     userRole ? item.roles.includes(userRole) : item.roles.includes('viewer')
   );
 
@@ -241,14 +241,14 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     <div className="min-h-screen transition-all duration-300 bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden backdrop-blur-sm"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <div 
+      <div
         className={cn(
           "fixed inset-y-0 left-0 z-50 transform transition-all duration-300 ease-in-out lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
@@ -259,9 +259,9 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
         <div className="flex flex-col h-screen overflow-hidden">
           {/* CFF Logo at Top */}
           <div className="p-4 border-b border-slate-700/50">
-            <img 
-              src="/CFF%20LOGO.png" 
-              alt="CFF Logo" 
+            <img
+              src="/CFF%20LOGO.png"
+              alt="CFF Logo"
               className="h-12 w-auto object-contain mx-auto"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
@@ -276,23 +276,23 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
               const Icon = item.icon;
               const active = isActive(item.href);
               const isPortiq = item.name === "Portiq";
-              
+
               return (
                 <button
                   key={item.name}
                   onClick={() => handleNavigation(item.href)}
                   className={cn(
                     "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group",
-                    active 
-                      ? "bg-blue-600 text-white" 
+                    active
+                      ? "bg-blue-600 text-white"
                       : "text-slate-300 hover:bg-cyan-600/20 hover:text-white"
                   )}
                   title={item.name}
                 >
                   {isPortiq ? (
-                    <img 
-                      src="/robot.png" 
-                      alt="Portiq" 
+                    <img
+                      src="/robot.png"
+                      alt="Portiq"
                       className="w-5 h-5 flex-shrink-0 object-contain"
                     />
                   ) : (
@@ -311,16 +311,16 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
               <p className="text-xs text-slate-400 mb-1">Email</p>
               <p className="text-sm text-white truncate">{user?.email}</p>
             </div>
-            
+
             {/* Profile Picture */}
             <div className="flex items-center gap-3 px-4">
-{avatarUrl ? (
-              <img src={avatarUrl} alt="Profile" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
-            ) : (
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
-                {user?.email?.charAt(0).toUpperCase() || 'U'}
-              </div>
-            )}
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Profile" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+              ) : (
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+                  {user?.email?.charAt(0).toUpperCase() || 'U'}
+                </div>
+              )}
               <div>
                 <p className="text-sm font-medium text-white capitalize">
                   {userRole || 'Viewer'}
@@ -352,101 +352,101 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
               >
                 <Menu className="w-5 h-5" />
               </Button>
-              
-                <div>
-                  {location.pathname === '/dashboard' && userRole === 'admin' ? (
-                    <>
-                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
-                        Welcome back, Administrator
-                      </h2>
-                      <p className="text-sm text-white/70 transition-colors">
-                        Here's what's happening with your network today
-                      </p>
-                    </>
-                  ) : location.pathname === '/dashboard' && userRole === 'viewer' ? (
-                    <>
-                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
-                        Welcome to CFF Network
-                      </h2>
-                      <p className="text-sm md:text-base text-white/90 transition-colors mt-1 font-medium">
-                        Connect with <span className="font-bold text-white">200+ fund managers</span> worldwide • Access <span className="font-bold text-white">4 years</span> of market insights • Join the <span className="font-bold text-white">frontier finance</span> revolution
-                      </p>
-                    </>
-                  ) : location.pathname === '/dashboard' && userRole === 'member' ? (
-                    <>
-                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
-                        Welcome back, {user?.email?.split('@')[0] || 'Member'}!
-                      </h2>
-                      <p className="text-sm text-white/70 transition-colors">
-                        Your gateway to global fund management excellence.
-                      </p>
-                    </>
-                  ) : location.pathname.startsWith('/network/fund-manager/') ? (
-                    <div className="flex items-center space-x-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => navigate('/network')}
-                        className="flex items-center space-x-2 border-white/30 text-white hover:bg-white/20 bg-white/5"
-                      >
-                        <ArrowLeft className="w-4 h-4" />
-                        <span>Back to Network</span>
-                      </Button>
-                      <div className="h-6 w-px bg-white/30"></div>
-                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
-                        Fund Manager Details
-                      </h2>
-                    </div>
-                  ) : location.pathname === '/application' ? (
-                    <>
-                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
-                        Membership Application
-                      </h2>
-                      <p className="text-sm text-white/70 transition-colors">
-                        Join the CFF Network and connect with global fund managers
-                      </p>
-                    </>
-                  ) : location.pathname === '/community' || location.pathname === '/blogs' ? (
-                    <>
-                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
-                        Community hub
-                      </h2>
-                      <p className="text-sm text-white/70 transition-colors">
-                        Network updates, perspectives and structured learning for fund managers
-                      </p>
-                    </>
-                  ) : location.pathname === '/profile' ? (
-                    <>
-                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
-                        Company Profile
-                      </h2>
-                      <p className="text-sm text-white/70 transition-colors">
-                        Update your company information
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
-                        {location.pathname.startsWith('/survey') && 'Surveys'}
-                        {location.pathname === '/network' && 'Network Directory'}
-                        {location.pathname === '/analytics' && 'Analytics Hub'}
-                        {location.pathname === '/admin/launch-plus-analytics' && 'Launch + Analytics'}
-                        {(location.pathname === '/admin' || (location.pathname.startsWith('/admin') && location.pathname !== '/admin/launch-plus-analytics')) && 'Admin Panel'}
-                        {location.pathname === '/admin-chat' && 'Portiq - AI Assistant'}
-                      </h2>
-                      <p className="text-sm text-white/70 transition-colors">
-                        {location.pathname.startsWith('/survey') && 'Complete and view survey responses'}
-                        {location.pathname === '/network' && 'Browse and connect with fund managers'}
-                        {location.pathname === '/analytics' && 'Data insights and comprehensive reports'}
-                        {location.pathname === '/admin/launch-plus-analytics' && 'View and analyze LAUNCH+ assessment submissions'}
-                        {(location.pathname === '/admin' || (location.pathname.startsWith('/admin') && location.pathname !== '/admin/launch-plus-analytics')) && 'Manage users, content, and system settings'}
-                        {location.pathname === '/admin-chat' && 'Your intelligent assistant for data insights and analysis'}
-                      </p>
-                    </>
-                  )}
-                </div>
+
+              <div>
+                {location.pathname === '/dashboard' && userRole === 'admin' ? (
+                  <>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
+                      Welcome back, Administrator
+                    </h2>
+                    <p className="text-sm text-white/70 transition-colors">
+                      Here's what's happening with your network today
+                    </p>
+                  </>
+                ) : location.pathname === '/dashboard' && userRole === 'viewer' ? (
+                  <>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
+                      Welcome to CFF Network
+                    </h2>
+                    <p className="text-sm md:text-base text-white/90 transition-colors mt-1 font-medium">
+                      Connect with <span className="font-bold text-white">200+ fund managers</span> worldwide • Access <span className="font-bold text-white">4 years</span> of market insights • Join the <span className="font-bold text-white">frontier finance</span> revolution
+                    </p>
+                  </>
+                ) : location.pathname === '/dashboard' && userRole === 'member' ? (
+                  <>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
+                      Welcome back, {user?.email?.split('@')[0] || 'Member'}!
+                    </h2>
+                    <p className="text-sm text-white/70 transition-colors">
+                      Your gateway to global fund management excellence.
+                    </p>
+                  </>
+                ) : location.pathname.startsWith('/network/fund-manager/') ? (
+                  <div className="flex items-center space-x-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/network')}
+                      className="flex items-center space-x-2 border-white/30 text-white hover:bg-white/20 bg-white/5"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      <span>Back to Network</span>
+                    </Button>
+                    <div className="h-6 w-px bg-white/30"></div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
+                      Fund Manager Details
+                    </h2>
+                  </div>
+                ) : location.pathname === '/application' ? (
+                  <>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
+                      Membership Application
+                    </h2>
+                    <p className="text-sm text-white/70 transition-colors">
+                      Join the CFF Network and connect with global fund managers
+                    </p>
+                  </>
+                ) : location.pathname === '/community' || location.pathname === '/blogs' ? (
+                  <>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
+                      Community hub
+                    </h2>
+                    <p className="text-sm text-white/70 transition-colors">
+                      Network updates, perspectives and structured learning for fund managers
+                    </p>
+                  </>
+                ) : location.pathname === '/profile' ? (
+                  <>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
+                      Company Profile
+                    </h2>
+                    <p className="text-sm text-white/70 transition-colors">
+                      Update your company information
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white transition-colors">
+                      {location.pathname.startsWith('/survey') && 'Surveys'}
+                      {location.pathname === '/network' && 'Network Directory'}
+                      {location.pathname === '/analytics' && 'Analytics Hub'}
+                      {location.pathname === '/admin/launch-plus-analytics' && 'Launch + Analytics'}
+                      {(location.pathname === '/admin' || (location.pathname.startsWith('/admin') && location.pathname !== '/admin/launch-plus-analytics')) && 'Admin Panel'}
+                      {location.pathname === '/admin-chat' && 'Portiq - AI Assistant'}
+                    </h2>
+                    <p className="text-sm text-white/70 transition-colors">
+                      {location.pathname.startsWith('/survey') && 'Complete and view survey responses'}
+                      {location.pathname === '/network' && 'Browse and connect with fund managers'}
+                      {location.pathname === '/analytics' && 'Data insights and comprehensive reports'}
+                      {location.pathname === '/admin/launch-plus-analytics' && 'View and analyze LAUNCH+ assessment submissions'}
+                      {(location.pathname === '/admin' || (location.pathname.startsWith('/admin') && location.pathname !== '/admin/launch-plus-analytics')) && 'Manage users, content, and system settings'}
+                      {location.pathname === '/admin-chat' && 'Your intelligent assistant for data insights and analysis'}
+                    </p>
+                  </>
+                )}
+              </div>
             </div>
-            
+
             <div className="flex items-center gap-2">
               {headerActions}
             </div>

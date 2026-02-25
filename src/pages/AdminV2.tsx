@@ -15,19 +15,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { 
-  Shield, 
-  User, 
-  FileText, 
-  Clock, 
-  CheckCircle, 
-  Users, 
-  Activity, 
-  UserPlus, 
-  Mail, 
-  MapPin, 
-  Calendar, 
-  XCircle, 
+import {
+  Shield,
+  User,
+  FileText,
+  Clock,
+  CheckCircle,
+  Users,
+  Activity,
+  UserPlus,
+  Mail,
+  MapPin,
+  Calendar,
+  XCircle,
   Eye,
   RefreshCw,
   Search,
@@ -117,7 +117,7 @@ interface ActivityLog {
 const getTimeAgo = (date: Date): string => {
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  
+
   if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
   if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
   if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
@@ -210,11 +210,11 @@ function EnhancedActivityLog(props: { activityLogs: ActivityLog[]; getTimeAgo: (
   };
 
   return (
-    <Card className="border border-slate-200 bg-white shadow-sm overflow-hidden">
-      <CardHeader className="border-b border-slate-200 bg-slate-50/50">
+    <Card className="border border-slate-100 bg-white shadow-sm rounded-2xl overflow-hidden">
+      <CardHeader className="border-b border-slate-100 bg-slate-50/50">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <CardTitle className="text-lg font-semibold text-slate-900">Activity log</CardTitle>
+            <CardTitle className="text-lg font-semibold text-navy-900">Activity log</CardTitle>
             <CardDescription className="text-slate-500 mt-0.5">
               System events, user actions, and admin changes. Use search and filters to narrow results.
             </CardDescription>
@@ -304,7 +304,7 @@ function EnhancedActivityLog(props: { activityLogs: ActivityLog[]; getTimeAgo: (
 const AdminV2 = () => {
   const { user, userRole } = useAuth();
   const { toast } = useToast();
-  
+
   // State management
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
@@ -337,7 +337,7 @@ const AdminV2 = () => {
       if (profilesResult.error) {
         console.error('Error fetching profiles:', profilesResult.error);
       }
-      
+
       let activityLogsData: any[] = [];
       if (logsResult.error) {
         console.error('Error fetching activity logs:', logsResult.error);
@@ -401,7 +401,7 @@ const AdminV2 = () => {
     // Subscribe to applications table changes
     const applicationsSubscription = supabase
       .channel('applications-changes')
-      .on('postgres_changes', 
+      .on('postgres_changes',
         { event: '*', schema: 'public', table: 'applications' },
         (payload) => {
           console.log('Applications change detected:', payload);
@@ -430,9 +430,9 @@ const AdminV2 = () => {
                   .single()
                   .then(({ data }) => {
                     if (data) {
-                      setActivityLogs(current => 
-                        current.map(log => 
-                          log.id === newLog.id 
+                      setActivityLogs(current =>
+                        current.map(log =>
+                          log.id === newLog.id
                             ? { ...log, user: data }
                             : log
                         )
@@ -527,26 +527,26 @@ const AdminV2 = () => {
       return date >= lastMonth && date < thisMonth;
     }).length;
 
-    const applicationsGrowth = lastMonthRequests > 0 
-      ? ((thisMonthRequests - lastMonthRequests) / lastMonthRequests) * 100 
+    const applicationsGrowth = lastMonthRequests > 0
+      ? ((thisMonthRequests - lastMonthRequests) / lastMonthRequests) * 100
       : thisMonthRequests > 0 ? 100 : 0;
 
-    const usersGrowth = lastMonthProfiles > 0 
-      ? ((thisMonthProfiles - lastMonthProfiles) / lastMonthProfiles) * 100 
+    const usersGrowth = lastMonthProfiles > 0
+      ? ((thisMonthProfiles - lastMonthProfiles) / lastMonthProfiles) * 100
       : thisMonthProfiles > 0 ? 100 : 0;
 
     // Calculate average processing time (for approved/rejected)
-    const processedRequests = membershipRequests.filter(r => 
+    const processedRequests = membershipRequests.filter(r =>
       r.status === 'approved' || r.status === 'rejected'
     );
     const avgProcessingDays = processedRequests.length > 0
       ? processedRequests.reduce((sum, r) => {
-          if (r.created_at && r.reviewed_at) {
-            const days = (new Date(r.reviewed_at).getTime() - new Date(r.created_at).getTime()) / (1000 * 60 * 60 * 24);
-            return sum + days;
-          }
-          return sum;
-        }, 0) / processedRequests.length
+        if (r.created_at && r.reviewed_at) {
+          const days = (new Date(r.reviewed_at).getTime() - new Date(r.created_at).getTime()) / (1000 * 60 * 60 * 24);
+          return sum + days;
+        }
+        return sum;
+      }, 0) / processedRequests.length
       : 0;
 
     // Calculate additional metrics
@@ -577,20 +577,20 @@ const AdminV2 = () => {
   // Filter data
   const filteredRequests = useMemo(() => {
     let filtered = membershipRequests;
-    
-     if (searchTerm) {
-       filtered = filtered.filter(request =>
-         (request.applicant_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
-         request.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         request.vehicle_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         (request.company_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
-       );
-     }
-    
+
+    if (searchTerm) {
+      filtered = filtered.filter(request =>
+        (request.applicant_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
+        request.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        request.vehicle_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (request.company_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
+      );
+    }
+
     if (statusFilter !== 'all') {
       filtered = filtered.filter(request => request.status === statusFilter);
     }
-    
+
     return filtered;
   }, [membershipRequests, searchTerm, statusFilter]);
 
@@ -615,7 +615,7 @@ const AdminV2 = () => {
         points_earned: 0,
         description: `Application ${status} for ${membershipRequests.find(r => r.id === requestId)?.applicant_name || 'unknown'}`
       };
-      
+
       const { error: logError } = await supabase.from('activity_log').insert(activityData);
       if (logError) {
         // Try alternative table name
@@ -659,7 +659,7 @@ const AdminV2 = () => {
     });
 
     return last7Days.map(date => {
-      const dayRequests = membershipRequests.filter(r => 
+      const dayRequests = membershipRequests.filter(r =>
         r.created_at && r.created_at.split('T')[0] === date
       );
       return {
@@ -698,7 +698,7 @@ const AdminV2 = () => {
     // Get date range from first application to today
     const firstDate = new Date(sortedRequests[0].created_at!);
     const today = new Date();
-    
+
     // Group by month for better visualization
     const monthlyData: Record<string, {
       date: string;
@@ -712,14 +712,14 @@ const AdminV2 = () => {
     // Initialize all months from first application to today
     const currentDate = new Date(firstDate);
     currentDate.setDate(1); // Start of month
-    
+
     while (currentDate <= today) {
       const monthKey = currentDate.toISOString().slice(0, 7); // YYYY-MM
-      const displayDate = currentDate.toLocaleDateString('en-US', { 
-        month: 'short', 
+      const displayDate = currentDate.toLocaleDateString('en-US', {
+        month: 'short',
         year: 'numeric'
       });
-      
+
       monthlyData[monthKey] = {
         date: displayDate,
         dateValue: monthKey,
@@ -728,7 +728,7 @@ const AdminV2 = () => {
         rejected: 0,
         pending: 0
       };
-      
+
       // Move to next month
       currentDate.setMonth(currentDate.getMonth() + 1);
     }
@@ -793,13 +793,17 @@ const AdminV2 = () => {
 
   return (
     <SidebarLayout>
-      <div className="min-h-screen bg-slate-50/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="min-h-screen bg-gradient-to-b from-navy-50/40 via-white to-slate-50/60 font-sans">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
           {/* Page header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
             <div>
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Admin Dashboard</h1>
-              <p className="text-sm text-slate-500 mt-1">
+              <span className="section-label text-gold-600">Admin</span>
+              <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">
+                Admin Dashboard
+              </h1>
+              <div className="w-14 h-0.5 bg-gold-500/60 mt-3 rounded-full" />
+              <p className="text-sm text-slate-600 mt-3 max-w-xl">
                 Overview of applications, members, and community activity
               </p>
             </div>
@@ -808,7 +812,7 @@ const AdminV2 = () => {
               size="sm"
               onClick={() => fetchAllData()}
               disabled={loading}
-              className="border-slate-200 text-slate-600 hover:bg-slate-50 shrink-0"
+              className="border-navy-200 text-navy-800 hover:bg-navy-50 hover:border-gold-300 shrink-0 rounded-xl transition-colors"
             >
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
               Refresh
@@ -816,8 +820,8 @@ const AdminV2 = () => {
           </div>
 
           {/* KPI cards – meaningful, readable metrics */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-            <Card className="bg-white border-slate-200 shadow-sm rounded-xl overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
+            <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl overflow-hidden hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
@@ -838,7 +842,7 @@ const AdminV2 = () => {
               </CardContent>
             </Card>
 
-            <Card className={`bg-white border shadow-sm rounded-xl overflow-hidden ${stats.pendingRequests > 0 ? 'border-amber-200 ring-1 ring-amber-100' : 'border-slate-200'}`}>
+            <Card className={`bg-white border shadow-sm rounded-2xl overflow-hidden transition-all duration-300 ${stats.pendingRequests > 0 ? 'border-amber-200 ring-1 ring-amber-100 hover:shadow-md' : 'border-slate-100 hover:shadow-md hover:border-gold-200/50'}`}>
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
@@ -855,7 +859,7 @@ const AdminV2 = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-slate-200 shadow-sm rounded-xl overflow-hidden">
+            <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl overflow-hidden hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
@@ -872,7 +876,7 @@ const AdminV2 = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-slate-200 shadow-sm rounded-xl overflow-hidden">
+            <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl overflow-hidden hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
@@ -889,7 +893,7 @@ const AdminV2 = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-slate-200 shadow-sm rounded-xl overflow-hidden">
+            <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl overflow-hidden hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
@@ -907,173 +911,175 @@ const AdminV2 = () => {
 
           {/* Main Dashboard Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3 bg-white border border-slate-200 shadow-sm rounded-xl p-1.5 h-12">
-              <TabsTrigger 
-                value="overview" 
-                className="data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 font-medium"
+            <TabsList className="grid w-full grid-cols-3 bg-white border border-slate-100 shadow-sm rounded-2xl p-1.5 h-12">
+              <TabsTrigger
+                value="overview"
+                className="data-[state=active]:bg-navy-900 data-[state=active]:text-white data-[state=active]:shadow-md rounded-xl text-slate-600 font-medium transition-all"
               >
                 <LayoutDashboard className="w-4 h-4 mr-2" />
                 Overview
               </TabsTrigger>
-              <TabsTrigger 
-                value="applications" 
-                className="data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 font-medium"
+              <TabsTrigger
+                value="applications"
+                className="data-[state=active]:bg-navy-900 data-[state=active]:text-white data-[state=active]:shadow-md rounded-xl text-slate-600 font-medium transition-all"
               >
                 <ClipboardCheck className="w-4 h-4 mr-2" />
                 Applications
               </TabsTrigger>
-              <TabsTrigger 
-                value="activity" 
-                className="data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-sm text-slate-600 font-medium"
+              <TabsTrigger
+                value="activity"
+                className="data-[state=active]:bg-navy-900 data-[state=active]:text-white data-[state=active]:shadow-md rounded-xl text-slate-600 font-medium transition-all"
               >
                 <History className="w-4 h-4 mr-2" />
                 Activity
               </TabsTrigger>
             </TabsList>
 
-                    {/* Overview Tab */}
-                    <TabsContent value="overview" className="space-y-8 mt-6">
-                      <div>
-                        <h2 className="text-base font-semibold text-slate-900 mb-1">Applications pipeline</h2>
-                        <p className="text-sm text-slate-500">Trends and distribution over time.</p>
-                      </div>
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Applications Trend Chart */}
-                        <Card className="border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
-                          <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
-                            <CardTitle className="text-base font-semibold text-slate-900">Applications this week</CardTitle>
-                            <CardDescription className="text-slate-500 text-sm mt-0.5">Daily submissions by outcome</CardDescription>
-                          </CardHeader>
-                          <CardContent className="pt-6">
-                            <ResponsiveContainer width="100%" height={300}>
-                              <BarChart data={chartData}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                                <XAxis dataKey="date" stroke="#64748b" fontSize={12} />
-                                <YAxis stroke="#64748b" fontSize={12} />
-                                <Tooltip 
-                                  contentStyle={{ 
-                                    backgroundColor: 'white', 
-                                    border: '1px solid #e2e8f0',
-                                    borderRadius: '6px',
-                                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                                    fontSize: '12px'
-                                  }} 
-                                />
-                                <Legend wrapperStyle={{ fontSize: '12px' }} />
-                                <Bar dataKey="applications" fill="#475569" name="Total Applications" radius={[4, 4, 0, 0]} />
-                                <Bar dataKey="approved" fill="#059669" name="Approved" radius={[4, 4, 0, 0]} />
-                                <Bar dataKey="rejected" fill="#dc2626" name="Rejected" radius={[4, 4, 0, 0]} />
-                              </BarChart>
-                            </ResponsiveContainer>
-                          </CardContent>
-                        </Card>
+            {/* Overview Tab */}
+            <TabsContent value="overview" className="space-y-8 mt-6">
+              <div>
+                <span className="section-label text-gold-600">Insights</span>
+                <h2 className="text-xl font-display font-normal text-navy-900 mt-1">Applications pipeline</h2>
+                <p className="text-sm text-slate-600 mt-1">Trends and distribution over time.</p>
+                <div className="w-14 h-0.5 bg-gold-500/60 mt-2 rounded-full" />
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Applications Trend Chart */}
+                <Card className="border border-slate-100 bg-white shadow-sm rounded-2xl overflow-hidden">
+                  <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+                    <CardTitle className="text-base font-semibold text-navy-900">Applications this week</CardTitle>
+                    <CardDescription className="text-slate-500 text-sm mt-0.5">Daily submissions by outcome</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                        <XAxis dataKey="date" stroke="#64748b" fontSize={12} />
+                        <YAxis stroke="#64748b" fontSize={12} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: 'white',
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '6px',
+                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                            fontSize: '12px'
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: '12px' }} />
+                        <Bar dataKey="applications" fill="#475569" name="Total Applications" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="approved" fill="#059669" name="Approved" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="rejected" fill="#dc2626" name="Rejected" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
 
-                        {/* Status Distribution */}
-                        <Card className="border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
-                          <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
-                            <CardTitle className="text-base font-semibold text-slate-900">Status breakdown</CardTitle>
-                            <CardDescription className="text-slate-500 text-sm mt-0.5">Pending, approved, and rejected</CardDescription>
-                          </CardHeader>
-                          <CardContent className="pt-6">
-                            <ResponsiveContainer width="100%" height={300}>
-                              <RechartsPieChart>
-                                <Pie
-                                  data={statusDistribution}
-                                  cx="50%"
-                                  cy="50%"
-                                  innerRadius={60}
-                                  outerRadius={120}
-                                  paddingAngle={2}
-                                  dataKey="value"
-                                >
-                                  {statusDistribution.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.color} stroke="#fff" strokeWidth={2} />
-                                  ))}
-                                </Pie>
-                                <Tooltip 
-                                  contentStyle={{ 
-                                    backgroundColor: 'white', 
-                                    border: '1px solid #e2e8f0',
-                                    borderRadius: '6px',
-                                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                                    fontSize: '12px'
-                                  }} 
-                                />
-                                <Legend wrapperStyle={{ fontSize: '12px' }} />
-                              </RechartsPieChart>
-                            </ResponsiveContainer>
-                          </CardContent>
-                        </Card>
-                      </div>
+                {/* Status Distribution */}
+                <Card className="border border-slate-100 bg-white shadow-sm rounded-2xl overflow-hidden">
+                  <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+                    <CardTitle className="text-base font-semibold text-navy-900">Status breakdown</CardTitle>
+                    <CardDescription className="text-slate-500 text-sm mt-0.5">Pending, approved, and rejected</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <RechartsPieChart>
+                        <Pie
+                          data={statusDistribution}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={120}
+                          paddingAngle={2}
+                          dataKey="value"
+                        >
+                          {statusDistribution.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} stroke="#fff" strokeWidth={2} />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: 'white',
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '6px',
+                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                            fontSize: '12px'
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: '12px' }} />
+                      </RechartsPieChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </div>
 
-                      {/* Application Lifetime Chart */}
-                      <Card className="border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
-                        <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
-                          <CardTitle className="text-base font-semibold text-slate-900">Applications over time</CardTitle>
-                          <CardDescription className="text-slate-500 text-sm mt-0.5">Cumulative applications, approved, rejected, and pending</CardDescription>
-                        </CardHeader>
-                        <CardContent className="pt-6">
-                          <ResponsiveContainer width="100%" height={300}>
-                            <LineChart data={lifetimeData}>
-                              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                              <XAxis 
-                                dataKey="date" 
-                                stroke="#64748b" 
-                                fontSize={12} 
-                                tick={{ fill: '#64748b' }}
-                              />
-                              <YAxis stroke="#64748b" fontSize={12} tick={{ fill: '#64748b' }} label={{ value: 'Applications', angle: -90, position: 'insideLeft', fill: '#64748b' }} />
-                              <Tooltip 
-                                contentStyle={{ 
-                                  backgroundColor: 'white', 
-                                  border: '1px solid #e2e8f0',
-                                  borderRadius: '6px',
-                                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                                  fontSize: '12px'
-                                }} 
-                              />
-                              <Legend wrapperStyle={{ fontSize: '12px' }} />
-                              <Line 
-                                type="monotone" 
-                                dataKey="applications" 
-                                stroke="#475569" 
-                                strokeWidth={2}
-                                name="Total Applications"
-                                dot={{ fill: '#475569', r: 4 }}
-                                activeDot={{ r: 6 }}
-                              />
-                              <Line 
-                                type="monotone" 
-                                dataKey="approved" 
-                                stroke="#059669" 
-                                strokeWidth={2}
-                                name="Approved"
-                                dot={{ fill: '#059669', r: 4 }}
-                                activeDot={{ r: 6 }}
-                              />
-                              <Line 
-                                type="monotone" 
-                                dataKey="rejected" 
-                                stroke="#dc2626" 
-                                strokeWidth={2}
-                                name="Rejected"
-                                dot={{ fill: '#dc2626', r: 4 }}
-                                activeDot={{ r: 6 }}
-                              />
-                              <Line 
-                                type="monotone" 
-                                dataKey="pending" 
-                                stroke="#D97706" 
-                                strokeWidth={2}
-                                name="Pending"
-                                dot={{ fill: '#D97706', r: 4 }}
-                                activeDot={{ r: 6 }}
-                              />
-                            </LineChart>
-                          </ResponsiveContainer>
-                        </CardContent>
-                      </Card>
-                    </TabsContent>
+              {/* Application Lifetime Chart */}
+              <Card className="border border-slate-100 bg-white shadow-sm rounded-2xl overflow-hidden">
+                <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+                  <CardTitle className="text-base font-semibold text-navy-900">Applications over time</CardTitle>
+                  <CardDescription className="text-slate-500 text-sm mt-0.5">Cumulative applications, approved, rejected, and pending</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={lifetimeData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis
+                        dataKey="date"
+                        stroke="#64748b"
+                        fontSize={12}
+                        tick={{ fill: '#64748b' }}
+                      />
+                      <YAxis stroke="#64748b" fontSize={12} tick={{ fill: '#64748b' }} label={{ value: 'Applications', angle: -90, position: 'insideLeft', fill: '#64748b' }} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'white',
+                          border: '1px solid #e2e8f0',
+                          borderRadius: '6px',
+                          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                          fontSize: '12px'
+                        }}
+                      />
+                      <Legend wrapperStyle={{ fontSize: '12px' }} />
+                      <Line
+                        type="monotone"
+                        dataKey="applications"
+                        stroke="#475569"
+                        strokeWidth={2}
+                        name="Total Applications"
+                        dot={{ fill: '#475569', r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="approved"
+                        stroke="#059669"
+                        strokeWidth={2}
+                        name="Approved"
+                        dot={{ fill: '#059669', r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="rejected"
+                        stroke="#dc2626"
+                        strokeWidth={2}
+                        name="Rejected"
+                        dot={{ fill: '#dc2626', r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="pending"
+                        stroke="#D97706"
+                        strokeWidth={2}
+                        name="Pending"
+                        dot={{ fill: '#D97706', r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
             {/* Applications Tab */}
             <TabsContent value="applications" className="space-y-6">
@@ -1105,104 +1111,104 @@ const AdminV2 = () => {
             {selectedRequest && (
               <div className="space-y-6 pt-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                   <div className="space-y-4">
-                     <div>
-                       <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3 pb-2 border-b border-slate-200">Applicant Information</h3>
-                       <div className="space-y-3 text-sm">
-                         <div>
-                           <p className="text-slate-500 mb-1">Name</p>
-                           <p className="font-medium text-slate-900">{selectedRequest.applicant_name || 'Not provided'}</p>
-                         </div>
-                         <div>
-                           <p className="text-slate-500 mb-1">Email</p>
-                           <p className="font-medium text-slate-900">{selectedRequest.email}</p>
-                         </div>
-                         <div>
-                           <p className="text-slate-500 mb-1">Company</p>
-                           <p className="font-medium text-slate-900">{selectedRequest.company_name || selectedRequest.vehicle_name || 'Not provided'}</p>
-                         </div>
-                         <div>
-                           <p className="text-slate-500 mb-1">Role/Title</p>
-                           <p className="font-medium text-slate-900">{selectedRequest.role_job_title || 'Not provided'}</p>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                   <div className="space-y-4">
-                     <div>
-                       <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3 pb-2 border-b border-slate-200">Fund Information</h3>
-                       <div className="space-y-3 text-sm">
-                         <div>
-                           <p className="text-slate-500 mb-1">Vehicle Name</p>
-                           <p className="font-medium text-slate-900">{selectedRequest.vehicle_name || 'Not provided'}</p>
-                         </div>
-                         <div>
-                           <p className="text-slate-500 mb-1">Website</p>
-                           <p className="font-medium text-slate-900">{selectedRequest.organization_website || 'Not provided'}</p>
-                         </div>
-                         <div>
-                           <p className="text-slate-500 mb-1">Domicile Countries</p>
-                           <p className="font-medium text-slate-900">{selectedRequest.domicile_countries?.join(', ') || 'Not provided'}</p>
-                         </div>
-                         <div>
-                           <p className="text-slate-500 mb-1">Check Size</p>
-                           <p className="font-medium text-slate-900">{selectedRequest.typical_check_size || 'Not provided'}</p>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-                 
-                 {selectedRequest.team_overview && (
-                   <div className="border-t border-slate-200 pt-6">
-                     <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">Team Overview</h3>
-                     <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
-                       {selectedRequest.team_overview}
-                     </div>
-                   </div>
-                 )}
-                 
-                 {selectedRequest.investment_thesis && (
-                   <div className="border-t border-slate-200 pt-6">
-                     <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">Investment Thesis</h3>
-                     <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
-                       {selectedRequest.investment_thesis}
-                     </div>
-                   </div>
-                 )}
-                 
-                 <div className="grid grid-cols-3 gap-4 border-t border-slate-200 pt-6">
-                   <div>
-                     <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Number of Investments</p>
-                     <p className="text-sm font-semibold text-slate-900">{selectedRequest.number_of_investments || 'Not provided'}</p>
-                   </div>
-                   <div>
-                     <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Amount Raised</p>
-                     <p className="text-sm font-semibold text-slate-900">{selectedRequest.amount_raised_to_date || 'Not provided'}</p>
-                   </div>
-                   <div>
-                     <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Check Size</p>
-                     <p className="text-sm font-semibold text-slate-900">{selectedRequest.typical_check_size || 'Not provided'}</p>
-                   </div>
-                 </div>
-                 
-                 {selectedRequest.expectations_from_network && (
-                   <div className="border-t border-slate-200 pt-6">
-                     <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">Network Expectations</h3>
-                     <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
-                       {selectedRequest.expectations_from_network}
-                     </div>
-                   </div>
-                 )}
-                 
-                 {selectedRequest.how_heard_about_network && (
-                   <div className="border-t border-slate-200 pt-6">
-                     <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">How They Heard About Us</h3>
-                     <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg">
-                       {selectedRequest.how_heard_about_network}
-                     </div>
-                   </div>
-                 )}
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3 pb-2 border-b border-slate-200">Applicant Information</h3>
+                      <div className="space-y-3 text-sm">
+                        <div>
+                          <p className="text-slate-500 mb-1">Name</p>
+                          <p className="font-medium text-slate-900">{selectedRequest.applicant_name || 'Not provided'}</p>
+                        </div>
+                        <div>
+                          <p className="text-slate-500 mb-1">Email</p>
+                          <p className="font-medium text-slate-900">{selectedRequest.email}</p>
+                        </div>
+                        <div>
+                          <p className="text-slate-500 mb-1">Company</p>
+                          <p className="font-medium text-slate-900">{selectedRequest.company_name || selectedRequest.vehicle_name || 'Not provided'}</p>
+                        </div>
+                        <div>
+                          <p className="text-slate-500 mb-1">Role/Title</p>
+                          <p className="font-medium text-slate-900">{selectedRequest.role_job_title || 'Not provided'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3 pb-2 border-b border-slate-200">Fund Information</h3>
+                      <div className="space-y-3 text-sm">
+                        <div>
+                          <p className="text-slate-500 mb-1">Vehicle Name</p>
+                          <p className="font-medium text-slate-900">{selectedRequest.vehicle_name || 'Not provided'}</p>
+                        </div>
+                        <div>
+                          <p className="text-slate-500 mb-1">Website</p>
+                          <p className="font-medium text-slate-900">{selectedRequest.organization_website || 'Not provided'}</p>
+                        </div>
+                        <div>
+                          <p className="text-slate-500 mb-1">Domicile Countries</p>
+                          <p className="font-medium text-slate-900">{selectedRequest.domicile_countries?.join(', ') || 'Not provided'}</p>
+                        </div>
+                        <div>
+                          <p className="text-slate-500 mb-1">Check Size</p>
+                          <p className="font-medium text-slate-900">{selectedRequest.typical_check_size || 'Not provided'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {selectedRequest.team_overview && (
+                  <div className="border-t border-slate-200 pt-6">
+                    <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">Team Overview</h3>
+                    <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
+                      {selectedRequest.team_overview}
+                    </div>
+                  </div>
+                )}
+
+                {selectedRequest.investment_thesis && (
+                  <div className="border-t border-slate-200 pt-6">
+                    <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">Investment Thesis</h3>
+                    <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
+                      {selectedRequest.investment_thesis}
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-3 gap-4 border-t border-slate-200 pt-6">
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Number of Investments</p>
+                    <p className="text-sm font-semibold text-slate-900">{selectedRequest.number_of_investments || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Amount Raised</p>
+                    <p className="text-sm font-semibold text-slate-900">{selectedRequest.amount_raised_to_date || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Check Size</p>
+                    <p className="text-sm font-semibold text-slate-900">{selectedRequest.typical_check_size || 'Not provided'}</p>
+                  </div>
+                </div>
+
+                {selectedRequest.expectations_from_network && (
+                  <div className="border-t border-slate-200 pt-6">
+                    <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">Network Expectations</h3>
+                    <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
+                      {selectedRequest.expectations_from_network}
+                    </div>
+                  </div>
+                )}
+
+                {selectedRequest.how_heard_about_network && (
+                  <div className="border-t border-slate-200 pt-6">
+                    <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">How They Heard About Us</h3>
+                    <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg">
+                      {selectedRequest.how_heard_about_network}
+                    </div>
+                  </div>
+                )}
 
                 {selectedRequest.status === 'pending' && (
                   <div className="flex space-x-3 pt-6 border-t border-slate-200">
