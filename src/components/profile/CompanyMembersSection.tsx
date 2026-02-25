@@ -6,13 +6,15 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Users, UserPlus, Loader2, Trash2, Mail, Eye, EyeOff } from 'lucide-react';
+import { Users, UserPlus, Loader2, Trash2, Mail, Eye, EyeOff, Pencil } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface CompanyMember {
   id: string;
   member_email: string;
   member_name: string | null;
+  member_user_id: string;
+  company_user_id: string;
   role_in_company: string | null;
   is_active: boolean;
   created_at: string;
@@ -25,45 +27,50 @@ export default function CompanyMembersSection() {
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingMember, setEditingMember] = useState<CompanyMember | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [newMember, setNewMember] = useState({
-    email: '',
-    name: '',
-    password: ''
-  });
+  const [newMember, setNewMember] = useState({ email: '', name: '', password: '' });
+  const [editForm, setEditForm] = useState({ name: '', role: '' });
+
+  // For admins: company selector
   const [companies, setCompanies] = useState<{ id: string; company_name: string }[]>([]);
   const [selectedCompany, setSelectedCompany] = useState('');
 
+  const isAdmin = userRole === 'admin';
+  const isMember = userRole === 'member';
+
   useEffect(() => {
+    if (!isAdmin && !isMember) return;
     fetchMembers();
-  }, [user]);
+    if (isAdmin) fetchCompanies();
+  }, [user, isAdmin, isMember]);
 
-  useEffect(() => {
-    const fetchCompanies = async () => {
-      const { data } = await supabase
-        .from('user_profiles')
-        .select('id, company_name')
-        .order('company_name');
-      if (data) {
-        setCompanies(data.filter(c => c.company_name && c.company_name !== 'Not provided'));
-      }
-    };
-    fetchCompanies();
-  }, []);
+  // Both admins and primary members can see this section
+  if (!isAdmin && !isMember) return null;
 
-  // Only admins can see this section
-  if (userRole !== 'admin') return null;
+  const fetchCompanies = async () => {
+    const { data } = await supabase
+      .from('user_profiles')
+      .select('id, company_name')
+      .order('company_name');
+    if (data) {
+      setCompanies(data.filter(c => c.company_name && c.company_name !== 'Not provided' && c.company_name !== 'Individual'));
+    }
+  };
 
   const fetchMembers = async () => {
     if (!user) return;
     try {
       setLoading(true);
-      // Admins fetch all members; for a specific company view we'd filter by company_user_id
-      const { data, error } = await supabase
-        .from('company_members')
-        .select('*')
-        .order('created_at', { ascending: false });
+      let query = supabase.from('company_members').select('*').order('created_at', { ascending: false });
+      
+      // Members only see their own company's team
+      if (!isAdmin) {
+        query = query.eq('company_user_id', user.id);
+      }
 
+      const { data, error } = await query;
       if (error) throw error;
       setMembers((data as CompanyMember[]) || []);
     } catch (err) {
@@ -73,8 +80,9 @@ export default function CompanyMembersSection() {
     }
   };
 
-  const handleAddMember = async (companyUserId: string) => {
-    if (!newMember.email || !newMember.password) {
+  const handleAddMember = async () => {
+    const companyId = isAdmin ? selectedCompany : user?.id;
+    if (!companyId || !newMember.email || !newMember.password) {
       toast({ title: 'Missing fields', description: 'Email and password are required', variant: 'destructive' });
       return;
     }
@@ -83,7 +91,7 @@ export default function CompanyMembersSection() {
       setAdding(true);
       const { data, error } = await supabase.functions.invoke('add-company-member', {
         body: {
-          company_user_id: companyUserId,
+          company_user_id: companyId,
           member_email: newMember.email,
           member_name: newMember.name,
           password: newMember.password
@@ -104,7 +112,29 @@ export default function CompanyMembersSection() {
     }
   };
 
+  const handleEditMember = async () => {
+    if (!editingMember) return;
+    try {
+      const { error } = await supabase
+        .from('company_members')
+        .update({
+          member_name: editForm.name || editingMember.member_name,
+          role_in_company: editForm.role || editingMember.role_in_company
+        })
+        .eq('id', editingMember.id);
+
+      if (error) throw error;
+      toast({ title: 'Member Updated' });
+      setEditDialogOpen(false);
+      setEditingMember(null);
+      fetchMembers();
+    } catch (err: any) {
+      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+    }
+  };
+
   const handleRemoveMember = async (memberId: string) => {
+    if (!confirm('Are you sure you want to remove this team member?')) return;
     try {
       const { error } = await supabase
         .from('company_members')
@@ -119,6 +149,11 @@ export default function CompanyMembersSection() {
     }
   };
 
+  const openEditDialog = (member: CompanyMember) => {
+    setEditingMember(member);
+    setEditForm({ name: member.member_name || '', role: member.role_in_company || '' });
+    setEditDialogOpen(true);
+  };
 
   return (
     <Card className="bg-white border-gray-200 shadow-lg">
@@ -130,7 +165,9 @@ export default function CompanyMembersSection() {
               Company Team Members
             </CardTitle>
             <CardDescription className="text-gray-600">
-              Add secondary members to company accounts. These members can log in and access the platform but won't appear in the directory.
+              {isAdmin
+                ? 'Add secondary members to company accounts. These members can log in and access the platform but won\'t appear in the directory.'
+                : 'Manage your team members. They can log in and access the platform but won\'t appear in the directory.'}
             </CardDescription>
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -144,23 +181,25 @@ export default function CompanyMembersSection() {
               <DialogHeader>
                 <DialogTitle>Add Team Member</DialogTitle>
                 <DialogDescription>
-                  Create a secondary account linked to a company. This member can log in but won't be listed in the network directory.
+                  Create a secondary account{isAdmin ? ' linked to a company' : ' for your team'}. This member can log in but won't be listed in the network directory.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 pt-4">
-                <div className="space-y-2">
-                  <Label>Company</Label>
-                  <select
-                    value={selectedCompany}
-                    onChange={(e) => setSelectedCompany(e.target.value)}
-                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
-                  >
-                    <option value="">Select a company...</option>
-                    {companies.map(c => (
-                      <option key={c.id} value={c.id}>{c.company_name}</option>
-                    ))}
-                  </select>
-                </div>
+                {isAdmin && (
+                  <div className="space-y-2">
+                    <Label>Company</Label>
+                    <select
+                      value={selectedCompany}
+                      onChange={(e) => setSelectedCompany(e.target.value)}
+                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                    >
+                      <option value="">Select a company...</option>
+                      {companies.map(c => (
+                        <option key={c.id} value={c.id}>{c.company_name}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label>Member Name</Label>
                   <Input
@@ -200,8 +239,8 @@ export default function CompanyMembersSection() {
                   </div>
                 </div>
                 <Button
-                  onClick={() => handleAddMember(selectedCompany)}
-                  disabled={adding || !selectedCompany || !newMember.email || !newMember.password}
+                  onClick={handleAddMember}
+                  disabled={adding || (isAdmin && !selectedCompany) || !newMember.email || !newMember.password}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   {adding ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Adding...</> : <><UserPlus className="w-4 h-4 mr-2" />Add Member</>}
@@ -232,21 +271,66 @@ export default function CompanyMembersSection() {
                   <div>
                     <p className="text-sm font-medium text-gray-900">{member.member_name || member.member_email}</p>
                     <p className="text-xs text-gray-500">{member.member_email}</p>
+                    {member.role_in_company && (
+                      <p className="text-xs text-blue-600">{member.role_in_company}</p>
+                    )}
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleRemoveMember(member.id)}
-                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => openEditDialog(member)}
+                    className="text-gray-500 hover:text-blue-600 hover:bg-blue-50"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRemoveMember(member.id)}
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
         )}
       </CardContent>
+
+      {/* Edit Member Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Edit Team Member</DialogTitle>
+            <DialogDescription>Update member details.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            <div className="space-y-2">
+              <Label>Name</Label>
+              <Input
+                value={editForm.name}
+                onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))}
+                className="bg-white border-gray-300"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Role in Company</Label>
+              <Input
+                value={editForm.role}
+                onChange={(e) => setEditForm(prev => ({ ...prev, role: e.target.value }))}
+                placeholder="e.g. Analyst, Associate"
+                className="bg-white border-gray-300"
+              />
+            </div>
+            <Button onClick={handleEditMember} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+              Save Changes
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
