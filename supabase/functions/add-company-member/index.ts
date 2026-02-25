@@ -38,21 +38,24 @@ serve(async (req) => {
       )
     }
 
-    // Check caller is admin
+    // Check caller is admin or the primary account holder for the company
     const { data: callerRole } = await supabaseAdmin
       .from('user_roles')
       .select('role')
       .eq('user_id', caller.id)
       .single()
 
-    if (callerRole?.role !== 'admin') {
+    const { company_user_id, member_email, member_name, password } = await req.json()
+
+    const isAdmin = callerRole?.role === 'admin'
+    const isPrimaryOwner = caller.id === company_user_id
+
+    if (!isAdmin && !isPrimaryOwner) {
       return new Response(
-        JSON.stringify({ error: 'Only admins can add company members' }),
+        JSON.stringify({ error: 'Only admins or the company account owner can add members' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
-
-    const { company_user_id, member_email, member_name, password } = await req.json()
 
     if (!company_user_id || !member_email || !password) {
       return new Response(
