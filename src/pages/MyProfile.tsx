@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Upload, Mail, Globe, Building2, FileText, Lock, Eye, EyeOff, CheckCircle, XCircle, Shield } from 'lucide-react';
 import MyApplicationSection from '@/components/profile/MyApplicationSection';
+import CompanyMembersSection from '@/components/profile/CompanyMembersSection';
 
 export default function MyProfile() {
   const { user } = useAuth();
@@ -454,6 +455,9 @@ export default function MyProfile() {
 
               {/* Application Profile Section */}
               <MyApplicationSection />
+
+              {/* Company Team Members (Admin only) */}
+              <CompanyMembersSection />
 
               {/* Password Change Card */}
               <Card className="bg-white border-gray-200 shadow-lg">

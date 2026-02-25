@@ -466,7 +466,7 @@ async function findUserByEmail(supabase: any, email: string): Promise<{ id: stri
     }
     
     const users = data?.users || []
-    const matchingUser = users.find(u => {
+    const matchingUser = users.find((u: any) => {
       const userEmail = u.email?.toLowerCase().trim()
       return userEmail === emailLower
     })
@@ -856,7 +856,7 @@ Return format (JSON only, no other text):
         return new Response(
           JSON.stringify({ 
             companies: [], 
-            error: searchError.message || 'Search failed',
+            error: (searchError as Error).message || 'Search failed',
             details: String(searchError)
           }),
           { 
@@ -1361,7 +1361,7 @@ Return format (JSON only, no other text):
   } catch (error) {
     console.error('Error in company-lookup function:', error)
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: (error as Error).message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
