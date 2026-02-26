@@ -44,7 +44,7 @@ serve(async (req) => {
 
     // Check if user already exists
     const { data: existingUsers } = await supabase.auth.admin.listUsers()
-    const userExists = existingUsers?.users?.some(u => u.email?.toLowerCase() === email.toLowerCase())
+    const userExists = (existingUsers?.users as any[])?.some((u: any) => u.email?.toLowerCase() === email.toLowerCase())
     
     if (userExists) {
       return new Response(
