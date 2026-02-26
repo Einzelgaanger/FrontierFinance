@@ -146,12 +146,12 @@ const FundManagerDetail = () => {
   const [fundManager, setFundManager] = useState<FundManager | null>(null);
   const [loading, setLoading] = useState(true);
   const [surveyStatus, setSurveyStatus] = useState<{[key: string]: boolean}>({});
-  const [surveys, setSurveys] = useState<Array<{ year: number; data: any }>>([]);
+  const [surveys, setSurveys] = useState<Array<{ year: number; data: any; submittedBy?: string }>>([]);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [selectedSection, setSelectedSection] = useState<number>(1);
   const [fieldVisibility, setFieldVisibility] = useState<Record<string, { viewer: boolean; member: boolean; admin: boolean }>>({});
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [teamMembers, setTeamMembers] = useState<Array<{ member_name: string | null; member_email: string; role_in_company: string | null }>>([]);
+  const [teamMembers, setTeamMembers] = useState<Array<{ member_user_id: string; member_name: string | null; member_email: string; role_in_company: string | null }>>([]);
 
   const fetchFundManagerData = useCallback(async () => {
     try {
@@ -205,7 +205,7 @@ const FundManagerDetail = () => {
         if (id) {
           const { data: membersData } = await supabase
             .from('company_members')
-            .select('member_name, member_email, role_in_company')
+            .select('member_user_id, member_name, member_email, role_in_company')
             .eq('company_user_id', id)
             .order('member_name', { ascending: true, nullsFirst: false });
           setTeamMembers(membersData ?? []);
@@ -224,7 +224,8 @@ const FundManagerDetail = () => {
       }
     }, [id, toast]);
 
-    const checkSurveyStatus = async () => {
+    const checkSurveyStatus = async (primaryId: string, memberIds: string[]) => {
+      const userIds = [primaryId, ...memberIds];
       const years = ['2021', '2022', '2023', '2024'];
       const status: {[key: string]: boolean} = {};
       for (const year of years) {
@@ -232,10 +233,10 @@ const FundManagerDetail = () => {
           const { data } = await supabase
             .from(`survey_responses_${year}` as any)
             .select('id')
-            .eq('user_id', id)
+            .in('user_id', userIds)
             .eq('submission_status', 'completed')
-            .maybeSingle();
-          status[year] = Boolean(data);
+            .limit(1);
+          status[year] = Boolean(data && data.length > 0);
         } catch (error) {
           status[year] = false;
         }
@@ -263,19 +264,35 @@ const FundManagerDetail = () => {
       }
     };
 
-    const fetchSurveys = async () => {
-      if (!id) return;
+    const fetchSurveys = async (primaryId: string, members: Array<{ member_user_id: string; member_name: string | null }>) => {
+      if (!primaryId) return;
+      const userIds = [primaryId, ...members.map(m => m.member_user_id)];
       const years = [2021, 2022, 2023, 2024];
-      const collected: Array<{ year: number; data: any }> = [];
+      const collected: Array<{ year: number; data: any; submittedBy?: string }> = [];
       for (const year of years) {
         try {
-          const { data, error } = await supabase
+          const { data: primaryData } = await supabase
             .from(`survey_responses_${year}` as any)
             .select('*')
-            .eq('user_id', id)
+            .eq('user_id', primaryId)
             .eq('submission_status', 'completed')
             .maybeSingle();
-          if (data && !error) collected.push({ year, data });
+          if (primaryData) {
+            collected.push({ year, data: primaryData, submittedBy: undefined });
+            continue;
+          }
+          for (const m of members) {
+            const { data: memberData } = await supabase
+              .from(`survey_responses_${year}` as any)
+              .select('*')
+              .eq('user_id', m.member_user_id)
+              .eq('submission_status', 'completed')
+              .maybeSingle();
+            if (memberData) {
+              collected.push({ year, data: memberData, submittedBy: m.member_name || undefined });
+              break;
+            }
+          }
         } catch (e) {
           // continue
         }
@@ -338,11 +355,12 @@ const FundManagerDetail = () => {
 
   useEffect(() => {
     if (id) {
-      checkSurveyStatus();
       fetchFieldVisibility();
-      fetchSurveys();
+      const memberIds = teamMembers.map(m => m.member_user_id);
+      checkSurveyStatus(id, memberIds);
+      fetchSurveys(id, teamMembers);
     }
-  }, [id]);
+  }, [id, teamMembers]);
 
   // Reset selected section when year changes or ensure it's valid
   useEffect(() => {
@@ -740,6 +758,9 @@ const FundManagerDetail = () => {
                           <div>
                             <h2 className="text-3xl font-bold text-navy-900">{currentSection.title}</h2>
                             <p className="text-slate-700 mt-1 font-medium">Survey year {selectedYear}</p>
+                            {surveys.find(s => s.year === selectedYear)?.submittedBy && (
+                              <p className="text-slate-500 text-sm mt-0.5">Submitted by {surveys.find(s => s.year === selectedYear)?.submittedBy}</p>
+                            )}
                           </div>
                           <Badge className="bg-gold-200 text-gold-800 border-0 font-medium" variant="secondary">
                             {currentSection.fields.length} fields

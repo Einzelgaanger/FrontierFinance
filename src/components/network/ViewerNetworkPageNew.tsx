@@ -56,24 +56,30 @@ export default function ViewerNetworkPageNew() {
       const companyMembersList = companyMembersResult.data || [];
       const secondaryMemberIds = new Set(companyMembersList.map((m: { member_user_id: string }) => m.member_user_id));
       const teamCountByCompanyId = new Map<string, number>();
-      companyMembersList.forEach((m: { company_user_id: string }) => {
+      const secondaryToPrimary = new Map<string, string>();
+      companyMembersList.forEach((m: { company_user_id: string; member_user_id: string }) => {
         const cid = m.company_user_id;
         teamCountByCompanyId.set(cid, (teamCountByCompanyId.get(cid) || 0) + 1);
+        secondaryToPrimary.set(m.member_user_id, cid);
       });
       const allProfiles = (profilesResult.data || []).filter(
         (p: { id: string; email?: string }) => !secondaryMemberIds.has(p.id) && !isStaffEmail(p.email)
       );
 
-      const usersWithSurveys = new Set<string>();
+      // Aggregate at company level: primary or any team member having a survey => company has_surveys
+      const primaryIdsWithSurveys = new Set<string>();
       [survey2021Result.data, survey2022Result.data, survey2023Result.data, survey2024Result.data].forEach(surveyData => {
         (surveyData || []).forEach((survey: { user_id?: string }) => {
-          if (survey.user_id) usersWithSurveys.add(survey.user_id);
+          if (survey.user_id) {
+            const primaryId = secondaryToPrimary.get(survey.user_id) ?? survey.user_id;
+            primaryIdsWithSurveys.add(primaryId);
+          }
         });
       });
 
       const profilesWithSurveys = allProfiles.map((profile: any) => ({
         ...profile,
-        has_surveys: usersWithSurveys.has(profile.id),
+        has_surveys: primaryIdsWithSurveys.has(profile.id),
         team_member_count: teamCountByCompanyId.get(profile.id) || 0
       }));
       setProfiles(profilesWithSurveys);

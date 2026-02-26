@@ -62,20 +62,28 @@ export default function MemberNetworkPageNew() {
       const companyMembersList = companyMembersResult.data || [];
       const secondaryMemberIds = new Set(companyMembersList.map((m: { member_user_id: string }) => m.member_user_id));
       const teamCountByCompanyId = new Map<string, number>();
-      companyMembersList.forEach((m: { company_user_id: string }) => {
+      const secondaryToPrimary = new Map<string, string>();
+      companyMembersList.forEach((m: { company_user_id: string; member_user_id: string }) => {
         const cid = m.company_user_id;
         teamCountByCompanyId.set(cid, (teamCountByCompanyId.get(cid) || 0) + 1);
+        secondaryToPrimary.set(m.member_user_id, cid);
       });
       const allProfiles = (profilesResult.data || []).filter(
         (p: { id: string; email?: string }) => !secondaryMemberIds.has(p.id) && !isStaffEmail(p.email)
       );
 
-      const userSurveyYears = new Map<string, string[]>();
+      // Aggregate survey years at company level: primary + any team member's surveys count for the primary
+      const companySurveyYears = new Map<string, string[]>();
+      const resolvePrimaryId = (userId: string) => secondaryToPrimary.get(userId) || userId;
+      const addSurveyYear = (primaryId: string, year: string) => {
+        const existing = companySurveyYears.get(primaryId) || [];
+        if (!existing.includes(year)) companySurveyYears.set(primaryId, [...existing, year]);
+      };
       const processSurveys = (data: any[], year: string) => {
         data?.forEach(survey => {
           if (survey.user_id) {
-            const existing = userSurveyYears.get(survey.user_id) || [];
-            if (!existing.includes(year)) userSurveyYears.set(survey.user_id, [...existing, year]);
+            const primaryId = resolvePrimaryId(survey.user_id);
+            addSurveyYear(primaryId, year);
           }
         });
       };
@@ -86,7 +94,7 @@ export default function MemberNetworkPageNew() {
 
       const profilesWithSurveys = allProfiles.map((profile: any) => ({
         ...profile,
-        completed_surveys: userSurveyYears.get(profile.id) || [],
+        completed_surveys: companySurveyYears.get(profile.id) || [],
         team_member_count: teamCountByCompanyId.get(profile.id) || 0
       }));
       setProfiles(profilesWithSurveys);

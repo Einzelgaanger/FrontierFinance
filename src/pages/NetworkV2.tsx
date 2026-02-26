@@ -149,11 +149,15 @@ const NetworkV2 = React.memo(() => {
       const secondaryMemberIds = new Set(
         companyMembersList.map((m: any) => m.member_user_id)
       );
-      // Count team members per company (company_user_id = profile id)
+      // Count team members per company and list of team member IDs per primary
       const teamCountByCompanyId = new Map<string, number>();
+      const teamMemberIdsByCompanyId = new Map<string, string[]>();
       companyMembersList.forEach((m: any) => {
         const cid = m.company_user_id;
         teamCountByCompanyId.set(cid, (teamCountByCompanyId.get(cid) || 0) + 1);
+        const list = teamMemberIdsByCompanyId.get(cid) || [];
+        list.push(m.member_user_id);
+        teamMemberIdsByCompanyId.set(cid, list);
       });
 
       // Handle errors gracefully
@@ -203,8 +207,11 @@ const NetworkV2 = React.memo(() => {
       );
       let processedManagers = filteredProfiles.map(userProfile => {
         const userId = userProfile.id;
-        const userSurveys = surveyDataMap.get(userId) || [];
-        
+        const teamMemberIds = teamMemberIdsByCompanyId.get(userId) || [];
+        const primarySurveys = surveyDataMap.get(userId) || [];
+        const teamSurveys = teamMemberIds.flatMap((mid: string) => surveyDataMap.get(mid) || []);
+        const userSurveys = [...primarySurveys, ...teamSurveys];
+
         // Use profile data for company information
         const companyName = userProfile.company_name || '';
         const email = userProfile.email || '';
