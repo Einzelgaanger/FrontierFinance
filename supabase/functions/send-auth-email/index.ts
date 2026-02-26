@@ -83,8 +83,10 @@ Deno.serve(async (req) => {
       subject = 'CFF Network - Email Verification'
     }
 
+    // Use verified domain (e.g. hello@frontierfinance.org); fallback for dev only
+    const fromAddress = Deno.env.get('RESEND_FROM_EMAIL') || 'CFF Network <onboarding@resend.dev>'
     const { error } = await resend.emails.send({
-      from: 'CFF Network <onboarding@resend.dev>',
+      from: fromAddress,
       to: [user.email],
       subject,
       html,

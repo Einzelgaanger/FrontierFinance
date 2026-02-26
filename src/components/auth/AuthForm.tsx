@@ -1,14 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Mail, Lock, User, Eye, EyeOff, CheckCircle, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, CheckCircle, ArrowRight, Search, LogIn, KeyRound } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import AuthLayout from './AuthLayout';
+import { supabase } from '@/integrations/supabase/client';
+
+export interface AccountLookupResult {
+  email: string;
+  company_name: string;
+}
 
 const getErrorMessage = (error: unknown): string => {
   if (error && typeof error === 'object' && 'message' in error && typeof (error as any).message === 'string') {
@@ -51,9 +57,35 @@ export default function AuthForm() {
   const tabFromUrl = new URLSearchParams(location.search).get('tab');
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>(tabFromUrl === 'signup' ? 'signup' : 'signin');
 
+  const [accountQuery, setAccountQuery] = useState('');
+  const [accountResults, setAccountResults] = useState<AccountLookupResult[]>([]);
+  const [accountLoading, setAccountLoading] = useState(false);
+
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const runAccountLookup = useCallback(async (q: string) => {
+    if (q.length < 2) {
+      setAccountResults([]);
+      return;
+    }
+    setAccountLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke<{ results: AccountLookupResult[]; error?: string }>('account-lookup', { body: { q } });
+      if (error) throw error;
+      setAccountResults(data?.results ?? []);
+    } catch {
+      setAccountResults([]);
+    } finally {
+      setAccountLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => runAccountLookup(accountQuery), 300);
+    return () => clearTimeout(t);
+  }, [accountQuery, runAccountLookup]);
 
   const checkPasswordStrength = (password: string) => {
     const checks = {
@@ -208,6 +240,78 @@ export default function AuthForm() {
       title={activeTab === 'signin' ? 'Welcome back' : 'Create account'}
       description={activeTab === 'signin' ? 'Sign in to access your account' : 'Join the Frontier Finance platform'}
     >
+      <div className="mb-5 rounded-lg border border-slate-200 dark:border-navy-600/60 bg-slate-50/50 dark:bg-navy-800/30 p-3">
+        <p className="text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+          Already have a company in the network?
+        </p>
+        <p className="text-[11px] text-slate-500 dark:text-navy-400 mb-2">
+          Search by company name or email to sign in or reset your password — no need to create a new account.
+        </p>
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+          <Input
+            type="text"
+            placeholder="Search company or email..."
+            value={accountQuery}
+            onChange={(e) => setAccountQuery(e.target.value)}
+            className="pl-8 h-8 text-sm bg-white dark:bg-navy-800/50 border-slate-200 dark:border-navy-600 rounded-md"
+          />
+        </div>
+        {accountLoading && (
+          <p className="text-[11px] text-slate-500 dark:text-navy-400 mt-2">Searching…</p>
+        )}
+        {!accountLoading && accountQuery.length >= 2 && accountResults.length > 0 && (
+          <ul className="mt-2 max-h-40 overflow-y-auto space-y-1 border-t border-slate-200 dark:border-navy-600 pt-2">
+            {accountResults.map((r) => (
+              <li
+                key={`${r.email}-${r.company_name}`}
+                className="flex flex-wrap items-center justify-between gap-2 py-1.5 px-2 rounded-md hover:bg-slate-100 dark:hover:bg-navy-700/50 text-xs"
+              >
+                <span className="text-slate-700 dark:text-slate-300 truncate">
+                  <span className="font-medium">{r.company_name}</span>
+                  <span className="text-slate-500 dark:text-navy-400 mx-1">·</span>
+                  <span className="text-slate-600 dark:text-slate-400">{r.email}</span>
+                </span>
+                <span className="flex gap-1 shrink-0">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-[11px] px-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    onClick={() => {
+                      setActiveTab('signin');
+                      setSignInForm((prev) => ({ ...prev, email: r.email }));
+                      setAccountQuery('');
+                      setAccountResults([]);
+                    }}
+                  >
+                    <LogIn className="w-3 h-3 mr-1" />
+                    Sign in
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-[11px] px-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    onClick={() => {
+                      navigate('/forgot-password', { state: { email: r.email } });
+                      setAccountQuery('');
+                      setAccountResults([]);
+                    }}
+                  >
+                    <KeyRound className="w-3 h-3 mr-1" />
+                    Forgot password
+                  </Button>
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+        {!accountLoading && accountQuery.length >= 2 && accountResults.length === 0 && (
+          <p className="text-[11px] text-slate-500 dark:text-navy-400 mt-2">No account found. You can sign up below.</p>
+        )}
+      </div>
+
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'signin' | 'signup')} className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-5 bg-slate-100/80 dark:bg-navy-800/30 p-0.5 rounded-lg min-h-[40px] border border-slate-200/80 dark:border-navy-700/50">
           <TabsTrigger

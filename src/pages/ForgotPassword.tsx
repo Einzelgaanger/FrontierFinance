@@ -1,6 +1,5 @@
-
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,12 +10,18 @@ import AuthLayout from '@/components/auth/AuthLayout';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const { resetPassword } = useAuth();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const stateEmail = (location.state as { email?: string })?.email;
+    if (stateEmail && typeof stateEmail === 'string') setEmail(stateEmail);
+  }, [location.state]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +35,10 @@ const ForgotPassword = () => {
         let message = 'Failed to send reset email. Please try again.';
         if (error && typeof error === 'object' && 'message' in error && typeof (error as { message?: unknown }).message === 'string') {
           message = (error as { message: string }).message;
+        }
+        // Make rate limit errors actionable
+        if (message.toLowerCase().includes('rate limit')) {
+          message = 'Too many reset attempts. Please wait a few minutes and try again.';
         }
         setError(message);
         toast({

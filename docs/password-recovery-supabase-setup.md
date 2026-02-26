@@ -69,3 +69,59 @@ Sending many reset requests in a short time can cause throttling or errors. Wait
 ---
 
 **Summary:** With the redirect URL already allowed, the next step is **Auth logs** to see the exact error, then **custom SMTP** if the logs show an email/sending failure. That combination resolves most 500s on recover.
+
+---
+
+## No emails at all (any address, including different emails)
+
+If **no** reset emails are sent for any address (and you see 429 rate limit or no error but nothing in Resend/inbox), work through this list.
+
+### 1. Auth logs (required)
+
+1. **Supabase Dashboard** → **Logs** → **Auth**.
+2. Trigger “Forgot password” once from the app (one email).
+3. Check the log for that request:
+   - **429 / “email rate limit exceeded”** → See step 2 (rate limits).
+   - **500 / “Failed to send” / SMTP or hook error** → See steps 3–4 (SMTP or Hook).
+   - **200 / success** but no email → Likely SMTP or Hook sends then fails; still check steps 3–4.
+
+### 2. Rate limits (429 for everyone)
+
+Supabase Auth applies **global** rate limits on auth emails (signup + recover + magic link), not only per-address. So after a few attempts in a short time, **all** addresses can get 429 until the window resets.
+
+- **Dashboard:** **Authentication** → **Rate Limits** (or **Settings** → **Auth**). Check “Email” / “Recovery” limits.
+- **Action:** Wait **at least 1 hour** without requesting any reset, then try **one** request. If it still 429s, increase the recovery limit if your plan allows, or wait longer.
+
+### 3. Custom SMTP (if you are **not** using a Send Email Hook)
+
+If **Authentication** → **Hooks** does **not** have a “Send Email” hook enabled:
+
+- **Authentication** → **SMTP** (or **Project Settings** → **Auth** → **SMTP**).
+- Ensure **Enable Custom SMTP** is on.
+- **Sender email:** use a verified domain (e.g. `hello@frontierfinance.org`). Not @gmail.com.
+- **Host / port / user / password:** match Resend’s SMTP (e.g. host `smtp.resend.com`, port 465, user `resend`, password = Resend API key).
+- In **Resend** → **Domains**, the sender’s domain must be **Verified** (DNS for that domain added and green).
+
+If SMTP is wrong or domain not verified, Supabase may “accept” the request but the email never reaches Resend or the inbox.
+
+### 4. Send Email Hook (if you **are** using the `send-auth-email` Edge Function)
+
+If **Authentication** → **Hooks** has a **Send Email** hook pointing to your Edge Function:
+
+- **Hook URL** must be the deployed function URL (e.g. `https://qiqxdivyyjcbegdlptuq.supabase.co/functions/v1/send-auth-email`).
+- **Hook secret** must match the `SEND_EMAIL_HOOK_SECRET` secret set for the function.
+- The function needs **RESEND_API_KEY** (and optionally **RESEND_FROM_EMAIL**, e.g. `CFF Network <hello@frontierfinance.org>`) in **Project Settings** → **Edge Functions** → **Secrets**.
+- In **Resend** → **Domains**, the address in `RESEND_FROM_EMAIL` must use a **Verified** domain (e.g. `frontierfinance.org`). If you leave the default `onboarding@resend.dev`, some receivers may block or drop it.
+
+If the hook returns an error or times out, Supabase may surface that in Auth logs; fix the hook (secret, Resend key, from address) so it returns 200.
+
+### 5. One path only: Hook **or** SMTP
+
+- If the **Send Email Hook** is **enabled**, Supabase uses **only** the hook (SMTP is ignored).
+- If the hook is **disabled**, Supabase uses **only** SMTP.
+
+So: either fix the hook (and its from-address/Resend config), or disable the hook and fix SMTP. Don’t assume both are in use at once.
+
+---
+
+**Summary:** Check **Auth logs** first. Then fix **rate limits** (wait or adjust), and either **SMTP** or **Send Email Hook** (and Resend domain/from address) so that one path is correct end-to-end.

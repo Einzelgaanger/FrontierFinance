@@ -12,5 +12,8 @@ verify_jwt = true
 [functions.company-lookup]
 verify_jwt = false
 
+[functions.account-lookup]
+verify_jwt = false
+
 [functions.add-company-member]
 verify_jwt = false
