@@ -139,7 +139,9 @@ export default function MemberNetworkPageNew() {
   };
 
   const handleCardClick = (profile: UserProfile) => {
-    if (profile.completed_surveys.length > 0 || userRole === 'admin') {
+    if (userRole === 'admin' || userRole === 'member') {
+      navigate(`/network/fund-manager/${profile.id}`);
+    } else if (profile.completed_surveys.length > 0) {
       navigate(`/network/fund-manager/${profile.id}`);
     }
   };
@@ -265,7 +267,7 @@ export default function MemberNetworkPageNew() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredProfiles.map((profile, i) => {
               const hasSurveys = profile.completed_surveys.length > 0;
-              const isClickable = hasSurveys || userRole === 'admin';
+              const isClickable = userRole === 'admin' || userRole === 'member' || hasSurveys;
               const cardProfile: DirectoryProfileCardProfile = {
                 id: profile.id,
                 company_name: profile.company_name,

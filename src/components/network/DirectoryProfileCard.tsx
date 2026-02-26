@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Building2, Mail, Globe, FileText, Users, ChevronRight } from 'lucide-react';
+import { Building2, Mail, Globe, FileText, Users } from 'lucide-react';
 
 export interface DirectoryProfileCardProfile {
   id: string;
@@ -78,8 +78,8 @@ export default function DirectoryProfileCard({
           )}
         </div>
 
-        <div className="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between">
-          {profile.website ? (
+        {(profile.website) ? (
+          <div className="mt-4 pt-4 border-t border-slate-200">
             <a
               href={profile.website}
               target="_blank"
@@ -90,14 +90,8 @@ export default function DirectoryProfileCard({
               <Globe className="h-3.5 w-3.5" />
               Website
             </a>
-          ) : <span />}
-          {isClickable && (
-            <span className="text-sm font-semibold text-gold-700 flex items-center gap-0.5">
-              View profile
-              <ChevronRight className="h-3.5 w-3.5" />
-            </span>
-          )}
-        </div>
+          </div>
+        ) : null}
       </CardContent>
     </Card>
   );
