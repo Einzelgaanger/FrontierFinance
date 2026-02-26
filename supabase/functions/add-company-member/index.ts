@@ -89,7 +89,7 @@ serve(async (req) => {
 
     // Check if email already exists as a user
     const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers()
-    const existingUser = existingUsers?.users?.find(u => u.email?.toLowerCase() === member_email.toLowerCase())
+    const existingUser = (existingUsers?.users as any[])?.find((u: any) => u.email?.toLowerCase() === member_email.toLowerCase())
 
     let memberUserId: string
 
