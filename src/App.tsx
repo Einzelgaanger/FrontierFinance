@@ -57,13 +57,27 @@ const queryClient = new QueryClient();
 
 const AUTH_ROUTES = ['/auth', '/forgot-password', '/reset-password'];
 
+// Only show the homepage/marketing Navbar on these routes. App pages (dashboard, admin, network, etc.) use SidebarLayout and should not show the fixed Navbar.
+const ROUTES_WITH_NAVBAR = [
+  '/',
+  '/about',
+  '/escp-network',
+  '/learning-hub',
+  '/our-events',
+  '/partnership',
+];
+const pathHasNavbar = (path: string) =>
+  ROUTES_WITH_NAVBAR.includes(path) ||
+  path.startsWith('/learning-hub/article/');
+
 const AppRoutes = () => {
   const location = useLocation();
   const isAuthPage = AUTH_ROUTES.includes(location.pathname);
+  const showNavbar = !isAuthPage && pathHasNavbar(location.pathname);
 
   return (
     <>
-      {!isAuthPage && <Navbar />}
+      {showNavbar && <Navbar />}
       <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
@@ -146,7 +160,7 @@ const AppRoutes = () => {
                   </ProtectedRoute>
                 } />
                 <Route path="/admin-chat" element={
-                  <ProtectedRoute requiredRole="admin">
+                  <ProtectedRoute requiredRole="member">
                     <AdminChat />
                   </ProtectedRoute>
                 } />
@@ -207,7 +221,7 @@ const App = () => {
         <AuthProvider>
           <BrowserRouter>
             <ScrollToTop />
-            <div className="font-rubik">
+            <div className="font-sans antialiased">
               <AppRoutes />
             </div>
           </BrowserRouter>

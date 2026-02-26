@@ -182,8 +182,7 @@ const AdminDashboardV2 = () => {
   const fetchAllData = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('AdminDashboardV2 - Fetching all data...');
-      
+
       // Fetch data with individual error handling to prevent one failure from breaking all queries
       const fetchWithErrorHandling = async (query: Promise<any>, tableName: string) => {
         try {
@@ -274,17 +273,6 @@ const AdminDashboardV2 = () => {
       const userProfiles = userProfilesResult.data || [];
       const membershipRequests = applicationsResult.data || [];
 
-      // Log data counts for debugging
-      console.log('AdminDashboardV2 - Raw data counts:', {
-        survey2021Count: survey2021Users.length,
-        survey2022Count: survey2022Users.length,
-        survey2023Count: survey2023Users.length,
-        survey2024Count: survey2024Users.length,
-        userRolesCount: userRoles.length,
-        userProfilesCount: userProfiles.length,
-        applicationsCount: membershipRequests.length
-      });
-
       // Calculate comprehensive metrics
       // Note: If user_roles query fails due to RLS, use user_profiles as fallback for total count
       // Then try to get role-specific counts from survey data or use user_profiles count
@@ -346,19 +334,6 @@ const AdminDashboardV2 = () => {
       const appsGrowthWeek = lastWeekApps > 0 ? ((thisWeekApps - lastWeekApps) / lastWeekApps) * 100 : (thisWeekApps > 0 ? 100 : 0);
       const processedTotal = approvedApplications + rejectedApplications;
       const approvalRate = processedTotal > 0 ? Math.round((approvedApplications / processedTotal) * 100) : 0;
-
-      console.log('AdminDashboardV2 - Data fetched:', {
-        totalUsers,
-        activeMembers,
-        viewers,
-        admins,
-        totalSurveyResponses,
-        pendingApplications,
-        approvedApplications,
-        rejectedApplications,
-        thisMonthSurveys,
-        thisMonthUsers
-      });
 
       // Header analytics – 6 insight cards with extensive details
       const communityTotal = (blogsCountVal ?? 0) + (learningResourcesCountVal ?? 0);
@@ -648,32 +623,34 @@ const AdminDashboardV2 = () => {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-y-auto bg-gradient-to-br from-[#f5f5dc] to-[#f0f0e6]">
+    <div className="min-h-screen overflow-y-auto bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        {/* Page header – CFF external style: section-label, font-display, gold line */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Admin Dashboard</h1>
-            <p className="text-sm text-slate-500 mt-1">
-              Overview of applications, members, and community activity
+            <span className="section-label">Overview</span>
+            <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">Admin Dashboard</h1>
+            <div className="w-14 h-0.5 bg-gold-500/60 rounded-full my-3" aria-hidden />
+            <p className="text-sm text-slate-600 font-sans">
+              Applications, members, and community activity
             </p>
             {!loading && overview && (
-              <p className="text-xs text-slate-600 mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-                <span><span className="font-medium text-slate-800">{overview.members}</span> members</span>
+              <p className="text-xs text-slate-500 mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-sans">
+                <span><span className="font-medium tabular-nums text-navy-800">{overview.members}</span> members</span>
                 <span>·</span>
-                <span><span className="font-medium text-slate-800">{overview.viewers}</span> viewers</span>
+                <span><span className="font-medium tabular-nums text-navy-800">{overview.viewers}</span> viewers</span>
                 <span>·</span>
-                <span><span className="font-medium text-slate-800">{overview.surveyTotal}</span> survey responses</span>
+                <span><span className="font-medium tabular-nums text-navy-800">{overview.surveyTotal}</span> survey responses</span>
                 {overview.pending > 0 && (
                   <>
                     <span>·</span>
-                    <span className="font-medium text-amber-700">{overview.pending} pending</span>
+                    <span className="font-medium text-gold-600">{overview.pending} pending</span>
                   </>
                 )}
               </p>
             )}
             {lastUpdated && (
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-400 mt-1 font-sans">
                 Last updated {lastUpdated.toLocaleTimeString()}
               </p>
             )}
@@ -683,99 +660,92 @@ const AdminDashboardV2 = () => {
             size="sm"
             onClick={() => fetchAllData()}
             disabled={loading}
-            className="border-slate-200 text-slate-600 hover:bg-slate-50 shrink-0"
+            className="border-slate-200 text-slate-600 hover:bg-white hover:border-gold-500/30 shrink-0 font-sans"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
         </div>
 
-        {/* Executive summary – needs attention */}
+        {/* Executive summary – needs attention (CFF: gold accent) */}
         {!loading && overview && overview.pending > 0 && (
-          <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50/80 p-4 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
-                <AlertCircle className="w-5 h-5 text-amber-600" />
+          <div className="mb-8 rounded-2xl border border-slate-200/80 border-l-4 border-l-gold-500 bg-white p-5 flex flex-wrap items-center justify-between gap-4 shadow-finance">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                <AlertCircle className="w-6 h-6" />
               </div>
               <div>
-                <p className="font-semibold text-amber-900">
-                  {overview.pending} membership {overview.pending === 1 ? 'application' : 'applications'} need your review
+                <p className="font-semibold text-navy-900 font-sans">
+                  <span className="tabular-nums">{overview.pending}</span> membership {overview.pending === 1 ? 'application' : 'applications'} need your review
                 </p>
-                <p className="text-sm text-amber-700 mt-0.5">Review and approve or reject pending requests.</p>
+                <p className="text-sm text-slate-600 mt-0.5 font-sans">Review and approve or reject pending requests.</p>
               </div>
             </div>
-            <Button size="sm" onClick={() => navigate('/admin')} className="bg-amber-600 hover:bg-amber-700 text-white shrink-0">
+            <Button size="sm" onClick={() => navigate('/admin')} className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold shrink-0 rounded-full shadow-finance">
               Review applications
             </Button>
           </div>
         )}
 
-        {/* Header analytics – 6 insight cards with extensive details */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-          {stats.map((stat, index) => {
-            const gradientColors = [
-              'bg-gradient-to-br from-blue-500 to-blue-600',
-              'bg-gradient-to-br from-green-500 to-green-600',
-              'bg-gradient-to-br from-purple-500 to-purple-600',
-              'bg-gradient-to-br from-orange-500 to-orange-600',
-              'bg-gradient-to-br from-indigo-500 to-indigo-600',
-              'bg-gradient-to-br from-cyan-500 to-cyan-600'
-            ];
-            const colorClass = gradientColors[index % gradientColors.length];
-            return (
-              <div key={index} className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 hover:shadow-md transition-shadow flex flex-col">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-slate-600 uppercase tracking-wider mb-0.5">{stat.title}</p>
-                    <div className="text-xl font-bold text-slate-900">
-                      {loading ? (
-                        <div className="animate-pulse bg-slate-200 h-6 w-12 rounded" />
-                      ) : (
-                        stat.value
-                      )}
-                    </div>
-                  </div>
-                  <div className={`w-10 h-10 ${colorClass} rounded-lg flex items-center justify-center shrink-0 shadow-sm`}>
-                    <stat.icon className="w-5 h-5 text-white" />
+        {/* KPI cards – CFF finance-card style: white, shadow-finance, navy/gold */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          {stats.map((stat, index) => (
+            <div key={index} className="finance-card p-4 flex flex-col">
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-gold-600 font-sans mb-0.5">{stat.title}</p>
+                  <div className="text-xl font-display font-normal text-navy-900 tabular-nums">
+                    {loading ? (
+                      <div className="animate-pulse bg-slate-200 h-6 w-12 rounded" />
+                    ) : (
+                      stat.value
+                    )}
                   </div>
                 </div>
-                <p className="text-xs text-slate-500 mb-1">{stat.description}</p>
-                {stat.change && (
-                  <div className="flex items-center gap-1 mb-1">
-                    {stat.trend.isPositive ? (
-                      <ArrowUpRight className="w-3 h-3 text-emerald-500 shrink-0" />
-                    ) : (
-                      <ArrowDownRight className="w-3 h-3 text-red-500 shrink-0" />
-                    )}
-                    <span className={`text-xs font-medium ${stat.trend.isPositive ? 'text-emerald-600' : 'text-red-600'}`}>
-                      {stat.change}
-                    </span>
-                  </div>
-                )}
-                {stat.detail && (
-                  <p className="text-xs text-slate-600 mt-1 pt-1 border-t border-slate-100">{stat.detail}</p>
-                )}
-                {stat.details && stat.details.length > 0 && (
-                  <div className="mt-1 pt-1 border-t border-slate-100 space-y-0.5">
-                    {stat.details.map((line, i) => (
-                      <p key={i} className="text-xs text-slate-600">{line}</p>
-                    ))}
-                  </div>
-                )}
+                <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                  <stat.icon className="w-5 h-5" />
+                </div>
               </div>
-            );
-          })}
+              <p className="text-xs text-slate-600 font-sans mb-1">{stat.description}</p>
+              {stat.change && (
+                <div className="flex items-center gap-1 mb-1">
+                  {stat.trend.isPositive ? (
+                    <ArrowUpRight className="w-3 h-3 text-gold-600 shrink-0" />
+                  ) : (
+                    <ArrowDownRight className="w-3 h-3 text-red-500 shrink-0" />
+                  )}
+                  <span className={`text-xs font-medium tabular-nums font-sans ${stat.trend.isPositive ? 'text-gold-600' : 'text-red-600'}`}>
+                    {stat.change}
+                  </span>
+                </div>
+              )}
+              {stat.detail && (
+                <p className="text-xs text-slate-600 mt-1 pt-1 border-t border-slate-200/60 font-sans">{stat.detail}</p>
+              )}
+              {stat.details && stat.details.length > 0 && (
+                <div className="mt-1 pt-1 border-t border-slate-200/60 space-y-0.5">
+                  {stat.details.map((line, i) => (
+                    <p key={i} className="text-xs text-slate-600 font-sans">{line}</p>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
 
-        {/* Insights – Applications pipeline, Survey breakdown, This week */}
+        {/* Insights – CFF finance-card style */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
-            <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
-              <div className="flex items-center gap-2">
-                <ClipboardList className="w-5 h-5 text-slate-600" />
-                <CardTitle className="text-base font-semibold text-slate-900">Applications pipeline</CardTitle>
+          <Card className="finance-card overflow-hidden">
+            <CardHeader className="border-b border-slate-200/60 bg-amber-50 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                  <ClipboardList className="w-5 h-5" />
+                </div>
+                <div>
+                  <CardTitle className="text-base font-display font-normal text-navy-900">Applications pipeline</CardTitle>
+                  <p className="text-xs section-label mt-1">Breakdown by status</p>
+                </div>
               </div>
-              <p className="text-xs text-slate-500 mt-1">Breakdown by status</p>
             </CardHeader>
             <CardContent className="p-5">
               {loading ? (
@@ -787,29 +757,29 @@ const AdminDashboardV2 = () => {
               ) : overview ? (
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-sm font-sans">
                       <span className="text-slate-600">Approved</span>
-                      <span className="font-medium text-emerald-700">{analytics?.approvedApps ?? 0}</span>
+                      <span className="font-medium tabular-nums text-navy-900">{analytics?.approvedApps ?? 0}</span>
                     </div>
-                    <Progress value={overview.totalApplications ? ((analytics?.approvedApps ?? 0) / overview.totalApplications) * 100 : 0} className="h-2 bg-slate-100" indicatorClassName="bg-emerald-500" />
+                    <Progress value={overview.totalApplications ? ((analytics?.approvedApps ?? 0) / overview.totalApplications) * 100 : 0} className="h-2 bg-slate-100" indicatorClassName="bg-gold-500" />
                   </div>
                   <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-sm font-sans">
                       <span className="text-slate-600">Pending</span>
-                      <span className="font-medium text-amber-700">{overview.pending}</span>
+                      <span className="font-medium tabular-nums text-gold-600">{overview.pending}</span>
                     </div>
-                    <Progress value={overview.totalApplications ? (overview.pending / overview.totalApplications) * 100 : 0} className="h-2 bg-slate-100" indicatorClassName="bg-amber-500" />
+                    <Progress value={overview.totalApplications ? (overview.pending / overview.totalApplications) * 100 : 0} className="h-2 bg-slate-100" indicatorClassName="bg-gold-400" />
                   </div>
                   <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-sm font-sans">
                       <span className="text-slate-600">Rejected</span>
-                      <span className="font-medium text-red-700">{analytics?.rejectedApps ?? 0}</span>
+                      <span className="font-medium tabular-nums text-navy-900">{analytics?.rejectedApps ?? 0}</span>
                     </div>
-                    <Progress value={overview.totalApplications ? ((analytics?.rejectedApps ?? 0) / overview.totalApplications) * 100 : 0} className="h-2 bg-slate-100" indicatorClassName="bg-red-500" />
+                    <Progress value={overview.totalApplications ? ((analytics?.rejectedApps ?? 0) / overview.totalApplications) * 100 : 0} className="h-2 bg-slate-100" indicatorClassName="bg-slate-600" />
                   </div>
                   {analytics && (analytics.approvedApps + analytics.rejectedApps) > 0 && (
-                    <p className="text-xs text-slate-500 pt-2 border-t border-slate-100">
-                      Approval rate: <span className="font-medium text-slate-700">{analytics.approvalRate}%</span> of decided applications
+                    <p className="text-xs text-slate-500 pt-2 border-t border-slate-200 font-sans">
+                      Approval rate: <span className="font-medium tabular-nums text-navy-900">{analytics.approvalRate}%</span> of decided applications
                     </p>
                   )}
                 </div>
@@ -817,13 +787,17 @@ const AdminDashboardV2 = () => {
             </CardContent>
           </Card>
 
-          <Card className="border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
-            <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
-              <div className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-slate-600" />
-                <CardTitle className="text-base font-semibold text-slate-900">Survey responses by year</CardTitle>
+          <Card className="finance-card overflow-hidden">
+            <CardHeader className="border-b border-slate-200/60 bg-amber-50 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                  <BarChart3 className="w-5 h-5" />
+                </div>
+                <div>
+                  <CardTitle className="text-base font-display font-normal text-navy-900">Survey responses by year</CardTitle>
+                  <p className="text-xs section-label mt-1">All survey submissions</p>
+                </div>
               </div>
-              <p className="text-xs text-slate-500 mt-1">All survey submissions</p>
             </CardHeader>
             <CardContent className="p-5">
               {loading ? (
@@ -834,38 +808,42 @@ const AdminDashboardV2 = () => {
               ) : analytics ? (
                 <div className="space-y-3">
                   {[
-                    { label: '2021', value: analytics.surveyByYear.y2021, color: 'bg-blue-500' },
-                    { label: '2022', value: analytics.surveyByYear.y2022, color: 'bg-violet-500' },
-                    { label: '2023', value: analytics.surveyByYear.y2023, color: 'bg-emerald-500' },
-                    { label: '2024', value: analytics.surveyByYear.y2024, color: 'bg-amber-500' }
+                    { label: '2021', value: analytics.surveyByYear.y2021, color: 'bg-gold-500' },
+                    { label: '2022', value: analytics.surveyByYear.y2022, color: 'bg-gold-600' },
+                    { label: '2023', value: analytics.surveyByYear.y2023, color: 'bg-navy-700' },
+                    { label: '2024', value: analytics.surveyByYear.y2024, color: 'bg-navy-600' }
                   ].map(({ label, value, color }) => {
                     const total = analytics.surveyByYear.y2021 + analytics.surveyByYear.y2022 + analytics.surveyByYear.y2023 + analytics.surveyByYear.y2024;
                     const pct = total > 0 ? (value / total) * 100 : 0;
                     return (
-                      <div key={label} className="flex items-center gap-3">
+                      <div key={label} className="flex items-center gap-3 font-sans">
                         <span className="text-sm font-medium text-slate-700 w-10">{label}</span>
                         <div className="flex-1 h-6 bg-slate-100 rounded-full overflow-hidden">
                           <div className={`h-full ${color} rounded-full transition-all`} style={{ width: `${Math.max(pct, 2)}%` }} />
                         </div>
-                        <span className="text-sm font-semibold text-slate-900 w-8 text-right">{value}</span>
+                        <span className="text-sm font-semibold tabular-nums text-navy-900 w-8 text-right">{value}</span>
                       </div>
                     );
                   })}
-                  <p className="text-xs text-slate-500 pt-2">
-                    Total: <span className="font-medium text-slate-700">{overview?.surveyTotal ?? 0}</span> responses
+                  <p className="text-xs text-slate-500 pt-2 font-sans">
+                    Total: <span className="font-medium tabular-nums text-navy-900">{overview?.surveyTotal ?? 0}</span> responses
                   </p>
                 </div>
               ) : null}
             </CardContent>
           </Card>
 
-          <Card className="border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
-            <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-slate-600" />
-                <CardTitle className="text-base font-semibold text-slate-900">This week</CardTitle>
+          <Card className="finance-card overflow-hidden">
+            <CardHeader className="border-b border-slate-200/60 bg-amber-50 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                  <TrendingUp className="w-5 h-5" />
+                </div>
+                <div>
+                  <CardTitle className="text-base font-display font-normal text-navy-900">This week</CardTitle>
+                  <p className="text-xs section-label mt-1">Last 7 days</p>
+                </div>
               </div>
-              <p className="text-xs text-slate-500 mt-1">Last 7 days</p>
             </CardHeader>
             <CardContent className="p-5">
               {loading ? (
@@ -875,20 +853,20 @@ const AdminDashboardV2 = () => {
                 </div>
               ) : analytics ? (
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center font-sans">
                     <span className="text-sm text-slate-600">New applications</span>
-                    <span className="font-semibold text-slate-900">{analytics.thisWeekApps}</span>
+                    <span className="font-semibold tabular-nums text-navy-900">{analytics.thisWeekApps}</span>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center font-sans">
                     <span className="text-sm text-slate-600">New users</span>
-                    <span className="font-semibold text-slate-900">{analytics.thisWeekUsers}</span>
+                    <span className="font-semibold tabular-nums text-navy-900">{analytics.thisWeekUsers}</span>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center font-sans">
                     <span className="text-sm text-slate-600">Survey responses</span>
-                    <span className="font-semibold text-slate-900">{analytics.thisWeekSurveys}</span>
+                    <span className="font-semibold tabular-nums text-navy-900">{analytics.thisWeekSurveys}</span>
                   </div>
                   {analytics.appsGrowthWeek !== 0 && (
-                    <p className={`text-xs font-medium pt-2 border-t border-slate-100 ${analytics.appsGrowthWeek >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                    <p className={`text-xs font-medium pt-2 border-t border-slate-200 font-sans ${analytics.appsGrowthWeek >= 0 ? 'text-gold-600' : 'text-red-600'}`}>
                       Applications {analytics.appsGrowthWeek >= 0 ? '+' : ''}{analytics.appsGrowthWeek}% vs last week
                     </p>
                   )}
@@ -900,20 +878,20 @@ const AdminDashboardV2 = () => {
 
         {/* Main content – Activity & Quick actions */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Activity logs – detailed, grouped, well displayed */}
-          <Card className="lg:col-span-2 border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
-            <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+          {/* Activity logs – CFF finance-card */}
+          <Card className="lg:col-span-2 finance-card overflow-hidden">
+            <CardHeader className="border-b border-slate-200/60 bg-amber-50 px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                    <Activity className="w-5 h-5 text-slate-600" />
+                  <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                    <Activity className="w-5 h-5" />
                   </div>
                   <div>
-                    <CardTitle className="text-lg font-semibold text-slate-900">Activity logs</CardTitle>
-                    <p className="text-sm text-slate-500 mt-0.5">Surveys, applications, new users — grouped by date</p>
+                    <CardTitle className="text-lg font-display font-normal text-navy-900">Activity logs</CardTitle>
+                    <p className="text-xs section-label mt-1">Surveys, applications, new users — grouped by date</p>
                   </div>
                 </div>
-                <Badge variant="secondary" className="text-xs font-medium">{recentActivity.length} events</Badge>
+                <Badge variant="secondary" className="text-xs font-medium tabular-nums font-sans">{recentActivity.length} events</Badge>
               </div>
             </CardHeader>
             <CardContent className="p-4">
@@ -933,7 +911,7 @@ const AdminDashboardV2 = () => {
                     <div className="space-y-6">
                       {order.filter((k) => groups[k]?.length).map((label) => (
                         <div key={label}>
-                          <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">{label}</h3>
+                          <h3 className="section-label mb-3 px-1">{label}</h3>
                           <div className="space-y-2">
                             {groups[label].map((activity) => {
                               const date = activity.createdAt ? new Date(activity.createdAt) : new Date();
@@ -941,7 +919,7 @@ const AdminDashboardV2 = () => {
                               return (
                                 <div
                                   key={activity.id}
-                                  className="flex gap-3 p-4 rounded-xl border border-slate-100 bg-white hover:bg-slate-50/80 hover:border-slate-200 transition-colors"
+                                  className="flex gap-3 p-4 rounded-xl border border-slate-200/80 bg-white hover:shadow-finance transition-all font-sans"
                                 >
                                   <div className={`shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${bg}`}>
                                     <activity.icon className={`w-5 h-5 ${activity.color}`} />
@@ -988,11 +966,11 @@ const AdminDashboardV2 = () => {
             </CardContent>
           </Card>
 
-          {/* Quick Actions & Platform Overview */}
+          {/* Quick Actions & Platform Overview – CFF style */}
           <div className="space-y-4">
-            <Card className="border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-5 py-3">
-                <CardTitle className="text-sm font-semibold text-slate-900">Quick actions</CardTitle>
+            <Card className="finance-card overflow-hidden">
+              <CardHeader className="border-b border-slate-200/60 bg-amber-50 px-5 py-3">
+                <CardTitle className="text-sm font-display font-normal text-navy-900">Quick actions</CardTitle>
               </CardHeader>
               <CardContent className="p-3">
                 <div className="space-y-1">
@@ -1001,38 +979,38 @@ const AdminDashboardV2 = () => {
                       key={idx}
                       type="button"
                       onClick={() => navigate(action.href)}
-                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 text-left transition-colors border border-transparent hover:border-slate-100"
+                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 text-left transition-colors border border-transparent hover:border-gold-500/20 font-sans"
                     >
-                      <div className={`w-8 h-8 rounded-lg ${action.bgColor} flex items-center justify-center shrink-0`}>
-                        <action.icon className={`w-4 h-4 ${action.color}`} />
+                      <div className="w-8 h-8 rounded-lg bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                        <action.icon className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-slate-900 text-sm">{action.title}</p>
-                        <p className="text-xs text-slate-500 truncate">{action.description}</p>
+                        <p className="font-medium text-navy-900 text-sm">{action.title}</p>
+                        <p className="text-xs text-slate-600 truncate">{action.description}</p>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
+                      <ArrowRight className="w-4 h-4 text-gold-600 shrink-0" />
                     </button>
                   ))}
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border border-slate-200 bg-white shadow-sm rounded-xl overflow-hidden">
-              <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-5 py-3">
-                <CardTitle className="text-sm font-semibold text-slate-900">Platform overview</CardTitle>
-                <p className="text-xs text-slate-500 mt-0.5">Content & survey coverage</p>
+            <Card className="finance-card overflow-hidden">
+              <CardHeader className="border-b border-slate-200/60 bg-amber-50 px-5 py-3">
+                <CardTitle className="text-sm font-display font-normal text-navy-900">Platform overview</CardTitle>
+                <p className="text-xs section-label mt-0.5">Content & survey coverage</p>
               </CardHeader>
               <CardContent className="p-4">
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="text-center p-3 rounded-lg bg-slate-50 border border-slate-100">
-                    <p className="text-xs text-slate-500 uppercase tracking-wider">Surveys</p>
-                    <p className="text-lg font-bold text-slate-900 mt-1">4 years</p>
-                    <p className="text-xs text-slate-500 mt-0.5">2021–2024</p>
+                  <div className="text-center p-3 rounded-xl bg-slate-100 border border-slate-200/60 font-sans">
+                    <p className="text-xs section-label">Surveys</p>
+                    <p className="text-lg font-display font-normal tabular-nums text-navy-900 mt-1">4 years</p>
+                    <p className="text-xs text-slate-600 mt-0.5">2021–2024</p>
                   </div>
-                  <div className="text-center p-3 rounded-lg bg-slate-50 border border-slate-100">
-                    <p className="text-xs text-slate-500 uppercase tracking-wider">Content</p>
-                    <p className="text-lg font-bold text-slate-900 mt-1">{loading ? '—' : blogsCount + learningResourcesCount}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{loading ? '' : `${blogsCount} posts · ${learningResourcesCount} resources`}</p>
+                  <div className="text-center p-3 rounded-xl bg-slate-100 border border-slate-200/60 font-sans">
+                    <p className="text-xs section-label">Content</p>
+                    <p className="text-lg font-display font-normal tabular-nums text-navy-900 mt-1">{loading ? '—' : blogsCount + learningResourcesCount}</p>
+                    <p className="text-xs text-slate-600 mt-0.5">{loading ? '' : `${blogsCount} posts · ${learningResourcesCount} resources`}</p>
                   </div>
                 </div>
               </CardContent>

@@ -128,30 +128,13 @@
   }
 }
 
-/* Professional finance card with hover shine */
+/* Professional finance card - hover lift and shadow only (no sweep/block effect) */
 .finance-card {
   @apply relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-finance transition-all duration-300;
 }
 
 .finance-card:hover {
   @apply shadow-card-hover -translate-y-1 border-gold-500/20;
-}
-
-.finance-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.4) 45%, transparent 90%);
-  transform: translateX(-100%) skewX(-12deg);
-  transition: transform 0.7s ease;
-  pointer-events: none;
-}
-
-.finance-card:hover::after {
-  transform: translateX(200%) skewX(-12deg);
 }
 
 .section-label {

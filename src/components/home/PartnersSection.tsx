@@ -23,7 +23,7 @@ const PartnersSection = () => {
             <p className="text-base sm:text-lg text-slate-700 leading-[1.7] font-sans font-light">
               With input from <span className="font-semibold text-gold-600">80+ fund managers, funders, and fieldbuilders</span> over the past year, the Collaborative for Frontier Finance is a multi-stakeholder initiative.
             </p>
-            <Link to="/escp-network" className="inline-flex mt-10">
+            <Link to="/partnership" className="inline-flex mt-10">
               <Button
                 size="lg"
                 className="bg-navy-900 hover:bg-navy-800 text-white font-semibold rounded-full px-8 shadow-finance-lg group transition-all duration-300 hover:-translate-y-0.5"

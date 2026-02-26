@@ -81,8 +81,8 @@ const Hero = () => {
         className="absolute inset-0 bg-cover bg-center z-0"
         style={{ backgroundImage: 'url(/CFF.jpg)' }}
       >
+        <div className="absolute inset-0 bg-navy-950/25" />
         <div className="absolute inset-0 bg-navy-950/45" />
-        <div className="absolute inset-0 bg-navy-950/70" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-20 pb-20 w-full">

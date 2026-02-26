@@ -227,7 +227,7 @@ const AdminLaunchPlusAnalytics = () => {
 
   return (
     <SidebarLayout headerActions={headerActions}>
-      <div className="min-h-screen bg-gradient-to-b from-navy-50/40 via-white to-slate-50/60 font-sans">
+      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
           {/* Page header */}
           <div className="mb-10">
@@ -240,7 +240,7 @@ const AdminLaunchPlusAnalytics = () => {
           </div>
 
           <Tabs defaultValue="analytics" className="w-full">
-            <TabsList className="grid w-full max-w-md grid-cols-2 mb-8 bg-white border border-slate-100 shadow-sm rounded-2xl p-1.5 h-12">
+            <TabsList className="grid w-full max-w-md grid-cols-2 mb-8 bg-white border border-slate-200 shadow-sm rounded-2xl p-1.5 h-12">
               <TabsTrigger value="analytics" className="flex items-center gap-2 rounded-xl data-[state=active]:bg-navy-900 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-600 font-medium transition-all">
                 <BarChart3 className="w-4 h-4" />
                 Analytics
@@ -258,7 +258,7 @@ const AdminLaunchPlusAnalytics = () => {
               {loading ? (
                 <>
                   {[1, 2, 3, 4].map((i) => (
-                    <Card key={i} className="bg-white border border-slate-100 shadow-sm rounded-2xl">
+                    <Card key={i} className="bg-white border border-slate-200 shadow-sm rounded-2xl">
                       <CardHeader>
                         <Skeleton className="h-4 w-24" />
                       </CardHeader>
@@ -270,7 +270,7 @@ const AdminLaunchPlusAnalytics = () => {
                 </>
               ) : (
                 <>
-                  <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+                  <Card className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
@@ -285,7 +285,7 @@ const AdminLaunchPlusAnalytics = () => {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+                  <Card className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
@@ -300,7 +300,7 @@ const AdminLaunchPlusAnalytics = () => {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+                  <Card className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
@@ -315,7 +315,7 @@ const AdminLaunchPlusAnalytics = () => {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+                  <Card className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-xl overflow-hidden hover:shadow-md transition-shadow">
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
@@ -339,22 +339,22 @@ const AdminLaunchPlusAnalytics = () => {
                 <Activity className="w-4 h-4 text-slate-500" />
                 Fund Stage Distribution
               </h2>
-              <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
+              <Card className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                 <CardContent className="p-6">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="text-center p-5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-indigo-50/80 hover:border-indigo-200 transition-colors">
+                    <div className="text-center p-5 rounded-xl border border-slate-200 bg-amber-50 hover:bg-indigo-100 hover:border-indigo-200 transition-colors">
                       <div className="text-2xl font-bold text-slate-900 mb-1">{stageDistribution.concept}</div>
                       <div className="text-sm font-medium text-slate-600">Concept</div>
                     </div>
-                    <div className="text-center p-5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-amber-50/80 hover:border-amber-200 transition-colors">
+                    <div className="text-center p-5 rounded-xl border border-slate-200 bg-amber-50 hover:bg-amber-100 hover:border-amber-200 transition-colors">
                       <div className="text-2xl font-bold text-slate-900 mb-1">{stageDistribution.pilot}</div>
                       <div className="text-sm font-medium text-slate-600">Pilot</div>
                     </div>
-                    <div className="text-center p-5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-emerald-50/80 hover:border-emerald-200 transition-colors">
+                    <div className="text-center p-5 rounded-xl border border-slate-200 bg-amber-50 hover:bg-emerald-100 hover:border-emerald-200 transition-colors">
                       <div className="text-2xl font-bold text-slate-900 mb-1">{stageDistribution.implementation}</div>
                       <div className="text-sm font-medium text-slate-600">Implementation</div>
                     </div>
-                    <div className="text-center p-5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-violet-50/80 hover:border-violet-200 transition-colors">
+                    <div className="text-center p-5 rounded-xl border border-slate-200 bg-amber-50 hover:bg-violet-100 hover:border-violet-200 transition-colors">
                       <div className="text-2xl font-bold text-slate-900 mb-1">{stageDistribution.scale}</div>
                       <div className="text-sm font-medium text-slate-600">Scale</div>
                     </div>
@@ -370,10 +370,10 @@ const AdminLaunchPlusAnalytics = () => {
                   <Coins className="w-4 h-4 text-emerald-600" />
                   Capital Raised by Type
                 </h2>
-                <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
+                <Card className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                   <CardContent className="p-6 space-y-3">
                     {Object.entries(capitalByType).map(([type, amount]) => (
-                      <div key={type} className="flex items-center justify-between p-3 rounded-lg bg-slate-50/80 border border-slate-100 hover:bg-emerald-50/50 hover:border-emerald-100 transition-colors">
+                      <div key={type} className="flex items-center justify-between p-3 rounded-lg bg-slate-100 border border-slate-200 hover:bg-emerald-100 hover:border-emerald-100 transition-colors">
                         <span className="text-sm font-medium text-slate-700 capitalize">{type.replace(/([A-Z])/g, ' $1').trim()}</span>
                         <span className="text-sm font-semibold text-slate-900">${(amount / 1000000).toFixed(2)}M</span>
                       </div>
@@ -387,10 +387,10 @@ const AdminLaunchPlusAnalytics = () => {
                   <Target className="w-4 h-4 text-amber-600" />
                   Service Interests
                 </h2>
-                <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
+                <Card className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                   <CardContent className="p-6 space-y-3">
                     {Object.entries(serviceInterests).map(([service, count]) => (
-                      <div key={service} className="flex items-center justify-between gap-3 p-3 rounded-lg bg-slate-50/80 border border-slate-100 hover:bg-amber-50/50 hover:border-amber-100 transition-colors">
+                      <div key={service} className="flex items-center justify-between gap-3 p-3 rounded-lg bg-slate-100 border border-slate-200 hover:bg-amber-100 hover:border-amber-100 transition-colors">
                         <span className="text-sm font-medium text-slate-700 capitalize flex-1 min-w-0 truncate">{service.replace(/_/g, ' ')}</span>
                         <div className="flex items-center gap-3 shrink-0">
                           <div className="w-20 h-2 bg-slate-200 rounded-full overflow-hidden">
@@ -415,11 +415,11 @@ const AdminLaunchPlusAnalytics = () => {
                   <Globe className="w-4 h-4 text-violet-600" />
                   Geographic Focus
                 </h2>
-                <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
+                <Card className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                   <CardContent className="p-6">
                     <div className="grid grid-cols-2 gap-3">
                       {Object.entries(geographicFocus).map(([region, count]) => (
-                        <div key={region} className="p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-violet-50/50 hover:border-violet-100 text-center transition-colors">
+                        <div key={region} className="p-4 rounded-xl border border-slate-200 bg-amber-50 hover:bg-violet-100 hover:border-violet-100 text-center transition-colors">
                           <div className="text-xl font-bold text-slate-900 mb-1">{count}</div>
                           <div className="text-sm text-slate-600 capitalize font-medium">{region}</div>
                         </div>
@@ -434,17 +434,17 @@ const AdminLaunchPlusAnalytics = () => {
                   <TrendingUp className="w-4 h-4 text-indigo-600" />
                   Investment Activity
                 </h2>
-                <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
+                <Card className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                   <CardContent className="p-6 space-y-3">
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/50 hover:border-indigo-100 transition-colors">
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-slate-100 border border-slate-200 hover:bg-indigo-100 hover:border-indigo-100 transition-colors">
                       <span className="text-sm font-medium text-slate-700">Capital Committed</span>
                       <span className="text-sm font-semibold text-slate-900">${(totalCommitted / 1000000).toFixed(2)}M</span>
                     </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/50 hover:border-indigo-100 transition-colors">
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-slate-100 border border-slate-200 hover:bg-indigo-100 hover:border-indigo-100 transition-colors">
                       <span className="text-sm font-medium text-slate-700">Capital Disbursed</span>
                       <span className="text-sm font-semibold text-slate-900">${(totalDisbursed / 1000000).toFixed(2)}M</span>
                     </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/50 hover:border-indigo-100 transition-colors">
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-slate-100 border border-slate-200 hover:bg-indigo-100 hover:border-indigo-100 transition-colors">
                       <span className="text-sm font-medium text-slate-700">Deployment Rate</span>
                       <span className="text-sm font-semibold text-slate-900">
                         {totalCommitted > 0 ? ((totalDisbursed / totalCommitted) * 100).toFixed(1) : 0}%
@@ -463,7 +463,7 @@ const AdminLaunchPlusAnalytics = () => {
                 <Users className="w-4 h-4 text-indigo-600" />
                 All Assessment Responses
               </h2>
-              <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl rounded-xl overflow-hidden">
+              <Card className="bg-white border border-slate-200 shadow-sm rounded-2xl rounded-xl overflow-hidden">
                 <CardContent className="p-6">
                 {/* Search and Filter */}
                 <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -529,7 +529,7 @@ const AdminLaunchPlusAnalytics = () => {
                   <div className="rounded-xl border border-slate-200 overflow-hidden bg-white">
                     <Table>
                       <TableHeader>
-                        <TableRow className="bg-slate-50/80 hover:bg-slate-50/80 border-b border-slate-200">
+                        <TableRow className="bg-slate-100 hover:bg-slate-100 border-b border-slate-200">
                           <TableHead className="text-slate-600 font-semibold text-xs uppercase tracking-wider">Submission Date</TableHead>
                           <TableHead className="text-slate-600 font-semibold text-xs uppercase tracking-wider">Name</TableHead>
                           <TableHead className="text-slate-600 font-semibold text-xs uppercase tracking-wider">Fund</TableHead>
@@ -547,7 +547,7 @@ const AdminLaunchPlusAnalytics = () => {
                           </TableRow>
                         ) : (
                           filteredAssessments.map((assessment) => (
-                            <TableRow key={assessment.id} className="border-slate-100 hover:bg-slate-50 transition-colors">
+                            <TableRow key={assessment.id} className="border-slate-200 hover:bg-slate-100 transition-colors">
                               <TableCell className="text-slate-600">
                                 {format(new Date(assessment.created_at), 'MMM dd, yyyy')}
                               </TableCell>
@@ -588,7 +588,7 @@ const AdminLaunchPlusAnalytics = () => {
       {/* Detail Modal */}
       <Dialog open={!!selectedAssessment} onOpenChange={() => setSelectedAssessment(null)}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden bg-white border border-slate-200 rounded-xl shadow-xl">
-          <DialogHeader className="border-b border-slate-100 pb-4">
+          <DialogHeader className="border-b border-slate-200 pb-4">
             <DialogTitle className="text-xl font-semibold text-slate-900 flex items-center gap-3">
               <div className="p-2 bg-indigo-100 rounded-lg">
                 <Eye className="w-5 h-5 text-indigo-600" />
@@ -600,7 +600,7 @@ const AdminLaunchPlusAnalytics = () => {
           <ScrollArea className="max-h-[calc(90vh-8rem)] pr-4">
             <div className="space-y-4 py-4">
               {/* Basic Information Section */}
-              <Card className="bg-slate-50/80 border border-slate-200 rounded-xl">
+              <Card className="bg-slate-100 border border-slate-200 rounded-xl">
                 <CardHeader className="border-b border-slate-200">
                   <CardTitle className="text-base font-semibold text-slate-900 flex items-center gap-2">
                     <div className="p-1.5 bg-indigo-100 rounded-lg">
@@ -634,7 +634,7 @@ const AdminLaunchPlusAnalytics = () => {
               </Card>
 
               {/* Fund Details Section */}
-              <Card className="bg-slate-50/80 border border-slate-200 rounded-xl">
+              <Card className="bg-slate-100 border border-slate-200 rounded-xl">
                 <CardHeader className="border-b border-slate-200">
                   <CardTitle className="text-base font-semibold text-slate-900 flex items-center gap-2">
                     <div className="p-1.5 bg-amber-100 rounded-lg">
@@ -672,7 +672,7 @@ const AdminLaunchPlusAnalytics = () => {
               </Card>
 
               {/* Fund Stage Section */}
-              <Card className="bg-slate-50/80 border border-slate-200 rounded-xl">
+              <Card className="bg-slate-100 border border-slate-200 rounded-xl">
                 <CardHeader className="border-b border-slate-200">
                   <CardTitle className="text-base font-semibold text-slate-900 flex items-center gap-2">
                     <div className="p-1.5 bg-emerald-100 rounded-lg">
@@ -702,7 +702,7 @@ const AdminLaunchPlusAnalytics = () => {
               </Card>
 
               {/* Eligibility Section */}
-              <Card className="bg-slate-50/80 border border-slate-200 rounded-xl">
+              <Card className="bg-slate-100 border border-slate-200 rounded-xl">
                 <CardHeader className="border-b border-slate-200">
                   <CardTitle className="text-base font-semibold text-slate-900 flex items-center gap-2">
                     <div className="p-1.5 bg-violet-100 rounded-lg">
@@ -746,7 +746,7 @@ const AdminLaunchPlusAnalytics = () => {
               </Card>
 
               {/* Capital Raised Section */}
-              <Card className="bg-slate-50/80 border border-slate-200 rounded-xl">
+              <Card className="bg-slate-100 border border-slate-200 rounded-xl">
                 <CardHeader className="border-b border-slate-200">
                   <CardTitle className="text-base font-semibold text-slate-900 flex items-center gap-2">
                     <div className="p-1.5 bg-emerald-100 rounded-lg">
@@ -790,7 +790,7 @@ const AdminLaunchPlusAnalytics = () => {
               </Card>
 
               {/* Investments Section */}
-              <Card className="bg-slate-50/80 border border-slate-200 rounded-xl">
+              <Card className="bg-slate-100 border border-slate-200 rounded-xl">
                 <CardHeader className="border-b border-slate-200">
                   <CardTitle className="text-base font-semibold text-slate-900 flex items-center gap-2">
                     <div className="p-1.5 bg-indigo-100 rounded-lg">
@@ -816,7 +816,7 @@ const AdminLaunchPlusAnalytics = () => {
               </Card>
 
               {/* Program Expectations */}
-              <Card className="bg-slate-50/80 border border-slate-200 rounded-xl">
+              <Card className="bg-slate-100 border border-slate-200 rounded-xl">
                 <CardHeader className="border-b border-slate-200">
                   <CardTitle className="text-base font-semibold text-slate-900 flex items-center gap-2">
                     <div className="p-1.5 bg-amber-100 rounded-lg">

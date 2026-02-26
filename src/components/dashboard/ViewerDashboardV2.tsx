@@ -640,26 +640,18 @@ const ViewerDashboardV2 = () => {
 
   if (showSuccessMessage) {
     return (
-      <div
-        className="min-h-screen bg-slate-900/80"
-        style={{
-          backgroundImage: 'url(/CFF.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
+      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center bg-white/95 backdrop-blur-sm rounded-xl border border-gray-200 px-8 py-10 shadow-sm">
-            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-10 h-10 text-white" />
+          <div className="text-center finance-card px-8 py-10">
+            <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-10 h-10" />
             </div>
-            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-2">
+            <h1 className="text-2xl md:text-3xl font-display font-normal text-navy-900 mb-2">
               Application submitted
             </h1>
-            <p className="text-sm text-gray-600 mb-6 max-w-xl mx-auto leading-relaxed">
+            <p className="text-sm text-slate-600 mb-6 max-w-xl mx-auto leading-relaxed font-sans">
               Thank you for your interest in joining the CFF Network. Your application has been received and will be reviewed by the team.
-              You can expect a response within <span className="font-semibold text-gray-900">5–7 business days</span>.
+              You can expect a response within <span className="font-semibold text-navy-900">5–7 business days</span>.
             </p>
             <Button
               onClick={() => {
@@ -685,7 +677,7 @@ const ViewerDashboardV2 = () => {
                   topics_of_interest: [],
                 });
               }}
-              className="px-6 py-3 text-sm font-medium rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+              className="px-6 py-3 text-sm font-semibold rounded-full bg-gold-500 hover:bg-gold-400 text-navy-950 shadow-finance font-sans"
             >
               Submit another application
             </Button>
@@ -695,57 +687,49 @@ const ViewerDashboardV2 = () => {
     );
   }
 
-  // Preview/Landing Page
+  // Preview/Landing Page – CFF design
   if (!showApplicationForm) {
     return (
-      <div
-        className="min-h-screen bg-slate-900/80"
-        style={{
-          backgroundImage: 'url(/CFF.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
+      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-10">
+          <span className="section-label">Viewer</span>
+          <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">Dashboard</h1>
+          <div className="w-14 h-0.5 bg-gold-500/60 rounded-full my-3" aria-hidden />
+          <p className="text-sm text-slate-600 mb-8 font-sans">Apply for membership and explore resources.</p>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-            {/* Application Overview */}
-            <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl p-8 shadow-sm">
+            <div className="finance-card p-8">
               <div className="mb-6">
-                <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-2">
+                <h2 className="text-xl md:text-2xl font-display font-normal text-navy-900 mb-2">
                   Membership application
                 </h2>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-slate-600 font-sans">
                   Share a concise overview of your organization and investment activity to help us assess fit with the CFF Network.
                 </p>
               </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-8 text-sm text-gray-700">
+              <div className="grid grid-cols-2 gap-4 mb-8 text-sm text-slate-700 font-sans">
                 <div className="space-y-1">
-                  <p className="font-medium text-gray-900">1. Organization details</p>
-                  <p className="text-xs text-gray-500">Basic information and domicile</p>
+                  <p className="font-medium text-navy-900">1. Organization details</p>
+                  <p className="text-xs text-slate-500">Basic information and domicile</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="font-medium text-gray-900">2. Team & role</p>
-                  <p className="text-xs text-gray-500">Your role and team overview</p>
+                  <p className="font-medium text-navy-900">2. Team & role</p>
+                  <p className="text-xs text-slate-500">Your role and team overview</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="font-medium text-gray-900">3. Investment profile</p>
-                  <p className="text-xs text-gray-500">Strategy, tickets and capital raised</p>
+                  <p className="font-medium text-navy-900">3. Investment profile</p>
+                  <p className="text-xs text-slate-500">Strategy, tickets and capital raised</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="font-medium text-gray-900">4. Network expectations</p>
-                  <p className="text-xs text-gray-500">How you plan to engage</p>
+                  <p className="font-medium text-navy-900">4. Network expectations</p>
+                  <p className="text-xs text-slate-500">How you plan to engage</p>
                 </div>
               </div>
-
-              <div className="border-t border-gray-100 pt-6 mt-2">
-                <p className="text-xs text-gray-500 mb-3">
-                  Typical completion time: 10–15 minutes.
-                </p>
+              <div className="border-t border-slate-200 pt-6 mt-2">
+                <p className="text-xs text-slate-500 mb-3 font-sans">Typical completion time: 10–15 minutes.</p>
                 <Button
                   onClick={() => navigate('/application')}
-                  className="w-full justify-center px-6 py-3 text-sm font-medium rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                  className="w-full justify-center px-6 py-3 text-sm font-semibold rounded-full bg-gold-500 hover:bg-gold-400 text-navy-950 shadow-finance font-sans"
                   size="lg"
                 >
                   <span>Start application</span>
@@ -754,36 +738,31 @@ const ViewerDashboardV2 = () => {
               </div>
             </div>
 
-            {/* Viewer tools */}
             <div className="flex flex-col gap-6">
-              <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl p-6 shadow-sm">
+              <div className="finance-card p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-900">Network overview</h3>
-                    <p className="text-xs text-gray-500">
-                      High-level view of the CFF fund manager community.
-                    </p>
+                    <h3 className="text-sm font-display font-normal text-navy-900">Network overview</h3>
+                    <p className="text-xs section-label mt-0.5">CFF fund manager community</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 text-xs text-gray-700">
+                <div className="flex items-center gap-4 text-xs text-slate-600 font-sans">
                   <div>
-                    <p className="font-semibold text-gray-900">200+</p>
-                    <p className="text-gray-500">fund managers</p>
+                    <p className="font-display font-normal text-navy-900 text-lg">200+</p>
+                    <p className="text-slate-500">fund managers</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">25+</p>
-                    <p className="text-gray-500">countries</p>
+                    <p className="font-display font-normal text-navy-900 text-lg">25+</p>
+                    <p className="text-slate-500">countries</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl p-6 shadow-sm">
+              <div className="finance-card p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-900">Survey library</h3>
-                    <p className="text-xs text-gray-500">
-                      Access ESCP survey instruments from 2021–2024.
-                    </p>
+                    <h3 className="text-sm font-display font-normal text-navy-900">Survey library</h3>
+                    <p className="text-xs section-label mt-0.5">2021–2024</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-4 gap-2 mb-3">
@@ -793,27 +772,23 @@ const ViewerDashboardV2 = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => navigate(survey.path)}
-                      className="h-9 text-xs font-medium border-gray-300 text-gray-800 hover:bg-gray-100 rounded-md"
+                      className="h-9 text-xs font-medium border-slate-200 text-navy-900 hover:border-gold-500/40 hover:bg-amber-50 rounded-lg font-sans"
                     >
                       {survey.year}
                     </Button>
                   ))}
                 </div>
-                <p className="text-xs text-gray-500">
-                  Four years of data on local capital providers and MSME financing.
-                </p>
+                <p className="text-xs text-slate-500 font-sans">Four years of data on local capital providers and MSME financing.</p>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+              <div className="finance-card p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-900">Learning and events</h3>
-                    <p className="text-xs text-gray-500">
-                      Webinars, workshops and curated resources for fund managers.
-                    </p>
+                    <h3 className="text-sm font-display font-normal text-navy-900">Learning and events</h3>
+                    <p className="text-xs section-label mt-0.5">Resources for fund managers</p>
                   </div>
                 </div>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-slate-500 font-sans">
                   As the platform evolves, this space will host structured learning content,
                   recordings and practical tools for managers across the network.
                 </p>
@@ -826,77 +801,66 @@ const ViewerDashboardV2 = () => {
   }
 
   return (
-    <div
-      className="min-h-screen bg-slate-900/80"
-      style={{
-        backgroundImage: 'url(/CFF.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      {/* Header with Back Button */}
+    <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
         <div className="flex items-center justify-between mb-4">
           <Button
             variant="outline"
             onClick={() => setShowApplicationForm(false)}
-            className="flex items-center border-gray-300 text-gray-800 hover:bg-gray-100 bg-white shadow-sm"
+            className="flex items-center border-slate-200 text-navy-900 hover:bg-white hover:border-gold-500/30 font-sans"
           >
             <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
             Back to Overview
           </Button>
         </div>
         <div className="text-center mb-6">
-          <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-2">
+          <span className="section-label">Application</span>
+          <h1 className="text-2xl md:text-3xl font-display font-normal text-navy-900 mt-1 mb-2">
             Membership application
           </h1>
-          <p className="text-sm text-gray-600 max-w-2xl mx-auto">
+          <div className="w-14 h-0.5 bg-gold-500/60 rounded-full mx-auto my-2" aria-hidden />
+          <p className="text-sm text-slate-600 max-w-2xl mx-auto font-sans">
             Provide a concise overview of your organization, team and investment activity to support the review process.
           </p>
         </div>
       </div>
-      
-      {/* Application Form */}
+
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-        <div className="rounded-2xl bg-white/95 backdrop-blur-sm border border-gray-200 shadow-sm">
+        <div className="finance-card overflow-hidden">
           <div className="p-8 md:p-10">
             <div className="space-y-6">
-              {/* Progress Bar */}
               <div className="space-y-3">
-                <div className="flex justify-between text-sm font-semibold">
-                  <span className="text-gray-700">Step {currentSection} of 4</span>
-                  <span className="text-gray-900">{Math.round((currentSection / 4) * 100)}% complete</span>
+                <div className="flex justify-between text-sm font-semibold font-sans">
+                  <span className="text-slate-700">Step {currentSection} of 4</span>
+                  <span className="text-navy-900 tabular-nums">{Math.round((currentSection / 4) * 100)}% complete</span>
                 </div>
-                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-blue-600 rounded-full transition-all duration-500 ease-out"
+                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gold-500 rounded-full transition-all duration-500 ease-out"
                     style={{ width: `${(currentSection / 4) * 100}%` }}
-                  ></div>
+                  />
                 </div>
               </div>
 
-              {/* Form Content */}
               {renderSection(currentSection)}
 
-              {/* Navigation Buttons */}
               <div className="flex justify-between pt-8">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handlePrevious}
                   disabled={currentSection === 1}
-                  className="border-blue-300 text-blue-700 hover:bg-blue-50 bg-white disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all duration-300 rounded-full px-6 py-3 font-semibold"
+                  className="border-slate-200 text-navy-900 hover:bg-slate-100 hover:border-gold-500/30 disabled:opacity-50 disabled:cursor-not-allowed rounded-full px-6 py-3 font-semibold font-sans"
                 >
                   <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
                   Previous
                 </Button>
-                
+
                 <Button
                   type="button"
                   onClick={handleNext}
                   disabled={loading}
-                  className="group bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-8 py-3 shadow-2xl hover:shadow-purple-500/30 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 rounded-full font-bold"
+                  className="bg-gold-500 hover:bg-gold-400 text-navy-950 px-8 py-3 shadow-finance rounded-full font-bold font-sans"
                 >
                   {loading ? (
                     <span className="flex items-center">
@@ -905,13 +869,13 @@ const ViewerDashboardV2 = () => {
                     </span>
                   ) : currentSection === 4 ? (
                     <span className="flex items-center">
-                      Submit Application 🚀
+                      Submit Application
                       <CheckCircle className="w-5 h-5 ml-2" />
                     </span>
                   ) : (
                     <span className="flex items-center">
                       Next
-                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                      <ArrowRight className="w-5 h-5 ml-2" />
                     </span>
                   )}
                 </Button>
@@ -919,7 +883,6 @@ const ViewerDashboardV2 = () => {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

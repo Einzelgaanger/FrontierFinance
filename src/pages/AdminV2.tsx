@@ -210,13 +210,13 @@ function EnhancedActivityLog(props: { activityLogs: ActivityLog[]; getTimeAgo: (
   };
 
   return (
-    <Card className="border border-slate-100 bg-white shadow-sm rounded-2xl overflow-hidden">
-      <CardHeader className="border-b border-slate-100 bg-slate-50/50">
+    <Card className="border-l-4 border-l-slate-400 border border-slate-200/80 bg-white shadow-sm rounded-xl overflow-hidden">
+      <CardHeader className="border-b border-slate-200 bg-amber-50">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <CardTitle className="text-lg font-semibold text-navy-900">Activity log</CardTitle>
+            <CardTitle className="text-lg font-display font-normal text-navy-900">Activity log</CardTitle>
             <CardDescription className="text-slate-500 mt-0.5">
-              System events, user actions, and admin changes. Use search and filters to narrow results.
+              System events, user actions, and admin changes.
             </CardDescription>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -251,7 +251,7 @@ function EnhancedActivityLog(props: { activityLogs: ActivityLog[]; getTimeAgo: (
         ) : filteredAndGrouped.length === 0 ? (
           <p className="text-sm text-slate-500 text-center py-12">No matches for your filters.</p>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-slate-200">
             {filteredAndGrouped.map(({ label, logs }) => (
               <div key={label} className="py-4 first:pt-4">
                 <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-1 mb-3">{label}</h3>
@@ -263,7 +263,7 @@ function EnhancedActivityLog(props: { activityLogs: ActivityLog[]; getTimeAgo: (
                     return (
                       <div
                         key={log.id}
-                        className="flex gap-4 p-4 rounded-lg border border-slate-100 bg-white hover:bg-slate-50/80 hover:border-slate-200 transition-colors"
+                        className="flex gap-4 p-4 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 hover:border-slate-200 transition-colors"
                       >
                         <div className={`shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${meta.bg} ${meta.text}`}>
                           {meta.icon}
@@ -780,11 +780,13 @@ const AdminV2 = () => {
   if (userRole !== 'admin') {
     return (
       <SidebarLayout>
-        <div className="flex items-center justify-center h-screen">
-          <div className="text-center">
-            <Shield className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
-            <p className="text-gray-600">You don't have permission to access this page.</p>
+        <div className="min-h-screen bg-slate-100 flex items-center justify-center font-sans antialiased">
+          <div className="text-center px-6">
+            <div className="w-14 h-14 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center mx-auto mb-4">
+              <Shield className="w-8 h-8" />
+            </div>
+            <h1 className="text-2xl font-display font-normal text-navy-900 mb-2">Access denied</h1>
+            <p className="text-slate-600">You don’t have permission to access this page.</p>
           </div>
         </div>
       </SidebarLayout>
@@ -793,18 +795,17 @@ const AdminV2 = () => {
 
   return (
     <SidebarLayout>
-      <div className="min-h-screen bg-gradient-to-b from-navy-50/40 via-white to-slate-50/60 font-sans">
+      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-          {/* Page header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
+          <span className="section-label">Admin</span>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div>
-              <span className="section-label text-gold-600">Admin</span>
-              <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">
-                Admin Dashboard
+              <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 tracking-tight mt-1">
+                Applications & activity
               </h1>
-              <div className="w-14 h-0.5 bg-gold-500/60 mt-3 rounded-full" />
-              <p className="text-sm text-slate-600 mt-3 max-w-xl">
-                Overview of applications, members, and community activity
+              <div className="w-14 h-0.5 bg-gold-500/60 rounded-full my-2" aria-hidden />
+              <p className="text-sm text-slate-600 font-sans">
+                Applications, members, and community activity
               </p>
             </div>
             <Button
@@ -812,123 +813,121 @@ const AdminV2 = () => {
               size="sm"
               onClick={() => fetchAllData()}
               disabled={loading}
-              className="border-navy-200 text-navy-800 hover:bg-navy-50 hover:border-gold-300 shrink-0 rounded-xl transition-colors"
+              className="border-slate-200 text-slate-600 hover:bg-white hover:border-gold-500/30 shrink-0 rounded-lg font-sans"
             >
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
           </div>
 
-          {/* KPI cards – meaningful, readable metrics */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
-            <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl overflow-hidden hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+            <Card className="finance-card overflow-hidden">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Applications</p>
-                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.totalRequests}</p>
-                    <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
-                      {stats.applicationsGrowth >= 0 ? <TrendingUp className="w-3 h-3 text-emerald-600" /> : <TrendingDown className="w-3 h-3 text-red-600" />}
-                      <span className={stats.applicationsGrowth >= 0 ? 'text-emerald-600' : 'text-red-600'}>
+                    <p className="text-xs section-label">Applications</p>
+                    <p className="text-2xl font-display font-normal text-navy-900 mt-1 tabular-nums">{stats.totalRequests}</p>
+                    <p className="text-xs text-slate-500 mt-2 flex items-center gap-1 font-sans">
+                      {stats.applicationsGrowth >= 0 ? <TrendingUp className="w-3 h-3 text-gold-600" /> : <TrendingDown className="w-3 h-3 text-red-500" />}
+                      <span className={stats.applicationsGrowth >= 0 ? 'text-gold-600' : 'text-red-500'}>
                         {Math.abs(stats.applicationsGrowth).toFixed(1)}%
                       </span>
                       vs last month
                     </p>
                   </div>
-                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
-                    <ClipboardList className="w-5 h-5 text-slate-600" />
+                  <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                    <ClipboardList className="w-5 h-5" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className={`bg-white border shadow-sm rounded-2xl overflow-hidden transition-all duration-300 ${stats.pendingRequests > 0 ? 'border-amber-200 ring-1 ring-amber-100 hover:shadow-md' : 'border-slate-100 hover:shadow-md hover:border-gold-200/50'}`}>
+            <Card className={`finance-card overflow-hidden ${stats.pendingRequests > 0 ? 'border-l-4 border-l-gold-500' : ''}`}>
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Pending review</p>
-                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.pendingRequests}</p>
-                    <p className="text-xs text-slate-500 mt-2">
+                    <p className="text-xs section-label">Pending review</p>
+                    <p className="text-2xl font-display font-normal text-navy-900 mt-1 tabular-nums">{stats.pendingRequests}</p>
+                    <p className="text-xs text-slate-500 mt-2 font-sans">
                       {stats.pendingRequests > 0 ? 'Needs attention' : 'All caught up'}
                     </p>
                   </div>
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${stats.pendingRequests > 0 ? 'bg-amber-100' : 'bg-slate-100'}`}>
-                    <AlertCircle className={`w-5 h-5 ${stats.pendingRequests > 0 ? 'text-amber-600' : 'text-slate-600'}`} />
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${stats.pendingRequests > 0 ? 'bg-gold-100 text-gold-600' : 'bg-navy-900 text-gold-500'}`}>
+                    <AlertCircle className="w-5 h-5" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl overflow-hidden hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
+            <Card className="finance-card overflow-hidden">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Members & users</p>
-                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.totalProfiles}</p>
-                    <p className="text-xs text-slate-500 mt-2">
+                    <p className="text-xs section-label">Members</p>
+                    <p className="text-2xl font-display font-normal text-navy-900 mt-1 tabular-nums">{stats.totalProfiles}</p>
+                    <p className="text-xs text-slate-500 mt-2 font-sans">
                       {stats.activeMembers} members · {(stats.viewersCount ?? (stats.totalProfiles - stats.activeMembers))} viewers
                     </p>
                   </div>
-                  <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
-                    <Users className="w-5 h-5 text-emerald-600" />
+                  <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                    <Users className="w-5 h-5" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl overflow-hidden hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
+            <Card className="finance-card overflow-hidden">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Community</p>
-                    <p className="text-2xl font-bold text-slate-900 mt-1">{blogsCount + learningResourcesCount}</p>
-                    <p className="text-xs text-slate-500 mt-2">
-                      {blogsCount} posts · {learningResourcesCount} learning resources
+                    <p className="text-xs section-label">Community</p>
+                    <p className="text-2xl font-display font-normal text-navy-900 mt-1 tabular-nums">{blogsCount + learningResourcesCount}</p>
+                    <p className="text-xs text-slate-500 mt-2 font-sans">
+                      {blogsCount} posts · {learningResourcesCount} resources
                     </p>
                   </div>
-                  <div className="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
-                    <BookOpen className="w-5 h-5 text-violet-600" />
+                  <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                    <BookOpen className="w-5 h-5" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border border-slate-100 shadow-sm rounded-2xl overflow-hidden hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
+            <Card className="finance-card overflow-hidden">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Avg. decision time</p>
-                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.avgProcessingDays}</p>
-                    <p className="text-xs text-slate-500 mt-2">days to approve or reject</p>
+                    <p className="text-xs section-label">Avg. decision</p>
+                    <p className="text-2xl font-display font-normal text-navy-900 mt-1 tabular-nums">{stats.avgProcessingDays}</p>
+                    <p className="text-xs text-slate-500 mt-2 font-sans">days to decide</p>
                   </div>
-                  <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
-                    <Clock className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                    <Clock className="w-5 h-5" />
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Main Dashboard Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3 bg-white border border-slate-100 shadow-sm rounded-2xl p-1.5 h-12">
+            <TabsList className="grid w-full grid-cols-3 bg-white border border-slate-200 shadow-finance rounded-xl p-1.5 h-11 max-w-md">
               <TabsTrigger
                 value="overview"
-                className="data-[state=active]:bg-navy-900 data-[state=active]:text-white data-[state=active]:shadow-md rounded-xl text-slate-600 font-medium transition-all"
+                className="data-[state=active]:bg-gold-50 data-[state=active]:text-navy-900 data-[state=active]:border-gold-500/30 rounded-lg text-slate-600 font-medium transition-all font-sans"
               >
                 <LayoutDashboard className="w-4 h-4 mr-2" />
                 Overview
               </TabsTrigger>
               <TabsTrigger
                 value="applications"
-                className="data-[state=active]:bg-navy-900 data-[state=active]:text-white data-[state=active]:shadow-md rounded-xl text-slate-600 font-medium transition-all"
+                className="data-[state=active]:bg-gold-50 data-[state=active]:text-navy-900 data-[state=active]:border-gold-500/30 rounded-lg text-slate-600 font-medium transition-all font-sans"
               >
                 <ClipboardCheck className="w-4 h-4 mr-2" />
                 Applications
               </TabsTrigger>
               <TabsTrigger
                 value="activity"
-                className="data-[state=active]:bg-navy-900 data-[state=active]:text-white data-[state=active]:shadow-md rounded-xl text-slate-600 font-medium transition-all"
+                className="data-[state=active]:bg-gold-50 data-[state=active]:text-navy-900 data-[state=active]:border-gold-500/30 rounded-lg text-slate-600 font-medium transition-all font-sans"
               >
                 <History className="w-4 h-4 mr-2" />
                 Activity
@@ -938,16 +937,14 @@ const AdminV2 = () => {
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-8 mt-6">
               <div>
-                <span className="section-label text-gold-600">Insights</span>
-                <h2 className="text-xl font-display font-normal text-navy-900 mt-1">Applications pipeline</h2>
-                <p className="text-sm text-slate-600 mt-1">Trends and distribution over time.</p>
-                <div className="w-14 h-0.5 bg-gold-500/60 mt-2 rounded-full" />
+                <h2 className="text-xl font-display font-normal text-navy-900">Applications pipeline</h2>
+                <p className="text-sm text-slate-600 mt-0.5">Trends and distribution over time.</p>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Applications Trend Chart */}
-                <Card className="border border-slate-100 bg-white shadow-sm rounded-2xl overflow-hidden">
-                  <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
-                    <CardTitle className="text-base font-semibold text-navy-900">Applications this week</CardTitle>
+                <Card className="finance-card overflow-hidden">
+                  <CardHeader className="border-b border-slate-200/60 bg-amber-50 px-6 py-4">
+                    <CardTitle className="text-base font-display font-normal text-navy-900">Applications this week</CardTitle>
                     <CardDescription className="text-slate-500 text-sm mt-0.5">Daily submissions by outcome</CardDescription>
                   </CardHeader>
                   <CardContent className="pt-6">
@@ -975,9 +972,9 @@ const AdminV2 = () => {
                 </Card>
 
                 {/* Status Distribution */}
-                <Card className="border border-slate-100 bg-white shadow-sm rounded-2xl overflow-hidden">
-                  <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
-                    <CardTitle className="text-base font-semibold text-navy-900">Status breakdown</CardTitle>
+                <Card className="finance-card overflow-hidden">
+                  <CardHeader className="border-b border-slate-200/60 bg-amber-50 px-6 py-4">
+                    <CardTitle className="text-base font-display font-normal text-navy-900">Status breakdown</CardTitle>
                     <CardDescription className="text-slate-500 text-sm mt-0.5">Pending, approved, and rejected</CardDescription>
                   </CardHeader>
                   <CardContent className="pt-6">
@@ -1013,9 +1010,9 @@ const AdminV2 = () => {
               </div>
 
               {/* Application Lifetime Chart */}
-              <Card className="border border-slate-100 bg-white shadow-sm rounded-2xl overflow-hidden">
-                <CardHeader className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
-                  <CardTitle className="text-base font-semibold text-navy-900">Applications over time</CardTitle>
+              <Card className="finance-card overflow-hidden">
+                <CardHeader className="border-b border-slate-200/60 bg-amber-50 px-6 py-4">
+                  <CardTitle className="text-base font-display font-normal text-navy-900">Applications over time</CardTitle>
                   <CardDescription className="text-slate-500 text-sm mt-0.5">Cumulative applications, approved, rejected, and pending</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-6">
@@ -1162,7 +1159,7 @@ const AdminV2 = () => {
                 {selectedRequest.team_overview && (
                   <div className="border-t border-slate-200 pt-6">
                     <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">Team Overview</h3>
-                    <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
+                    <div className="text-sm text-slate-700 bg-slate-100 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
                       {selectedRequest.team_overview}
                     </div>
                   </div>
@@ -1171,7 +1168,7 @@ const AdminV2 = () => {
                 {selectedRequest.investment_thesis && (
                   <div className="border-t border-slate-200 pt-6">
                     <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">Investment Thesis</h3>
-                    <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
+                    <div className="text-sm text-slate-700 bg-slate-100 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
                       {selectedRequest.investment_thesis}
                     </div>
                   </div>
@@ -1195,7 +1192,7 @@ const AdminV2 = () => {
                 {selectedRequest.expectations_from_network && (
                   <div className="border-t border-slate-200 pt-6">
                     <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">Network Expectations</h3>
-                    <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
+                    <div className="text-sm text-slate-700 bg-slate-100 border border-slate-200 p-4 rounded-lg whitespace-pre-wrap leading-relaxed">
                       {selectedRequest.expectations_from_network}
                     </div>
                   </div>
@@ -1204,7 +1201,7 @@ const AdminV2 = () => {
                 {selectedRequest.how_heard_about_network && (
                   <div className="border-t border-slate-200 pt-6">
                     <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-3">How They Heard About Us</h3>
-                    <div className="text-sm text-slate-700 bg-slate-50 border border-slate-200 p-4 rounded-lg">
+                    <div className="text-sm text-slate-700 bg-slate-100 border border-slate-200 p-4 rounded-lg">
                       {selectedRequest.how_heard_about_network}
                     </div>
                   </div>

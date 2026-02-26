@@ -112,12 +112,15 @@ const ViewerSettings = () => {
 
   if (userRole !== 'viewer') {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-slate-100 font-sans">
         <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
-            <p className="text-gray-600">This page is only available for viewers.</p>
+            <div className="w-14 h-14 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-8 h-8" />
+            </div>
+            <h1 className="text-2xl font-display font-normal text-navy-900 mb-2">Access denied</h1>
+            <p className="text-slate-600 font-sans">This page is only available for viewers.</p>
           </div>
         </div>
       </div>
@@ -125,23 +128,27 @@ const ViewerSettings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-rose-50 to-pink-50">
+    <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
       <Header />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">Settings</h1>
-          <p className="text-slate-600">Manage your account settings and preferences</p>
-        </div>
+        <span className="section-label">Account</span>
+        <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 mb-2 tracking-tight">Settings</h1>
+        <div className="w-14 h-0.5 bg-gold-500/60 rounded-full my-3" aria-hidden />
+        <p className="text-sm text-slate-600 mb-8 font-sans">Manage your account settings and preferences.</p>
 
-        <Card className="bg-gradient-to-br from-rose-50 to-pink-100 border border-rose-200 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center text-rose-800">
-              <Lock className="w-5 h-5 mr-2 text-rose-600" />
-              Change Password
-            </CardTitle>
-            <CardDescription className="text-rose-700">
-              Update your password to keep your account secure. Your new password must be at least 8 characters long and include uppercase, lowercase, number, and special character.
-            </CardDescription>
+        <Card className="finance-card overflow-hidden">
+          <CardHeader className="border-b border-slate-200/60 bg-amber-50">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                <Lock className="w-5 h-5" />
+              </div>
+              <div>
+                <CardTitle className="text-lg font-display font-normal text-navy-900">Change Password</CardTitle>
+                <CardDescription className="text-slate-600 font-sans mt-0.5">
+                  Update your password to keep your account secure. Your new password must be at least 8 characters long and include uppercase, lowercase, number, and special character.
+                </CardDescription>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -151,20 +158,20 @@ const ViewerSettings = () => {
                   name="currentPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-rose-700">Current Password</FormLabel>
+                      <FormLabel className="text-navy-900 font-sans">Current Password</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
                             {...field}
                             type={showCurrentPassword ? "text" : "password"}
                             placeholder="Enter your current password"
-                            className="pr-10 bg-white/70 backdrop-blur-sm border-rose-200 focus:border-rose-400"
+                            className="pr-10 bg-white backdrop-blur-sm border-slate-200 focus:border-gold-500/50"
                           />
                           <Button
                             type="button"
                             variant="ghost"
                             size="sm"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-rose-500"
+                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-gold-600"
                             onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                           >
                             {showCurrentPassword ? (
@@ -185,20 +192,20 @@ const ViewerSettings = () => {
                   name="newPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-rose-700">New Password</FormLabel>
+                      <FormLabel className="text-navy-900 font-sans">New Password</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
                             {...field}
                             type={showNewPassword ? "text" : "password"}
                             placeholder="Enter your new password"
-                            className="pr-10 bg-white/70 backdrop-blur-sm border-rose-200 focus:border-rose-400"
+                            className="pr-10 bg-white backdrop-blur-sm border-slate-200 focus:border-gold-500/50"
                           />
                           <Button
                             type="button"
                             variant="ghost"
                             size="sm"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-rose-500"
+                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-gold-600"
                             onClick={() => setShowNewPassword(!showNewPassword)}
                           >
                             {showNewPassword ? (
@@ -219,20 +226,20 @@ const ViewerSettings = () => {
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-rose-700">Confirm New Password</FormLabel>
+                      <FormLabel className="text-navy-900 font-sans">Confirm New Password</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
                             {...field}
                             type={showConfirmPassword ? "text" : "password"}
                             placeholder="Confirm your new password"
-                            className="pr-10 bg-white/70 backdrop-blur-sm border-rose-200 focus:border-rose-400"
+                            className="pr-10 bg-white backdrop-blur-sm border-slate-200 focus:border-gold-500/50"
                           />
                           <Button
                             type="button"
                             variant="ghost"
                             size="sm"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-rose-500"
+                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-gold-600"
                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                           >
                             {showConfirmPassword ? (
@@ -251,7 +258,7 @@ const ViewerSettings = () => {
                 <Button 
                   type="submit" 
                   disabled={isUpdating}
-                  className="w-full bg-rose-500 hover:bg-rose-600 text-white shadow-sm"
+                  className="w-full bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold shadow-finance rounded-full font-sans"
                 >
                   {isUpdating ? (
                     <div className="flex items-center">

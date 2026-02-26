@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Building2, Mail, Globe, User, Loader2, FileText, ChevronDown, ChevronUp, Search } from 'lucide-react';
+import { User, Loader2, Search, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { isStaffEmail } from '@/lib/staff';
+import { motion } from 'framer-motion';
+import DirectoryProfileCard, { type DirectoryProfileCardProfile } from '@/components/network/DirectoryProfileCard';
 
 interface UserProfile {
   id: string;
@@ -16,6 +17,7 @@ interface UserProfile {
   profile_picture_url: string | null;
   user_role: string;
   has_surveys: boolean;
+  team_member_count?: number;
 }
 
 export default function ViewerNetworkPageNew() {
@@ -24,8 +26,6 @@ export default function ViewerNetworkPageNew() {
   const [filteredProfiles, setFilteredProfiles] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUser, setSelectedUser] = useState<{ id: string; name: string } | null>(null);
-  const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     fetchProfiles();
@@ -38,14 +38,13 @@ export default function ViewerNetworkPageNew() {
   const fetchProfiles = async () => {
     try {
       setLoading(true);
-
       const [profilesResult, companyMembersResult, survey2021Result, survey2022Result, survey2023Result, survey2024Result] = await Promise.all([
         supabase
           .from('user_profiles')
           .select('id, email, company_name, description, website, profile_picture_url, user_role')
           .not('email', 'like', '%.test@escpnetwork.net')
           .order('company_name'),
-        supabase.from('company_members').select('member_user_id'),
+        supabase.from('company_members').select('company_user_id, member_user_id'),
         supabase.from('survey_responses_2021').select('user_id').eq('submission_status', 'completed'),
         supabase.from('survey_responses_2022').select('user_id').eq('submission_status', 'completed'),
         supabase.from('survey_responses_2023').select('user_id').eq('submission_status', 'completed'),
@@ -54,8 +53,16 @@ export default function ViewerNetworkPageNew() {
 
       if (profilesResult.error) throw profilesResult.error;
 
-      const secondaryMemberIds = new Set((companyMembersResult.data || []).map((m: { member_user_id: string }) => m.member_user_id));
-      const allProfiles = (profilesResult.data || []).filter((p: { id: string }) => !secondaryMemberIds.has(p.id));
+      const companyMembersList = companyMembersResult.data || [];
+      const secondaryMemberIds = new Set(companyMembersList.map((m: { member_user_id: string }) => m.member_user_id));
+      const teamCountByCompanyId = new Map<string, number>();
+      companyMembersList.forEach((m: { company_user_id: string }) => {
+        const cid = m.company_user_id;
+        teamCountByCompanyId.set(cid, (teamCountByCompanyId.get(cid) || 0) + 1);
+      });
+      const allProfiles = (profilesResult.data || []).filter(
+        (p: { id: string; email?: string }) => !secondaryMemberIds.has(p.id) && !isStaffEmail(p.email)
+      );
 
       const usersWithSurveys = new Set<string>();
       [survey2021Result.data, survey2022Result.data, survey2023Result.data, survey2024Result.data].forEach(surveyData => {
@@ -66,9 +73,9 @@ export default function ViewerNetworkPageNew() {
 
       const profilesWithSurveys = allProfiles.map((profile: any) => ({
         ...profile,
-        has_surveys: usersWithSurveys.has(profile.id)
+        has_surveys: usersWithSurveys.has(profile.id),
+        team_member_count: teamCountByCompanyId.get(profile.id) || 0
       }));
-
       setProfiles(profilesWithSurveys);
     } catch (error) {
       console.error('Error fetching profiles:', error);
@@ -82,22 +89,12 @@ export default function ViewerNetworkPageNew() {
       setFilteredProfiles(profiles);
       return;
     }
-
     const filtered = profiles.filter(profile =>
       profile.company_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       profile.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       profile.description?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredProfiles(filtered);
-  };
-
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
-      case 'admin': return 'bg-red-100 text-red-800 border-red-300';
-      case 'member': return 'bg-blue-100 text-blue-800 border-blue-300';
-      case 'viewer': return 'bg-gray-100 text-gray-800 border-gray-300';
-      default: return 'bg-gray-100 text-gray-800 border-gray-300';
-    }
   };
 
   const handleCardClick = (profile: UserProfile) => {
@@ -108,166 +105,111 @@ export default function ViewerNetworkPageNew() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-navy-950 font-sans p-6 sm:p-8 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-12 w-12 text-gold-500 animate-spin" />
-          <p className="text-navy-300 animate-pulse">Loading Network...</p>
+      <div className="directory-page">
+        <div className="directory-hero">
+          <h1 className="directory-hero-title">Directory</h1>
+          <p className="directory-hero-subtitle">Fund managers in the CFF network</p>
+          <div className="directory-hero-accent" aria-hidden />
+        </div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="h-10 w-10 text-gold-500 animate-spin" />
+            <p className="text-sm font-medium text-slate-600 mt-4">Loading directory…</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <>
-      <div className="min-h-screen bg-navy-950 font-sans p-6 sm:p-8">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div>
-              <span className="section-label text-gold-400/90">Network</span>
-              <h1 className="text-2xl sm:text-3xl font-display font-normal text-white mt-1 tracking-tight">Network Directory</h1>
-              <div className="w-14 h-0.5 bg-gold-500/60 mt-3 rounded-full" />
-              <p className="text-navy-200 mt-3">Browse fund managers in the CFF Network. Only primary account holders are listed.</p>
-            </div>
-          </div>
+    <div className="directory-page selection:bg-gold-500/20 selection:text-navy-900">
+      {/* Hero: same for all users */}
+      <header className="directory-hero">
+        <h1 className="directory-hero-title">Directory</h1>
+        <p className="directory-hero-subtitle">Search and browse fund managers in the CFF network.</p>
+        <div className="directory-hero-accent" aria-hidden />
+      </header>
 
-          <div className="glass-card rounded-2xl p-4 sm:p-6">
-            <div className="relative w-full max-w-md">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-navy-400" />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        {/* Toolbar: same layout as member, search + refresh only */}
+        <div className="directory-toolbar mb-8">
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
               <Input
-                placeholder="Search by company name, email, or description..."
+                placeholder="Search by company, email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 bg-navy-900/50 border-navy-700 text-white placeholder:text-navy-400 focus:border-gold-500/50 focus:ring-gold-500/20 rounded-xl h-12"
+                className="pl-10 h-11 bg-slate-50/80 border border-slate-200 text-navy-900 placeholder:text-slate-500 focus:bg-white focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 rounded-lg transition-colors"
               />
             </div>
-          </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProfiles.map((profile) => {
-          const isClickable = profile.has_surveys;
-          return (
-            <Card
-              key={profile.id}
-              className={`transition-all duration-300 relative overflow-hidden min-h-[380px] bg-navy-900/60 backdrop-blur-sm border border-navy-700 hover:border-gold-500/30 ${
-                isClickable ? 'cursor-pointer hover:shadow-xl hover:shadow-gold-900/10 hover:-translate-y-0.5' : 'opacity-80'
-              }`}
-              onClick={() => handleCardClick(profile)}
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-11 px-4 border border-slate-200 bg-slate-50/80 text-navy-900 hover:bg-white hover:border-gold-500 rounded-lg transition-colors shrink-0"
+              onClick={fetchProfiles}
             >
-                {/* Profile Picture as Background */}
-                <div className="absolute inset-0">
-                  <Avatar className="w-full h-full rounded-lg">
-                    <AvatarImage src={profile.profile_picture_url || ''} className="object-cover" />
-                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
-                      <Building2 className="w-24 h-24" />
-                    </AvatarFallback>
-                  </Avatar>
-                  {/* Strong dark overlay - nearly opaque for solid card feel */}
-                  <div className="absolute inset-0 bg-black/85 group-hover:bg-black/80 transition-all duration-300"></div>
-                  {/* Opaque content strip at bottom so text sits on solid background */}
-                  <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-slate-900 via-slate-900/98 to-transparent pointer-events-none" aria-hidden></div>
-                </div>
-
-                                 {/* Content Overlay - Directly on Image */}
-                 <div className="relative z-[1] h-full flex flex-col justify-end p-6 space-y-1">
-                   {/* Company Name - only show when provided (not placeholder) */}
-                   {profile.company_name && profile.company_name.trim().toLowerCase() !== 'not provided' && (
-                     <div className="flex items-center gap-2">
-                       <Building2 className="w-5 h-5 text-blue-400 flex-shrink-0" />
-                       <CardTitle className="text-lg text-white drop-shadow-md">{profile.company_name}</CardTitle>
-                     </div>
-                   )}
-
-                   {/* Email - only show when provided */}
-                   {profile.email && profile.email.trim().toLowerCase() !== 'no email provided' && (
-                     <div className="flex items-center gap-2 text-sm text-gray-100">
-                       <Mail className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                       <span className="truncate drop-shadow">{profile.email}</span>
-                     </div>
-                   )}
-
-                   {/* Website */}
-                   {profile.website && (
-                     <div className="flex items-center gap-2 text-sm text-gray-100">
-                       <Globe className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                       <a
-                         href={profile.website}
-                         target="_blank"
-                         rel="noopener noreferrer"
-                         className="text-blue-300 hover:text-blue-200 hover:underline truncate drop-shadow"
-                         onClick={(e) => e.stopPropagation()}
-                       >
-                         {profile.website}
-                       </a>
-                     </div>
-                   )}
-
-                                       {/* Description */}
-                    {profile.description && (
-                      <div className="relative">
-                        <div 
-                          className={`text-sm text-gray-200 drop-shadow transition-all duration-300 ${
-                            expandedDescriptions[profile.id] ? 'max-h-32 overflow-y-auto' : 'line-clamp-2'
-                          }`}
-                          style={{ maxHeight: expandedDescriptions[profile.id] ? '8rem' : 'none' }}
-                        >
-                          {profile.description}
-                        </div>
-                        {profile.description.length > 100 && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setExpandedDescriptions(prev => ({
-                                ...prev,
-                                [profile.id]: !prev[profile.id]
-                              }));
-                            }}
-                            className="text-blue-400 hover:text-blue-300 text-xs mt-1 flex items-center gap-1"
-                          >
-                            {expandedDescriptions[profile.id] ? (
-                              <>
-                                <span>Read Less</span>
-                                <ChevronUp className="w-3 h-3" />
-                              </>
-                            ) : (
-                              <>
-                                <span>Read More</span>
-                                <ChevronDown className="w-3 h-3" />
-                              </>
-                            )}
-                          </button>
-                        )}
-                      </div>
-                    )}
-
-                   {/* Badges - solid opaque styling */}
-                   <div className="flex flex-wrap gap-2 pt-2">
-                     <Badge className="bg-slate-700 text-white border-slate-500">
-                       {profile.user_role}
-                     </Badge>
-                     {profile.has_surveys && (
-                       <Badge className="bg-emerald-700 text-white border-emerald-600 font-medium">
-                         <FileText className="w-3 h-3 mr-1" />
-                         Has Surveys
-                       </Badge>
-                     )}
-                   </div>
-                 </div>
-          </Card>
-          );
-        })}
-      </div>
-
-      {filteredProfiles.length === 0 && (
-        <div className="text-center py-20 bg-navy-900/30 rounded-2xl border border-navy-800 border-dashed">
-          <User className="w-16 h-16 mx-auto text-navy-600 mb-4" />
-          <h3 className="text-xl font-semibold text-white mb-2">No profiles found</h3>
-          <p className="text-navy-300">Try adjusting your search</p>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
         </div>
-      )}
-        </div>
-      </div>
 
-    {/* Modal no longer used for viewers; navigation to detail page instead */}
-  </>
+        {/* Stats */}
+        <div className="flex gap-6 mb-6 text-sm font-medium text-slate-600">
+          <span><span className="text-navy-900 font-semibold">{filteredProfiles.length}</span> members{searchTerm ? ' matching your search' : ''}</span>
+        </div>
+
+        {/* Cards grid: shared DirectoryProfileCard (same UI/UX as member directory) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredProfiles.map((profile, i) => {
+            const isClickable = profile.has_surveys;
+            const cardProfile: DirectoryProfileCardProfile = {
+              id: profile.id,
+              company_name: profile.company_name,
+              email: profile.email,
+              description: profile.description,
+              website: profile.website,
+              profile_picture_url: profile.profile_picture_url,
+              user_role: profile.user_role,
+              team_member_count: profile.team_member_count,
+            };
+            return (
+              <motion.div
+                key={profile.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(i * 0.04, 0.25) }}
+              >
+                <DirectoryProfileCard
+                  profile={cardProfile}
+                  surveyBadgeText={profile.has_surveys ? 'Has surveys' : null}
+                  isClickable={isClickable}
+                  onClick={() => handleCardClick(profile)}
+                />
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {filteredProfiles.length === 0 && (
+          <div className="finance-card overflow-hidden py-16 text-center border-2 border-slate-200 bg-amber-50/50">
+            <div className="w-16 h-16 rounded-2xl bg-navy-900 text-gold-400 flex items-center justify-center mx-auto mb-4 shadow-finance">
+              <User className="h-9 w-9" />
+            </div>
+            <h3 className="text-lg font-display font-semibold text-navy-900">No profiles found</h3>
+            <p className="text-sm text-slate-600 mt-2 max-w-sm mx-auto">Try adjusting your search or filters.</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-6 border border-slate-200 text-navy-900 hover:border-gold-500 hover:bg-gold-50/50 font-semibold rounded-lg"
+              onClick={() => setSearchTerm('')}
+            >
+              Clear search
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

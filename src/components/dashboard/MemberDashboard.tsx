@@ -180,41 +180,31 @@ const MemberDashboard = () => {
   ];
 
   return (
-    <div 
-      className="min-h-screen"
-      style={{
-        backgroundImage: 'url(/member.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-      }}
-    >
+    <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Quick Actions */}
+        <span className="section-label">Member</span>
+        <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">Dashboard</h1>
+        <div className="w-14 h-0.5 bg-gold-500/60 rounded-full my-3" aria-hidden />
+        <p className="text-sm text-slate-600 mb-8">Quick actions, surveys, and network overview.</p>
+
+        {/* Quick Actions – CFF finance-card */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-            <Zap className="w-6 h-6" />
-            Quick Actions
-          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {quickActions.map((action, index) => (
-              <Card 
+              <Card
                 key={index}
-                className="bg-white/95 backdrop-blur-sm border-gray-200/50 shadow-lg hover:shadow-xl transition-all hover:scale-105 cursor-pointer group"
+                className="finance-card cursor-pointer"
                 onClick={() => navigate(action.href)}
               >
                 <CardContent className="p-5">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform`}>
-                    <action.icon className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center mb-4">
+                    <action.icon className="w-6 h-6" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
-                    {action.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-3">{action.description}</p>
-                  <div className="flex items-center text-sm font-medium text-blue-600 group-hover:gap-2 transition-all">
+                  <h3 className="font-display font-normal text-navy-900 mb-1">{action.title}</h3>
+                  <p className="text-sm text-slate-600 mb-3 font-sans">{action.description}</p>
+                  <div className="flex items-center text-sm font-medium text-gold-600 group-hover:gap-2 transition-all">
                     Get started
-                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-4 h-4 ml-1" />
                   </div>
                 </CardContent>
               </Card>
@@ -223,18 +213,21 @@ const MemberDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Survey Access & Features */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Survey Access Card */}
-            <Card className="bg-white/95 backdrop-blur-sm border-gray-200/50 shadow-xl">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <FileText className="w-5 h-5 text-purple-600" />
-                  Survey Access & Insights
-                </CardTitle>
+            <Card className="finance-card overflow-hidden">
+              <CardHeader className="border-b border-slate-200/60 bg-amber-50 px-5 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl font-display font-normal text-navy-900">Survey Access & Insights</CardTitle>
+                    <p className="text-xs section-label mt-1">2021–2024</p>
+                  </div>
+                </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 mb-4">
+              <CardContent className="p-5">
+                <p className="text-slate-600 mb-4 font-sans">
                   Complete annual surveys to share your insights and access comprehensive market data from 2021-2024.
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
@@ -243,49 +236,43 @@ const MemberDashboard = () => {
                       key={survey.year}
                       variant="outline"
                       onClick={() => navigate(survey.path)}
-                      className={`h-auto py-3 font-semibold border-2 hover:scale-105 transition-transform ${survey.color}`}
+                      className="h-auto py-3 font-semibold border-2 border-slate-200 text-navy-900 hover:border-gold-500/40 hover:bg-amber-50 rounded-xl font-sans"
                     >
                       {survey.year}
                     </Button>
                   ))}
                 </div>
-                <div className="flex items-center justify-between text-sm text-gray-600 pt-4 border-t border-gray-200">
+                <div className="flex items-center justify-between text-sm text-slate-600 pt-4 border-t border-slate-200 font-sans">
                   <span className="flex items-center gap-1">
-                    <BarChart3 className="w-4 h-4" />
+                    <BarChart3 className="w-4 h-4 text-gold-600" />
                     Trend Analysis Available
                   </span>
                   <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-4 h-4 text-gold-600" />
                     4 Years of Data
                   </span>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Features Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {features.map((feature, index) => (
-                <Card 
-                  key={index}
-                  className="bg-white/95 backdrop-blur-sm border-gray-200/50 shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] cursor-pointer"
-                >
+                <Card key={index} className="finance-card cursor-pointer">
                   <CardContent className="p-5">
-                    <div className={`w-12 h-12 rounded-xl ${feature.bgColor} border-2 ${feature.borderColor} flex items-center justify-center mb-4`}>
-                      <feature.icon className={`w-6 h-6 ${feature.color}`} />
+                    <div className="w-12 h-12 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center mb-4">
+                      <feature.icon className="w-6 h-6" />
                     </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                    <p className="text-sm text-gray-600 mb-3">{feature.description}</p>
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                      <span className="text-xs font-medium text-gray-500">{feature.stats}</span>
-                      <ArrowRight className="w-4 h-4 text-gray-400" />
+                    <h3 className="font-display font-normal text-navy-900 mb-2">{feature.title}</h3>
+                    <p className="text-sm text-slate-600 mb-3 font-sans">{feature.description}</p>
+                    <div className="flex items-center justify-between pt-3 border-t border-slate-200">
+                      <span className="text-xs font-medium text-gold-600 font-sans">{feature.stats}</span>
+                      <ArrowRight className="w-4 h-4 text-gold-600" />
                     </div>
                   </CardContent>
                 </Card>
               ))}
             </div>
           </div>
-
-          {/* Right Column - Leaderboard */}
           <div className="lg:col-span-1">
             <Leaderboard />
           </div>

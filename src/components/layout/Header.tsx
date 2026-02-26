@@ -95,8 +95,8 @@ const Header = ({ showNav = true }: HeaderProps) => {
         return {
           label: 'Visitor',
           icon: Eye,
-          className: 'px-3 py-1 bg-blue-50 text-blue-700 border-blue-200',
-          popupClassName: 'bg-blue-600 text-white',
+          className: 'px-3 py-1 bg-gold-50 text-gold-700 border-gold-200',
+          popupClassName: 'bg-navy-900 text-gold-400',
           description: 'Limited access to network resources',
           features: [
             'Browse limited directory of fund managers',
@@ -111,7 +111,7 @@ const Header = ({ showNav = true }: HeaderProps) => {
   const roleConfig = getRoleBadgeConfig(userRole || 'viewer');
 
   return (
-    <header className="border-b border-gray-200 bg-white shadow-sm rounded-bl-xl rounded-br-xl">
+    <header className="border-b border-slate-200 bg-white shadow-sm rounded-bl-xl rounded-br-xl font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Left side - CFF Logo */}
@@ -139,40 +139,22 @@ const Header = ({ showNav = true }: HeaderProps) => {
               {/* Right side - Navigation and User Info */}
               <div className="hidden md:flex items-center space-x-6">
                 {/* Navigation Container */}
-                <div className="bg-gray-100 rounded-2xl px-3 py-1.5 shadow-md border border-gray-200">
+                <div className="bg-slate-100 rounded-2xl px-3 py-1.5 shadow-sm border border-slate-200">
                   <nav className="flex items-center space-x-2">
                     {filteredNavItems.map((item) => {
                       const Icon = item.icon;
                       const active = isActive(item.href);
-                      
                       return (
                         <button
                           key={item.name}
                           onClick={() => handleNavigation(item.href)}
                           className={`flex items-center space-x-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ease-in-out relative overflow-hidden group ${
-                            active 
-                              ? 'text-blue-700 bg-white shadow-sm' 
-                              : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                            active ? 'text-navy-900 bg-white shadow-sm border border-gold-200/50' : 'text-slate-600 hover:text-navy-900 hover:bg-white/60'
                           }`}
                         >
-                          {/* Icon */}
-                          <Icon className={`w-4 h-4 transition-all duration-300 ease-in-out ${
-                            active 
-                              ? 'text-blue-600' 
-                              : 'text-gray-500 group-hover:text-gray-700'
-                          }`} />
-                          
-                          {/* Text */}
-                          <span className="relative z-10">
-                            {item.name}
-                          </span>
-                          
-                          {/* Hover Underline Effect */}
-                          <div className={`absolute bottom-0 left-1/2 w-0 h-0.5 bg-blue-500 transition-all duration-300 ease-in-out transform -translate-x-1/2 ${
-                            active 
-                              ? 'w-full' 
-                              : 'group-hover:w-full'
-                          }`} />
+                          <Icon className={`w-4 h-4 transition-all duration-300 ease-in-out ${active ? 'text-gold-600' : 'text-slate-500 group-hover:text-gold-600'}`} />
+                          <span className="relative z-10">{item.name}</span>
+                          <div className={`absolute bottom-0 left-1/2 w-0 h-0.5 bg-gold-500 transition-all duration-300 ease-in-out transform -translate-x-1/2 ${active ? 'w-full' : 'group-hover:w-full'}`} />
                         </button>
                       );
                     })}
@@ -180,7 +162,7 @@ const Header = ({ showNav = true }: HeaderProps) => {
                 </div>
 
                 {/* Email Display */}
-                <div className="flex items-center space-x-2 text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-xl border border-gray-200">
+                <div className="flex items-center space-x-2 text-sm text-slate-700 bg-slate-100 px-3 py-2 rounded-xl border border-slate-200">
                   <User className="w-4 h-4 text-gray-500" />
                   <span className="font-medium text-gray-800">{user.email}</span>
                   
@@ -196,7 +178,7 @@ const Header = ({ showNav = true }: HeaderProps) => {
                     
                     {/* Hover Popup Card */}
                     <div className="absolute right-0 top-full mt-2 w-80 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out z-[9999]">
-                      <Card className="shadow-xl border-gray-200 bg-white">
+                      <Card className="shadow-xl border-slate-200 bg-white">
                         <CardHeader className="pb-3">
                           <CardTitle className="text-lg flex items-center">
                             <div className={`w-8 h-8 ${roleConfig.className.split(' ')[1]} rounded-lg flex items-center justify-center mr-3`}>
@@ -228,7 +210,7 @@ const Header = ({ showNav = true }: HeaderProps) => {
                           
                           <div className="text-center pt-2">
                             <Button 
-                              className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg transition-all duration-300 ease-in-out"
+                              className="w-full bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold shadow-finance rounded-full"
                               onClick={() => navigate('/network')}
                             >
                               <Globe className="w-4 h-4 mr-2" />
@@ -255,7 +237,7 @@ const Header = ({ showNav = true }: HeaderProps) => {
                           ? 'bg-red-100 text-red-700 border border-red-200' 
                           : userRole === 'member' 
                           ? 'bg-green-100 text-green-700 border border-green-200' 
-                          : 'bg-blue-100 text-blue-700 border border-blue-200'
+                          : 'bg-gold-100 text-gold-700 border border-gold-200'
                       }`}>
                         {userRole === 'admin' ? 'Administrator' : 
                          userRole === 'member' ? 'Member' : 'Visitor'}
@@ -263,7 +245,7 @@ const Header = ({ showNav = true }: HeaderProps) => {
                     </div>
                   </div>
                   {/* Profile Picture - furthest right */}
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-semibold text-sm">
+                  <div className="w-10 h-10 bg-navy-900 text-gold-500 rounded-lg flex items-center justify-center font-semibold text-sm">
                     {user?.email?.charAt(0).toUpperCase() || 'U'}
                   </div>
                 </div>
@@ -282,7 +264,7 @@ const Header = ({ showNav = true }: HeaderProps) => {
               <div className="md:hidden">
                 <Sheet>
                   <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="border-gray-300 hover:bg-gray-50 transition-all duration-300 ease-in-out hover:shadow-sm rounded-xl">
+                    <Button variant="outline" size="sm" className="border-slate-200 hover:bg-slate-100 hover:border-gold-500/30 rounded-xl">
                       <Menu className="w-4 h-4 transition-transform duration-300 ease-in-out hover:scale-110" />
                     </Button>
                   </SheetTrigger>
@@ -294,7 +276,7 @@ const Header = ({ showNav = true }: HeaderProps) => {
                           <span className="text-lg font-bold text-gray-900">Menu</span>
                           {/* Mobile User Info */}
                           <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-semibold text-xs">
+                            <div className="w-8 h-8 bg-navy-900 text-gold-500 rounded-lg flex items-center justify-center font-semibold text-xs">
                               {user?.email?.charAt(0).toUpperCase() || 'U'}
                             </div>
                             <div className="text-right">
@@ -306,7 +288,7 @@ const Header = ({ showNav = true }: HeaderProps) => {
                                   ? 'bg-red-100 text-red-700' 
                                   : userRole === 'member' 
                                   ? 'bg-green-100 text-green-700' 
-                                  : 'bg-blue-100 text-blue-700'
+                                  : 'bg-gold-100 text-gold-700'
                               }`}>
                                 {userRole === 'admin' ? 'Admin' : 
                                  userRole === 'member' ? 'Member' : 'Visitor'}
@@ -328,15 +310,13 @@ const Header = ({ showNav = true }: HeaderProps) => {
                               onClick={() => handleNavigation(item.href)}
                               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-all duration-300 ease-in-out relative overflow-hidden group ${
                                 active 
-                                  ? 'text-blue-700 bg-blue-50 border border-blue-200' 
-                                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+                                  ? 'text-navy-900 bg-gold-50 border border-gold-200' 
+                                  : 'text-slate-700 hover:text-navy-900 hover:bg-slate-100'
                               }`}
                             >
                               {/* Icon */}
                               <Icon className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                                active 
-                                  ? 'text-blue-600' 
-                                  : 'text-gray-500 group-hover:text-gray-700'
+                                active ? 'text-gold-600' : 'text-slate-500 group-hover:text-gold-600'
                               }`} />
                               
                               {/* Text */}
@@ -346,7 +326,7 @@ const Header = ({ showNav = true }: HeaderProps) => {
                               
                               {/* Active indicator */}
                               {active && (
-                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-full" />
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gold-500 rounded-r-full" />
                               )}
                             </button>
                           );
@@ -354,11 +334,11 @@ const Header = ({ showNav = true }: HeaderProps) => {
                       </nav>
                       
                       {/* Mobile User Info & Actions */}
-                      <div className="border-t border-gray-200 pt-4 space-y-4">
+                      <div className="border-t border-slate-200 pt-4 space-y-4">
                         {/* User Info */}
-                        <div className="px-4 py-3 bg-gray-50 rounded-xl border border-gray-200">
+                        <div className="px-4 py-3 bg-slate-100 rounded-xl border border-slate-200">
                           <div className="flex items-center space-x-3 mb-2">
-                            <User className="w-5 h-5 text-gray-600" />
+                            <User className="w-5 h-5 text-slate-600" />
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-gray-900 truncate">{user.email}</p>
                               <div className="flex items-center space-x-2 mt-1">

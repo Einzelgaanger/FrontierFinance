@@ -234,18 +234,14 @@ const AdminChat = () => {
   return (
     <div className="h-screen overflow-hidden">
       <SidebarLayout>
-        <div
-          className="h-screen bg-cover bg-center bg-fixed overflow-hidden"
-          style={{ backgroundImage: 'url(/auth.jpg)' }}
-        >
-          <div className="absolute inset-0 bg-black/20" />
+        <div className="h-screen bg-slate-100 overflow-hidden font-sans antialiased">
           <div className="relative z-10 h-full flex p-4 pt-20">
-            {/* Conversations sidebar - polished panel */}
+            {/* Conversations sidebar */}
             <div
               className={`${sidebarOpen ? 'w-72' : 'w-0'
                 } transition-all duration-300 overflow-hidden flex flex-col shrink-0`}
             >
-              <Card className="h-full border-2 border-white/20 bg-white/25 backdrop-blur-md shadow-xl flex flex-col">
+              <Card className="h-full finance-card flex flex-col">
                 <div className="p-3 border-b border-white/30 flex items-center justify-between flex-shrink-0">
                   <h3 className="text-sm font-semibold text-slate-800">Conversations</h3>
                   <Button
@@ -370,7 +366,7 @@ const AdminChat = () => {
             {/* Toggle sidebar */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="flex items-center justify-center w-8 bg-white/30 hover:bg-white/50 backdrop-blur-sm border border-white/30 rounded-r-lg transition-colors shrink-0"
+              className="flex items-center justify-center w-8 bg-white border border-slate-200 hover:border-gold-500/30 rounded-r-lg transition-colors shrink-0 shadow-sm"
             >
               {sidebarOpen ? (
                 <ChevronLeft className="w-4 h-4 text-slate-700" />
@@ -379,25 +375,27 @@ const AdminChat = () => {
               )}
             </button>
 
-            {/* Main chat card - PortIQ-style */}
+            {/* Main chat card - CFF style */}
             <div className="flex-1 min-w-0 flex items-stretch ml-2">
-              <Card className="flex-1 shadow-2xl border-2 border-blue-100 bg-white/30 backdrop-blur-sm flex flex-col relative min-h-0">
-                <CardHeader className="border-b bg-gradient-to-r from-blue-50 to-purple-50 flex-shrink-0 py-3 px-4">
+              <Card className="flex-1 finance-card flex flex-col relative min-h-0">
+                <CardHeader className="border-b border-slate-200/60 bg-amber-50 flex-shrink-0 py-3 px-4">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <CardTitle className="flex items-center gap-2 text-base">
-                        <Brain className="w-4 h-4 text-purple-600 shrink-0" />
+                      <CardTitle className="flex items-center gap-2 text-base font-display font-normal text-navy-900">
+                        <div className="w-8 h-8 rounded-lg bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                          <Brain className="w-4 h-4" />
+                        </div>
                         Chat with Portiq
                       </CardTitle>
-                      <CardDescription className="text-xs mt-1">
+                      <CardDescription className="text-xs mt-1 text-slate-600 font-sans">
                         Ask about surveys, applications, network data, and more. Your conversations are private.
                       </CardDescription>
                     </div>
                     <div className="flex gap-3 shrink-0">
                       <div className="text-center">
-                        <Zap className="w-3 h-3 text-blue-600 mx-auto mb-0.5" />
-                        <p className="text-[10px] font-medium text-blue-900 leading-tight">Multi-Table</p>
-                        <p className="text-[10px] text-blue-700 leading-tight">Access</p>
+                        <Zap className="w-3 h-3 text-gold-600 mx-auto mb-0.5" />
+                        <p className="text-[10px] font-medium text-navy-900 leading-tight font-sans">Multi-Table</p>
+                        <p className="text-[10px] text-slate-600 leading-tight font-sans">Access</p>
                       </div>
                       <div className="text-center">
                         <Shield className="w-3 h-3 text-purple-600 mx-auto mb-0.5" />

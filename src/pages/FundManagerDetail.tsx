@@ -151,7 +151,7 @@ const FundManagerDetail = () => {
   const [selectedSection, setSelectedSection] = useState<number>(1);
   const [fieldVisibility, setFieldVisibility] = useState<Record<string, { viewer: boolean; member: boolean; admin: boolean }>>({});
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-
+  const [teamMembers, setTeamMembers] = useState<Array<{ member_name: string | null; member_email: string; role_in_company: string | null }>>([]);
 
   const fetchFundManagerData = useCallback(async () => {
     try {
@@ -200,6 +200,18 @@ const FundManagerDetail = () => {
       };
 
         setFundManager(processedProfile as FundManager);
+
+        // Fetch team members (company_members where this profile is the primary company)
+        if (id) {
+          const { data: membersData } = await supabase
+            .from('company_members')
+            .select('member_name, member_email, role_in_company')
+            .eq('company_user_id', id)
+            .order('member_name', { ascending: true, nullsFirst: false });
+          setTeamMembers(membersData ?? []);
+        } else {
+          setTeamMembers([]);
+        }
       } catch (error) {
         console.error('Error fetching fund manager data:', error);
         toast({
@@ -355,7 +367,7 @@ const FundManagerDetail = () => {
   if (loading) {
     return (
       <SidebarLayout>
-        <div className="min-h-screen bg-gradient-to-b from-navy-50/40 to-white flex items-center justify-center p-6">
+        <div className="min-h-screen bg-gradient-to-b from-amber-50/70 via-slate-100 to-slate-200 flex items-center justify-center p-6 font-sans">
           <div className="flex flex-col items-center gap-4">
             <div className="h-10 w-10 rounded-full border-2 border-gold-500/60 border-t-gold-500 animate-spin" />
             <p className="text-slate-600">Loading profile...</p>
@@ -368,7 +380,7 @@ const FundManagerDetail = () => {
   if (!fundManager) {
     return (
       <SidebarLayout>
-        <div className="min-h-screen bg-gradient-to-b from-navy-50/40 to-white flex items-center justify-center p-6">
+        <div className="min-h-screen bg-gradient-to-b from-amber-50/70 via-slate-100 to-slate-200 flex items-center justify-center p-6 font-sans">
           <div className="text-center max-w-md">
             <span className="section-label text-gold-600">Network</span>
             <h1 className="text-2xl font-display font-normal text-navy-900 mt-1 mb-2">Profile not found</h1>
@@ -544,27 +556,26 @@ const FundManagerDetail = () => {
 
   return (
     <SidebarLayout headerActions={yearSelectionActions}>
-       <div className="min-h-screen bg-gradient-to-b from-navy-50/30 via-white to-slate-50/50">
+       <div className="min-h-screen bg-gradient-to-b from-amber-50/70 via-slate-100 to-slate-200 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
 
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-12">
             <div className="mb-6">
-              <Button variant="ghost" onClick={() => navigate('/network')} className="text-navy-700 hover:text-navy-900 hover:bg-navy-100 rounded-xl -ml-2">
+              <Button variant="outline" onClick={() => navigate('/network')} className="border-2 border-slate-300 text-navy-800 hover:text-navy-900 hover:bg-amber-100 hover:border-gold-500 rounded-xl -ml-2 font-medium">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Network
               </Button>
             </div>
 
-            {/* Company Information Section */}
+            {/* Company Information Section - CFF style */}
             <div className="mb-8">
-              <div className="group relative overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
+              <div className="finance-card overflow-hidden border-2 border-slate-200 hover:border-gold-400/80 shadow-md">
                 <div className="relative flex items-start justify-between gap-4">
-                  {/* Left side - Content */}
                   <div className="flex-1 p-6 max-w-[60%] lg:max-w-[65%]">
                      <div className="flex items-center space-x-3 mb-6">
-                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-sm">
-                        <Building2 className="w-4 h-4 text-white" />
+                      <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0 shadow-md">
+                        <Building2 className="w-5 h-5" />
                       </div>
-                      <h2 className="text-lg font-bold text-gray-800">Company Information</h2>
+                      <h2 className="text-lg font-display font-semibold text-navy-900">Company Information</h2>
                       {userRole === 'admin' && (
                         <Button size="sm" variant="outline" className="ml-auto" onClick={(e) => { e.stopPropagation(); setEditDialogOpen(true); }}>
                           <Pencil className="w-3.5 h-3.5 mr-1.5" />
@@ -577,9 +588,9 @@ const FundManagerDetail = () => {
                      {/* Company Name - only show when provided */}
                      {fundManager.firm_name && (
                        <div className="flex items-center space-x-3">
-                         <Building2 className="w-5 h-5 text-blue-600" />
+                         <Building2 className="w-5 h-5 text-gold-600" />
                          <div>
-                           <p className="text-sm font-medium text-gray-700">Company Name</p>
+                           <p className="text-sm font-semibold text-slate-700">Company Name</p>
                            <p className="text-sm text-gray-900 font-semibold">{fundManager.firm_name}</p>
                          </div>
                        </div>
@@ -588,10 +599,10 @@ const FundManagerDetail = () => {
                      {/* Email - only show when provided */}
                      {fundManager.email_address && (
                        <div className="flex items-center space-x-3">
-                         <Mail className="w-5 h-5 text-blue-600" />
+                         <Mail className="w-5 h-5 text-gold-600" />
                          <div>
-                           <p className="text-sm font-medium text-gray-700">Email</p>
-                           <p className="text-sm text-gray-900">{fundManager.email_address}</p>
+                           <p className="text-sm font-semibold text-slate-700">Email</p>
+                           <p className="text-sm text-navy-900">{fundManager.email_address}</p>
                          </div>
                        </div>
                      )}
@@ -599,14 +610,14 @@ const FundManagerDetail = () => {
                      {/* Website - only show when provided */}
                      {fundManager.website && (
                        <div className="flex items-center space-x-3">
-                         <Globe className="w-5 h-5 text-blue-600" />
+                         <Globe className="w-5 h-5 text-gold-600" />
                          <div>
-                           <p className="text-sm font-medium text-gray-700">Website</p>
+                           <p className="text-sm font-semibold text-slate-700">Website</p>
                            <a 
                              href={fundManager.website.startsWith('http') ? fundManager.website : `https://${fundManager.website}`}
                              target="_blank" 
                              rel="noopener noreferrer"
-                             className="text-sm text-blue-600 hover:underline break-all"
+                             className="text-sm text-gold-700 hover:text-gold-800 hover:underline break-all font-medium"
                            >
                              {fundManager.website}
                            </a>
@@ -617,10 +628,38 @@ const FundManagerDetail = () => {
                      {/* Description - only show when provided */}
                      {fundManager.description && (
                        <div className="flex items-start space-x-3">
-                         <FileText className="w-5 h-5 text-blue-600 mt-0.5" />
+                         <FileText className="w-5 h-5 text-gold-600 mt-0.5" />
                          <div>
-                           <p className="text-sm font-medium text-gray-700">Description</p>
-                           <p className="text-sm text-gray-900">{fundManager.description}</p>
+                           <p className="text-sm font-semibold text-slate-700">Description</p>
+                           <p className="text-sm text-navy-900">{fundManager.description}</p>
+                         </div>
+                       </div>
+                     )}
+
+                     {/* Team members - emails and names when this fund has team members */}
+                     {teamMembers.length > 0 && (
+                       <div className="flex items-start space-x-3 pt-2 border-t border-slate-200 mt-4">
+                         <Users className="w-5 h-5 text-gold-600 mt-0.5" />
+                         <div className="flex-1 min-w-0">
+                           <p className="text-sm font-semibold text-slate-700 mb-2">Team members</p>
+                           <ul className="space-y-2">
+                             {teamMembers.map((m, idx) => (
+                               <li key={idx} className="text-sm flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                                 <span className="text-navy-900 font-semibold">{m.member_name || 'Team member'}</span>
+                                 <a
+                                   href={`mailto:${m.member_email}`}
+                                   className="text-gold-700 hover:text-gold-800 hover:underline break-all font-medium"
+                                 >
+                                   {m.member_email}
+                                 </a>
+                                 {m.role_in_company && (
+                                   <Badge variant="secondary" className="text-xs font-medium bg-navy-200 text-navy-800 border-0">
+                                     {m.role_in_company}
+                                   </Badge>
+                                 )}
+                               </li>
+                             ))}
+                           </ul>
                          </div>
                        </div>
                      )}
@@ -628,7 +667,7 @@ const FundManagerDetail = () => {
                  </div>
 
                 {/* Right side - Large Profile Picture inside card */}
-                <div className="w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 flex-none border-4 border-white shadow-lg rounded-xl overflow-hidden ml-auto mr-2 mt-4 mb-6">
+                <div className="w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 flex-none border-4 border-gold-400/60 shadow-lg rounded-xl overflow-hidden ml-auto mr-2 mt-4 mb-6">
                    {fundManager.profile_picture_url ? (
                      <img 
                        src={fundManager.profile_picture_url} 
@@ -636,8 +675,8 @@ const FundManagerDetail = () => {
                        className="w-full h-full object-cover"
                      />
                    ) : (
-                     <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                       <span className="text-6xl font-bold text-white">
+                     <div className="w-full h-full bg-gradient-to-br from-navy-800 to-navy-900 flex items-center justify-center">
+                       <span className="text-6xl font-bold text-gold-400">
                          {fundManager.participant_name?.charAt(0) || fundManager.first_name?.charAt(0) || 'F'}
                        </span>
                      </div>
@@ -662,14 +701,14 @@ const FundManagerDetail = () => {
                   
                   return (
                     <>
-                      {/* Section Selector - Matching AdminAnalytics Design */}
-                      <div className="rounded-2xl border border-blue-900/15 bg-white shadow-md p-5 mb-6">
+                      {/* Section Selector - CFF directory-style */}
+                      <div className="rounded-2xl border-2 border-slate-200 bg-white shadow-md p-5 mb-6">
                         <div className="flex items-center justify-between flex-wrap gap-3 mb-2">
                           <div className="flex items-center gap-2">
-                            <Briefcase className="h-4 w-4 text-blue-900" />
-                            <span className="text-xs font-semibold text-blue-900 uppercase tracking-[0.18em]">Survey Sections</span>
+                            <Briefcase className="h-4 w-4 text-gold-600" />
+                            <span className="text-xs font-semibold text-gold-700 uppercase tracking-[0.18em]">Survey Sections</span>
                           </div>
-                          <span className="text-[11px] text-slate-500">Choose a focus area to explore data</span>
+                          <span className="text-xs text-slate-600 font-medium">Choose a focus area to explore data</span>
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {sections.map((section) => {
@@ -681,8 +720,8 @@ const FundManagerDetail = () => {
                                 variant="ghost"
                                 className={`h-9 px-4 text-[11px] font-medium tracking-wide transition-all rounded-full ${
                                   isActive
-                                    ? 'bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white shadow-md hover:brightness-110'
-                                    : 'bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100'
+                                    ? 'bg-navy-900 text-gold-400 border-2 border-gold-500 shadow-md hover:brightness-110'
+                                    : 'bg-amber-50 text-navy-900 border-2 border-slate-200 hover:bg-amber-100 hover:border-gold-400'
                                 }`}
                                 onClick={() => setSelectedSection(section.id)}
                                 aria-pressed={isActive}
@@ -699,28 +738,28 @@ const FundManagerDetail = () => {
                       <div className="space-y-6">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">{currentSection.title}</h2>
-                            <p className="text-muted-foreground mt-1">Survey year {selectedYear}</p>
+                            <h2 className="text-3xl font-bold text-navy-900">{currentSection.title}</h2>
+                            <p className="text-slate-700 mt-1 font-medium">Survey year {selectedYear}</p>
                           </div>
-                          <Badge className="bg-blue-100 text-blue-700 border-blue-300" variant="outline">
+                          <Badge className="bg-gold-200 text-gold-800 border-0 font-medium" variant="secondary">
                             {currentSection.fields.length} fields
                           </Badge>
                         </div>
 
-                        <Card className="border-2 border-blue-200/60 shadow-sm bg-white">
-                          <CardHeader className="bg-gradient-to-r from-slate-50 to-blue-50 border-b border-blue-200/60 rounded-t-md">
-                            <CardTitle className="flex items-center justify-between text-gray-800">
+                        <Card className="border-2 border-slate-200 shadow-md bg-white">
+                          <CardHeader className="bg-amber-50 border-b-2 border-slate-200 rounded-t-md">
+                            <CardTitle className="flex items-center justify-between text-navy-900">
                               <span className="text-lg font-bold">{currentSection.title}</span>
                             </CardTitle>
                           </CardHeader>
                           <CardContent className="pt-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                               {currentSection.fields.map((field: string) => (
-                                <div key={field} className="rounded-lg border border-blue-200/60 bg-gradient-to-br from-white to-blue-50/30 p-4 hover:shadow-md transition-shadow">
-                                  <p className="font-semibold text-[11px] uppercase tracking-wide text-gray-600 mb-2">
+                                <div key={field} className="rounded-lg border-2 border-slate-200 bg-slate-50/50 hover:bg-amber-50 p-4 hover:shadow-md hover:border-gold-400/60 transition-all">
+                                  <p className="font-semibold text-[11px] uppercase tracking-wide text-slate-700 mb-2">
                                     {getQuestionLabel(field, selectedYear)}
                                   </p>
-                                  <div className="text-sm whitespace-pre-wrap leading-relaxed text-gray-900">
+                                  <div className="text-sm whitespace-pre-wrap leading-relaxed text-navy-900">
                                     {formatFieldValue(surveyData?.[field])}
                                   </div>
                                 </div>

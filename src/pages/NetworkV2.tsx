@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { isStaffEmail } from '@/lib/staff';
 import { 
   Search,
   Filter,
@@ -85,6 +86,7 @@ interface FundManager {
   stage_focus?: string[];
   role_badge?: string;
   has_survey?: boolean;
+  team_member_count?: number;
   profile?: {
     first_name: string;
     last_name: string;
@@ -135,7 +137,7 @@ const NetworkV2 = React.memo(() => {
       const [userProfilesResult, userRolesResult, companyMembersResult, survey2021Result, survey2022Result, survey2023Result, survey2024Result] = await Promise.all([
         supabase.from('user_profiles').select('id, company_name, email, full_name, role_title, profile_picture_url, user_role, is_active, created_at'),
         supabase.from('user_roles' as any).select('user_id, role'),
-        supabase.from('company_members').select('member_user_id'),
+        supabase.from('company_members').select('company_user_id, member_user_id'),
         supabase.from('survey_responses_2021').select('id, user_id, email_address, firm_name, participant_name, role_title, company_name, completed_at'),
         supabase.from('survey_responses_2022').select('id, user_id, email_address, organisation_name, participant_name, role_title, completed_at'),
         supabase.from('survey_responses_2023').select('id, user_id, email_address, organisation_name, completed_at'),
@@ -143,9 +145,16 @@ const NetworkV2 = React.memo(() => {
       ]);
 
       // Build set of secondary member user IDs to exclude from directory
+      const companyMembersList = companyMembersResult.data || [];
       const secondaryMemberIds = new Set(
-        (companyMembersResult.data || []).map((m: any) => m.member_user_id)
+        companyMembersList.map((m: any) => m.member_user_id)
       );
+      // Count team members per company (company_user_id = profile id)
+      const teamCountByCompanyId = new Map<string, number>();
+      companyMembersList.forEach((m: any) => {
+        const cid = m.company_user_id;
+        teamCountByCompanyId.set(cid, (teamCountByCompanyId.get(cid) || 0) + 1);
+      });
 
       // Handle errors gracefully
       if (userProfilesResult.error) {
@@ -188,9 +197,9 @@ const NetworkV2 = React.memo(() => {
       });
 
       // Process all users to create network profiles from user_profiles
-      // Exclude secondary members (they should not appear in the directory)
+      // Exclude secondary members and CFF admin team (they should not appear in the directory)
       const filteredProfiles = allUserProfiles.filter(
-        (p: any) => !secondaryMemberIds.has(p.id)
+        (p: any) => !secondaryMemberIds.has(p.id) && !isStaffEmail(p.email)
       );
       let processedManagers = filteredProfiles.map(userProfile => {
         const userId = userProfile.id;
@@ -231,7 +240,8 @@ const NetworkV2 = React.memo(() => {
           role_title: roleTitle,
           created_at: userProfile.created_at || new Date().toISOString(),
           role_badge: userRole,
-          is_active: isActive
+          is_active: isActive,
+          team_member_count: teamCountByCompanyId.get(userId) || 0
         };
       });
 
@@ -964,6 +974,16 @@ const NetworkV2 = React.memo(() => {
                           <h3 className="font-bold text-gray-900 text-lg leading-tight group-hover:text-gray-800 transition-colors duration-300">
                             {manager.firm_name || manager.fund_name}
                           </h3>
+                        </div>
+                      )}
+
+                      {/* Team members count badge */}
+                      {(manager.team_member_count ?? 0) > 0 && (
+                        <div className="flex justify-center mb-3">
+                          <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-700 border-0 gap-1">
+                            <Users className="w-3 h-3" />
+                            {manager.team_member_count} team {manager.team_member_count === 1 ? 'member' : 'members'}
+                          </Badge>
                         </div>
                       )}
                       

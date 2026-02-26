@@ -602,17 +602,17 @@ export default function AdminAnalytics() {
 
   return (
     <SidebarLayout headerActions={yearSelectionActions}>
-      <div className="min-h-screen bg-gradient-to-b from-navy-50/40 via-white to-slate-50/60">
+      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
         <div className="container mx-auto p-6 sm:p-8 space-y-6">
           <div className="mb-8">
-            <span className="section-label text-gold-600">Analytics</span>
+            <span className="section-label">Analytics</span>
             <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">
               Survey Analytics
             </h1>
             <div className="w-14 h-0.5 bg-gold-500/60 mt-3 rounded-full" />
-            <p className="text-sm text-slate-600 mt-3">Explore survey responses by year and section</p>
+            <p className="text-sm text-slate-600 mt-3 font-sans">Explore survey responses by year and section</p>
           </div>
-          <div className="rounded-2xl border border-slate-100 bg-white shadow-sm p-5 hover:shadow-md hover:border-gold-200/50 transition-all duration-300">
+          <div className="finance-card p-5">
             <div className="flex items-center justify-between flex-wrap gap-3 mb-2">
               <div className="flex items-center gap-2">
                 <Briefcase className="h-4 w-4 text-navy-900" />

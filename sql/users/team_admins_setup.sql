@@ -19,10 +19,9 @@
 
 BEGIN;
 
--- 1. Set role = admin and is_super_admin for Alfred only (by user_id from auth.users)
+-- 1a. Set role = admin in user_roles (source of truth for get_user_role / sidebar / RLS)
 UPDATE public.user_roles ur
 SET role = 'admin',
-    is_super_admin = (u.email = 'alfred@frontierfinance.org'),
     updated_at = now()
 FROM auth.users u
 WHERE ur.user_id = u.id
@@ -35,9 +34,26 @@ WHERE ur.user_id = u.id
     'alexandra@frontierfinance.org'
   );
 
--- 2. Ensure user_profiles exist for each (so they can use PortIQ and My Profile)
---    Uses id = auth user id so .eq('id', user.id) in app finds the row.
---    (If your user_profiles has user_id, add it to the INSERT and use ON CONFLICT (user_id).)
+-- 1b. Set is_super_admin for Alfred only (if column exists)
+DO $$
+BEGIN
+  UPDATE public.user_roles ur
+  SET is_super_admin = (u.email = 'alfred@frontierfinance.org'),
+      updated_at = now()
+  FROM auth.users u
+  WHERE ur.user_id = u.id
+    AND LOWER(u.email) IN (
+      'lisa@frontierfinance.org',
+      'alfred@frontierfinance.org',
+      'arnold@frontierfinance.org',
+      'drew@frontierfinance.org',
+      'gila@frontierfinance.org',
+      'alexandra@frontierfinance.org'
+    );
+EXCEPTION WHEN undefined_column THEN NULL;  -- skip if is_super_admin not in schema
+END $$;
+
+-- 2. Ensure user_profiles exist (so they can use PortIQ and My Profile)
 INSERT INTO public.user_profiles (id, company_name, full_name, email)
 SELECT u.id, 'CFF Team',
   CASE u.email
@@ -64,5 +80,23 @@ ON CONFLICT (id) DO UPDATE SET
   company_name = EXCLUDED.company_name,
   email = EXCLUDED.email,
   updated_at = now();
+
+-- 3. Set user_role = 'admin' in user_profiles (so Admin list / network show correct badge)
+DO $$
+BEGIN
+  UPDATE public.user_profiles up
+  SET user_role = 'admin', updated_at = now()
+  FROM auth.users u
+  WHERE up.id = u.id
+    AND LOWER(u.email) IN (
+      'lisa@frontierfinance.org',
+      'alfred@frontierfinance.org',
+      'arnold@frontierfinance.org',
+      'drew@frontierfinance.org',
+      'gila@frontierfinance.org',
+      'alexandra@frontierfinance.org'
+    );
+EXCEPTION WHEN undefined_column THEN NULL;  -- skip if user_role not in schema
+END $$;
 
 COMMIT;

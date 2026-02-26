@@ -32,7 +32,7 @@ const Pillars = () => {
     ];
 
     return (
-        <section id="how-it-works" className="pt-10 sm:pt-14 lg:pt-16 pb-10 sm:pb-14 lg:pb-16 bg-white relative scroll-mt-20">
+        <section id="how-it-works" className="pt-10 sm:pt-14 lg:pt-16 pb-10 sm:pb-14 lg:pb-16 bg-[#faf6f0] relative scroll-mt-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-10 sm:mb-16">
                     <span className="inline-block text-xs font-bold uppercase tracking-[0.25em] text-gold-600 font-sans">Our Approach</span>
