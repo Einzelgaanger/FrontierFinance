@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useCompanyMembership, logMemberActivity } from "@/hooks/useCompanyMembership";
 import { supabase } from "@/integrations/supabase/client";
+import { logMemberActivity } from "@/hooks/useCompanyMembership";
 import {
   Dialog,
   DialogContent,
@@ -23,6 +25,7 @@ interface CreateBlogModalProps {
 
 export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogModalProps) {
   const { user } = useAuth();
+  const { isTeamMember, companyUserId } = useCompanyMembership();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [useUrl, setUseUrl] = useState(true);
@@ -119,7 +122,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
         }
       }
 
-      const { error } = await supabase.from("blogs").insert({
+      const { data: inserted, error } = await supabase.from("blogs").insert({
         user_id: user.id,
         title: formData.title,
         content: formData.content,
@@ -127,9 +130,13 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
         media_url: mediaUrl || null,
         caption: formData.caption || null,
         thumbnail_url: thumbnailUrl,
-      });
+      }).select('id').single();
 
       if (error) throw error;
+
+      if (isTeamMember && companyUserId) {
+        await logMemberActivity(companyUserId, 'blog_post', 'Posted to community', 'blog', inserted?.id ?? undefined, { title: formData.title });
+      }
 
       toast.success("Blog post created! You earned 10 points! 🎉");
       setFormData({

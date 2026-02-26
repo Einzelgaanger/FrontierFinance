@@ -7,23 +7,39 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
+import { useCompanyMembership } from '@/hooks/useCompanyMembership';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Upload, Mail, Globe, Building2, FileText, Lock, Eye, EyeOff, CheckCircle, XCircle, Shield } from 'lucide-react';
+import { Loader2, Upload, Mail, Globe, Building2, FileText, Lock, Eye, EyeOff, CheckCircle, XCircle, Shield, Activity, User } from 'lucide-react';
 import MyApplicationSection from '@/components/profile/MyApplicationSection';
 import CompanyMembersSection from '@/components/profile/CompanyMembersSection';
 
+interface ActivityLogEntry {
+  id: string;
+  member_email: string;
+  member_name: string | null;
+  action_type: string;
+  action_label: string | null;
+  entity_type: string | null;
+  entity_id: string | null;
+  created_at: string;
+}
+
 export default function MyProfile() {
   const { user } = useAuth();
+  const { isTeamMember, companyUserId, loading: membershipLoading } = useCompanyMembership();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
+  const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
+  const [activityLoading, setActivityLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [profile, setProfile] = useState({
     company_name: '',
     description: '',
     website: '',
-    profile_picture_url: ''
+    profile_picture_url: '',
+    full_name: ''
   });
 
   // Password change state
@@ -58,6 +74,21 @@ export default function MyProfile() {
     fetchProfile();
   }, [user]);
 
+  useEffect(() => {
+    if (!user?.id || isTeamMember) return;
+    (async () => {
+      setActivityLoading(true);
+      const { data } = await supabase
+        .from('member_activity_log')
+        .select('id, member_email, member_name, action_type, action_label, entity_type, entity_id, created_at')
+        .eq('company_user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(50);
+      setActivityLog((data as ActivityLogEntry[]) || []);
+      setActivityLoading(false);
+    })();
+  }, [user?.id, isTeamMember]);
+
   const fetchProfile = async () => {
     if (!user) return;
 
@@ -76,7 +107,8 @@ export default function MyProfile() {
           company_name: data.company_name || '',
           description: data.description || '',
           website: data.website || '',
-          profile_picture_url: data.profile_picture_url || ''
+          profile_picture_url: data.profile_picture_url || '',
+          full_name: data.full_name || ''
         });
       }
     } catch (error) {
@@ -357,8 +389,17 @@ export default function MyProfile() {
                       title="Upload profile picture"
                     />
 
-                    {/* Email Info */}
-                    <div className="w-full pt-4 border-t border-gray-200">
+                    {/* Name & Email */}
+                    <div className="w-full pt-4 border-t border-gray-200 space-y-3">
+                      {profile.full_name && (
+                        <div className="space-y-1 text-center">
+                          <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                            <User className="w-4 h-4" />
+                            <span className="font-medium">Name</span>
+                          </div>
+                          <p className="text-sm font-medium text-gray-900">{profile.full_name}</p>
+                        </div>
+                      )}
                       <div className="space-y-1 text-center">
                         <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                           <Mail className="w-4 h-4" />
@@ -374,90 +415,143 @@ export default function MyProfile() {
 
             {/* Right Column - Form Sections */}
             <div className="lg:col-span-8 space-y-6">
-              {/* Company Information Card */}
+              {/* Company Information Card — read-only for team members */}
               <Card className="bg-white border-gray-200 shadow-lg">
                 <CardHeader>
                   <CardTitle className="flex items-center text-xl text-gray-800">
                     <Building2 className="w-5 h-5 mr-2 text-blue-600" />
-                    Company Information
+                    {isTeamMember ? 'Company' : 'Company Information'}
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                    Update your company details and description
+                    {isTeamMember
+                      ? 'Company profile is managed by your primary account holder. Your name and email are shown below.'
+                      : 'Update your company details and description'}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-5">
                   <div className="space-y-2">
-                    <Label htmlFor="company_name" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                       <Building2 className="w-4 h-4 text-gray-500" />
                       Company Name
                     </Label>
-                    <Input
-                      id="company_name"
-                      value={profile.company_name}
-                      onChange={(e) => setProfile(prev => ({ ...prev, company_name: e.target.value }))}
-                      placeholder="Enter your company name"
-                      className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white"
-                    />
+                    {isTeamMember ? (
+                      <p className="text-sm text-gray-900">{profile.company_name || '—'}</p>
+                    ) : (
+                      <Input
+                        id="company_name"
+                        value={profile.company_name}
+                        onChange={(e) => setProfile(prev => ({ ...prev, company_name: e.target.value }))}
+                        placeholder="Enter your company name"
+                        className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white"
+                      />
+                    )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="website" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                       <Globe className="w-4 h-4 text-gray-500" />
                       Company Website
                     </Label>
-                    <Input
-                      id="website"
-                      type="url"
-                      value={profile.website}
-                      onChange={(e) => setProfile(prev => ({ ...prev, website: e.target.value }))}
-                      placeholder="https://example.com"
-                      className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white"
-                    />
+                    {isTeamMember ? (
+                      <p className="text-sm text-gray-900">{profile.website ? <a href={profile.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{profile.website}</a> : '—'}</p>
+                    ) : (
+                      <Input
+                        id="website"
+                        type="url"
+                        value={profile.website}
+                        onChange={(e) => setProfile(prev => ({ ...prev, website: e.target.value }))}
+                        placeholder="https://example.com"
+                        className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white"
+                      />
+                    )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="description" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                       <FileText className="w-4 h-4 text-gray-500" />
                       Company Description
                     </Label>
-                    <Textarea
-                      id="description"
-                      value={profile.description}
-                      onChange={(e) => setProfile(prev => ({ ...prev, description: e.target.value }))}
-                      placeholder="Brief description of your company, investment focus, and key highlights"
-                      rows={6}
-                      className="resize-none border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white"
-                    />
-                    <p className="text-xs text-gray-500">Provide a concise overview of your company and investment strategy</p>
+                    {isTeamMember ? (
+                      <p className="text-sm text-gray-700 whitespace-pre-wrap">{profile.description || '—'}</p>
+                    ) : (
+                      <>
+                        <Textarea
+                          id="description"
+                          value={profile.description}
+                          onChange={(e) => setProfile(prev => ({ ...prev, description: e.target.value }))}
+                          placeholder="Brief description of your company, investment focus, and key highlights"
+                          rows={6}
+                          className="resize-none border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white"
+                        />
+                        <p className="text-xs text-gray-500">Provide a concise overview of your company and investment strategy</p>
+                      </>
+                    )}
                   </div>
 
-                  <div className="pt-4 border-t border-gray-200">
-                    <Button
-                      onClick={handleSave}
-                      disabled={saving}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 shadow-lg"
-                    >
-                      {saving ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Saving Changes...
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle className="w-4 h-4 mr-2" />
-                          Save Changes
-                        </>
-                      )}
-                    </Button>
-                  </div>
+                  {!isTeamMember && (
+                    <div className="pt-4 border-t border-gray-200">
+                      <Button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 shadow-lg"
+                      >
+                        {saving ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Saving Changes...
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Save Changes
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
               {/* Application Profile Section */}
               <MyApplicationSection />
 
-              {/* Company Team Members (Admin only) */}
+              {/* Company Team Members — only for primary account */}
               <CompanyMembersSection />
+
+              {/* Team activity log — only for primary */}
+              {!membershipLoading && !isTeamMember && (
+                <Card className="bg-white border-gray-200 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-xl text-gray-800">
+                      <Activity className="w-5 h-5 mr-2 text-blue-600" />
+                      Team activity
+                    </CardTitle>
+                    <CardDescription className="text-gray-600">
+                      Who in your company did what (posts, applications, surveys)
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {activityLoading ? (
+                      <div className="flex justify-center py-6"><Loader2 className="w-6 h-6 animate-spin text-gray-400" /></div>
+                    ) : activityLog.length === 0 ? (
+                      <p className="text-sm text-gray-500 py-4">No team activity yet.</p>
+                    ) : (
+                      <ul className="space-y-2 max-h-80 overflow-y-auto">
+                        {activityLog.map((entry) => (
+                          <li key={entry.id} className="flex items-start gap-2 py-2 border-b border-gray-100 last:border-0 text-sm">
+                            <User className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
+                            <div>
+                              <span className="font-medium text-gray-900">{entry.member_name || entry.member_email}</span>
+                              <span className="text-gray-500"> {entry.action_label || entry.action_type}</span>
+                              <span className="text-gray-400 text-xs block">{new Date(entry.created_at).toLocaleString()}</span>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Password Change Card */}
               <Card className="bg-white border-gray-200 shadow-lg">

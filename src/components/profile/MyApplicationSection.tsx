@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
+import { useCompanyMembership, logMemberActivity } from '@/hooks/useCompanyMembership';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { 
@@ -33,6 +34,7 @@ interface UploadedFile {
 
 export default function MyApplicationSection() {
   const { user, userRole } = useAuth();
+  const { isTeamMember, companyUserId } = useCompanyMembership();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -207,13 +209,21 @@ export default function MyApplicationSection() {
           .update(applicationData)
           .eq('id', application.id);
         if (error) throw error;
+        if (isTeamMember && companyUserId) {
+          await logMemberActivity(companyUserId, 'application_update', 'Updated application profile', 'application', application.id);
+        }
       } else {
         // Create new - for members, auto-set as approved; for viewers, pending
         const status = userRole === 'member' || userRole === 'admin' ? 'approved' : 'pending';
-        const { error } = await supabase
+        const { data: inserted, error } = await supabase
           .from('applications')
-          .insert([{ ...applicationData, status }]);
+          .insert([{ ...applicationData, status }])
+          .select('id')
+          .single();
         if (error) throw error;
+        if (isTeamMember && companyUserId && inserted?.id) {
+          await logMemberActivity(companyUserId, 'application_submit', 'Submitted application profile', 'application', inserted.id, { vehicle_name: formData.vehicle_name });
+        }
       }
 
       toast({ title: 'Success', description: 'Application profile updated successfully' });

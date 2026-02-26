@@ -93,6 +93,8 @@ serve(async (req) => {
 
     let memberUserId: string
 
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24h from now
+
     if (existingUser) {
       // Check if already a company member
       const { data: existingMember } = await supabaseAdmin
@@ -109,7 +111,7 @@ serve(async (req) => {
       }
       memberUserId = existingUser.id
     } else {
-      // Create the user account
+      // Create the user account (temp password expires in 24h — user should reset)
       const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email: member_email,
         password,
@@ -119,7 +121,8 @@ serve(async (req) => {
           company_name: company.company_name,
           is_secondary_member: true,
           parent_company_id: company_user_id,
-          created_via: 'admin_add_member'
+          created_via: 'admin_add_member',
+          temp_password_expires_at: expiresAt
         }
       })
 
@@ -150,16 +153,20 @@ serve(async (req) => {
       }).single()
     }
 
-    // Insert into company_members
+    // Insert into company_members (new members get 24h temp password expiry for display)
+    const insertPayload: Record<string, unknown> = {
+      company_user_id,
+      member_user_id: memberUserId,
+      member_email,
+      member_name: member_name || member_email.split('@')[0],
+      invited_by: caller.id
+    }
+    if (!existingUser) {
+      insertPayload.temporary_password_expires_at = expiresAt
+    }
     const { error: memberError } = await supabaseAdmin
       .from('company_members')
-      .insert({
-        company_user_id,
-        member_user_id: memberUserId,
-        member_email,
-        member_name: member_name || member_email.split('@')[0],
-        invited_by: caller.id
-      })
+      .insert(insertPayload)
 
     if (memberError) {
       return new Response(
@@ -175,9 +182,10 @@ serve(async (req) => {
           user_id: memberUserId,
           email: member_email,
           name: member_name,
-          company: company.company_name
+          company: company.company_name,
+          temporary_password_expires_at: !existingUser ? expiresAt : null
         },
-        message: `${member_name || member_email} has been added as a team member of ${company.company_name}`
+        message: `${member_name || member_email} has been added as a team member of ${company.company_name}. Their temporary password expires in 24 hours — share the password securely or send them a reset link.`
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )

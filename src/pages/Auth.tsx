@@ -1,11 +1,13 @@
-
-import { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import AuthForm from "@/components/auth/AuthForm";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [expiredLinkError, setExpiredLinkError] = useState(false);
 
   useEffect(() => {
     // Handle Supabase recovery tokens from URL hash first (e.g. #access_token=...)
@@ -14,6 +16,15 @@ const Auth = () => {
     const hashAccessToken = hashParams.get('access_token');
     const hashRefreshToken = hashParams.get('refresh_token');
     const hashType = hashParams.get('type');
+    const hashError = hashParams.get('error');
+    const hashErrorCode = hashParams.get('error_code');
+    const hashErrorDesc = hashParams.get('error_description') ?? '';
+
+    if (hashError === 'access_denied' && (hashErrorCode === 'otp_expired' || hashErrorDesc.toLowerCase().includes('expired') || hashErrorDesc.toLowerCase().includes('invalid'))) {
+      setExpiredLinkError(true);
+      window.history.replaceState(null, '', location.pathname + location.search);
+      return;
+    }
 
     if (hashAccessToken && hashRefreshToken && hashType === 'recovery') {
       // Redirect to reset-password with tokens as query params
@@ -51,7 +62,21 @@ const Auth = () => {
     return null; // This will prevent the auth form from showing while redirecting
   }
 
-  return <AuthForm />;
+  return (
+    <>
+      {expiredLinkError && (
+        <Alert variant="destructive" className="mb-4 border-amber-200 bg-amber-50 text-amber-900 [&>svg]:text-amber-600">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Link expired or invalid</AlertTitle>
+          <AlertDescription>
+            This sign-in or password reset link has expired. Request a new link: go to{" "}
+            <Link to="/forgot-password" className="font-medium underline">Forgot password</Link> and enter your email, or ask your company admin to send you a new link from <strong>My Profile → Company Team Members</strong> (key icon next to your name).
+          </AlertDescription>
+        </Alert>
+      )}
+      <AuthForm />
+    </>
+  );
 };
 
 export default Auth;

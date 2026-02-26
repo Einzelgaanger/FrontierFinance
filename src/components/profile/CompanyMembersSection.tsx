@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
+import { useCompanyMembership } from '@/hooks/useCompanyMembership';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Users, UserPlus, Loader2, Trash2, Mail, Eye, EyeOff, Pencil } from 'lucide-react';
+import { Users, UserPlus, Loader2, Trash2, Mail, Eye, EyeOff, Pencil, KeyRound, Copy, Check } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface CompanyMember {
@@ -21,28 +22,62 @@ interface CompanyMember {
 }
 
 export default function CompanyMembersSection() {
-  const { user, userRole } = useAuth();
+  const { user, userRole, resetPassword } = useAuth();
+  const { isTeamMember } = useCompanyMembership();
   const { toast } = useToast();
+  const [sendingResetTo, setSendingResetTo] = useState<string | null>(null);
   const [members, setMembers] = useState<CompanyMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [justAddedMember, setJustAddedMember] = useState<{ email: string; name: string; password: string } | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<CompanyMember | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [newMember, setNewMember] = useState({ email: '', name: '', password: '' });
   const [editForm, setEditForm] = useState({ name: '', role: '' });
+  const [copiedPassword, setCopiedPassword] = useState(false);
 
-  const isMember = userRole === 'member';
+  const isPrimaryMember = userRole === 'member' && !isTeamMember;
+
+  const generatePassword = () => {
+    const length = 14;
+    const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    const lower = 'abcdefghjkmnpqrstuvwxyz';
+    const numbers = '23456789';
+    const special = '!@#$%&*';
+    const all = upper + lower + numbers + special;
+    let p = '';
+    p += upper[Math.floor(Math.random() * upper.length)];
+    p += lower[Math.floor(Math.random() * lower.length)];
+    p += numbers[Math.floor(Math.random() * numbers.length)];
+    p += special[Math.floor(Math.random() * special.length)];
+    for (let i = p.length; i < length; i++) p += all[Math.floor(Math.random() * all.length)];
+    setNewMember((prev) => ({ ...prev, password: p.split('').sort(() => Math.random() - 0.5).join('') }));
+    setCopiedPassword(false);
+  };
+
+  const copyPasswordToClipboard = async (password?: string) => {
+    const p = password ?? newMember.password;
+    if (!p) return;
+    await navigator.clipboard.writeText(p);
+    setCopiedPassword(true);
+    toast({ title: 'Copied', description: 'Password copied to clipboard' });
+    setTimeout(() => setCopiedPassword(false), 2000);
+  };
+
+  const finishAddMemberFlow = () => {
+    setJustAddedMember(null);
+    setDialogOpen(false);
+  };
 
   useEffect(() => {
-    if (!isMember) return;
+    if (!isPrimaryMember) return;
     fetchMembers();
-  }, [user, isMember]);
+  }, [user, isPrimaryMember]);
 
-  // Only primary members see this section — they manage their own company's team.
-  // Admins don't have "their" company; they manage users via Admin Panel / directory.
-  if (!isMember) return null;
+  // Only primary (company) members see this section — not team members, not admins.
+  if (!isPrimaryMember) return null;
 
   const fetchMembers = async () => {
     if (!user) return;
@@ -83,8 +118,8 @@ export default function CompanyMembersSection() {
       if (data?.error) throw new Error(data.error);
 
       toast({ title: 'Member Added', description: data.message });
+      setJustAddedMember({ email: newMember.email, name: newMember.name, password: newMember.password });
       setNewMember({ email: '', name: '', password: '' });
-      setDialogOpen(false);
       fetchMembers();
     } catch (err: any) {
       toast({ title: 'Error', description: err.message || 'Failed to add member', variant: 'destructive' });
@@ -136,6 +171,19 @@ export default function CompanyMembersSection() {
     setEditDialogOpen(true);
   };
 
+  const handleSendResetLink = async (email: string) => {
+    setSendingResetTo(email);
+    try {
+      const { error } = await resetPassword(email);
+      if (error) throw error;
+      toast({ title: 'Reset link sent', description: `Password reset email sent to ${email}` });
+    } catch (err: any) {
+      toast({ title: 'Failed to send', description: err?.message || 'Could not send reset email', variant: 'destructive' });
+    } finally {
+      setSendingResetTo(null);
+    }
+  };
+
   return (
     <Card className="bg-white border-gray-200 shadow-lg">
       <CardHeader>
@@ -149,7 +197,13 @@ export default function CompanyMembersSection() {
               Manage your team members. They can log in and access the platform but won&apos;t appear in the directory.
             </CardDescription>
           </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <Dialog
+            open={dialogOpen}
+            onOpenChange={(open) => {
+              setDialogOpen(open);
+              if (!open) setJustAddedMember(null);
+            }}
+          >
             <DialogTrigger asChild>
               <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                 <UserPlus className="w-4 h-4 mr-2" />
@@ -158,58 +212,132 @@ export default function CompanyMembersSection() {
             </DialogTrigger>
             <DialogContent className="bg-white">
               <DialogHeader>
-                <DialogTitle>Add Team Member</DialogTitle>
+                <DialogTitle>{justAddedMember ? 'Member added — save this password' : 'Add Team Member'}</DialogTitle>
                 <DialogDescription>
-                  Create a secondary account for your team. This member can log in but won&apos;t be listed in the network directory.
+                  {justAddedMember
+                    ? 'Copy the password or send a reset link. We cannot show this password again after you close this dialog.'
+                    : 'Create a team member account. They can log in, post, and complete surveys under your company. Their temporary password expires in 24 hours — they should reset it on first login.'}
                 </DialogDescription>
               </DialogHeader>
-              <div className="space-y-4 pt-4">
-                <div className="space-y-2">
-                  <Label>Member Name</Label>
-                  <Input
-                    value={newMember.name}
-                    onChange={(e) => setNewMember(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="John Doe"
-                    className="bg-white border-gray-300"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Email Address</Label>
-                  <Input
-                    type="email"
-                    value={newMember.email}
-                    onChange={(e) => setNewMember(prev => ({ ...prev, email: e.target.value }))}
-                    placeholder="member@company.com"
-                    className="bg-white border-gray-300"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Temporary Password</Label>
-                  <div className="relative">
-                    <Input
-                      type={showPassword ? 'text' : 'password'}
-                      value={newMember.password}
-                      onChange={(e) => setNewMember(prev => ({ ...prev, password: e.target.value }))}
-                      placeholder="Min 8 characters"
-                      className="bg-white border-gray-300 pr-10"
-                    />
-                    <button
+              {justAddedMember ? (
+                <div className="space-y-4 pt-4">
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+                    <p className="font-medium">{justAddedMember.name || justAddedMember.email}</p>
+                    <p className="text-amber-700">{justAddedMember.email}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Temporary password (save it now)</Label>
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <Input
+                          readOnly
+                          type={showPassword ? 'text' : 'password'}
+                          value={justAddedMember.password}
+                          className="bg-gray-50 border-gray-300 pr-20 font-mono"
+                        />
+                        <div className="absolute right-1 top-1/2 -translate-y-1/2 flex gap-0.5">
+                          <button
+                            type="button"
+                            onClick={() => copyPasswordToClipboard(justAddedMember.password)}
+                            className="p-1.5 text-gray-500 hover:text-blue-600 rounded"
+                            title="Copy password"
+                          >
+                            {copiedPassword ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="p-1.5 text-gray-500 hover:text-gray-700 rounded"
+                          >
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500">If their email link expires, use the key icon next to their name in the team list to send a new reset link.</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      variant="outline"
+                      onClick={() => handleSendResetLink(justAddedMember.email)}
+                      disabled={sendingResetTo === justAddedMember.email}
+                      className="flex-1 border-gray-300"
                     >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
+                      {sendingResetTo === justAddedMember.email ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <KeyRound className="w-4 h-4 mr-2" />}
+                      Send reset link now
+                    </Button>
+                    <Button type="button" onClick={finishAddMemberFlow} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
+                      Done
+                    </Button>
                   </div>
                 </div>
-                <Button
-                  onClick={handleAddMember}
-                  disabled={adding || !newMember.email || !newMember.password}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  {adding ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Adding...</> : <><UserPlus className="w-4 h-4 mr-2" />Add Member</>}
-                </Button>
-              </div>
+              ) : (
+                <div className="space-y-4 pt-4">
+                  <div className="space-y-2">
+                    <Label>Member Name</Label>
+                    <Input
+                      value={newMember.name}
+                      onChange={(e) => setNewMember(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="John Doe"
+                      className="bg-white border-gray-300"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Email Address</Label>
+                    <Input
+                      type="email"
+                      value={newMember.email}
+                      onChange={(e) => setNewMember(prev => ({ ...prev, email: e.target.value }))}
+                      placeholder="member@company.com"
+                      className="bg-white border-gray-300"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Temporary Password (expires in 24 hours)</Label>
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <Input
+                          type={showPassword ? 'text' : 'password'}
+                          value={newMember.password}
+                          onChange={(e) => setNewMember(prev => ({ ...prev, password: e.target.value }))}
+                          placeholder="Min 8 characters, or generate below"
+                          className="bg-white border-gray-300 pr-20"
+                        />
+                        <div className="absolute right-1 top-1/2 -translate-y-1/2 flex gap-0.5">
+                          <button
+                            type="button"
+                            onClick={() => copyPasswordToClipboard()}
+                            className="p-1.5 text-gray-400 hover:text-gray-600 rounded"
+                            title="Copy password"
+                          >
+                            {copiedPassword ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="p-1.5 text-gray-400 hover:text-gray-600 rounded"
+                          >
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                        </div>
+                      </div>
+                      <Button type="button" variant="outline" onClick={generatePassword} className="shrink-0 border-gray-300">
+                        <KeyRound className="w-4 h-4 mr-1" />
+                        Generate
+                      </Button>
+                    </div>
+                    <p className="text-xs text-gray-500">Share this password securely. They must reset it within 24 hours. You can also send a reset link from Forgot password using their email.</p>
+                  </div>
+                  <Button
+                    onClick={handleAddMember}
+                    disabled={adding || !newMember.email || !newMember.password}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    {adding ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Adding...</> : <><UserPlus className="w-4 h-4 mr-2" />Add Member</>}
+                  </Button>
+                </div>
+              )}
             </DialogContent>
           </Dialog>
         </div>
@@ -241,6 +369,16 @@ export default function CompanyMembersSection() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSendResetLink(member.member_email)}
+                    disabled={sendingResetTo === member.member_email}
+                    className="text-gray-500 hover:text-blue-600 hover:bg-blue-50"
+                    title="Send password reset email"
+                  >
+                    {sendingResetTo === member.member_email ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />}
+                  </Button>
                   <Button
                     variant="ghost"
                     size="sm"

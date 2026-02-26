@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useCompanyMembership, logMemberActivity } from '@/hooks/useCompanyMembership';
 import Header from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -168,6 +169,7 @@ type Survey2024FormData = z.infer<typeof survey2024Schema>;
 export default function Survey2024() {
 	const navigate = useNavigate();
 	const { user } = useAuth();
+	const { isTeamMember, companyUserId } = useCompanyMembership();
 	const [currentSection, setCurrentSection] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [showIntro, setShowIntro] = useState(true);
@@ -650,6 +652,10 @@ export default function Survey2024() {
       }
 
       if (submitError) throw submitError;
+
+			if (isTeamMember && companyUserId) {
+				await logMemberActivity(companyUserId, 'survey_submit', 'Submitted 2024 survey', 'survey_responses_2024', existing?.id ?? undefined, { year: 2024 });
+			}
 
 			toast({
 				title: "Survey Submitted!",
