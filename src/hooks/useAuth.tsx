@@ -294,8 +294,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   const resetPassword = async (email: string) => {
     try {
+      // Use VITE_APP_URL in production so redirect URL matches Supabase Redirect URLs allowlist (avoids 500)
+      const baseUrl = (import.meta.env.VITE_APP_URL || '').replace(/\/$/, '') || window.location.origin;
+      const redirectTo = `${baseUrl}/reset-password`;
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo,
       });
       return { error };
     } catch (error) {

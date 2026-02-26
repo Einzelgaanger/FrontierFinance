@@ -41,6 +41,7 @@ const Navbar = () => {
         { name: 'Learning Hub', path: '/learning-hub' },
         { name: 'Events', path: '/our-events' },
         { name: 'Partnerships', path: '/partnership' },
+        { name: 'Launch +', path: '/launch-plus-intro' },
     ];
 
     const showSolidBg = isScrolled;
@@ -87,7 +88,7 @@ const Navbar = () => {
                         ))}
                     </div>
 
-                    {/* CTA Button */}
+                    {/* CTA Buttons */}
                     <div className="hidden lg:flex items-center space-x-4">
                         <Link to="/auth">
                             <Button
@@ -100,7 +101,7 @@ const Navbar = () => {
                                 Sign In
                             </Button>
                         </Link>
-                        <Link to="/launch-plus-intro">
+                        <Link to="/auth?tab=signup">
                             <Button className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold rounded-full px-6 shadow-finance shadow-gold-500/20 hover:shadow-gold-glow transition-all duration-300 hover:-translate-y-0.5">
                                 Join Network
                             </Button>
@@ -158,7 +159,7 @@ const Navbar = () => {
                                         <LogIn className="mr-2 h-4 w-4" /> Sign In
                                     </Button>
                                 </Link>
-                                <Link to="/launch-plus-intro" onClick={() => setIsMobileMenuOpen(false)} className="block">
+                                <Link to="/auth?tab=signup" onClick={() => setIsMobileMenuOpen(false)} className="block">
                                     <Button className="w-full min-h-[48px] bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold justify-center rounded-xl">
                                         Join Network
                                     </Button>

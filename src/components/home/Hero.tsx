@@ -112,7 +112,7 @@ const Hero = () => {
               transition={{ delay: 0.4, duration: 0.5 }}
               className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4 mt-6 sm:mt-8"
             >
-              <Link to="/launch-plus-intro" className="w-full sm:w-auto flex justify-center lg:justify-start">
+              <Link to="/auth?tab=signup" className="w-full sm:w-auto flex justify-center lg:justify-start">
                 <Button
                   size="lg"
                   className="w-full sm:w-auto min-h-[48px] bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold px-6 sm:px-8 h-12 sm:h-14 text-base sm:text-lg rounded-full shadow-finance-lg shadow-gold-500/25 hover:shadow-gold-glow transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"

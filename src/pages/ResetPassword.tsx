@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +12,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -22,10 +23,11 @@ const ResetPassword = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  // Get tokens from URL
-  const accessToken = searchParams.get('access_token');
-  const refreshToken = searchParams.get('refresh_token');
-  const type = searchParams.get('type');
+  // Supabase puts tokens in the URL hash (#access_token=...); fall back to query (?access_token=...)
+  const hashParams = new URLSearchParams(location.hash?.startsWith('#') ? location.hash.slice(1) : '');
+  const accessToken = hashParams.get('access_token') || searchParams.get('access_token');
+  const refreshToken = hashParams.get('refresh_token') || searchParams.get('refresh_token');
+  const type = hashParams.get('type') || searchParams.get('type');
 
   useEffect(() => {
     const handlePasswordReset = async () => {

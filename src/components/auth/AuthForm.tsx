@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -47,7 +47,9 @@ export default function AuthForm() {
     companyName: ''
   });
 
-  const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
+  const location = useLocation();
+  const tabFromUrl = new URLSearchParams(location.search).get('tab');
+  const [activeTab, setActiveTab] = useState<'signin' | 'signup'>(tabFromUrl === 'signup' ? 'signup' : 'signin');
 
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
