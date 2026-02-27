@@ -115,7 +115,7 @@ const AuthLayout = ({ children, title, description }: AuthLayoutProps) => {
 
             {/* Form side – scrollable, safe-area aware */}
             <div
-                className="flex flex-col items-center justify-center p-4 sm:p-6 lg:p-12 relative overflow-y-auto min-h-0 lg:min-h-screen lg:min-h-[100dvh] pb-[env(safe-area-inset-bottom,0)] bg-gradient-to-b from-slate-50/100 via-white to-slate-50/80 dark:from-navy-950 dark:via-navy-950 dark:to-navy-900/50"
+                className="flex flex-col items-center justify-center p-4 sm:p-6 lg:p-12 pt-[max(1rem,env(safe-area-inset-top,0))] relative overflow-y-auto min-h-0 lg:min-h-screen lg:min-h-[100dvh] pb-[env(safe-area-inset-bottom,0)] bg-gradient-to-b from-slate-50/100 via-white to-slate-50/80 dark:from-navy-950 dark:via-navy-950 dark:to-navy-900/50"
                 style={{ minHeight: 'min(100dvh, 100vh)' } as React.CSSProperties}
             >
                 {/* Subtle grid texture */}

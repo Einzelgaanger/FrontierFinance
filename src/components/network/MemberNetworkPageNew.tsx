@@ -154,7 +154,7 @@ export default function MemberNetworkPageNew() {
           <p className="directory-hero-subtitle">Fund managers in the CFF network</p>
           <div className="directory-hero-accent" aria-hidden />
         </div>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 py-8 sm:py-12 min-w-0">
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="h-10 w-10 text-gold-500 animate-spin" />
             <p className="text-sm font-medium text-slate-600 mt-4">Loading directory…</p>
@@ -173,7 +173,7 @@ export default function MemberNetworkPageNew() {
         <div className="directory-hero-accent" aria-hidden />
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10 min-w-0 overflow-x-hidden">
         {/* Toolbar: one bar for all */}
         <div className="directory-toolbar mb-8">
           <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">

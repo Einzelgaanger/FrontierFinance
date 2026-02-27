@@ -185,7 +185,7 @@ export default function LearningResourceDetail() {
   return (
     <SidebarLayout>
       <div className="min-h-screen bg-white">
-        <div className="w-full max-w-7xl px-4 sm:px-6 py-4 md:py-8">
+        <div className="w-full max-w-7xl px-3 sm:px-6 py-4 md:py-8 min-w-0 overflow-x-hidden">
           <Button
             variant="ghost"
             size="sm"

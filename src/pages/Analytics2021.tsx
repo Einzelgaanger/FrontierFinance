@@ -1326,7 +1326,7 @@ const Analytics2021: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         {userRole !== 'admin' && <Header />}
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 min-w-0 overflow-x-auto">
           <div className="text-center">
             <Eye className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h2 className="text-lg font-medium text-gray-900 mb-2">Access Restricted</h2>
@@ -1341,7 +1341,7 @@ const Analytics2021: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         {userRole !== 'admin' && <Header />}
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 min-w-0 overflow-x-auto">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p className="text-gray-600">Loading 2021 survey analytics...</p>
@@ -1355,7 +1355,7 @@ const Analytics2021: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <style>{analyticsStyles}</style>
       {userRole !== 'admin' && <Header />}
-      <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 min-w-0 overflow-x-auto">
         {/* Compact Header with Integrated Controls */}
         <div className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg p-4 mb-4 shadow-sm">
           <div className="flex items-center justify-between">

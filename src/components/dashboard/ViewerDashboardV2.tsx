@@ -640,9 +640,9 @@ const ViewerDashboardV2 = () => {
 
   if (showSuccessMessage) {
     return (
-      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center finance-card px-8 py-10">
+      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900 overflow-x-hidden">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 min-w-0">
+          <div className="text-center finance-card px-4 sm:px-8 py-8 sm:py-10">
             <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10" />
             </div>
@@ -690,15 +690,15 @@ const ViewerDashboardV2 = () => {
   // Preview/Landing Page – CFF design
   if (!showApplicationForm) {
     return (
-      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-10">
+      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900 overflow-x-hidden">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-8 sm:pb-10 min-w-0">
           <span className="section-label">Viewer</span>
-          <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">Dashboard</h1>
+          <h1 className="text-xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">Dashboard</h1>
           <div className="w-14 h-0.5 bg-gold-500/60 rounded-full my-3" aria-hidden />
-          <p className="text-sm text-slate-600 mb-8 font-sans">Apply for membership and explore resources.</p>
+          <p className="text-sm text-slate-600 mb-6 sm:mb-8 font-sans">Apply for membership and explore resources.</p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-            <div className="finance-card p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch">
+            <div className="finance-card p-5 sm:p-8">
               <div className="mb-6">
                 <h2 className="text-xl md:text-2xl font-display font-normal text-navy-900 mb-2">
                   Membership application
@@ -801,13 +801,13 @@ const ViewerDashboardV2 = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
-        <div className="flex items-center justify-between mb-4">
+    <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900 overflow-x-hidden">
+      <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-4 min-w-0">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
           <Button
             variant="outline"
             onClick={() => setShowApplicationForm(false)}
-            className="flex items-center border-slate-200 text-navy-900 hover:bg-white hover:border-gold-500/30 font-sans"
+            className="flex items-center min-h-[44px] border-slate-200 text-navy-900 hover:bg-white hover:border-gold-500/30 font-sans touch-manipulation w-full sm:w-auto"
           >
             <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
             Back to Overview
@@ -825,9 +825,9 @@ const ViewerDashboardV2 = () => {
         </div>
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+      <div className="relative z-10 max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 pb-6 sm:pb-8 min-w-0">
         <div className="finance-card overflow-hidden">
-          <div className="p-8 md:p-10">
+          <div className="p-4 sm:p-8 md:p-10">
             <div className="space-y-6">
               <div className="space-y-3">
                 <div className="flex justify-between text-sm font-semibold font-sans">

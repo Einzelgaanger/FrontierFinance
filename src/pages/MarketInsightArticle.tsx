@@ -15,21 +15,21 @@ const ARTICLE_CONTENT: Record<string, { title: string; subtitle: string; date: s
           Established in 2020 as a business-to-business marketplace connecting African producers to global buyers, Kwely quickly established traction with a revenue-generating model. But within 18 months it was caught in the &ldquo;missing middle&rdquo; funding gap, a challenge faced by small and growing businesses that are too big for microfinance and too small or risky for traditional bank lending.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          Fortunately, Kwely secured an investment from WIC Capital (a former grantee of ours at FMO) in 2022, in the form of a Simple Agreement for Future Equity (SAFE) note to support its efforts to continue scaling. But without suitable early-stage financing, businesses like Kwely risk failing before they ever have a chance to reach scale, with the wider economy losing out on a key source of innovation, employment and growth.
+          Fortunately, <a href="https://corp.kwely.com/" target="_blank" rel="noopener noreferrer">Kwely</a> secured an investment from <a href="https://wicsenegal.com/" target="_blank" rel="noopener noreferrer">WIC Capital</a> (a former grantee of ours at FMO) in 2022, in the form of a <a href="https://www.forbes.com/sites/kylewestaway/2023/01/06/understanding-safe-agreements-benefits-and-risks-for-startups/?sh=216424de3433" target="_blank" rel="noopener noreferrer">Simple Agreement for Future Equity (SAFE)</a> note to support its efforts to continue scaling. But without suitable early-stage financing, businesses like Kwely risk failing before they ever have a chance to reach scale, with the wider economy losing out on a key source of innovation, employment and growth.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-8">
-          The challenge of serving businesses like Kwely is well-known and widely discussed in the development finance sector. But though emerging fund managers and other capital allocators are playing a vital role in addressing the missing middle financing gap in many underserved markets, the demand for this funding vastly outweighs the current supply. In this article — the first in a two-part series exploring the uses of technical assistance (TA) in development finance — we&apos;ll explore how development finance institutions (DFIs) can leverage technical assistance to meet the earlier-stage financing needs of missing middle businesses and improve the pipeline for later-stage investors.
+          The challenge of serving businesses like Kwely is well-known and widely discussed in the development finance sector. But though emerging fund managers and other capital allocators are playing a vital role in addressing the missing middle financing gap in many underserved markets, the demand for this funding vastly outweighs the current supply. In this article — the first in a <a href="https://nextbillion.net/next-generation-dfi-technical-assistance-development-finance-institutions-standardised-approach/" target="_blank" rel="noopener noreferrer">two-part series exploring the uses of technical assistance (TA) in development finance</a> — we&apos;ll explore how development finance institutions (DFIs) can leverage technical assistance to meet the earlier-stage financing needs of missing middle businesses and improve the pipeline for later-stage investors.
         </p>
 
         <h2 className="text-xl font-display font-semibold text-navy-900 mt-10 mb-4">THE CHALLENGES OF FUNDING MISSING MIDDLE BUSINESSES</h2>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          The IFC estimates that 43% of formal SMEs in developing countries are financially constrained, representing a total funding gap of almost $4.1 trillion. Emerging capital allocators — including some accelerators, incubators and funds operating in frontier markets, as well as donor-supported grant-making mechanisms — can play an important role in filling this gap, particularly for earlier-stage businesses. This is because they understand local market dynamics and capital constraints, and are often physically close to the businesses they work with, which supports both pipeline development and ongoing investment monitoring.
+          The <a href="https://www.ifc.org/content/dam/ifc/doc/mgrt/2022-gsmef-progress-report.pdf" target="_blank" rel="noopener noreferrer">IFC estimates</a> that 43% of formal SMEs in developing countries are financially constrained, representing a total funding gap of almost $4.1 trillion. Emerging capital allocators — including some accelerators, incubators and funds operating in frontier markets, as well as donor-supported grant-making mechanisms — can play an important role in filling this gap, particularly for earlier-stage businesses. This is because they understand local market dynamics and capital constraints, and are often physically close to the businesses they work with, which supports both pipeline development and ongoing investment monitoring.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          Evelyne Dioh Simpa, Managing Director of WIC Capital, the first investment fund in West Africa that exclusively targets women-led small and growing businesses, explains this role as follows: &ldquo;We&apos;re not just providing capital, we&apos;re deeply involved in the field. We understand the unique challenges businesses face here and step in when traditional financing falls short. Our close involvement allows us to guide new ventures and keep track of progress. In brief, we don&apos;t just fund — we&apos;re partners at every step.&rdquo;
+          Evelyne Dioh Simpa, Managing Director of <a href="https://wicsenegal.com/" target="_blank" rel="noopener noreferrer">WIC Capital</a>, the first investment fund in West Africa that exclusively targets women-led small and growing businesses, explains this role as follows: &ldquo;We&apos;re not just providing capital, we&apos;re deeply involved in the field. We understand the unique challenges businesses face here and step in when traditional financing falls short. Our close involvement allows us to guide new ventures and keep track of progress. In brief, we don&apos;t just fund — we&apos;re partners at every step.&rdquo;
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          Despite this potential, emerging capital allocators still face significant challenges, resulting in uneven distribution of their capital among businesses across different growth stages and geographies. And higher-risk markets — arguably those in the greatest need — are often the least well-served, with around three quarters of deals in Africa historically going to Nigeria, Kenya, Egypt and South Africa, according to the Africa Investment Report 2022.
+          Despite this potential, emerging capital allocators <a href="https://english.dggf.nl/documents/publications/2019/1/15/study-on-scaling-access-to-finance-for-early-stage-enterprises" target="_blank" rel="noopener noreferrer">still face significant challenges</a>, resulting in uneven distribution of their capital among businesses across different growth stages and geographies. And higher-risk markets — arguably those in the greatest need — are often the least well-served, with around three quarters of deals in Africa historically going to Nigeria, Kenya, Egypt and South Africa, according to the <a href="https://briterbridges.com/africa-investment-report-2022-by-briter-bridges" target="_blank" rel="noopener noreferrer">Africa Investment Report 2022</a>.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
           So what is holding these investors back from reaching more businesses? Part of the answer relates to fund economics. Traditional fund structures aren&apos;t geared towards supporting higher-volume, lower-ticket size transactions (often in the range of US $50,000 – $1 million), since their transaction costs as a percentage of deal size are often too high to be viable. In addition, fund manager compensation — often based on a &ldquo;two and 20&rdquo; model where fund managers charge 2% of total asset value for management fees and 20% of profits as performance fees — fails to reflect the true cost and risk of operating in frontier and growth markets.
@@ -43,24 +43,24 @@ const ARTICLE_CONTENT: Record<string, { title: string; subtitle: string; date: s
           With these challenges in mind, how can development finance TA play a meaningful role in increasing the reach and relevance of early-stage financing?
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          One way is by supporting innovation and experimentation to identify, test and scale alternative models that better meet the needs of early-stage capital providers and the businesses in which they invest. Since 2021, FMO&apos;s Ventures Program has supported the Collaborative for Frontier Finance, a multi-stakeholder platform providing mentoring and peer-to-peer exchange to over 100 early-stage capital providers across 30 countries, including first-time and women fund managers — two groups that are historically underrepresented. FMO partnered with the Collaborative on the initial round of the LAUNCH Capital Provider Program, which provided 10 funds with customized TA support and to date has enabled eight of these emerging fund managers to raise nearly $15 million in total, with 35 investments made. Some of these innovative funds include:
+          One way is by supporting innovation and experimentation to identify, test and scale alternative models that better meet the needs of early-stage capital providers and the businesses in which they invest. Since 2021, <a href="https://www.fmo.nl/ventures-program" target="_blank" rel="noopener noreferrer">FMO&apos;s Ventures Program</a> has supported the <a href="/learning-hub" className="text-gold-600 hover:text-gold-700 underline">Collaborative for Frontier Finance</a>, a multi-stakeholder platform providing mentoring and peer-to-peer exchange to over 100 early-stage capital providers across 30 countries, including first-time and women fund managers — two groups that are historically underrepresented. FMO partnered with the Collaborative on the initial round of the <a href="https://www.fmo.nl/news-detail/4340151a-a42d-4b2c-8404-8ebc45244c63/promoting-the-investment-readiness-of-local-capital-providers-in-africa" target="_blank" rel="noopener noreferrer">LAUNCH Capital Provider Program</a>, which provided 10 funds with customized TA support and to date has enabled eight of these emerging fund managers to raise nearly $15 million in total, with 35 investments made. Some of these innovative funds include:
         </p>
         <ul className="list-disc pl-6 font-sans text-slate-600 leading-relaxed mb-6 space-y-2">
-          <li><strong>FIVE35 Ventures:</strong> a high-volume, pan-African gender lens equity fund closely linked to the continent&apos;s STEM ecosystem;</li>
-          <li><strong>Mirepa Capital:</strong> a closed-end fund based in Ghana and focusing across Africa that&apos;s raising capital from local funds of funds (FoFs) and pension funds using a mixture of debt and equity to invest;</li>
-          <li><strong>WIC Capital:</strong> an open-ended fund seeded by the Women&apos;s Investment Club (WIC) and receiving TA from WIC Academy, with significant input from female mentors in Senegal.</li>
+          <li><strong><a href="https://www.five35.ventures/" target="_blank" rel="noopener noreferrer">FIVE35 Ventures</a>:</strong> a high-volume, pan-African gender lens equity fund closely linked to the continent&apos;s STEM ecosystem;</li>
+          <li><strong><a href="https://mirepaglobal.com/" target="_blank" rel="noopener noreferrer">Mirepa Capital</a>:</strong> a <a href="https://www.investopedia.com/terms/c/closed-endinvestment.asp" target="_blank" rel="noopener noreferrer">closed-end fund</a> based in Ghana and focusing across Africa that&apos;s raising capital from local funds of funds (FoFs) and pension funds using a mixture of debt and equity to invest;</li>
+          <li><strong><a href="https://wicsenegal.com/" target="_blank" rel="noopener noreferrer">WIC Capital</a>:</strong> an open-ended fund seeded by the Women&apos;s Investment Club (WIC) and receiving TA from <a href="https://wicsenegal.com/wic-academie/missions-wic-academie/" target="_blank" rel="noopener noreferrer">WIC Academy</a>, with significant input from female mentors in Senegal.</li>
         </ul>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          There is also growing interest from DFIs and the donor community in supporting more FoF models targeting the missing middle, particularly those operating at a local level. Leveraging funding or TA from DFIs, this new breed of FoFs can support non-traditional, impact-driven venture capital approaches by making use of blended finance, providing training and guidance to emerging fund managers, and offering financial &ldquo;warehousing,&rdquo; which allows fund managers to start building a portfolio before launching a full-scale fund. These kind of FoFs can also offer early-stage capital providers access to large-scale sources of capital — including local pension funds such as the South African SME Fund, which raised capital from South African pension funds using a USAID first-loss guarantee, without which it would not have been able to invest in the missing middle.
+          There is also growing interest from DFIs and the donor community in supporting more <a href="https://static1.squarespace.com/static/59d679428dd0414c16f59855/t/63060a1fed97bb69afa53d8c/1661340209826/CFF+Fund+of+Funds+Design+Considerations.pdf" target="_blank" rel="noopener noreferrer">FoF models</a> targeting the missing middle, particularly <a href="https://www.proparco.fr/en/carte-des-projets/ip-developpement-2" target="_blank" rel="noopener noreferrer">those operating at a local level</a>. Leveraging funding or TA from DFIs, this new breed of FoFs can support non-traditional, impact-driven venture capital approaches by making use of blended finance, providing training and guidance to emerging fund managers, and offering financial &ldquo;warehousing,&rdquo; which allows fund managers to start building a portfolio before launching a full-scale fund. These kind of FoFs can also offer early-stage capital providers access to large-scale sources of capital — including local pension funds such as the South African SME Fund, which raised capital from South African pension funds using a <a href="https://www.theimpactprogramme.org.uk/wp-content/uploads/2021/12/IIWV_Learning-Outcomes_October-2021.pdf" target="_blank" rel="noopener noreferrer">USAID first-loss guarantee</a>, without which it would not have been able to invest in the missing middle.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          Another way DFI TA can support early-stage capital providers is by rethinking the TA &ldquo;toolbox&rdquo; to provide more relevant support to these funders. TA is traditionally not used to cover &ldquo;business as usual&rdquo; costs — for example, management salaries — because this weakens the case for additionality and has the potential to compromise sustainability, raising the question of who will keep paying for those staff salaries after the intervention finishes. But what if this type of subsidy encouraged a high-potential fund manager to enter a new and challenging geography, or helped establish a revolving fund with high operating costs that will operate in an underserved market? Taking these potential uses of TA into account, the Collaborative for Frontier Finance has highlighted emerging alternative approaches to compensation, including grant-supported management costs — as exemplified by Nyala Venture — and the potential for cross-subsidisation between funds.
+          Another way DFI TA can support early-stage capital providers is by rethinking the TA &ldquo;toolbox&rdquo; to provide more relevant support to these funders. TA is traditionally not used to cover &ldquo;business as usual&rdquo; costs — for example, management salaries — because this weakens the case for additionality and has the potential to compromise sustainability, raising the question of who will keep paying for those staff salaries after the intervention finishes. But what if this type of subsidy encouraged a high-potential fund manager to enter a new and challenging geography, or helped establish a revolving fund with high operating costs that will operate in an underserved market? Taking these potential uses of TA into account, the Collaborative for Frontier Finance has highlighted emerging <a href="https://static1.squarespace.com/static/59d679428dd0414c16f59855/t/63060a1fed97bb69afa53d8c/1661340209826/CFF+Fund+of+Funds+Design+Considerations.pdf" target="_blank" rel="noopener noreferrer">alternative approaches</a> to compensation, including grant-supported management costs — as exemplified by <a href="https://www.nyalaventure.com/" target="_blank" rel="noopener noreferrer">Nyala Venture</a> — and the potential for cross-subsidisation between funds.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          In another innovative approach, DFI TA can be clearly linked and granted alongside investment capital, with the aim of extending DFI investments to earlier-stage fund managers or those working in the most challenging markets. Smarter use of grant capital, for example concessional or interest-free loans, offers an opportunity to take on riskier but more impactful investments. TA can also help to offset structuring expenses associated with blended finance mechanisms, as demonstrated by Teranga Capital in its first fund.
+          In another innovative approach, DFI TA can be clearly linked and granted alongside investment capital, with the aim of extending DFI investments to earlier-stage fund managers or those working in the most challenging markets. Smarter use of grant capital, for example concessional or interest-free loans, offers an opportunity to take on riskier but more impactful investments. TA can also help to offset structuring expenses associated with blended finance mechanisms, as demonstrated by <a href="https://impactalpha.com/teranga-capital-taking-risks-to-build-an-impact-ecosystem-in-west-africa/" target="_blank" rel="noopener noreferrer">Teranga Capital in its first fund</a>.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          Thinking beyond the level of an individual firm or fund manager, development finance TA is also increasingly being used to help strengthen entrepreneurial ecosystems. One example of this is the aforementioned FMO Ventures Program Technical Assistance Facility, which fits into FMO&apos;s market creation remit as part of a broader strategy supporting longer-term investable pipeline opportunities for FMO. Another is the IFC&apos;s Startup Catalyst, which has supported 19 accelerators, which in turn have invested in nearly 1,200 startups in emerging markets.
+          Thinking beyond the level of an individual firm or fund manager, development finance TA is also increasingly being used to help strengthen entrepreneurial ecosystems. One example of this is the aforementioned FMO Ventures Program Technical Assistance Facility, which fits into <a href="https://www.fmo.nl/news-detail/b0f991df-5b7e-44f7-8b7f-7849b900b717/updated-strategy-towards-2030-pioneer-develop-scale" target="_blank" rel="noopener noreferrer">FMO&apos;s market creation</a> remit as part of a broader strategy supporting longer-term investable pipeline opportunities for FMO. Another is the <a href="https://www.ifc.org/en/what-we-do/sector-expertise/venture-capital/startup-catalyst" target="_blank" rel="noopener noreferrer">IFC&apos;s Startup Catalyst</a>, which has supported 19 accelerators, which in turn have invested in nearly 1,200 startups in emerging markets.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-8">
           However, to maximise the effectiveness of these TA innovations, the sector needs more and better data. More regular sector-wide studies would provide a signal to the market, highlighting sectors and geographies with pressing financing gaps and untapped potential. Establishing transparent benchmarks for fund economics would enable actors from across the ecosystem to make more informed decisions and set realistic expectations on risk and returns. And improved results measurement would highlight what types of TA are yielding the most promising results, directing resources to the areas of greatest potential.
@@ -71,14 +71,14 @@ const ARTICLE_CONTENT: Record<string, { title: string; subtitle: string; date: s
 
         <div className="border-t border-slate-200 pt-6 mt-10 space-y-4">
           <p className="text-sm font-sans text-slate-600 leading-relaxed italic">
-            Note: In late 2022, Boost Africa Technical Assistance Facility, a European Investment Bank initiative co-financed by the European Union and implemented by Adam Smith International, facilitated a series of conversations that aimed to support coordination efforts and the sharing of best practices between DFIs and development partners providing technical assistance to fund managers and the early-stage investment ecosystem in emerging economies, particularly in sub-Saharan Africa. This is the first article in a two-part series that shares key insights from participants in these conversations — the second article can be read here.
+            Note: In late 2022, Boost Africa Technical Assistance Facility, a European Investment Bank initiative co-financed by the European Union and implemented by Adam Smith International, facilitated a series of conversations that aimed to support coordination efforts and the sharing of best practices between DFIs and development partners providing technical assistance to fund managers and the early-stage investment ecosystem in emerging economies, particularly in sub-Saharan Africa. This is the first article in a two-part series that shares key insights from participants in these conversations — <a href="https://nextbillion.net/next-generation-dfi-technical-assistance-development-finance-institutions-standardised-approach/" target="_blank" rel="noopener noreferrer">the second article can be read here</a>.
           </p>
           <p className="text-sm font-sans text-slate-600 leading-relaxed">
-            Robert Haynie is an impact investing consultant focusing on frontier and growth markets. Justin van Rhyn is an independent consultant with a background in delivering large-scale TA programming.
+            <a href="https://nextbillion.net/authors/robert-haynie/" target="_blank" rel="noopener noreferrer">Robert Haynie</a> is an impact investing consultant focusing on frontier and growth markets. <a href="https://nextbillion.net/authors/justin-van-rhyn/" target="_blank" rel="noopener noreferrer">Justin van Rhyn</a> is an independent consultant with a background in delivering large-scale TA programming.
           </p>
           <p className="text-sm font-sans text-slate-500">
             <strong>Disclaimer:</strong> This article was featured by our partner Next Billion website{" "}
-            <a href="https://bit.ly/48bETSs" target="_blank" rel="noopener noreferrer" className="text-gold-600 hover:text-gold-700 underline">https://bit.ly/48bETSs</a>
+            <a href="https://nextbillion.net/next-generation-dfi-technical-assistance-development-finance-institutions-standardised-approach/" target="_blank" rel="noopener noreferrer" className="text-gold-600 hover:text-gold-700 underline">Next Billion</a>
           </p>
         </div>
       </>
@@ -97,12 +97,12 @@ const ARTICLE_CONTENT: Record<string, { title: string; subtitle: string; date: s
           Fund of funds are private investment funds that invest in other private funds aligned with their impact theses. Such vehicles are established in the private equity and microfinance sectors. They&apos;re now emerging in the global small business finance sector to help mobilize the roughly $5 trillion that small and growing businesses need annually.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-8">
-          A new survey from the Collaborative for Frontier Finance finds that fund of funds employ a range of strategies to evaluate local fund managers&apos; risk, which is in turn helping fund managers transition from raising from angel and high-net worth investors, family offices and foundations to institutional investors. They&apos;re also providing other critical support, such as track-record building, proving fund economics, and contributing capital to warehouse deals.
+          A <a href="https://static1.squarespace.com/static/59d679428dd0414c16f59855/t/6579adf52eddbc2c9e5b1f95/1702473238883/2311106+CFF+African+Fund+of+Funds+Report.pdf" target="_blank" rel="noopener noreferrer">new survey</a> from the Collaborative for Frontier Finance finds that fund of funds employ a range of strategies to evaluate local fund managers&apos; risk, which is in turn helping fund managers transition from raising from angel and high-net worth investors, family offices and foundations to institutional investors. They&apos;re also providing other critical support, such as track-record building, proving fund economics, and contributing capital to warehouse deals.
         </p>
 
         <h2 className="text-xl font-display font-semibold text-navy-900 mt-10 mb-4">Evaluating manager risk</h2>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          Half of local fund managers in Africa and the Middle East include fund of funds among their first institutional backers, according to CFF&apos;s most recent annual network survey. The 60 respondents, all managing small business-focused funds, collectively expect fund of funds to contribute $310 million of a targeted $1.5 billion in total fundraising targets. About $50 million has been raised from fund of funds so far.
+          Half of local fund managers in Africa and the Middle East include fund of funds among their first institutional backers, according to CFF&apos;s <a href="https://static1.squarespace.com/static/59d679428dd0414c16f59855/t/6540bc7cf4c8160e5bc97bf0/1698741389546/CFF+Annual+Local+Capital+Provider+Survey+2023.pdf" target="_blank" rel="noopener noreferrer">most recent annual network survey</a>. The 60 respondents, all managing small business-focused funds, collectively expect fund of funds to contribute $310 million of a targeted $1.5 billion in total fundraising targets. About $50 million has been raised from fund of funds so far.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
           The network&apos;s fund of funds backers include the Dutch Good Growth Fund, Mastercard Foundation&apos;s Africa Growth Fund, FSDAi&apos;s Nyala Ventures, Ghana Venture Capital Trust Fund, Egypt&apos;s MSMEDA Fund of Funds and I&P, all of which invest in early-stage managers who may need concessionary capital and time to hone their investment theses and capabilities. More commercially-focused fund of funds include Avanz Capital, Kuramo Capital and 27four Investment Managers.
@@ -201,7 +201,7 @@ const ARTICLE_CONTENT: Record<string, { title: string; subtitle: string; date: s
         <div className="border-t border-slate-200 pt-6 mt-10">
           <p className="text-sm font-sans text-slate-500">
             <strong>Disclaimer:</strong> This article was featured by our partner Impact Alpha website{" "}
-            <a href="https://bit.ly/47njZyx" target="_blank" rel="noopener noreferrer" className="text-gold-600 hover:text-gold-700 underline">https://bit.ly/47njZyx</a>
+            <a href="https://impactalpha.com/103172-2/" target="_blank" rel="noopener noreferrer" className="text-gold-600 hover:text-gold-700 underline">Impact Alpha</a>
           </p>
         </div>
       </>
@@ -220,7 +220,7 @@ const ARTICLE_CONTENT: Record<string, { title: string; subtitle: string; date: s
           Local fund managers and other capital providers are key to finally unlocking the capital small businesses need. How? By nimbly, creatively and economically identifying the types of financing local businesses truly need, and proving both the financial and impact case for rethinking small business finance.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          The Collaborative for Frontier Finance&apos;s most recent research reveals an unprecedented level of experimentation in African small business finance. More than 60 local capital providers, collectively working to mobilize $1.5 billion for small businesses and local ventures in Africa and the Middle East are reengineering financial products and investment terms to fit businesses&apos; needs; redesigning fund structures to work for small ticket investments; and galvanizing participation from local institutional investors.
+          The Collaborative for Frontier Finance&apos;s <a href="https://static1.squarespace.com/static/59d679428dd0414c16f59855/t/650d7ca1ead3997465b522c7/1695382704738/CFF+Annual+Local+Capital+Provider+Survey.pdf" target="_blank" rel="noopener noreferrer">most recent research</a> reveals an unprecedented level of experimentation in African small business finance. More than 60 local capital providers, collectively working to mobilize $1.5 billion for small businesses and local ventures in Africa and the Middle East are reengineering financial products and investment terms to fit businesses&apos; needs; redesigning fund structures to work for small ticket investments; and galvanizing participation from local institutional investors.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-8">
           Considering many traditional financial institutions are reaching the limit of what they can achieve in the market, there is tremendous opportunity for investors and market builders to track and support the success of alternative models.
@@ -237,7 +237,7 @@ const ARTICLE_CONTENT: Record<string, { title: string; subtitle: string; date: s
           CFF&apos;s survey finds that 60% of local capital providers&apos; investment volume is allocated using a variety of self-liquidating instrument including debt but also mezzanine structures, convertible notes and revenue sharing instruments. Almost 90% of managers are using some self-liquidating instrument in their mix.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          Amam Ventures in Jordan uses self-liquidating instruments, combining debt and equity with revenue sharing and/or convertible notes, to provide patient, non-dilutive capital and flexible repayment options tailored to the needs of the women founders. The team&apos;s approach is entrepreneur-friendly, offering support beyond just capital and minimizing exit challenges.
+          <a href="https://www.amamventures.com/" target="_blank" rel="noopener noreferrer">Amam Ventures</a> in Jordan uses self-liquidating instruments, combining debt and equity with revenue sharing and/or convertible notes, to provide patient, non-dilutive capital and flexible repayment options tailored to the needs of the women founders. The team&apos;s approach is entrepreneur-friendly, offering support beyond just capital and minimizing exit challenges.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
           &ldquo;With this type of instrument our performance flows with the performance of the business,&rdquo; says Amam&apos;s Jenny Atout Ahlzen. &ldquo;The better the company does, the better we do.&rdquo;
@@ -249,7 +249,7 @@ const ARTICLE_CONTENT: Record<string, { title: string; subtitle: string; date: s
           Sixty percent of the funds in CFF&apos;s network are led by women, compared to 12% in private equity and 5% in venture capital globally. These women are bringing other women investment decision-making, thereby influencing the gender balance in financial services. And they&apos;re giving more women access to finance, boosting women&apos;s long-term economic opportunities and wealth.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-8">
-          Grassroots Business Fund knows the impact opportunity of investing in small businesses in the agriculture sector in particular. The 15-year-old impact investment firm says agri-businesses in its portfolio – once given access to finance – promote gender equity within companies and value chains, enhance climate resilience for their networks of smallholder farmers, and stimulate job growth.
+          <a href="https://www.gbfund.org/" target="_blank" rel="noopener noreferrer">Grassroots Business Fund</a> knows the impact opportunity of investing in small businesses in the agriculture sector in particular. The 15-year-old impact investment firm says agri-businesses in its portfolio – once given access to finance – promote gender equity within companies and value chains, enhance climate resilience for their networks of smallholder farmers, and stimulate job growth.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-8">
           &ldquo;Agriculture finance is more than just about supplying capital to SMEs,&rdquo; says GBF&apos;s Lilian Mramba. &ldquo;It&apos;s a vehicle through which local capital providers can address intersectional impact issues.&rdquo;
@@ -263,13 +263,13 @@ const ARTICLE_CONTENT: Record<string, { title: string; subtitle: string; date: s
           Sixty percent of the fund managers in CFF&apos;s network are raising sub-$30 million funds. The sustainability of these smaller funds requires using a variety of strategies to manage cashflow effectively, especially in the early part of a fund&apos;s lifecycle.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          Teranga Capital, which invests in local businesses in Senegal, offers an investment readiness programs for early-stage ventures to build pipeline for their core fund while generating additional income. This approach helped with Teranga&apos;s fund economics by augmenting back-office resourcing. It also provided career growth opportunities and talent retention within the organization.
+          <a href="http://www.terangacapital.com/en/" target="_blank" rel="noopener noreferrer">Teranga Capital</a>, which invests in local businesses in Senegal, offers an investment readiness programs for early-stage ventures to build pipeline for their core fund while generating additional income. This approach helped with Teranga&apos;s fund economics by augmenting back-office resourcing. It also provided career growth opportunities and talent retention within the organization.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-6">
-          Investing across Sub-Saharan Africa, Unconventional Capital, is set up as an open-ended fund and uses revenue sharing agreements to support economics. By simplifying portfolio management using a bespoke technology platform, they have created efficiencies to enable a high volume of deals.
+          Investing across Sub-Saharan Africa, <a href="https://www.unconventional.capital/" target="_blank" rel="noopener noreferrer">Unconventional Capital</a>, is set up as an open-ended fund and uses revenue sharing agreements to support economics. By simplifying portfolio management using a bespoke technology platform, they have created efficiencies to enable a high volume of deals.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-8">
-          Having tested their operator-investor model with support of public monies, Secha Capital are able to transition to a more traditionally sustainable model whilst maintaining a focus on job creation.
+          Having tested their operator-investor model with support of public monies, <a href="https://www.sechacapital.com/" target="_blank" rel="noopener noreferrer">Secha Capital</a> are able to transition to a more traditionally sustainable model whilst maintaining a focus on job creation.
         </p>
 
         <h2 className="text-xl font-display font-semibold text-navy-900 mt-10 mb-4">Engaging local investors</h2>
@@ -286,7 +286,7 @@ const ARTICLE_CONTENT: Record<string, { title: string; subtitle: string; date: s
           To plug their own capital gaps, local capital providers are increasingly turning to local institutional investors. Mirepa Investment Advisors notched half of its $10 million fund goal from local investors, including pension fund managers.
         </p>
         <p className="font-sans text-slate-600 leading-relaxed mb-8">
-          Vakayi Capital in Zimbabwe has also successfully engaged local investors. The value goes beyond money, says Vakayi&apos;s Chai Musoni: local investors have a similar view on perceived and actual risk.
+          <a href="https://www.vakayi.com/" target="_blank" rel="noopener noreferrer">Vakayi Capital</a> in Zimbabwe has also successfully engaged local investors. The value goes beyond money, says Vakayi&apos;s Chai Musoni: local investors have a similar view on perceived and actual risk.
         </p>
 
         <h2 className="text-xl font-display font-semibold text-navy-900 mt-10 mb-4">Data transparency drives allocation</h2>
@@ -302,6 +302,12 @@ const ARTICLE_CONTENT: Record<string, { title: string; subtitle: string; date: s
         <p className="font-sans text-slate-600 leading-relaxed mb-8">
           The opportunity at the heart of small business finance sits with a set of capital players who are local, have deep knowledge of their communities and the markets&apos; business needs – and a willingness and capability to assess and design appropriate financing approaches. It is time for investors and market builders to help them replicate and scale by supporting models and approaches that work.
         </p>
+        <div className="border-t border-slate-200 pt-6 mt-10">
+          <p className="text-sm font-sans text-slate-500">
+            <strong>Disclaimer:</strong> This article was featured by our partner Impact Alpha website{" "}
+            <a href="https://impactalpha.com/103172-2/" target="_blank" rel="noopener noreferrer" className="text-gold-600 hover:text-gold-700 underline">Impact Alpha</a>
+          </p>
+        </div>
       </>
     ),
   },
@@ -335,7 +341,7 @@ export default function MarketInsightArticle() {
   if (!article) {
     return (
       <div className="min-h-screen bg-navy-950 font-sans flex items-center justify-center">
-        <div className="container mx-auto px-4 py-24 text-center text-white max-w-md">
+        <div className="container mx-auto px-3 sm:px-6 py-16 sm:py-24 text-center text-white max-w-md min-w-0">
           <p className="mb-6 text-slate-300">Article not found.</p>
           <Button
             onClick={() => navigate("/learning-hub")}
@@ -350,14 +356,14 @@ export default function MarketInsightArticle() {
   }
 
   return (
-    <div className="min-h-screen bg-navy-950 font-sans selection:bg-gold-500/30">
+    <div className="min-h-screen bg-navy-950 font-sans selection:bg-gold-500/30 overflow-x-hidden">
       {/* Sticky bar when scrolled past header */}
       {article && stickyVisible && (
         <div
           className="sticky z-30 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm"
           style={{ top: NAVBAR_OFFSET }}
         >
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3 min-w-0">
             <div className="flex items-center gap-3 min-w-0">
               <Link
                 to="/learning-hub#market-insights"
@@ -374,7 +380,7 @@ export default function MarketInsightArticle() {
         </div>
       )}
       <section className="bg-white rounded-t-[2.5rem] sm:rounded-t-[3rem] -mt-0 min-h-screen pt-8 sm:pt-12 pb-24 shadow-[0_-8px_30px_rgba(0,0,0,0.06)]">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 min-w-0">
           {/* Breadcrumb navigation */}
           <nav aria-label="Breadcrumb" className="mb-8">
             <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500 font-sans">
@@ -408,7 +414,7 @@ export default function MarketInsightArticle() {
               Market Insights
             </p>
             <span className="text-sm text-slate-500 font-sans">{article.date}</span>
-            <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-display font-normal text-navy-900 mt-2 mb-3 leading-[1.2] tracking-tight">
+            <h1 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-display font-normal text-navy-900 mt-2 mb-3 leading-[1.2] tracking-tight">
               {article.title}
             </h1>
             {article.subtitle && (
@@ -419,14 +425,14 @@ export default function MarketInsightArticle() {
             <div className="mt-8 pt-8 border-t border-slate-200">
               <Link
                 to="/learning-hub#market-insights"
-                className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-gold-600 font-sans py-2 px-3 -ml-3 rounded-lg hover:bg-gold-500/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 min-h-[44px] py-2 px-3 -ml-3 rounded-lg text-sm font-medium text-slate-600 hover:text-gold-600 font-sans hover:bg-gold-500/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 touch-manipulation"
               >
                 <ArrowLeft className="w-4 h-4 shrink-0" aria-hidden /> All Market Insights
               </Link>
             </div>
           </header>
 
-          <div className="prose prose-slate max-w-none prose-headings:font-display prose-headings:tracking-tight prose-p:leading-[1.75] prose-p:text-slate-600 prose-a:text-gold-600 prose-a:no-underline hover:prose-a:underline prose-a:transition-colors">
+          <div className="prose prose-slate max-w-none prose-headings:font-display prose-headings:tracking-tight prose-p:leading-[1.75] prose-p:text-slate-600 prose-a:text-gold-600 prose-a:no-underline hover:prose-a:underline prose-a:transition-colors break-words">
             {article.body}
           </div>
         </div>

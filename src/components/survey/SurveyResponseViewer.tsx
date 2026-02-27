@@ -260,7 +260,7 @@ const SurveyResponseViewer = () => {
     return (
       <SidebarLayout>
         <div className="min-h-screen bg-gradient-to-br from-[#f5f5dc] to-[#f0f0e6]">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 min-w-0 overflow-x-hidden">
             <div className="text-center">
               <div className="mb-8">
                 <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -329,7 +329,7 @@ const SurveyResponseViewer = () => {
   return (
     <SidebarLayout>
       <div className="min-h-screen bg-gradient-to-br from-[#f5f5dc] to-[#f0f0e6]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-12">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 pb-8 sm:pb-12 min-w-0 overflow-x-hidden">
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-6">

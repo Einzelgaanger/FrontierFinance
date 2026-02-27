@@ -8,7 +8,7 @@ const About = () => {
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-gold-500/30">
       {/* Hero Section */}
-      <section className="relative min-h-[75vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[60vh] sm:min-h-[75vh] flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center z-0"
           style={{ backgroundImage: 'url(/CFF.jpg)' }}
@@ -17,7 +17,7 @@ const About = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-navy-900/50"></div>
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 text-center pt-24 sm:pt-20 pb-12">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 text-center pt-[max(5rem,calc(4rem+env(safe-area-inset-top,0px)))] sm:pt-20 pb-10 sm:pb-12 min-w-0">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -26,7 +26,7 @@ const About = () => {
             <div className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white text-sm font-semibold mb-6">
               About Us
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-normal text-white mb-4 sm:mb-6">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-normal text-white mb-4 sm:mb-6">
               Collaborative for <br />
               <span className="text-gold-400">Frontier Finance</span>
             </h1>
@@ -38,9 +38,9 @@ const About = () => {
       </section>
 
       {/* Why Frontier Finance – protrudes into hero with rounded top */}
-      <section className="py-16 sm:py-24 bg-gradient-to-b from-slate-50 via-white to-amber-50/30 relative overflow-hidden rounded-t-[2.5rem] sm:rounded-t-[3rem] -mt-8 sm:-mt-12 z-10">
+      <section className="py-12 sm:py-24 bg-gradient-to-b from-slate-50 via-white to-amber-50/30 relative overflow-hidden rounded-t-[2.5rem] sm:rounded-t-[3rem] -mt-8 sm:-mt-12 z-10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_70%_0%,rgba(212,175,55,0.06),transparent)] pointer-events-none" aria-hidden />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 min-w-0">
           <span className="section-label">Context</span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-normal text-navy-900 mt-2 mb-6 sm:mb-10">Why Frontier Finance</h2>
           <div className="w-14 h-0.5 bg-gold-500/60 mx-auto rounded-full mb-10" />
@@ -59,9 +59,9 @@ const About = () => {
       {/* Vision & Mission */}
       <section className="py-16 sm:py-24 bg-navy-950 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-navy-900/80 skew-x-12 transform translate-x-32" />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 min-w-0">
           <span className="section-label text-gold-400/90">Our Purpose</span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-normal text-white mt-2 mb-6 sm:mb-8">Our Vision and Mission</h2>
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-display font-normal text-white mt-2 mb-6 sm:mb-8">Our Vision and Mission</h2>
           <div className="w-16 h-1 bg-gold-500 rounded-full mb-8" />
           <p className="text-lg text-slate-300 leading-relaxed font-sans">
             To achieve a sustainable and growing small business finance ecosystem in Africa and beyond by addressing the "missing middle" financing gap. We do this by supporting and enabling local capital providers to accelerate financing solutions that target small and growing businesses in frontier markets.
@@ -73,15 +73,15 @@ const About = () => {
       <section id="how-we-work" className="py-16 sm:py-24 bg-amber-50/40 scroll-mt-24 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-96 h-96 bg-gold-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" aria-hidden />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-navy-900/5 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" aria-hidden />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 min-w-0">
           <div className="w-full h-0.5 sm:h-1 bg-gold-500/80 rounded-full mb-12 sm:mb-14" aria-hidden />
           <span className="section-label block mb-4">Our Approach</span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-normal text-navy-900 mb-6 sm:mb-8">How We Work</h2>
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-display font-normal text-navy-900 mb-6 sm:mb-8">How We Work</h2>
           <div className="w-14 h-0.5 bg-gold-500/60 rounded-full mb-10" />
           <p className="text-lg text-slate-700 leading-relaxed font-sans max-w-4xl mb-6">
             We work with diverse stakeholders – including fund managers, funders, and fieldbuilders – to accelerate financing solutions that target SGBs. We aim to set a common action agenda for SGB finance; to test and scale promising financing models; and to facilitate the flow of capital to the SGB market. With a bias to action, CFF works with stakeholders to identify, co-design and launch initiatives – or specific solutions that table SGB financing challenges – that are too complex for any one stakeholder to launch on their own. We do this in three ways:
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mt-10 sm:mt-12">
             {[
               { subtitle: 'Network', title: 'The Collective', lead: 'Where peers align.', icon: Users, desc: 'We connect stakeholders facing similar pain-points to a peer network of actors operating with shared principles, values, and ambitions to learn from and support one another.' },
               { subtitle: 'Actionable Research', title: 'Evidence in Motion', lead: 'From data to decisions.', icon: BookOpen, desc: 'We facilitate research on hot topics to improve transparency within the sector, provide a practical guide for those less familiar with the sector, and dispel common misconceptions.' },
@@ -107,9 +107,9 @@ const About = () => {
       {/* Impact of SGB Financing */}
       <section className="py-16 sm:py-24 bg-slate-100/90 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_100%,rgba(15,23,42,0.04),transparent)] pointer-events-none" aria-hidden />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 min-w-0">
           <span className="section-label block mb-4">Sustainable Development</span>
-          <h2 className="text-3xl md:text-4xl font-display font-normal text-navy-900 mb-4">The Impact of SGB Financing</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-normal text-navy-900 mb-4">The Impact of SGB Financing</h2>
           <p className="text-lg text-slate-600 font-sans mb-12 max-w-2xl">
             Increasing appropriate capital available for SGBs will directly contribute to achieving the Sustainable Development Goals:
           </p>

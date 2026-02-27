@@ -66,7 +66,7 @@ const SurveyNavigation: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f5f5dc] to-[#f0f0e6]">
-      <div className="max-w-6xl mx-auto p-8">
+      <div className="max-w-6xl mx-auto p-3 sm:p-6 lg:p-8 min-w-0 overflow-x-hidden">
         {/* Enhanced Header */}
         <div className="mb-16 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-white/80 rounded-full shadow-lg mb-6">

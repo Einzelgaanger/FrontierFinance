@@ -576,19 +576,19 @@ const FundManagerDetail = () => {
     <SidebarLayout headerActions={yearSelectionActions}>
        <div className="min-h-screen bg-gradient-to-b from-amber-50/70 via-slate-100 to-slate-200 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
 
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-12">
-            <div className="mb-6">
-              <Button variant="outline" onClick={() => navigate('/network')} className="border-2 border-slate-300 text-navy-800 hover:text-navy-900 hover:bg-amber-100 hover:border-gold-500 rounded-xl -ml-2 font-medium">
+         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 pb-8 sm:pb-12 min-w-0 overflow-x-hidden">
+            <div className="mb-4 sm:mb-6">
+              <Button variant="outline" onClick={() => navigate('/network')} className="min-h-[44px] border-2 border-slate-300 text-navy-800 hover:text-navy-900 hover:bg-amber-100 hover:border-gold-500 rounded-xl font-medium touch-manipulation w-full sm:w-auto">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Network
               </Button>
             </div>
 
             {/* Company Information Section - CFF style */}
-            <div className="mb-8">
+            <div className="mb-6 sm:mb-8">
               <div className="finance-card overflow-hidden border-2 border-slate-200 hover:border-gold-400/80 shadow-md">
-                <div className="relative flex items-start justify-between gap-4">
-                  <div className="flex-1 p-6 max-w-[60%] lg:max-w-[65%]">
+                <div className="relative flex flex-col lg:flex-row items-start justify-between gap-4">
+                  <div className="flex-1 w-full min-w-0 p-4 sm:p-6 lg:max-w-[65%]">
                      <div className="flex items-center space-x-3 mb-6">
                       <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0 shadow-md">
                         <Building2 className="w-5 h-5" />

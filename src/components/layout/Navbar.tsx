@@ -50,9 +50,10 @@ const Navbar = () => {
         <nav
             className={cn(
                 'fixed top-0 left-0 right-0 z-50 transition-all duration-300 font-sans',
+                'pt-[max(0.75rem,env(safe-area-inset-top,0px))] pl-[env(safe-area-inset-left,0px)] pr-[env(safe-area-inset-right,0px)]',
                 showSolidBg
-                    ? 'bg-navy-950/95 backdrop-blur-md shadow-finance py-3'
-                    : 'bg-transparent py-5'
+                    ? 'bg-navy-950/95 backdrop-blur-md shadow-finance pb-3'
+                    : 'bg-transparent pb-5'
             )}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -134,7 +135,7 @@ const Navbar = () => {
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.25 }}
-                        className="lg:hidden bg-navy-900/98 backdrop-blur-xl border-t border-white/10 overflow-hidden max-h-[calc(100vh-4rem)] overflow-y-auto overscroll-contain"
+                        className="lg:hidden bg-navy-900/98 backdrop-blur-xl border-t border-white/10 overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom,0px)]"
                     >
                         <nav className="px-4 pt-4 pb-8 space-y-1" aria-label="Mobile navigation">
                             {navLinks.map((link) => (

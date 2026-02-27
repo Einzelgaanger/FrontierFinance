@@ -84,7 +84,7 @@ const ESCPNetwork = () => {
   return (
     <div className="min-h-screen bg-navy-950 font-sans selection:bg-gold-500/30 overflow-x-hidden" ref={containerRef}>
       {/* Hero Section – clear, centered layout */}
-      <section className="relative min-h-[75vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[60vh] sm:min-h-[75vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -94,13 +94,13 @@ const ESCPNetwork = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-navy-950/90" />
         </div>
 
-        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 pb-24 text-center">
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-[max(5rem,calc(4.5rem+env(safe-area-inset-top,0px)))] sm:pt-32 pb-16 sm:pb-24 text-center min-w-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl font-display font-normal text-white leading-[1.12] tracking-tight">
+            <h1 className="text-2xl sm:text-5xl md:text-6xl lg:text-6xl font-display font-normal text-white leading-[1.12] tracking-tight">
               Early Stage Capital
               <br />
               <span className="text-gold-300">Provider Network</span>
@@ -128,9 +128,9 @@ const ESCPNetwork = () => {
       </section>
 
       {/* About Section – protrudes into hero with rounded top */}
-      <section className="py-16 sm:py-24 lg:py-32 bg-slate-50 relative rounded-t-[2.5rem] sm:rounded-t-[3rem] overflow-hidden -mt-8 sm:-mt-12 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-center">
+      <section className="py-12 sm:py-24 lg:py-32 bg-slate-50 relative rounded-t-[2.5rem] sm:rounded-t-[3rem] overflow-hidden -mt-8 sm:-mt-12 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 min-w-0">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-16 lg:gap-20 items-center">
 
             <motion.div
               initial={{ opacity: 0, x: -24 }}
@@ -201,7 +201,7 @@ const ESCPNetwork = () => {
       {/* Why It Matters – same design as About "Our Purpose" */}
       <section className="py-16 sm:py-24 bg-navy-950 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-navy-900/80 skew-x-12 transform translate-x-32" aria-hidden />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10 min-w-0">
           <span className="section-label text-gold-400/90">Context</span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-normal text-white mt-2 mb-6 sm:mb-8">Why It Matters</h2>
           <div className="w-16 h-1 bg-gold-500 rounded-full mb-8" />
@@ -254,7 +254,7 @@ const ESCPNetwork = () => {
           <div className="absolute top-2/3 right-0 w-36 h-36 rounded-full bg-slate-300/20 blur-xl" />
           <div className="absolute top-1/2 left-1/2 w-24 h-24 border border-gold-400/20 rounded-lg rotate-45" />
         </div>
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10 min-w-0">
           <div className="mb-12 sm:mb-16">
             <p className="text-gold-600 font-semibold tracking-widest uppercase text-xs mb-2 font-sans">Our Journey</p>
             <h2 className="text-2xl sm:text-3xl font-display font-normal text-navy-900">Progress to Date</h2>
@@ -287,7 +287,7 @@ const ESCPNetwork = () => {
 
       {/* Get involved + Stay updated – integrated */}
       <section className="py-16 sm:py-20 lg:py-24 bg-white border-t border-slate-200/80">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 min-w-0">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             <motion.div
               initial={{ opacity: 0, y: 12 }}

@@ -333,7 +333,7 @@ export default function MyProfile() {
   return (
     <SidebarLayout>
       <div className="min-h-screen bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-8 lg:px-8 min-w-0 overflow-x-hidden">
           {/* Page Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">My Profile</h1>

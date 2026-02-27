@@ -4507,7 +4507,7 @@ Which of the following would you be prepared to make available? [note: we are cu
   return (
     <SidebarLayout>
       <div className={`min-h-screen bg-gray-50 ${showIntro ? 'pb-0' : 'pb-16'}`}>
-        <div className={`max-w-6xl mx-auto ${!showIntro ? 'pr-80' : ''}`}>
+        <div className={`max-w-6xl mx-auto px-3 sm:px-6 min-w-0 overflow-x-hidden ${!showIntro ? 'lg:pr-80' : ''}`}>
         {/* Back Button hidden on intro */}
         {!showIntro && null}
         {showIntro && renderIntroCard()}

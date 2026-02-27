@@ -153,7 +153,7 @@ const Profile = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 min-w-0 overflow-x-hidden">
           <div className="text-center">
             <User className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h2 className="text-lg font-medium text-gray-900 mb-2">Access Required</h2>
@@ -168,7 +168,7 @@ const Profile = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 min-w-0 overflow-x-hidden">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p className="text-gray-600">Loading profile...</p>
@@ -182,7 +182,7 @@ const Profile = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 min-w-0 overflow-x-hidden">
         {/* Professional Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">

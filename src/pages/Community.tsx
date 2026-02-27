@@ -43,7 +43,7 @@ export default function Community() {
           backgroundRepeat: 'no-repeat',
         }}
       >
-        <div className="max-w-7xl w-full px-4 py-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl w-full px-3 py-4 sm:px-6 lg:px-8 min-w-0 overflow-x-hidden">
           <div className="bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             {/* Clean Header */}
             <div className="border-b border-slate-100 px-5 py-4">

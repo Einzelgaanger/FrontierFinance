@@ -85,8 +85,8 @@ const Hero = () => {
         <div className="absolute inset-0 bg-navy-950/45" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-20 pb-20 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 xl:gap-16 items-center min-h-[calc(100vh-8rem)]">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-[max(6rem,calc(5rem+env(safe-area-inset-top,0px)))] sm:pt-20 pb-16 sm:pb-20 w-full min-w-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 xl:gap-16 items-center min-h-0 lg:min-h-[calc(100vh-8rem)]">
           {/* Left: Main content (words) */}
           <motion.div
             initial={{ opacity: 0, x: -24 }}

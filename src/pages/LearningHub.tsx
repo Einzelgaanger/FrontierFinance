@@ -34,33 +34,33 @@ const LearningHub = () => {
   ];
 
   const publications: { title: string; type: string; desc: string; links: { label: string; href: string }[]; year: string }[] = [
-    { title: "Reaching Small and Growing Businesses in Frontier Markets - ARIA", type: "Full Report", year: "2024", desc: "ARIA's Foundations of Growth Publication, a DFI-focused initiative by Proparco, British International Investment (BII), and FMO - Dutch entrepreneurial development bank to expand investment in frontier markets. Using examples from the CFF network, our article highlights the investment approaches used by local fund managers to support small and growing businesses in these markets, and offers a set of concrete suggestions on where we hope to see DFIs engage.", links: [{ label: "Full Report", href: "#" }] },
-    { title: "CFF Annual Local Capital Provider Survey 2024", type: "Preliminary Report", year: "2024", desc: "Our Newly Published State of Play Report_Issue Brief No. 1. The 2024 Annual Survey Report highlights the current state-of-play and trends within small business finance funds. With 100 respondents, an almost twofold increase from last year's survey, the report showcases a new acceleration of growth for the asset class, shifts towards more investor-friendly fund set ups, and continued innovation. Respondents are collectively aiming to raise $2.25 billion to invest into Africa and MENA's small businesses.", links: [{ label: "Preliminary Report", href: "#" }] },
-    { title: "African Fund of Fund Platforms: Building the small business finance ecosystem", type: "Analysis", year: "2023", desc: "A new group of public and private fund of funds platforms are achieving system-level changes by efficiently moving institutional capital to local small business growth funds in their markets. Six of those platforms including 2X Global (pan-African), Venture Capital Trust Fund (Ghana), MSMEDA (Egypt), SA SME Fund (South Africa), 27four Black Business Growth Fund (South Africa) and CFF share insights as to the role they are playing in addition to capitalising this new intermediary segment.", links: [{ label: "Full report", href: "#" }] },
-    { title: "CFF Annual Local Capital Provider Survey 2023", type: "Full Report", year: "2023", desc: "This year's publication highlights the increasing influence of local capital providers throughout Africa and the Middle East. It categorises the small business finance asset class, delineating their pivotal role in supplying growth capital to businesses and reveals the strategies fund managers are using to build track record, address fund economics and raise capital. The 60 survey respondents aim to secure $1.5 billion in capital, following their investments in 1200 businesses to date.", links: [{ label: "Full report", href: "#" }, { label: "Summary", href: "#" }] },
-    { title: "CFF Annual Local Capital Provider Survey 2022", type: "Full Report", year: "2022", desc: "The CFF has developed this survey to assess the \"state-of-play\" with regard to the small business financing sector in Africa and the Middle East. It is designed to better understand the emerging class of LCPs who are a heterogeneous group of indigenous fund managers using alternative structures to provide capital to SGBs in their local markets. This flagship publication builds on the initial edition published in 2020, highlighting the market movement that has taken place during that time and revealing new insights into this asset class.", links: [{ label: "Full Report", href: "#" }, { label: "Summary infographic", href: "#" }] },
-    { title: "Unlocking Local Pension Fund Capital for Small Business Finance", type: "Report", year: "—", desc: "The purpose of this report is to highlight some of the work of market builders working closely with pension fund industry bodies in South Africa, Ghana and Zambia to unlock capital for small business finance in Africa. There is a shortage of growth capital for small and growing businesses in African markets, which can be partially filled by local institutional investors, particularly local pension funds.", links: [] },
-    { title: "Launch of Nyala Venture", type: "Partnership", year: "—", desc: "In partnership with CFF and the facility manager (Cardano Development and Total Impact Capital Europe), FSDAi will provide the critical anchor funding for Nyala Venture. Nyala Venture will bridge the funding gap by targeting a new class of capital providers serving small and growing businesses, particularly those led by women or applying a gender lens investment strategy in Nigeria, Ghana, Kenya, Senegal, South Africa, and Uganda. The facility will be highly flexible; funds will be available in the form of debt or equity. Technical assistance funding will be made available to managers. FSDAi is also funding the development of the Frontier Capital Learning Lab.", links: [] },
-    { title: "Fund of Funds Vehicles for Small and Growing Businesses Report", type: "Full Report", year: "—", desc: "A consortium including the World Economic Forum Global Alliance for Social Entrepreneurship, CFF, GSG and SDIP worked with Impact Investing Ghana to accelerate the design and implementation of a Fund of Funds vehicle for Ghana. This report shares key learnings from the FoF design process and insights from a wider group of nine FoFs.", links: [{ label: "Full Report", href: "#" }, { label: "Executive Summary", href: "#" }] },
-    { title: "The New Operating Environment Facing Latin American Capital Providers", type: "Report", year: "2020", desc: "Collaborative for Frontier Finance, Sonen Capital, Fondo de Fondos, and Dalberg. A survey of capital managers supporting MSMEs in the region on the impact of COVID-19. The survey reveals an expanding network of LatAm capital providers and focuses on current plans to support portfolios and expand resources and AUM, plus how capital providers are thinking about impact in terms of gender and employment.", links: [] },
-    { title: "Emerging Market Small & Growing Business Capital Provider's Survey Results", type: "Survey", year: "2020", desc: "CFF with support of Visa Foundation conducted a survey of capital managers that target SGBs in emerging markets. The survey is a snapshot of this sector pre- and post-COVID-19 – and in particular, what is happening with the gender-oriented impact sector. The results offer a pathway for systemic change by supporting highly effective local capital providers that prioritize gender-oriented investments.", links: [] },
-    { title: "Insights on SME Fund Performance: Generating learnings to catalyse interest and action in SME investing", type: "Report", year: "2019", desc: "Shell Foundation, Omidyar Network, and Deloitte. Key findings from a SME fund performance study which analyzed data from 365 funds across 5 DFIs. The report seeks to establish realistic expectations for development outcomes and financial returns, thereby encouraging the flow of capital into SME segments.", links: [] },
-    { title: "Closing the Gaps - Finance Pathways for Serving the Missing Middles", type: "Report", year: "2019", desc: "CFF and founding members produced a follow-up to \"Missing Middles\". The new report identifies five alternative approaches or \"pathways\" for providing finance that meets the diverse needs of each SGB segment and investor, and highlights critical actions that ecosystem stakeholders can take to help support these approaches.", links: [] },
-    { title: "The Missing Middles - Segmenting Enterprises to Better Understand their Financial Needs", type: "Report", year: "2018", desc: "Omidyar Network and CFF. This report aims to help investors, intermediaries, and entrepreneurs better navigate the complex landscape of SGB investment in frontier and emerging markets. Segmenting the SGB market into multiple \"missing middles\" will help more effectively diagnose the distinct financing needs and gaps faced by different types of enterprises.", links: [] },
-    { title: "Scaling Access to Finance for Early-Stage Enterprises in Emerging Markets", type: "Report", year: "2018", desc: "Dutch Good Growth Fund. This report explores scaling access to finance for early-stage enterprises in emerging markets and shares lessons from the field. It seeks to explore how to improve the scalability and viability of early-stage finance provision, thereby reducing the need for philanthropic capital and subsidies.", links: [] },
-    { title: "Reaching deep in low-income markets: Enterprises achieving impact, sustainability, and scale at the base of the pyramid", type: "Report", year: "2017", desc: "Omidyar Network and MacArthur Foundation. Explores 20 enterprises that serve people living at the bottom of the pyramid to better understand the impact, sustainability, and scale of these businesses. The research aims to help provide transparency and guidance to advance the broader field of funding for businesses serving the deep BOP.", links: [] },
-    { title: "SME Finance in Sub-Saharan Africa", type: "Study", year: "2017", desc: "Shell Foundation and Enclude. The study focuses on SMEs that are commercially viable with five to 250 employees and have significant potential and ambition for growth. The \"Target Market\" focus is on businesses in the \"validate\" and \"prepare\" stages seeking growth and working capital of between $250,000 and $1 million.", links: [] },
-    { title: "The State of Early Stage Investing and Opportunity for Venture Debt", type: "Study", year: "2016", desc: "Global Development Incubator. Omidyar Network and GDI conducted a study with 50+ fund managers, fieldbuilders, and other intermediaries to detail the size of the market for SGB investments, existing debt and equity structures and products, progress by local and international investors, and success factors. Includes recommendations for the sector based on gaps identified.", links: [] },
-    { title: "Investing in Africa's Small and Growing Businesses: An Introduction to Private Equity in Africa", type: "Handbook", year: "2015", desc: "I&P. The handbook is a tool to foster the development of early-stage SME investment in Africa and encourage the rise of new investors on the continent. Intended for investors, entrepreneurs and anyone interested in the field of SME financing in Africa.", links: [] },
-    { title: "Innovations in Financing Structures for Impact Enterprises: Spotlight on Latin America", type: "Report", year: "2017", desc: "Transform Finance. Outlines the specific problems with traditional financing structure for impact enterprises, including how investment funds and deal structures are innovating to alleviate the capital gap, and recommendations for fund managers, investors, entrepreneurs. Highlights 16 cases across Latin America.", links: [] },
-    { title: "New Perspectives on Financing Small Cap SMEs in Emerging Markets: The Case for Mezzanine Finance", type: "Report", year: "2016", desc: "Dutch Good Growth Fund. Mezzanine finance blends elements from traditional PE and debt financing. This study provides an understanding of the specificities, diversity and complexities of it, critical to spur innovative thinking on both the fund managers and investors sides.", links: [] },
-    { title: "Private Credit Solutions: Mezzanine Financing in Emerging Markets", type: "Report", year: "2014", desc: "EMPEA. EMPEA's first in-depth look at the role that private credit plays in supporting the development of small- and medium-size companies across the emerging markets, and in offering institutional investors a means of accessing this growth.", links: [] },
+    { title: "Reaching Small and Growing Businesses in Frontier Markets - ARIA", type: "Full Report", year: "2024", desc: "ARIA's Foundations of Growth Publication a DFI-focused initiative by Proparco, British International Investment (BII), and FMO - Dutch entrepreneurial development bank to expand investment in frontier markets. Using examples from the CFF network, our article highlights the investment approaches used by local fund managers to support small and growing businesses in these markets, and offers a set of concrete suggestions on where we hope to see DFIs engage.", links: [{ label: "Full Report", href: "https://www.ariainvests.org/news/foundations-of-growth-6" }] },
+    { title: "CFF Annual Local Capital Provider Survey 2024", type: "Preliminary Report", year: "2024", desc: "Our Newly Published State of Play Report_Issue Brief No. 1. The 2024 Annual Survey Report highlights the current state-of-play and trends within small business finance funds. With 100 respondents, an almost twofold increase in from last year's survey, the report showcases a new acceleration of growth for the asset class, shifts towards more investor-friendly fund set ups, and continued innovation. Respondents are collectively aiming to raise $2.25 billion to invest into Africa and MENA's small businesses.", links: [{ label: "Preliminary Report", href: "https://www.frontierfinance.org/s/CFF-2024-Annual-Survey-Preliminary-Report-5zmm.pdf" }] },
+    { title: "African Fund of Fund Platforms: Building the small business finance ecosystem", type: "Analysis", year: "2023", desc: "A new group of public and private fund of funds platforms are achieving system-level changes by efficiently moving institutional capital to local small business growth funds in their markets. Six of those platforms including 2X Global (pan-African), Venture Capital Trust Fund (Ghana), MSMEDA (Egypt), SA SME Fund (South Africa), 27four Black Business Growth Fund (South Africa)  and CFF share insights as to the role they are playing in addition to capitalising this new intermediary segment. 2X Global.", links: [{ label: "Full report", href: "https://www.frontierfinance.org/s/2311106-CFF-African-Fund-of-Funds-Report.pdf" }] },
+    { title: "CFF Annual Local Capital Provider Survey 2023", type: "Full Report", year: "2023", desc: "This year's publication highlights the increasing influence of local capital providers throughout Africa and the Middle East. It categorises the small business finance asset class, delineating their pivotal role in supplying growth capital to businesses and reveals the strategies fund managers are using to build track record, address fund economics and raise capital. The 60 survey respondants aim to secure $1.5 billion in capital, following their investments in 1200 businesses to date.", links: [{ label: "Full report", href: "https://www.frontierfinance.org/s/CFF-Annual-Local-Capital-Provider-Survey-2023.pdf" }, { label: "Summary", href: "https://www.frontierfinance.org/s/CFF-Annual-Local-Capital-Provider-Survey-Summary-2023.pdf" }] },
+    { title: "CFF Annual Local Capital Provider Survey 2022 ", type: "Full Report", year: "2022", desc: "The CFF has developed this survey to assess the \"state-of-play\" with regard to the small business financing sector in Africa and the Middle East. It is designed to better understand the emerging class of LCPs who are a heterogeneous group of indigenous fund managers using alternative structures to provide capital to SGBs in their local markets. This flagship publication builds on the initial edition published in 2020, highlighting the market movement that has taken place during that time and revealing new insights into this asset class.", links: [{ label: "Full Report", href: "https://www.frontierfinance.org/s/CFF-Local-Capital-Provider-Survey-2022-7wpw.pdf" }, { label: "Summary infographic", href: "https://www.frontierfinance.org/s/CFF-Local-Capital-Provider-Survey-2022-Inforgraphic-e6lf.pdf" }] },
+    { title: "Unlocking Local Pension Fund Capital for Small Business Finance ", type: "Report", year: "—", desc: "The purpose of this report is to highlight some of the work of market builders working closely with pension fund industry bodies in South Africa, Ghana and Zambia to unlock capital for small business finance in Africa. There is a shortage of growth capital for small and growing businesses in African markets, which can be partially filled by local institutional investors, particularly local pension funds. While pension funds have historically been deterred by the risk profile, many are considering the de-risked opportunities in this market segment to achieve diversification, returns and local economic development. The report is valuable for market builders and pension funds as they seek to learn from colleagues and peers with regard to this emerging opportunity.", links: [{ label: "Report", href: "https://www.frontierfinance.org/s/CFF-Unlocking-local-pension-fund-capital.pdf" }] },
+    { title: "Launch of Nyala Venture", type: "Partnership", year: "—", desc: "In partnership with the Collaborative for Frontier Finance (CFF) and the facility manager, a Joint Venture of Cardano Development and Total Impact Capital Europe, FSDAi will provide the critical anchor funding for Nyala Venture. Nyala Venture will bridge the funding gap left by other institutions, by targeting a new class of capital providers serving small and growing businesses, particularly those which are led by women or are applying a gender lens investment strategy in Nigeria, Ghana, Kenya, Senegal, South Africa, and Uganda. The facility will be highly flexible with its investment funds to meet the innovative approaches of these local capital providers. Funds will be available in the form of debt or equity. In addition to the investment capital, technical assistance funding will be made available to these managers to assist with capacity strengthening. FSDAi is also funding the development of the Frontier Capital Learning Lab, which will document and share the learnings of these local capital managers and their small business portfolios over the coming years.", links: [{ label: "Press release", href: "https://www.frontierfinance.org/s/Nyala-Venture-Press-Release_final-nb7j.pdf" }] },
+    { title: "Fund of Funds Vehicles for Small and Growing Businesses Report", type: "Full Report", year: "—", desc: "A consortium of partners, initiated by the World Economic Forum Global Alliance for Social Entrepreneurship and including the Collaborative for Frontier Finance, the Global Steering Group for Impact Investing and the Sustainable Development Investment Partnership, worked with Impact Investing Ghana to accelerate the design and implementation of a Fund of Funds (FoF) investment vehicle that could address some of the key barriers to growth finance for small and growing businesses in Ghana. This report is intended for investment and market-building teams developing FoF and wholesale capital structures. The purpose of this report is to share key learnings from the FoF design process, and general insights and tools drawn from a wider group of nine FoFs. This report is not intended to provide a systematic methodology on FoF design but rather highlights some key pain points for practitioners to address when designing or investing in an FoF.", links: [{ label: "Full Report", href: "https://www.frontierfinance.org/s/CFF-Fund-of-Funds-Design-Considerations.pdf" }, { label: "Executive Summary", href: "https://www.frontierfinance.org/s/CFF-Fund-of-Funds-Design-Considerations_Executive-summary.pdf" }] },
+    { title: "The New Operating Environment Facing Latin American Capital Providers", type: "Report", year: "2020", desc: "Collaborative for Frontier Finance, Sonen Capital, Fondo de Fondos, and Dalberg - 2020. To better understand the impact of COVID-19 on Latin American impact-oriented capital managers targeting micro, small, and medium enterprises (MSMEs), the Collaborative for Frontier Finance, Sonen Capital, Fondo de Fondos, and Dalberg conducted a survey of capital managers supporting MSMEs in the region. The survey reveals an expanding network of LatAm capital providers, who support their portfolio companies' growth agenda pre- and post-COVID-19. In particular, the report focuses on the current plans by local capital providers to both support their portfolios and to expand their own resources and AUM. In addition, the report provides an update on how the capital providers are thinking about impact in terms of gender and employment. The survey provides ideas and opportunities to further support local impact-oriented capital providers that are addressing today's realities and tomorrow's opportunities.", links: [{ label: "Report", href: "https://www.frontierfinance.org/s/2020-September-Latin-America-Capital-Manager-Survey.pdf" }] },
+    { title: "Emerging Market Small & Growing Business Capital Provider's Survey Results", type: "Survey", year: "2020", desc: "Collaborative for Frontier Finance - 2020. To better understand impact of COVID-19 on small and growing businesses and the local capital providers that support them, the Collaborative for Frontier Finance, with the support of Visa Foundation, conducted a survey of capital managers that target SGBs in emerging markets. The survey is a snapshot of this critical sector pre- and post-COVID-19 in their local economies – and in particular, what is happening with the gender-oriented impact sector. The results offer a pathway for systemic change by supporting highly effective local capital providers that prioritize gender-oriented investments.", links: [{ label: "Survey", href: "https://www.frontierfinance.org/s/Sub-Sahara-Impact-Capital-Providers_COVID-19-Survey-Review_June-2020.pdf" }] },
+    { title: "Insights on SME Fund Performance: Generating learnings with the potential to catalyse interest and action in SME investing", type: "Report", year: "2019", desc: "Shell Foundation, Omidyar Network, and Deloitte - 2019. This report highlights key findings from a SME fund performance study which analyzed data from 365 funds across 5 development finance institutions (DFIs). Historically, lack of data on the risk, return, and impact of SME investments has kept additional capital from flowing into SME segments in emerging markets. Through its data analysis, this report seeks to establish realistic expectations for development outcomes and financial returns, thereby encouraging the flow of capital into SME segments.", links: [{ label: "Report", href: "https://shellfoundation.org/wp-content/uploads/2024/08/Insights-on-SME-fund-performance-ShellFoundationOmidyar.pdf" }] },
+    { title: "Closing the Gaps - Finance Pathways for Serving the Missing Middles", type: "Report", year: "2019", desc: "The Collaborative for Frontier Finance and its founding members have produced a follow-up report to the \"Missing Middles: Segmenting Enterprises to Better Understand Their Financial Needs\" which identified four distinct families of SGBs each with diverse characteristics and external financing needs. The new report: \"Closing the Gaps: Finance Pathways for Serving the Missing Middles\" identifies five alternative approaches or \"pathways\" for providing finance that meets the diverse needs of each SGB segment and investor. It also highlights critical actions that ecosystem stakeholders can take to help support these approaches as well as newly emerging ones that together can help fill the financing gaps within each SGB segment.", links: [{ label: "Report", href: "https://www.frontierfinance.org/closingthegaps" }] },
+    { title: "The Missing Middles - Segmenting Enterprises to Better Understand their Financial Needs", type: "Report", year: "2018", desc: "Omidyar Network and the Collaborative for Frontier Finance - 2018. This report aims to help investors, intermediaries, and entrepreneurs better navigate the complex landscape of SGB investment in frontier and emerging markets. Segmenting the SGB market into multiple \"missing middles\" will help more effectively diagnose the distinct financing needs and gaps faced by different types of enterprises – and in turn, will enable the industry to better focus on scaling the financing solutions that are most needed to empower these enterprises to meaningfully contribute to inclusive economic growth.", links: [{ label: "Report", href: "https://www.frontierfinance.org/s/Missing_Middles_CFF_Report-mee9.pdf" }] },
+    { title: "Scaling Access to Finance for Early-Stage Enterprises in Emerging Markets", type: "Report", year: "2018", desc: "Dutch Good Growth Fund - 2018. This report explores scaling access to finance for early-stage enterprises in emerging markets and shares lessons from the field. It seeks to explore how to improve the scalability and viability of early-stage finance provision in emerging markets, thereby reducing the need for philanthropic capital and subsidies to the local providers of finance and support to early-stage enterprises.", links: [{ label: "Report", href: "https://www.frontierfinance.org/s/Early-Stage-Finance-Final-2018-1.pdf" }] },
+    { title: "Reaching deep in low-income markets: Enterprises achieving impact, sustainability, and scale at the base of the pyramid", type: "Report", year: "2017", desc: "Omidyar Network and MacArthur Foundation - 2017. This report explores 20 enterprises that serve people who are living at the bottom of the pyramid to better understand the impact, sustainability, and scale of these businesses. The research aims to help provide transparency and guidance to advance the broader field of funding for businesses serving the deep BOP.", links: [{ label: "Report", href: "https://www.frontierfinance.org/s/us-cons-reaching-deep-in-low-income-markets.pdf" }] },
+    { title: "SME Finance in Sub-Saharan Africa", type: "Study", year: "2017", desc: "Shell Foundation and Enclude - 2017. The study focuses on SMEs that are commercially viable with five to 250 employees and have significant potential and ambition for growth. Within this segment, our \"Target Market\" focus is on businesses in the \"validate\" and \"prepare\" stages seeking growth and working capital of between $250,000 and $1 million.", links: [{ label: "Study", href: "https://www.frontierfinance.org/s/Shell_Foundation_Executive_S-2.pdf" }] },
+    { title: "The State of Early Stage Investing and Opportunity for Venture Debt", type: "Study", year: "2016", desc: "Global Development Incubator - 2016. Omidyar Network and the Global Development Incubator conducted a study with 50+ fund managers, fieldbuilders, and other intermediaries to detail the size of the market for SGB investments, existing debt and equity structures and products, progress by local and international investors, and success factors. It includes recommendations for the sector based on the gaps identified in interviews.", links: [{ label: "Study", href: "https://www.frontierfinance.org/s/ON-GDI-Impacting-Investing-Project-Abridged-Version-1-2.pdf" }] },
+    { title: "Investing in Africa's Small and Growing Businesses: An Introduction to Private Equity in Africa", type: "Handbook", year: "2015", desc: "I&P - 2015. The handbook is a tool to foster the development of early-stage SME investment in Africa and encourage the rise of new investors on the continent. The primary objective of this handbook is to provide an operative document for the future investment companies of the continent, and is intended for investors, entrepreneurs and anyone interested in the field of SME financing in Africa.", links: [{ label: "Handbook", href: "https://www.frontierfinance.org/s/Handbook-Investing-in-Africas-SGBs-1.pdf" }] },
+    { title: "Innovations in Financing Structures for Impact Enterprises: Spotlight on Latin America", type: "Report", year: "2017", desc: "Transform Finance - 2017. This report outlines the specific problems with traditional financing structure for impact enterprises, including how investment funds and deal structures are innovating to alleviate the capital gap, and recommendations for how fund managers, investors, entrepreneurs, and others can engage with these alternatives to collectively increase our impact. The report highlights 16 cases across Latin America.", links: [{ label: "Report", href: "https://www.frontierfinance.org/s/Transform-Finance-innovation-financing-structures.pdf" }] },
+    { title: "New Perspectives on Financing Small Cap SMEs in Emerging Markets: The Case for Mezzanine Finance", type: "Report", year: "2016", desc: "Dutch Good Growth Fund - 2016. In search for new models to provide risk capital, mezzanine finance, which blends elements from traditional Private Equity (PE) and debt financing into a unique product, provides an additional offer in the SME finance ecosystem for missing middle entrepreneurs. This studyprovides an understanding of the specificities, diversity (and complexities) of it, critical to spur innovative thinking on both the fund managers and investors sides so products may be improved and models may be more scalable.", links: [{ label: "Report", href: "https://www.frontierfinance.org/s/DGGF-report-on-mezzanine-finance.pdf" }] },
+    { title: "Private Credit Solutions: Mezzanine Financing in Emerging Markets", type: "Report", year: "2014", desc: "EMPEA - 2014. EMPEA's first in-depth look at the role that private credit plays in supporting the development of small- and medium-size companies across the emerging markets, and in offering institutional investors a means of accessing this growth.", links: [{ label: "Report", href: "https://www.frontierfinance.org/s/EMPEA-Emerging-Markets-Mezzanine-Report-May-2014.pdf" }] },
   ];
 
   return (
     <div className="min-h-screen bg-navy-950 font-sans selection:bg-gold-500/30">
       {/* Hero Section – 75vh like About/Network, layout like homepage */}
-      <section className="relative min-h-[75vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[60vh] sm:min-h-[75vh] flex items-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center z-0"
           style={{ backgroundImage: 'url(/learninghub.jpg)' }}
@@ -69,7 +69,7 @@ const LearningHub = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-navy-900/50" />
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-20 pb-16 sm:pb-20 w-full">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-[max(5rem,calc(4.5rem+env(safe-area-inset-top,0px)))] sm:pt-20 pb-12 sm:pb-20 w-full min-w-0">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 xl:gap-16 items-center">
             {/* Left: Main content */}
             <motion.div
@@ -78,17 +78,14 @@ const LearningHub = () => {
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               className="lg:col-span-7 order-1 text-center lg:text-left lg:pr-12 xl:pr-16"
             >
-              <p className="font-display text-gold-400 text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] mb-5">
-                Resources
-              </p>
-              <h1 className="text-[2rem] sm:text-[2.6rem] md:text-[3.4rem] lg:text-[4rem] xl:text-[4.5rem] font-display font-normal text-white leading-[1.12] tracking-tight">
+              <h1 className="text-[1.75rem] sm:text-[2.6rem] md:text-[3.4rem] lg:text-[4rem] xl:text-[4.5rem] font-display font-normal text-white leading-[1.12] tracking-tight">
                 Learning Lab
               </h1>
-              <p className="text-base sm:text-lg text-slate-200 max-w-xl mt-5 sm:mt-6 mx-auto lg:mx-0 leading-[1.7] font-sans font-light">
-                Curated resources for fund managers, funders, and fieldbuilders to mobilize capital for small and growing businesses in emerging markets.
+              <p className="text-base sm:text-lg text-slate-200 max-w-2xl mt-5 sm:mt-6 mx-auto lg:mx-0 leading-[1.7] font-sans font-light">
+                The Collaborative for Frontier Finance curates the below collection of key resources for fund managers, funders, and fieldbuilders to help mobilize additional capital for small and growing businesses in emerging markets.
               </p>
               <p className="text-sm text-slate-300 font-sans mt-4 mx-auto lg:mx-0 max-w-xl">
-                To recommend a resource,{' '}
+                If you would like to recommend a new resource,{' '}
                 <a href="mailto:hello@frontierfinance.org" className="text-gold-400 hover:text-gold-300 underline underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 rounded transition-colors">get in touch</a>.
               </p>
             </motion.div>
@@ -106,9 +103,9 @@ const LearningHub = () => {
               </p>
               <nav className="space-y-4 sm:space-y-5">
                 {[
-                  { title: "Fund Manager Portal", subtitle: "Tools, templates and video", icon: Database, href: "#fund-manager-portal" },
-                  { title: "Market Insights", subtitle: "Latest analysis and updates", icon: TrendingUp, href: "#market-insights" },
-                  { title: "Publications", subtitle: "Reports, surveys and research", icon: FileText, href: "#publications" }
+                  { title: "Fund manager portal", subtitle: "", icon: Database, href: "#fund-manager-portal" },
+                  { title: "Market insights", subtitle: "", icon: TrendingUp, href: "#market-insights" },
+                  { title: "Publications", subtitle: "", icon: FileText, href: "#publications" }
                 ].map((item, i) => (
                   <motion.a
                     key={i}
@@ -125,9 +122,11 @@ const LearningHub = () => {
                       <p className="font-sans font-semibold text-white group-hover:text-gold-200 transition-colors">
                         {item.title}
                       </p>
-                      <p className="font-sans text-sm text-slate-400 mt-0.5">
-                        {item.subtitle}
-                      </p>
+                      {item.subtitle && (
+                        <p className="font-sans text-sm text-slate-400 mt-0.5">
+                          {item.subtitle}
+                        </p>
+                      )}
                     </div>
                   </motion.a>
                 ))}
@@ -139,14 +138,13 @@ const LearningHub = () => {
 
       {/* Fund Manager Portal – protrudes into hero with rounded top (same as About/Network) */}
       <section id="fund-manager-portal" className="scroll-mt-24 py-24 bg-white rounded-t-[2.5rem] sm:rounded-t-[3rem] overflow-hidden -mt-8 sm:-mt-12 z-10 relative shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 min-w-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <span className="section-label text-gold-600">Toolkit</span>
               <h2 className="text-4xl font-display font-normal text-navy-900 mt-2 mb-6">Fund Manager Portal</h2>
               <p className="text-slate-600 leading-relaxed mb-6 text-lg font-sans">
                 SME Ventures and the Collaborative for Frontier Finance have partnered to curate a collection of open-source resources which can be accessed by fund managers operating in emerging markets at various stages of their vehicle&apos;s lifecycle.
@@ -155,7 +153,9 @@ const LearningHub = () => {
                 The portal is a repository of resources and templates organized by the stage of a vehicle&apos;s lifecycle, incorporating content for: Investment thesis and set-up, capital raising, team, track record, investment process, operations, ESG, impact and SME support.
               </p>
               <p className="text-slate-700 leading-relaxed mb-8 font-sans">
-                We invite you to explore the portal,{' '}
+                We invite you to{' '}
+                <a href="https://escpnetwork.net/" target="_blank" rel="noopener noreferrer" className="text-gold-600 hover:text-gold-700 font-semibold underline underline-offset-2 transition-colors">explore the portal</a>
+                ,{' '}
                 <a href="https://youtu.be/jTKHwZnMztM" target="_blank" rel="noopener noreferrer" className="text-gold-600 hover:text-gold-700 font-semibold underline underline-offset-2 transition-colors">watch the video</a>
                 {' '}to learn more, and share feedback on how we can improve the tool going forward.
               </p>
@@ -189,10 +189,10 @@ const LearningHub = () => {
 
       {/* Market Insights */}
       <section id="market-insights" className="scroll-mt-24 py-24 bg-navy-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 min-w-0">
           <div className="text-center mb-16">
             <span className="section-label text-gold-600">Latest Updates</span>
-            <h2 className="text-4xl font-display font-normal text-navy-900 mt-2">Market Insights</h2>
+            <h2 className="text-4xl font-display font-normal text-navy-900 mt-2">Market insights</h2>
             <div className="w-14 h-0.5 bg-gold-500/60 mx-auto mt-4 rounded-full" />
           </div>
 
@@ -214,7 +214,7 @@ const LearningHub = () => {
                   {'subtitle' in item && item.subtitle && (
                     <p className="text-sm text-gold-600 font-sans font-medium mb-3">{item.subtitle}</p>
                   )}
-                  <p className="text-slate-600 leading-relaxed text-sm mb-6 line-clamp-4 font-sans">
+                  <p className="text-slate-600 leading-relaxed text-sm mb-6 font-sans">
                     {item.excerpt}
                   </p>
                 </div>
@@ -232,12 +232,17 @@ const LearningHub = () => {
               </motion.div>
             ))}
           </div>
+          <div className="mt-8 text-center">
+            <a href="/learning-hub#publications" className="text-navy-800 font-semibold text-sm hover:text-gold-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 rounded">
+              See all
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* Publications – compact, creative */}
+      {/* Publications */}
       <section id="publications" className="scroll-mt-24 py-16 sm:py-20 bg-slate-50/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 min-w-0">
           <div className="mb-10">
             <span className="section-label text-gold-600">Research</span>
             <h2 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-2">Publications</h2>
@@ -272,10 +277,10 @@ const LearningHub = () => {
                       {pub.type}
                     </span>
                   </div>
-                  <h3 className="text-sm font-display font-normal text-navy-900 leading-snug mb-2 group-hover:text-gold-700 transition-colors line-clamp-2">
+                  <h3 className="text-sm font-display font-normal text-navy-900 leading-snug mb-2 group-hover:text-gold-700 transition-colors">
                     {pub.title}
                   </h3>
-                  <p className="text-slate-500 text-xs leading-relaxed font-sans flex-1 line-clamp-2 mb-3">
+                  <p className="text-slate-500 text-xs leading-relaxed font-sans flex-1 mb-3">
                     {pub.desc}
                   </p>
                   {pub.links.length > 0 ? (
@@ -285,6 +290,8 @@ const LearningHub = () => {
                           {j > 0 && <span className="text-slate-300 text-[10px]">·</span>}
                           <a
                             href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="inline-flex items-center gap-1 text-[11px] font-semibold text-navy-800 hover:text-gold-600 font-sans transition-colors"
                           >
                             <Download className="w-3 h-3 shrink-0" />

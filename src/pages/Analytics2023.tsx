@@ -417,7 +417,7 @@ export default function Analytics2023() {
     return (
       <div className="min-h-screen bg-gray-50">
         {userRole !== 'admin' && <Header />}
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 min-w-0 overflow-x-auto">
           <div className="text-center">
             <p className="text-gray-500">2023 Survey Analytics are only available to members and administrators.</p>
           </div>
@@ -430,7 +430,7 @@ export default function Analytics2023() {
     return (
       <div className="min-h-screen bg-gray-50">
         {userRole !== 'admin' && <Header />}
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 min-w-0 overflow-x-auto">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p className="text-gray-600">Loading 2023 survey analytics...</p>
@@ -443,7 +443,7 @@ export default function Analytics2023() {
   return (
     <div className="min-h-screen bg-gray-50">
       {userRole !== 'admin' && <Header />}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 min-w-0 overflow-x-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">2023 ESCP Survey Analytics</h1>

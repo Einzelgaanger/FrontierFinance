@@ -652,7 +652,7 @@ const Analytics = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         {userRole !== 'admin' && <Header />}
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 min-w-0 overflow-x-auto">
           <div className="text-center">
             <Eye className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h2 className="text-lg font-medium text-gray-900 mb-2">Access Restricted</h2>
@@ -667,7 +667,7 @@ const Analytics = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <style>{analyticsStyles}</style>
       <Header />
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 min-w-0 overflow-x-auto">
 
         {/* Year-specific Analytics */}
         {selectedYear === 2024 && <Analytics2024 />}

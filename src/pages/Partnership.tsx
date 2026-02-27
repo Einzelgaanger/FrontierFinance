@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import Footer from "@/components/layout/Footer";
-import { Button } from "@/components/ui/button";
-import { Mail } from "lucide-react";
 import { motion } from "framer-motion";
 
 const partnerLogos = [
@@ -129,7 +127,7 @@ const Partnership = () => {
   return (
     <div className="min-h-screen bg-navy-950 font-sans selection:bg-gold-500/30">
       {/* Hero: full-bleed, bold typography */}
-      <section className="relative scroll-mt-24 min-h-[85vh] flex flex-col justify-center overflow-hidden">
+      <section className="relative scroll-mt-24 min-h-[60vh] sm:min-h-[85vh] flex flex-col justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
           style={{ backgroundImage: "url(/home.png)" }}
@@ -137,23 +135,23 @@ const Partnership = () => {
           <div className="absolute inset-0 bg-navy-900/75" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(212,175,55,0.12),transparent)]" aria-hidden />
         </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-24 sm:py-32">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-[max(5rem,calc(4.5rem+env(safe-area-inset-top,0px)))] sm:py-32 min-w-0">
           <motion.div
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-4xl"
+            className="max-w-4xl min-w-0"
           >
             <p className="text-gold-400 text-sm font-bold uppercase tracking-[0.35em] mb-6">
               Partnerships
             </p>
             <h1 className="font-display font-normal text-white leading-[1.05] tracking-tight">
-              <span className="block text-[3rem] sm:text-[4rem] md:text-[5rem] lg:text-[6rem] xl:text-[7rem]">Partners</span>
-              <span className="block text-[2rem] sm:text-[2.5rem] md:text-3xl lg:text-4xl text-gold-400 mt-2 font-light">
+              <span className="block text-[2.25rem] sm:text-[4rem] md:text-[5rem] lg:text-[6rem] xl:text-[7rem]">Partners</span>
+              <span className="block text-[1.35rem] sm:text-[2.5rem] md:text-3xl lg:text-4xl text-gold-400 mt-2 font-light">
                 who back the mission
               </span>
             </h1>
-            <div className="flex items-center gap-4 mt-10">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-8 sm:mt-10">
               <div className="h-px flex-1 max-w-[120px] bg-gradient-to-r from-gold-500 to-transparent" aria-hidden />
               <p className="text-slate-300 text-lg sm:text-xl font-light leading-relaxed max-w-xl">
                 A growing community of fund managers, funders, and fieldbuilders advancing finance for small and growing businesses in frontier markets.
@@ -166,7 +164,7 @@ const Partnership = () => {
       {/* Partner logos: bento-style band */}
       <section className="relative py-16 sm:py-20 bg-[#0f172a] border-y border-white/5">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,rgba(212,175,55,0.03)_50%,transparent_100%)]" aria-hidden />
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 min-w-0">
           <p className="text-center text-gold-500/90 text-xs font-bold uppercase tracking-[0.25em] mb-10">
             Supporting the CFF mission
           </p>
@@ -200,8 +198,8 @@ const Partnership = () => {
 
       {/* Board Members: alternating editorial layout */}
       <section className="scroll-mt-24 py-20 sm:py-28 lg:py-32 bg-gradient-to-b from-amber-50/80 via-white to-slate-50/60">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
+<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 min-w-0">
+        <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -233,28 +231,6 @@ const Partnership = () => {
           <p className="text-slate-400 font-sans text-base sm:text-lg">
             CFF is a registered <strong className="text-slate-300">501(c)(3)</strong> non-profit incorporated in Delaware, United States.
           </p>
-        </div>
-      </section>
-
-      {/* CTA: bold gradient band */}
-      <section className="relative py-24 sm:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_50%,rgba(212,175,55,0.08),transparent_70%)]" aria-hidden />
-        <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-normal text-white mb-4">
-            Get in touch
-          </h2>
-          <p className="text-slate-300 text-lg sm:text-xl mb-10 max-w-xl mx-auto font-sans leading-relaxed">
-            Investor, field builder, or technical assistance provider—there’s a role for you in our network.
-          </p>
-          <Button
-            asChild
-            className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold text-base sm:text-lg px-10 sm:px-12 py-6 rounded-full shadow-lg shadow-gold-500/25 hover:shadow-gold-500/40 transition-all duration-300 hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
-          >
-            <a href="mailto:hello@frontierfinance.org">
-              <Mail className="w-5 h-5 mr-2 inline-block" aria-hidden /> Contact Our Partnership Team
-            </a>
-          </Button>
         </div>
       </section>
 

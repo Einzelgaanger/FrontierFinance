@@ -180,8 +180,8 @@ const MemberDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900 overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 min-w-0">
         <span className="section-label">Member</span>
         <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">Dashboard</h1>
         <div className="w-14 h-0.5 bg-gold-500/60 rounded-full my-3" aria-hidden />
@@ -230,13 +230,13 @@ const MemberDashboard = () => {
                 <p className="text-slate-600 mb-4 font-sans">
                   Complete annual surveys to share your insights and access comprehensive market data from 2021-2024.
                 </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4">
                   {surveyYears.map((survey) => (
                     <Button
                       key={survey.year}
                       variant="outline"
                       onClick={() => navigate(survey.path)}
-                      className="h-auto py-3 font-semibold border-2 border-slate-200 text-navy-900 hover:border-gold-500/40 hover:bg-amber-50 rounded-xl font-sans"
+                      className="h-auto min-h-[44px] py-3 font-semibold border-2 border-slate-200 text-navy-900 hover:border-gold-500/40 hover:bg-amber-50 rounded-xl font-sans text-sm sm:text-base touch-manipulation"
                     >
                       {survey.year}
                     </Button>

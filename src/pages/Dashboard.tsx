@@ -65,7 +65,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 min-w-0 overflow-x-hidden">
         <div className="text-center py-8">
           <p className="text-gray-500">Unknown user role</p>
         </div>

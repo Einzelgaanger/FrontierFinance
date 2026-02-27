@@ -62,7 +62,7 @@ const SurveyPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f5f5dc] to-[#f0f0e6]">
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-3 sm:p-6 min-w-0 overflow-x-hidden">
         {/* Compact Header */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">

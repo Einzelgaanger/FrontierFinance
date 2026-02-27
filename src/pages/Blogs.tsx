@@ -254,7 +254,7 @@ export default function Blogs() {
         {/* Overlay for readability */}
         <div className="absolute inset-0 bg-white/20 backdrop-blur-sm"></div>
         
-        <div className="relative z-10 mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="relative z-10 mx-auto max-w-6xl px-3 py-6 sm:px-6 lg:px-8 min-w-0 overflow-x-hidden">
           <div className="flex flex-col gap-4">
             {/* Stats Section */}
             <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-md shadow-slate-900/5">

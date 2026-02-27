@@ -237,27 +237,29 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
   }, [navigate, sidebarCollapsed]);
 
   return (
-    <div className="min-h-screen transition-all duration-300 bg-slate-100">
+    <div className="min-h-screen min-h-[100dvh] transition-all duration-300 bg-slate-100 overflow-x-hidden">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden backdrop-blur-sm"
           onClick={() => setSidebarOpen(false)}
+          aria-hidden
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - safe area on notched devices */}
       <div
         className={cn(
           "fixed inset-y-0 left-0 z-50 transform transition-all duration-300 ease-in-out lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          "w-56",
-          "bg-navy-900 shadow-2xl overflow-hidden font-sans border-r border-navy-800"
+          "w-64 sm:w-72 lg:w-56",
+          "bg-navy-900 shadow-2xl overflow-y-auto overflow-x-hidden font-sans border-r border-navy-800",
+          "pl-[env(safe-area-inset-left,0)]"
         )}
       >
-        <div className="flex flex-col h-screen overflow-hidden">
+        <div className="flex flex-col min-h-screen min-h-[100dvh] overflow-hidden">
           {/* CFF Logo at Top */}
-          <div className="p-4 border-b border-navy-800">
+          <div className="p-4 pt-[max(1rem,env(safe-area-inset-top,0))] border-b border-navy-800">
             <img
               src="/CFF%20LOGO.png"
               alt="CFF Logo"
@@ -281,7 +283,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                   key={item.name}
                   onClick={() => handleNavigation(item.href)}
                   className={cn(
-                    "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group",
+                    "w-full flex items-center gap-3 min-h-[44px] px-4 py-3 rounded-xl transition-all duration-200 group touch-manipulation text-left",
                     active
                       ? "bg-gold-500 text-navy-950"
                       : "text-slate-300 hover:bg-white/10 hover:text-white"
@@ -304,7 +306,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
           </nav>
 
           {/* Email and Profile Picture at Bottom */}
-          <div className="p-4 border-t border-navy-800 space-y-3">
+          <div className="p-4 pb-[max(1rem,env(safe-area-inset-bottom,0))] border-t border-navy-800 space-y-3">
             {/* Email */}
             <div className="px-4">
               <p className="text-xs text-slate-400 mb-1">Email</p>
@@ -339,16 +341,17 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
 
       {/* Main Content - no top header bar; pages use their own section-label + title */}
       <div className="flex flex-col min-w-0 lg:ml-56">
-        {/* Mobile only: menu button to open sidebar (no white bar) */}
+        {/* Mobile only: menu button to open sidebar - safe area and touch target */}
         <Button
           variant="ghost"
           size="sm"
-          className="lg:hidden fixed top-3 left-3 z-40 text-slate-600 bg-white/90 hover:bg-white shadow-sm border border-slate-200/80 rounded-md"
+          className="lg:hidden fixed z-40 text-slate-600 bg-white/95 hover:bg-white shadow-md border border-slate-200/80 rounded-xl min-h-[44px] min-w-[44px] p-0 touch-manipulation top-[max(0.75rem,env(safe-area-inset-top,0))] left-[max(0.75rem,env(safe-area-inset-left,0))]"
           onClick={() => setSidebarOpen(true)}
+          aria-label="Open menu"
         >
           <Menu className="w-5 h-5" />
         </Button>
-        <main className="flex-1 min-h-0">
+        <main className="flex-1 min-h-0 pt-14 sm:pt-16 lg:pt-0 px-3 sm:px-4 lg:px-0 pb-[env(safe-area-inset-bottom,0)]">
           {headerActions ? (
             <div className="flex justify-end items-center gap-2 px-4 py-2 lg:px-6">
               {headerActions}

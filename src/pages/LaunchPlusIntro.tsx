@@ -43,7 +43,7 @@ const LaunchPlusIntro = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-navy-900/50" />
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-20 pb-16 sm:pb-20 w-full text-center">
+        <div className="relative z-10 container mx-auto px-3 sm:px-6 lg:px-8 pt-[max(5rem,calc(4.5rem+env(safe-area-inset-top,0px)))] sm:pt-20 pb-12 sm:pb-20 w-full text-center min-w-0">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -70,7 +70,7 @@ const LaunchPlusIntro = () => {
       {/* Our offering – rounded top, light bg, section-label + cards like About */}
       <section id="services" className="py-16 sm:py-24 bg-gradient-to-b from-slate-50 via-white to-amber-50/30 relative overflow-hidden rounded-t-[2.5rem] sm:rounded-t-[3rem] -mt-8 sm:-mt-12 z-10 scroll-mt-24">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_70%_0%,rgba(212,175,55,0.06),transparent)] pointer-events-none" aria-hidden />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10 min-w-0">
           <span className="section-label block mb-4">Our offering</span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-normal text-navy-900 mt-2 mb-6 sm:mb-8">
             Integrated solutions
@@ -112,7 +112,7 @@ const LaunchPlusIntro = () => {
 
       {/* Bridging the gap – dark section like About Vision */}
       <section className="py-16 sm:py-24 bg-navy-950 text-white relative overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10 min-w-0">
           <span className="section-label text-gold-400/90">The challenge</span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-normal text-white mt-2 mb-6 sm:mb-8">
             Bridging the gap
@@ -130,7 +130,7 @@ const LaunchPlusIntro = () => {
       {/* Questionnaire CTA – light section, explicit redirect like site CTAs */}
       <section id="questionnaire" className="py-16 sm:py-24 bg-amber-50/40 scroll-mt-24 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-96 h-96 bg-gold-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" aria-hidden />
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div className="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10 text-center min-w-0">
           <span className="section-label block mb-4">Get started</span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-normal text-navy-900 mt-2 mb-6">
             Complete the LAUNCH+ questionnaire

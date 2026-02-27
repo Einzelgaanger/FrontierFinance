@@ -114,7 +114,7 @@ const ViewerSettings = () => {
     return (
       <div className="min-h-screen bg-slate-100 font-sans">
         <Header />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 min-w-0 overflow-x-hidden">
           <div className="text-center">
             <div className="w-14 h-14 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center mx-auto mb-4">
               <Lock className="w-8 h-8" />
@@ -130,7 +130,7 @@ const ViewerSettings = () => {
   return (
     <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
       <Header />
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-2xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 min-w-0">
         <span className="section-label">Account</span>
         <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 mb-2 tracking-tight">Settings</h1>
         <div className="w-14 h-0.5 bg-gold-500/60 rounded-full my-3" aria-hidden />

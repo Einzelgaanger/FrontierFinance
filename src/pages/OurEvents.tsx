@@ -37,12 +37,12 @@ const OurEvents = () => {
   ];
 
   const previousConvenings: { year: string; location: string; subtitle: string; briefHref: string; briefLabel: string; videoHref?: string; videoLabel?: string; impactVideoHref?: string; impactVideoLabel?: string }[] = [
-    { year: "2025", location: "Naivasha, Kenya", subtitle: "2025 Annual Convening held in Naivasha, Kenya", briefHref: "#", briefLabel: "2025 Annual Convening Brief" },
-    { year: "2023", location: "Capetown, South Africa", subtitle: "2023 Annual Convening held in Capetown, South Africa", briefHref: "#", briefLabel: "2023 Annual Convening Brief", videoHref: "#", videoLabel: "2023 Annual Convening Video", impactVideoHref: "#", impactVideoLabel: "Impact of the ESCP Network Video" },
-    { year: "2022", location: "Dar es Salaam, Tanzania", subtitle: "2022 Annual Convening held in Dar es Salaam, Tanzania", briefHref: "#", briefLabel: "2022 Annual Convening Brief" },
+    { year: "2025", location: "Naivasha, Kenya", subtitle: "2025 Annual Convening held in Naivasha, Kenya", briefHref: "/2025%20Annual%20Convening%20Brief.pdf", briefLabel: "2025 Annual Convening Brief" },
+    { year: "2023", location: "Capetown, South Africa", subtitle: "2023 Annual Convening held in Capetown, South Africa", briefHref: "/2023%20Annual%20Convening%20Brief.pdf", briefLabel: "2023 Annual Convening Brief", videoHref: "https://www.youtube.com/watch?v=vQmrvp8R2fc", videoLabel: "2023 Annual Convening Video", impactVideoHref: "https://www.youtube.com/watch?v=CQwKi4ufVBE", impactVideoLabel: "Impact of the ESCP Network Video" },
+    { year: "2022", location: "Dar es Salaam, Tanzania", subtitle: "2022 Annual Convening held in Dar es Salaam, Tanzania", briefHref: "https://www.frontierfinance.org/s/CFF-Convening_Dar-Es-Salaam_Recap-c5nb.pdf", briefLabel: "2022 Annual Convening Brief" },
   ];
 
-  const galleryImages = ["/dYua4R2w.jpg", "/CFF2025(Day2)-87+(1).webp"];
+  const galleryImages = ["/gallery.webp", "/gallery1.webp"];
   const exploreLinks = [
     { title: "About the Event", subtitle: "Overview and aims", href: "#about-event" },
     { title: "How It's Different", subtitle: "Convening vs conference", href: "#how-different" },
@@ -52,7 +52,7 @@ const OurEvents = () => {
   return (
     <div className="min-h-screen bg-navy-950 font-sans selection:bg-gold-500/30">
       {/* Hero – aligned with Learning Hub / About */}
-      <section className="relative min-h-[75vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[60vh] sm:min-h-[75vh] flex items-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center z-0"
           style={{ backgroundImage: "url(/CFF2025(Day2)-87+(1).webp)" }}
@@ -61,7 +61,7 @@ const OurEvents = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-navy-900/50" />
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-20 pb-16 sm:pb-20 w-full">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-[max(5rem,calc(4.5rem+env(safe-area-inset-top,0px)))] sm:pt-20 pb-12 sm:pb-20 w-full min-w-0">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 xl:gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -24 }}
@@ -72,7 +72,7 @@ const OurEvents = () => {
               <p className="font-display text-gold-400 text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] mb-5">
                 Events
               </p>
-              <h1 className="text-[2rem] sm:text-[2.6rem] md:text-[3.4rem] lg:text-[4rem] xl:text-[4.5rem] font-display font-normal text-white leading-[1.12] tracking-tight">
+              <h1 className="text-[1.75rem] sm:text-[2.6rem] md:text-[3.4rem] lg:text-[4rem] xl:text-[4.5rem] font-display font-normal text-white leading-[1.12] tracking-tight">
                 Our Events
               </h1>
               <p className="text-base sm:text-lg text-slate-200 max-w-xl mt-5 sm:mt-6 mx-auto lg:mx-0 leading-[1.7] font-sans font-light">
@@ -132,7 +132,7 @@ const OurEvents = () => {
 
       {/* About the Event – white section with rounded top */}
       <section id="about-event" className="scroll-mt-24 py-24 bg-white rounded-t-[2.5rem] sm:rounded-t-[3rem] overflow-hidden -mt-8 sm:-mt-12 z-10 relative shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 min-w-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             <motion.div
               initial={{ opacity: 0, x: -24 }}
@@ -162,10 +162,10 @@ const OurEvents = () => {
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button asChild className="bg-navy-900 text-white hover:bg-navy-800 rounded-full px-6 py-5 text-base shadow-finance-lg focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2">
-                  <a href="#" target="_blank" rel="noopener noreferrer">Explore the learning brief</a>
+                  <a href="/Explore%20the%20learning%20brief%20highlighting%20key%20takeaways%20from%20the%20event..pdf" target="_blank" rel="noopener noreferrer">Explore the learning brief</a>
                 </Button>
                 <Button variant="outline" asChild className="border-navy-200 text-navy-800 hover:bg-navy-50 rounded-full px-6 py-5 text-base focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2">
-                  <a href="#">Click here to view Agenda</a>
+                  <a href="https://docs.google.com/presentation/d/1p3xeoTfk2SwjN56ZXVZ83ywDgCeh6wg9/edit#slide=id.g330801a4239_0_3" target="_blank" rel="noopener noreferrer">Click here to view Agenda</a>
                 </Button>
               </div>
             </motion.div>
@@ -207,14 +207,17 @@ const OurEvents = () => {
       {/* How is a Convening different – editorial layout with icons */}
       <section id="how-different" className="scroll-mt-24 py-24 sm:py-28 bg-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(212,175,55,0.06),transparent_50%)] pointer-events-none" aria-hidden />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10 min-w-0">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <span className="section-label text-gold-600">Experience</span>
             <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-display font-normal text-navy-900 mt-2 leading-tight">
               How is a Convening different from a Conference?
             </h2>
             <p className="text-slate-500 font-sans italic mt-4 text-base">
-              Answered by Circle Generation
+              Answered by{" "}
+              <a href="https://www.circlegeneration.com/" target="_blank" rel="noopener noreferrer" className="text-gold-600 hover:text-gold-700 underline focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 rounded">
+                Circle Generation
+              </a>
             </p>
             <div className="w-14 h-0.5 bg-gold-500/60 mx-auto mt-6 rounded-full" />
           </div>
@@ -254,7 +257,7 @@ const OurEvents = () => {
       <section className="py-24 sm:py-28 bg-navy-950 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-navy-900 via-navy-950 to-navy-900" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gold-500/5 rounded-full blur-3xl" aria-hidden />
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10 min-w-0">
           <div className="text-center mb-16">
             <span className="section-label text-gold-400/90">Values</span>
             <h2 className="text-3xl sm:text-4xl font-display font-normal text-white mt-2">
@@ -305,7 +308,7 @@ const OurEvents = () => {
 
       {/* Previous Convenings – event cards */}
       <section id="previous-convenings" className="scroll-mt-24 py-24 sm:py-28 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 min-w-0">
           <div className="mb-16">
             <span className="section-label text-gold-600">History</span>
             <h2 className="text-3xl sm:text-4xl font-display font-normal text-navy-900 mt-2">
@@ -339,16 +342,16 @@ const OurEvents = () => {
                   {event.subtitle}
                 </p>
                 <div className="space-y-2 pt-4 border-t border-slate-100">
-                  <a href={event.briefHref} className="flex items-center gap-2 text-sm font-semibold text-navy-700 hover:text-gold-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 rounded w-fit">
+                  <a href={event.briefHref} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-navy-700 hover:text-gold-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 rounded w-fit">
                     {event.briefLabel} <ExternalLink className="w-3.5 h-3.5" aria-hidden />
                   </a>
                   {event.videoHref && (
-                    <a href={event.videoHref} className="flex items-center gap-2 text-sm font-semibold text-navy-700 hover:text-gold-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 rounded w-fit">
+                    <a href={event.videoHref} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-navy-700 hover:text-gold-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 rounded w-fit">
                       {event.videoLabel} <ExternalLink className="w-3.5 h-3.5" aria-hidden />
                     </a>
                   )}
                   {event.impactVideoHref && (
-                    <a href={event.impactVideoHref} className="flex items-center gap-2 text-sm font-semibold text-navy-700 hover:text-gold-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 rounded w-fit">
+                    <a href={event.impactVideoHref} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-navy-700 hover:text-gold-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 rounded w-fit">
                       {event.impactVideoLabel} <ExternalLink className="w-3.5 h-3.5" aria-hidden />
                     </a>
                   )}

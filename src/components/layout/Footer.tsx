@@ -46,7 +46,7 @@ export default function Footer() {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2" aria-hidden />
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-violet-500/5 rounded-full blur-3xl translate-y-1/2" aria-hidden />
       <div className="absolute top-1/2 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl translate-x-1/2" aria-hidden />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 lg:pt-14 pb-6 sm:pb-8 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 lg:pt-14 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] sm:pb-8 relative">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-6 lg:gap-8">
           {/* Brand */}
           <div className="lg:col-span-5 space-y-3 sm:space-y-4">
@@ -83,7 +83,7 @@ export default function Footer() {
                 <li key={to}>
                   <Link
                     to={to}
-                    className={`inline-flex items-center gap-2 py-1.5 px-2 -mx-2 rounded-lg transition-all duration-200 group ${linkAccentClasses[accent]}`}
+                    className={`inline-flex items-center gap-2 min-h-[44px] py-2 px-3 -mx-2 rounded-lg transition-all duration-200 group ${linkAccentClasses[accent]}`}
                   >
                     <span className="dot w-1.5 h-1.5 rounded-full transition-colors duration-200" />
                     {label}
@@ -124,9 +124,9 @@ export default function Footer() {
             <p className="text-slate-500">
               &copy; {currentYear} Collaborative for Frontier Finance. All rights reserved.
             </p>
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
-              <Link to="/privacy" className="text-slate-500 hover:text-amber-400 transition-colors font-medium">Privacy</Link>
-              <Link to="/terms" className="text-slate-500 hover:text-violet-400 transition-colors font-medium">Terms</Link>
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+              <Link to="/privacy" className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-slate-500 hover:text-amber-400 transition-colors font-medium -m-2 p-2 rounded-lg">Privacy</Link>
+              <Link to="/terms" className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-slate-500 hover:text-violet-400 transition-colors font-medium -m-2 p-2 rounded-lg">Terms</Link>
             </div>
           </div>
         </div>

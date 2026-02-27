@@ -683,7 +683,7 @@ const LaunchPlusAssessment = () => {
         />
       </div>
       
-      <div className="relative z-10 max-w-5xl mx-auto py-8">
+      <div className="relative z-10 max-w-5xl mx-auto px-3 sm:px-6 py-6 sm:py-8 min-w-0 overflow-x-hidden">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-semibold text-gray-900 mb-2">

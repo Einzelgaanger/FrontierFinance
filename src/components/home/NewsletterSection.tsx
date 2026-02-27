@@ -5,8 +5,8 @@ const NEWSLETTER_FORM_URL = 'https://fvco2.share-eu1.hsforms.com/2GephDJrwRPay5z
 
 export default function NewsletterSection() {
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-white border-t border-slate-200/80">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-12 sm:py-20 lg:py-24 bg-white border-t border-slate-200/80">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 min-w-0">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -27,7 +27,7 @@ export default function NewsletterSection() {
             href={NEWSLETTER_FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-gold-600 hover:text-gold-700 font-medium text-sm font-sans transition-colors"
+            className="inline-flex items-center justify-center gap-2 min-h-[44px] min-w-[44px] py-2 px-4 text-gold-600 hover:text-gold-700 font-medium text-sm font-sans transition-colors rounded-lg touch-manipulation"
           >
             Sign up for updates
             <ArrowRight className="w-4 h-4" />

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useCompanyMembership, logMemberActivity } from "@/hooks/useCompanyMembership";
 import { supabase } from "@/integrations/supabase/client";
-import { logMemberActivity } from "@/hooks/useCompanyMembership";
 import {
   Dialog,
   DialogContent,

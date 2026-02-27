@@ -245,8 +245,8 @@ const PortIQ = () => {
       <SidebarLayout>
                  <div className="h-screen bg-cover bg-center bg-fixed overflow-hidden" style={{ backgroundImage: 'url(/auth.jpg)' }}>
            <div className="absolute inset-0 bg-black/20"></div>
-          <div className="relative z-10 h-full flex items-center justify-center p-6 pt-20">
-            <div className="w-full max-w-5xl h-[calc(100vh-8rem)] flex flex-col">
+          <div className="relative z-10 h-full flex items-center justify-center p-3 sm:p-6 pt-16 sm:pt-20 pb-[env(safe-area-inset-bottom,0)]">
+            <div className="w-full max-w-5xl min-w-0 h-[calc(100vh-6rem)] sm:h-[calc(100vh-8rem)] flex flex-col">
 
             {/* Chat Area with warm design - Fixed height like WhatsApp */}
             <Card className="shadow-2xl border-2 border-blue-100 bg-white/30 backdrop-blur-sm h-full flex flex-col relative">
