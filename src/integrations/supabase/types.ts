@@ -302,6 +302,7 @@ export type Database = {
           member_name: string | null
           member_user_id: string
           role_in_company: string | null
+          temporary_password_expires_at: string | null
           updated_at: string | null
         }
         Insert: {
@@ -314,6 +315,7 @@ export type Database = {
           member_name?: string | null
           member_user_id: string
           role_in_company?: string | null
+          temporary_password_expires_at?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -326,6 +328,7 @@ export type Database = {
           member_name?: string | null
           member_user_id?: string
           role_in_company?: string | null
+          temporary_password_expires_at?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -639,6 +642,56 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      member_activity_log: {
+        Row: {
+          action_label: string | null
+          action_type: string
+          company_user_id: string
+          created_at: string | null
+          details: Json | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          member_email: string
+          member_name: string | null
+          member_user_id: string
+        }
+        Insert: {
+          action_label?: string | null
+          action_type: string
+          company_user_id: string
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          member_email: string
+          member_name?: string | null
+          member_user_id: string
+        }
+        Update: {
+          action_label?: string | null
+          action_type?: string
+          company_user_id?: string
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          member_email?: string
+          member_name?: string | null
+          member_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_activity_log_company_user_id_fkey"
+            columns: ["company_user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       survey_responses_2021: {
         Row: {

@@ -54,13 +54,13 @@ Deno.serve(async (req) => {
 
     // Determine email type and render appropriate template
     if (email_action_type === 'recovery') {
-      const resetLink = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${redirect_to}`
+      const resetLink = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${encodeURIComponent(redirect_to)}`
       html = await renderAsync(
         React.createElement(PasswordResetEmail, { resetLink })
       )
       subject = 'Reset Your CFF Network Password'
     } else if (email_action_type === 'signup' || email_action_type === 'invite') {
-      const confirmLink = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=signup&redirect_to=${redirect_to}`
+      const confirmLink = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=signup&redirect_to=${encodeURIComponent(redirect_to)}`
       const companyName = user.user_metadata?.company_name || 'there'
       html = await renderAsync(
         React.createElement(WelcomeEmail, {
@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
       subject = 'Welcome to CFF Network - Confirm Your Email'
     } else {
       // Fallback for other email types
-      const link = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${redirect_to}`
+      const link = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${encodeURIComponent(redirect_to)}`
       html = await renderAsync(
         React.createElement(WelcomeEmail, {
           email: user.email,

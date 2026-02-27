@@ -80,15 +80,15 @@ export async function logMemberActivity(
     .select('full_name')
     .eq('id', user.id)
     .single();
-  await supabase.from('member_activity_log').insert({
+  await supabase.from('member_activity_log').insert([{
     company_user_id: companyUserId,
     member_user_id: user.id,
-    member_email: user.email,
-    member_name: profile?.full_name ?? user.email.split('@')[0],
+    member_email: user.email!,
+    member_name: profile?.full_name ?? user.email!.split('@')[0],
     action_type: actionType,
     action_label: actionLabel,
     entity_type: entityType ?? null,
     entity_id: entityId ?? null,
-    details: details ?? {},
-  });
+    details: (details ?? {}) as Record<string, string>,
+  }]);
 }

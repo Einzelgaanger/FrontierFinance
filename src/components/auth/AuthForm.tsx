@@ -199,18 +199,11 @@ export default function AuthForm() {
           });
         }
       } else {
-        if (warning) {
-          toast({
-            title: "Account Created Successfully!",
-            description: warning,
-            variant: "default",
-          });
-        } else {
-          toast({
-            title: "Account Created Successfully!",
-            description: "Please check your email to verify your account before signing in.",
-          });
-        }
+        toast({
+          title: "Check Your Email ✉️",
+          description: warning || "We've sent a confirmation link to your email. Please click it to activate your account.",
+          duration: 10000,
+        });
         setSignUpForm({
           email: '',
           password: '',

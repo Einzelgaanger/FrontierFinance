@@ -217,47 +217,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, metadata?: Record<string, unknown>) => {
     try {
-      // Use public signup edge function that bypasses email confirmation
-      const { data, error } = await supabase.functions.invoke('public-signup', {
-        body: {
-          email,
-          password,
-          first_name: metadata?.first_name as string || '',
-          last_name: metadata?.last_name as string || '',
-          company_name: metadata?.company_name as string || ''
-        }
+      const baseUrl = (import.meta.env.VITE_APP_URL || '').replace(/\/$/, '') || window.location.origin;
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: metadata?.first_name as string || '',
+            last_name: metadata?.last_name as string || '',
+            company_name: metadata?.company_name as string || '',
+            created_via: 'public_signup',
+          },
+          emailRedirectTo: `${baseUrl}/dashboard`,
+        },
       });
 
       if (error) {
-        console.error('Public signup error:', error);
+        console.error('Sign up error:', error);
         return { error };
       }
 
-      if (data?.error) {
-        return { error: { message: data.error } };
+      // If user already exists but is unconfirmed, Supabase returns a fake user with no identities
+      if (data?.user && data.user.identities && data.user.identities.length === 0) {
+        return { error: { message: 'An account with this email already exists. Please sign in instead.' } };
       }
 
-      if (data?.success) {
-        // Sign in the user automatically after successful signup
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (signInError) {
-          console.warn('Auto sign-in failed, but account was created:', signInError);
-          // Account is created, user can sign in manually
-          return { 
-            error: null, 
-            data: { user: { id: data.user.id, email: data.user.email } },
-            warning: 'Account created successfully! Please sign in with your email and password.'
-          };
-        }
-
-        return { error: null, data: { user: { id: data.user.id, email: data.user.email } } };
-      }
-
-      return { error: { message: 'Unknown error occurred' } };
+      return {
+        error: null,
+        data,
+        warning: 'Please check your email and click the confirmation link to activate your account.',
+      };
     } catch (error) {
       console.error('Sign up error:', error);
       return { error };
