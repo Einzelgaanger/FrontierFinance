@@ -56,7 +56,7 @@ const Navbar = () => {
                     : 'bg-transparent pb-5'
             )}
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative z-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
                     {/* Logo: original on transparent hero, color logomark when scrolled/solid */}
                     <Link to="/" className="flex-shrink-0 relative group">
@@ -136,6 +136,21 @@ const Navbar = () => {
                 </div>
             </div>
 
+            {/* Backdrop: click outside to close menu (mobile only) */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed inset-0 z-40 lg:hidden bg-black/40 backdrop-blur-sm"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        aria-hidden
+                    />
+                )}
+            </AnimatePresence>
+
             {/* Mobile Menu - professional slide-down panel */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
@@ -148,7 +163,7 @@ const Navbar = () => {
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                        className="lg:hidden bg-navy-900/98 backdrop-blur-xl border-t border-white/10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.4)] overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom,0px)]"
+                        className="relative z-50 lg:hidden bg-navy-900/98 backdrop-blur-xl border-t border-white/10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.4)] overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom,0px)]"
                     >
                         <nav className="px-3 pt-4 pb-6 space-y-0.5" aria-label="Mobile navigation">
                             {navLinks.map((link) => {
