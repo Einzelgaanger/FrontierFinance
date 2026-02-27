@@ -77,7 +77,16 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
   }, [user?.id]);
 
 
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.documentElement.scrollLeft = 0;
+    document.body.scrollTop = 0;
+    document.body.scrollLeft = 0;
+  };
+
   const handleNavigation = (to: string) => {
+    scrollToTop();
     navigate(to);
     setSidebarOpen(false);
   };

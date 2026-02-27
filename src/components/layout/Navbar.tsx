@@ -6,6 +6,14 @@ import { Menu, X, ChevronRight, LogIn, UserPlus, Home, Info, Users, BookOpen, Ca
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
+function scrollToTop() {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.documentElement.scrollLeft = 0;
+    document.body.scrollTop = 0;
+    document.body.scrollLeft = 0;
+}
+
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -59,7 +67,7 @@ const Navbar = () => {
             <div className="relative z-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
                     {/* Logo: original on transparent hero, color logomark when scrolled/solid */}
-                    <Link to="/" className="flex-shrink-0 relative group">
+                    <Link to="/" onClick={scrollToTop} className="flex-shrink-0 relative group">
                         <img
                             src="/CFF%20LOGO.png"
                             alt="Collaborative for Frontier Finance"
@@ -73,6 +81,7 @@ const Navbar = () => {
                             <Link
                                 key={link.path}
                                 to={link.path}
+                                onClick={scrollToTop}
                                 className={cn(
                                     'text-sm font-medium transition-colors relative group',
                                     location.pathname === link.path
@@ -91,7 +100,7 @@ const Navbar = () => {
 
                     {/* CTA Buttons */}
                     <div className="hidden lg:flex items-center space-x-4">
-                        <Link to="/auth">
+                        <Link to="/auth" onClick={scrollToTop}>
                             <Button
                                 variant="ghost"
                                 className={cn(
@@ -102,7 +111,7 @@ const Navbar = () => {
                                 Sign In
                             </Button>
                         </Link>
-                        <Link to="/auth?tab=signup">
+                        <Link to="/auth?tab=signup" onClick={scrollToTop}>
                             <Button className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold rounded-full px-6 shadow-finance shadow-gold-500/20 hover:shadow-gold-glow transition-all duration-300 hover:-translate-y-0.5">
                                 Join Network
                             </Button>
@@ -172,7 +181,7 @@ const Navbar = () => {
                                     <Link
                                         key={link.path}
                                         to={link.path}
-                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        onClick={() => { scrollToTop(); setIsMobileMenuOpen(false); }}
                                         className={cn(
                                             'flex items-center gap-3 min-h-[40px] px-3 py-2.5 rounded-lg text-sm font-medium tracking-tight transition-colors',
                                             location.pathname === link.path
@@ -187,12 +196,12 @@ const Navbar = () => {
                                 );
                             })}
                             <div className="pt-4 mt-3 space-y-2 border-t border-white/10">
-                                <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)} className="block">
+                                <Link to="/auth" onClick={() => { scrollToTop(); setIsMobileMenuOpen(false); }} className="block">
                                     <span className="flex items-center justify-center gap-2 w-full min-h-[40px] px-4 py-2.5 rounded-lg text-sm font-medium border border-slate-500/50 text-slate-300 bg-white/5 hover:bg-slate-500/10 hover:text-white hover:border-slate-400/50 transition-colors">
                                         <LogIn className="h-4 w-4" /> Sign In
                                     </span>
                                 </Link>
-                                <Link to="/auth?tab=signup" onClick={() => setIsMobileMenuOpen(false)} className="block">
+                                <Link to="/auth?tab=signup" onClick={() => { scrollToTop(); setIsMobileMenuOpen(false); }} className="block">
                                     <span className="flex items-center justify-center gap-2 w-full min-h-[40px] px-4 py-2.5 rounded-lg text-sm font-semibold bg-gold-500 text-navy-950 hover:bg-gold-400 shadow-sm hover:shadow transition-colors">
                                         <UserPlus className="h-4 w-4" /> Join Network
                                     </span>
