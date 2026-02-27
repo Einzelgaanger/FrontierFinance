@@ -1,0 +1,208 @@
+\documentclass[11pt,a4paper]{article}
+
+% ========== Preamble ==========
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[default]{sourcesanspro}
+\usepackage{geometry}
+\geometry{top=2cm, bottom=2cm, left=2.5cm, right=2.5cm}
+
+% Color definitions
+\usepackage{xcolor}
+\definecolor{primaryBlue}{HTML}{0F172A}
+\definecolor{accentBlue}{HTML}{3B82F6}
+\definecolor{successGreen}{HTML}{10B981}
+\definecolor{lightGray}{HTML}{F8FAFC}
+\definecolor{mediumGray}{HTML}{64748B}
+
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{hyperref}
+\usepackage{fontawesome5}
+\usepackage{array}
+\usepackage{parskip}
+\usepackage{multirow}
+\usepackage{colortbl}
+
+% Custom boxes
+\newtcolorbox{headerbox}{
+    enhanced,
+    colback=primaryBlue,
+    colframe=primaryBlue,
+    boxrule=0pt,
+    arc=8pt,
+    left=20pt,
+    right=20pt,
+    top=20pt,
+    bottom=20pt
+}
+
+\newtcolorbox{infobox}{
+    enhanced,
+    colback=lightGray,
+    colframe=accentBlue!30,
+    boxrule=1pt,
+    arc=6pt,
+    left=15pt,
+    right=15pt,
+    top=12pt,
+    bottom=12pt
+}
+
+\newtcolorbox{paymentbox}{
+    enhanced,
+    colback=white,
+    colframe=successGreen,
+    boxrule=2pt,
+    arc=6pt,
+    left=15pt,
+    right=15pt,
+    top=12pt,
+    bottom=12pt
+}
+
+\pagestyle{empty}
+
+\begin{document}
+
+% ===== Header =====
+\begin{headerbox}
+    \begin{center}
+        {\Huge\color{white}\textbf{PROFESSIONAL SERVICES}} \\
+        \vspace{0.2cm}
+        {\LARGE\color{white!90}INVOICE}
+    \end{center}
+\end{headerbox}
+
+\vspace{0.5cm}
+
+% ===== Service Provider and Client Info =====
+\begin{minipage}[t]{0.48\textwidth}
+    \textbf{\color{primaryBlue}\Large SERVICE PROVIDER} \\
+    \vspace{0.2cm}
+    \begin{tabular}{@{}ll}
+        \textbf{Name:} & Alfred Mulinge Maweu \\
+        \textbf{Title:} & Software Developer \\
+        \textbf{Service:} & Professional Services \\
+    \end{tabular}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \textbf{\color{primaryBlue}\Large BILLED TO} \\
+    \vspace{0.2cm}
+    \begin{tabular}{@{}ll}
+        \textbf{Client:} & Collaborative For Frontier Finance \\
+        \textbf{Type:} & Client Organization \\
+        & \\
+    \end{tabular}
+\end{minipage}
+
+\vspace{0.5cm}
+
+% ===== Invoice Details =====
+\begin{infobox}
+    \begin{tabular}{@{}ll@{\hspace{2cm}}ll@{}}
+        \textbf{Invoice Date:} & February 23, 2026 &
+        \textbf{Due Date:} & Upon Receipt \\
+        \textbf{Period:} & \multicolumn{3}{l}{End January 2026 -- End February 2026} \\
+    \end{tabular}
+\end{infobox}
+
+\vspace{0.5cm}
+
+% ===== Service Details (Work from end Jan to end Feb 2026) =====
+\textbf{\color{primaryBlue}\LARGE SERVICE DETAILS}
+\vspace{0.15cm}
+{\small\color{mediumGray}Work performed from end January 2026 through end February 2026.}
+
+\vspace{0.3cm}
+
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}p{0.4cm}|X|>{\centering\arraybackslash}p{1.4cm}|}
+\hline
+\rowcolor{accentBlue!20}
+\textbf{\#} & \textbf{Description of Services} & \textbf{Hours} \\
+\hline
+1 & \textbf{Login \& directory:} Login button and directory name updates & 1.5 \\
+\hline
+2 & \textbf{Auth \& migrations:} Auth flow improvements; fixed auth emails and migrations & 3 \\
+\hline
+3 & \textbf{Survey data:} Consolidated survey data sources and survey duplicates & 4 \\
+\hline
+4 & \textbf{Admin profile:} Admin edit profile dialog; enhanced admin profile edits & 3.5 \\
+\hline
+5 & \textbf{Admin \& survey:} Admin and survey merge fixes; survey response handling & 3 \\
+\hline
+6 & \textbf{Company members:} Admin edited company members; company data fix and unify & 4 \\
+\hline
+7 & \textbf{Directory:} Directory/network updates (MemberNetwork, DirectoryProfileCard, company members directory select) & 5 \\
+\hline
+8 & \textbf{Survey Responses \& member:} Survey responses UI; enhance admin member management & 3 \\
+\hline
+9 & \textbf{Data consolidation:} Consolidated multi-email data; Consolidated Anza growth fund; MEMBER/MEMBER1 updates & 4 \\
+\hline
+10 & \textbf{Fund Manager Database (v0.0.2):} Database and system optimization, maintenance and testing; edge functions (account-lookup, add-company-member); migrations (company members merge, member activity log, team admins) & 8 \\
+\hline
+11 & \textbf{UI/UX mobile responsiveness:} Full-site mobile responsiveness (all public \& app pages), safe-area insets, Navbar/Footer/SidebarLayout, touch targets, responsive typography and grids & 6 \\
+\hline
+12 & \textbf{Navbar hamburger:} Professional mobile menu redesign — smaller items, icons per link, distinct Sign In (outline) and Join Network (primary) buttons & 1 \\
+\hline
+\end{tabularx}
+
+\vspace{0.5cm}
+
+% ===== Totals =====
+\begin{flushright}
+    \begin{tabular}{lr}
+        \textbf{Total:} & \textbf{USD \$1,500} \\
+    \end{tabular}
+\end{flushright}
+
+\vspace{0.8cm}
+
+% ===== New Bank Details (combined from second document) =====
+\begin{headerbox}
+    \begin{center}
+        {\Large\color{white}\textbf{Alfred Mulinge}} \\
+        \vspace{0.15cm}
+        {\normalsize\color{white!90}New Bank Details}
+    \end{center}
+\end{headerbox}
+
+\vspace{0.5cm}
+
+\begin{paymentbox}
+    \textbf{\color{accentBlue}\faUniversity \quad Bank Transfer:}
+
+    \vspace{0.2cm}
+
+    \begin{tabular}{@{}ll}
+        \textbf{Bank Name:} & Standard Chartered Bank Kenya \\
+        \textbf{Account Name:} & Alfred Mulinge Maweu \\
+        \textbf{Account Number:} & 8700455152700 \\
+        \textbf{Account Type:} & Foreign Currency Account (USD) \\
+        \textbf{Currency:} & USD (United States Dollar) \\
+        \textbf{SWIFT/BIC Code:} & SCBLKENX \\
+        \textbf{Amount Due:} & \textcolor{successGreen}{\textbf{USD \$1,500}} \\
+    \end{tabular}
+\end{paymentbox}
+
+\vspace{1cm}
+
+% ===== Footer =====
+\begin{center}
+    \color{mediumGray}
+    \small
+    \faPhone* \, +254700861129 \quad | \quad
+    \faEnvelope[regular] \, \href{mailto:binfred.ke@gmail.com}{binfred.ke@gmail.com} \quad | \quad
+    \faMapMarker* \, Nairobi, Kenya
+
+    \vspace{0.3cm}
+
+    \textit{Thank you for your business!}
+\end{center}
+
+\end{document}

@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, ChevronRight, LogIn } from 'lucide-react';
+import { Menu, X, ChevronRight, LogIn, UserPlus, Home, Info, Users, BookOpen, Calendar, Handshake, Rocket } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -35,13 +35,13 @@ const Navbar = () => {
     }, [isMobileMenuOpen]);
 
     const navLinks = [
-        { name: 'Home', path: '/' },
-        { name: 'About', path: '/about' },
-        { name: 'Network', path: '/escp-network' },
-        { name: 'Learning Hub', path: '/learning-hub' },
-        { name: 'Events', path: '/our-events' },
-        { name: 'Partnerships', path: '/partnership' },
-        { name: 'Launch +', path: '/launch-plus-intro' },
+        { name: 'Home', path: '/', icon: Home },
+        { name: 'About', path: '/about', icon: Info },
+        { name: 'Network', path: '/escp-network', icon: Users },
+        { name: 'Learning Hub', path: '/learning-hub', icon: BookOpen },
+        { name: 'Events', path: '/our-events', icon: Calendar },
+        { name: 'Partnerships', path: '/partnership', icon: Handshake },
+        { name: 'Launch +', path: '/launch-plus-intro', icon: Rocket },
     ];
 
     const showSolidBg = isScrolled;
@@ -109,61 +109,78 @@ const Navbar = () => {
                         </Link>
                     </div>
 
-                    {/* Mobile Menu Button - 44px min touch target for accessibility */}
-                    <div className="lg:hidden flex items-center -mr-2">
+                    {/* Mobile Menu Button - professional pill with clear affordance */}
+                    <div className="lg:hidden flex items-center">
                         <button
                             type="button"
                             aria-expanded={isMobileMenuOpen}
                             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                            aria-controls="mobile-nav"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             className={cn(
-                                "min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/10 active:bg-white/15 transition-colors touch-manipulation",
-                                showSolidBg ? "text-slate-200" : "text-white"
+                                "min-w-[48px] min-h-[48px] flex flex-col items-center justify-center gap-1.5 rounded-xl border transition-all duration-200 touch-manipulation",
+                                "focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950",
+                                showSolidBg
+                                    ? "border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 text-slate-200"
+                                    : "border-white/25 bg-white/5 hover:bg-white/10 hover:border-white/40 text-white",
+                                isMobileMenuOpen && "bg-white/10 border-gold-500/40 ring-2 ring-gold-500/20"
                             )}
                         >
-                            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                            {isMobileMenuOpen ? (
+                                <X className="h-5 w-5 stroke-[2.5]" aria-hidden />
+                            ) : (
+                                <Menu className="h-5 w-5 stroke-[2.5]" aria-hidden />
+                            )}
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* Mobile Menu - scrollable when many links, safe area padding */}
+            {/* Mobile Menu - professional slide-down panel */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
+                        id="mobile-nav"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Main menu"
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.25 }}
-                        className="lg:hidden bg-navy-900/98 backdrop-blur-xl border-t border-white/10 overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom,0px)]"
+                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        className="lg:hidden bg-navy-900/98 backdrop-blur-xl border-t border-white/10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.4)] overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom,0px)]"
                     >
-                        <nav className="px-4 pt-4 pb-8 space-y-1" aria-label="Mobile navigation">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.path}
-                                    to={link.path}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className={cn(
-                                        'block min-h-[48px] px-4 py-3 rounded-xl text-base font-medium transition-colors flex items-center justify-between',
-                                        location.pathname === link.path
-                                            ? 'bg-white/10 text-gold-400'
-                                            : 'text-gray-300 hover:bg-white/5 hover:text-white active:bg-white/10'
-                                    )}
-                                >
-                                    {link.name}
-                                    <ChevronRight className="h-5 w-5 opacity-50 shrink-0" />
-                                </Link>
-                            ))}
-                            <div className="pt-4 mt-2 space-y-3 border-t border-white/10">
+                        <nav className="px-3 pt-4 pb-6 space-y-0.5" aria-label="Mobile navigation">
+                            {navLinks.map((link) => {
+                                const Icon = link.icon;
+                                return (
+                                    <Link
+                                        key={link.path}
+                                        to={link.path}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={cn(
+                                            'flex items-center gap-3 min-h-[40px] px-3 py-2.5 rounded-lg text-sm font-medium tracking-tight transition-colors',
+                                            location.pathname === link.path
+                                                ? 'bg-gold-500/10 text-gold-400'
+                                                : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                                        )}
+                                    >
+                                        <Icon className="h-4 w-4 shrink-0 opacity-80" strokeWidth={2} />
+                                        <span className="flex-1 text-left">{link.name}</span>
+                                        <ChevronRight className="h-3.5 w-3.5 text-slate-500 shrink-0" strokeWidth={2.5} />
+                                    </Link>
+                                );
+                            })}
+                            <div className="pt-4 mt-3 space-y-2 border-t border-white/10">
                                 <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)} className="block">
-                                    <Button variant="outline" className="w-full min-h-[48px] border-white/20 text-white hover:bg-white/10 hover:text-white justify-center rounded-xl">
-                                        <LogIn className="mr-2 h-4 w-4" /> Sign In
-                                    </Button>
+                                    <span className="flex items-center justify-center gap-2 w-full min-h-[40px] px-4 py-2.5 rounded-lg text-sm font-medium border border-slate-500/50 text-slate-300 bg-white/5 hover:bg-slate-500/10 hover:text-white hover:border-slate-400/50 transition-colors">
+                                        <LogIn className="h-4 w-4" /> Sign In
+                                    </span>
                                 </Link>
                                 <Link to="/auth?tab=signup" onClick={() => setIsMobileMenuOpen(false)} className="block">
-                                    <Button className="w-full min-h-[48px] bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold justify-center rounded-xl">
-                                        Join Network
-                                    </Button>
+                                    <span className="flex items-center justify-center gap-2 w-full min-h-[40px] px-4 py-2.5 rounded-lg text-sm font-semibold bg-gold-500 text-navy-950 hover:bg-gold-400 shadow-sm hover:shadow transition-colors">
+                                        <UserPlus className="h-4 w-4" /> Join Network
+                                    </span>
                                 </Link>
                             </div>
                         </nav>
