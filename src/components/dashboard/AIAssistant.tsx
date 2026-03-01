@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { Send, Bot, User } from 'lucide-react';
 import { toast } from 'sonner';
+import ReactMarkdown from 'react-markdown';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -36,7 +37,7 @@ export default function AIAssistant() {
     } catch (error) {
       console.error('AI chat error:', error);
       toast.error('Failed to get AI response. Please try again.');
-      setMessages(prev => prev.slice(0, -1)); // Remove user message on error
+      setMessages(prev => prev.slice(0, -1));
     } finally {
       setLoading(false);
     }
@@ -82,7 +83,13 @@ export default function AIAssistant() {
                     : 'bg-muted'
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                {msg.role === 'assistant' ? (
+                  <div className="text-sm prose prose-sm max-w-none prose-headings:mt-2 prose-headings:mb-1 prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-table:text-xs [&_table]:w-full [&_th]:bg-muted [&_th]:border [&_th]:px-2 [&_th]:py-1 [&_td]:border [&_td]:px-2 [&_td]:py-1 whitespace-pre-wrap">
+                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                )}
               </div>
               {msg.role === 'user' && (
                 <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
