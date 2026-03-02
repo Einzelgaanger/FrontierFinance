@@ -24,7 +24,7 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
       `}</style>
     </Head>
-    <Preview>Reset your CFF Network password — click the secure link inside to set a new one.</Preview>
+    <Preview>Reset your Collaborative For Frontier Finance password — click the secure link inside to set a new one.</Preview>
     <Body style={main}>
       <Container style={container}>
         {/* Navy header with logo */}
@@ -33,7 +33,7 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
             src="https://escpnetwork.net/CFF%20LOGO.png"
             width="160"
             height="64"
-            alt="CFF Network"
+            alt="Collaborative For Frontier Finance"
             style={logo}
           />
         </Section>
@@ -48,7 +48,7 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
           </Section>
           <Heading style={h1}>Reset Your Password</Heading>
           <Text style={text}>
-            We received a request to reset the password for your CFF Network account. 
+            We received a request to reset the password for your Collaborative For Frontier Finance account. 
             Click the button below to create a new, secure password:
           </Text>
 
@@ -90,18 +90,18 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
             src="https://escpnetwork.net/CFF%20LOGO.png"
             width="100"
             height="40"
-            alt="CFF Network"
+            alt="Collaborative For Frontier Finance"
             style={{ margin: '0 auto 12px', display: 'block', opacity: 0.6 }}
           />
           <Text style={footerBrand}>
-            Collaborative for Frontier Finance
+            Collaborative For Frontier Finance
           </Text>
           <Text style={footerSubtext}>
             Advancing MSME financing in Africa and the Middle East
           </Text>
           <Hr style={footerDivider} />
           <Text style={copyright}>
-            © {new Date().getFullYear()} CFF Network. All rights reserved.
+            © {new Date().getFullYear()} Collaborative For Frontier Finance. All rights reserved.
           </Text>
           <Link href="https://frontierfinance.org" style={footerLink}>frontierfinance.org</Link>
         </Section>

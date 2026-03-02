@@ -148,18 +148,19 @@ serve(async (req) => {
       if (resendApiKey && linkData?.properties?.action_link) {
         const resend = new Resend(resendApiKey)
         const rawFrom = Deno.env.get('RESEND_FROM_EMAIL') || 'noreply@frontierfinance.org'
-        const fromAddress = rawFrom.includes('<') ? rawFrom : `CFF Network <${rawFrom}>`
+        const senderEmail = (rawFrom.match(/<([^>]+)>/)?.[1] || rawFrom).trim()
+        const fromAddress = `Collaborative For Frontier Finance <${senderEmail}>`
         const displayName = company_name || first_name || email.split('@')[0]
         const confirmLink = linkData.properties.action_link
 
         const confirmHtml = `
           <div style="font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ffffff;padding:24px;">
             <div style="max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-              <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="CFF Network" width="160" height="64" /></div>
+              <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="Collaborative For Frontier Finance" width="160" height="64" /></div>
               <div style="height:4px;background:#c49a2b;"></div>
               <div style="padding:28px;">
                 <h1 style="margin:0 0 12px;color:#0f1d2e;font-size:24px;">Confirm Your Email</h1>
-                <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">Hello ${displayName}, thank you for signing up for CFF Network! Please confirm your email address by clicking the button below.</p>
+                <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">Hello ${displayName}, thank you for signing up for Collaborative For Frontier Finance. Please confirm your email address by clicking the button below.</p>
                 <a href="${confirmLink}" style="display:inline-block;background:#c49a2b;color:#ffffff;text-decoration:none;padding:14px 26px;border-radius:8px;font-weight:700;">Confirm Email Address</a>
                 <p style="margin:20px 0 0;color:#5a5a6e;font-size:13px;">If you did not create this account, please ignore this email.</p>
                 <p style="margin:12px 0 0;color:#5a5a6e;font-size:11px;">Or copy and paste this link: ${confirmLink}</p>
@@ -170,7 +171,7 @@ serve(async (req) => {
         await resend.emails.send({
           from: fromAddress,
           to: [email],
-          subject: 'CFF Network - Confirm Your Email Address',
+          subject: 'Collaborative For Frontier Finance - Confirm Your Email Address',
           html: confirmHtml,
         })
         console.log('Confirmation email sent via Resend to:', email)

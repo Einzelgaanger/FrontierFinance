@@ -111,7 +111,8 @@ Deno.serve(async (req) => {
     }
 
     const rawFrom = Deno.env.get('RESEND_FROM_EMAIL') || 'noreply@frontierfinance.org'
-    const fromAddress = rawFrom.includes('<') ? rawFrom : `Collaborative For Frontier Finance <${rawFrom}>`
+    const senderEmail = (rawFrom.match(/<([^>]+)>/)?.[1] || rawFrom).trim()
+    const fromAddress = `Collaborative For Frontier Finance <${senderEmail}>`
     const replyTo = Deno.env.get('RESEND_REPLY_TO') || undefined
     const emailPayload: Record<string, unknown> = {
       from: fromAddress,

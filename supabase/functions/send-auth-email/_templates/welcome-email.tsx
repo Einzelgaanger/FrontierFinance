@@ -56,7 +56,7 @@ export const WelcomeEmail = ({ email, companyName, confirmLink }: WelcomeEmailPr
             Hello {companyName},
           </Text>
           <Text style={text}>
-            Thank you for joining the Collaborative for Frontier Finance (CFF) Network — 
+            Thank you for joining Collaborative For Frontier Finance — 
             a global community of fund managers and emerging market professionals advancing 
             MSME financing across Africa and the Middle East.
           </Text>
@@ -155,7 +155,7 @@ export const WelcomeEmail = ({ email, companyName, confirmLink }: WelcomeEmailPr
             style={{ margin: '0 auto 12px', display: 'block', opacity: 0.6 }}
           />
           <Text style={footerBrand}>
-            Collaborative for Frontier Finance
+            Collaborative For Frontier Finance
           </Text>
           <Text style={footerSubtext}>
             Advancing MSME financing in Africa and the Middle East

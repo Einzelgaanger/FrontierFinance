@@ -68,7 +68,8 @@ serve(async (req) => {
 
     const resend = new Resend(resendApiKey)
     const rawFrom = Deno.env.get('RESEND_FROM_EMAIL') || 'noreply@frontierfinance.org'
-    const fromAddress = rawFrom.includes('<') ? rawFrom : `Collaborative For Frontier Finance <${rawFrom}>`
+    const senderEmail = (rawFrom.match(/<([^>]+)>/)?.[1] || rawFrom).trim()
+    const fromAddress = `Collaborative For Frontier Finance <${senderEmail}>`
 
     const resetHtml = `
       <div style="font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ffffff;padding:24px;">
