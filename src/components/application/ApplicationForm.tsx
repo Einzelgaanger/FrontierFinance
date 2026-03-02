@@ -91,7 +91,8 @@ const ApplicationForm = () => {
     email: formData.email,
     company_name: formData.vehicle_name || 'Draft',
     application_text: JSON.stringify(formData),
-    status,
+    // DB constraint currently doesn't accept "draft"; keep draft behavior client-side
+    status: status === 'draft' ? 'pending' : status,
     applicant_name: formData.applicant_name,
     vehicle_name: formData.vehicle_name,
     organization_website: formData.organization_website,
@@ -127,7 +128,7 @@ const ApplicationForm = () => {
       if (existingApplication && (existingApplication.status === 'draft' || existingApplication.status === 'rejected' || existingApplication.status === 'pending')) {
         await supabase
           .from('applications')
-          .update({ ...draftData, status: existingApplication.status === 'pending' ? 'pending' : 'draft' })
+          .update({ ...draftData, status: existingApplication.status === 'rejected' ? 'rejected' : 'pending' })
           .eq('id', existingApplication.id);
       } else if (!existingApplication) {
         const { data } = await supabase
@@ -305,7 +306,7 @@ const ApplicationForm = () => {
     setUploadingProfilePic(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      if (!session || session.user?.id !== user.id) {
         toast({ title: "Session expired", description: "Please sign in again, then retry uploading your company logo." });
         return;
       }
@@ -320,7 +321,7 @@ const ApplicationForm = () => {
 
       const { error: uploadError } = await supabase.storage
         .from('profile-pictures')
-        .upload(fileName, file, { upsert: true });
+        .upload(fileName, file, { upsert: false, contentType: file.type });
 
       if (uploadError) {
         console.error('Storage upload error:', JSON.stringify(uploadError));
@@ -365,7 +366,7 @@ const ApplicationForm = () => {
     setUploading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      if (!session || session.user?.id !== user.id) {
         toast({ title: "Session expired", description: "Please sign in again, then retry uploading attachments." });
         return;
       }
@@ -380,7 +381,7 @@ const ApplicationForm = () => {
         
         const { error: uploadError } = await supabase.storage
           .from('application-documents')
-          .upload(fileName, file, { upsert: true });
+          .upload(fileName, file, { upsert: false, contentType: file.type });
 
         if (uploadError) throw uploadError;
 
