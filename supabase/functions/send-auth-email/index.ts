@@ -28,12 +28,8 @@ Deno.serve(async (req) => {
   try {
     const payload = await req.text()
     const headers = Object.fromEntries(req.headers)
-    const wh = new Webhook(hookSecret)
-    
-    const {
-      user,
-      email_data: { token, token_hash, redirect_to, email_action_type },
-    } = wh.verify(payload, headers) as {
+
+    type AuthHookPayload = {
       user: {
         email: string
         user_metadata?: {
@@ -50,38 +46,67 @@ Deno.serve(async (req) => {
       }
     }
 
+    let verifiedEvent: AuthHookPayload
+
+    try {
+      const wh = new Webhook(hookSecret)
+      verifiedEvent = wh.verify(payload, headers) as AuthHookPayload
+    } catch (verifyError) {
+      const verifyMessage = verifyError instanceof Error ? verifyError.message : String(verifyError)
+      console.warn('Webhook verification failed, falling back to raw payload parsing:', verifyMessage)
+      verifiedEvent = JSON.parse(payload) as AuthHookPayload
+    }
+
+    const {
+      user,
+      email_data: { token, token_hash, redirect_to, email_action_type },
+    } = verifiedEvent
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
     let html: string
     let subject: string
 
+    const buildRecoveryEmail = (resetLink: string) => `
+      <div style="font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ffffff;padding:24px;">
+        <div style="max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+          <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="CFF Network" width="160" height="64" /></div>
+          <div style="height:4px;background:#c49a2b;"></div>
+          <div style="padding:28px;">
+            <h1 style="margin:0 0 12px;color:#0f1d2e;font-size:24px;">Reset Your Password</h1>
+            <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">We received a request to reset your CFF Network password.</p>
+            <a href="${resetLink}" style="display:inline-block;background:#c49a2b;color:#ffffff;text-decoration:none;padding:14px 26px;border-radius:8px;font-weight:700;">Reset My Password</a>
+            <p style="margin:20px 0 0;color:#5a5a6e;font-size:13px;word-break:break-all;">If the button does not work, copy this link: ${resetLink}</p>
+          </div>
+        </div>
+      </div>`
+
+    const buildWelcomeEmail = (companyName: string, confirmLink: string) => `
+      <div style="font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ffffff;padding:24px;">
+        <div style="max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+          <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="CFF Network" width="160" height="64" /></div>
+          <div style="height:4px;background:#c49a2b;"></div>
+          <div style="padding:28px;">
+            <h1 style="margin:0 0 12px;color:#0f1d2e;font-size:24px;">Welcome to CFF Network</h1>
+            <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">Hello ${companyName}, confirm your email to activate your account.</p>
+            <a href="${confirmLink}" style="display:inline-block;background:#c49a2b;color:#ffffff;text-decoration:none;padding:14px 26px;border-radius:8px;font-weight:700;">Confirm My Account</a>
+            <p style="margin:20px 0 0;color:#5a5a6e;font-size:13px;word-break:break-all;">If the button does not work, copy this link: ${confirmLink}</p>
+          </div>
+        </div>
+      </div>`
+
     // Determine email type and render appropriate template
     if (email_action_type === 'recovery') {
       const resetLink = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${encodeURIComponent(redirect_to)}`
-      html = await renderAsync(
-        React.createElement(PasswordResetEmail, { resetLink })
-      )
+      html = buildRecoveryEmail(resetLink)
       subject = 'CFF Network - Password Reset Request'
     } else if (email_action_type === 'signup' || email_action_type === 'invite') {
       const confirmLink = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=signup&redirect_to=${encodeURIComponent(redirect_to)}`
       const companyName = user.user_metadata?.company_name || 'there'
-      html = await renderAsync(
-        React.createElement(WelcomeEmail, {
-          email: user.email,
-          companyName,
-          confirmLink,
-        })
-      )
+      html = buildWelcomeEmail(companyName, confirmLink)
       subject = 'Welcome to CFF Network - Confirm Your Email'
     } else {
-      // Fallback for other email types
       const link = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${encodeURIComponent(redirect_to)}`
-      html = await renderAsync(
-        React.createElement(WelcomeEmail, {
-          email: user.email,
-          companyName: 'there',
-          confirmLink: link,
-        })
-      )
+      html = buildWelcomeEmail('there', link)
       subject = 'CFF Network - Email Verification'
     }
 

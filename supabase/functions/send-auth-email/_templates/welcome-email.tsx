@@ -56,7 +56,7 @@ export const WelcomeEmail = ({ email, companyName, confirmLink }: WelcomeEmailPr
             Hello {companyName},
           </Text>
           <Text style={text}>
-            Thank you for joining the <strong>Collaborative for Frontier Finance (CFF) Network</strong> — 
+            Thank you for joining the Collaborative for Frontier Finance (CFF) Network — 
             a global community of fund managers and emerging market professionals advancing 
             MSME financing across Africa and the Middle East.
           </Text>
@@ -72,7 +72,7 @@ export const WelcomeEmail = ({ email, companyName, confirmLink }: WelcomeEmailPr
           </Section>
 
           <Text style={smallText}>
-            This link expires in <strong>24 hours</strong> for security purposes.
+            This link expires in 24 hours for security purposes.
           </Text>
         </Section>
 
@@ -164,9 +164,7 @@ export const WelcomeEmail = ({ email, companyName, confirmLink }: WelcomeEmailPr
           <Text style={copyright}>
             © {new Date().getFullYear()} CFF Network. All rights reserved.
           </Text>
-          <Text style={copyright}>
-            <Link href="https://frontierfinance.org" style={footerLink}>frontierfinance.org</Link>
-          </Text>
+          <Link href="https://frontierfinance.org" style={footerLink}>frontierfinance.org</Link>
         </Section>
       </Container>
     </Body>
