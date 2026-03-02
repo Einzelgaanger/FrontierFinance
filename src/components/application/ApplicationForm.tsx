@@ -117,6 +117,9 @@ const ApplicationForm = () => {
     // Only save if form has some data
     if (!formData.applicant_name && !formData.email && !formData.vehicle_name) return;
 
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
     setSavingDraft(true);
     try {
       const draftData = buildApplicationData('draft');
@@ -301,6 +304,12 @@ const ApplicationForm = () => {
 
     setUploadingProfilePic(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({ title: "Session expired", description: "Please sign in again, then retry uploading your company logo." });
+        return;
+      }
+
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/profile-picture.${fileExt}`;
 
@@ -355,13 +364,18 @@ const ApplicationForm = () => {
 
     setUploading(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({ title: "Session expired", description: "Please sign in again, then retry uploading attachments." });
+        return;
+      }
+
       for (const file of Array.from(files)) {
         if (file.size > 50 * 1024 * 1024) {
           toast({ title: "Error", description: `${file.name} exceeds 50MB limit` });
           continue;
         }
 
-        const fileExt = file.name.split('.').pop();
         const fileName = `${user.id}/${Date.now()}-${file.name}`;
         
         const { error: uploadError } = await supabase.storage
@@ -382,9 +396,9 @@ const ApplicationForm = () => {
       }
 
       toast({ title: "Success", description: "File(s) uploaded successfully" });
-    } catch (error) {
+    } catch (error: any) {
       console.error('File upload error:', error);
-      toast({ title: "Error", description: "Failed to upload file(s)" });
+      toast({ title: "Error", description: error?.message || "Failed to upload file(s)" });
     } finally {
       setUploading(false);
     }
@@ -456,6 +470,12 @@ const ApplicationForm = () => {
     setLoading(true);
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({ title: "Session expired", description: "Please sign in again before submitting your application." });
+        return;
+      }
+
       const applicationData = buildApplicationData('pending');
 
       let error;
@@ -511,11 +531,11 @@ const ApplicationForm = () => {
         setExistingApplication(newApp);
       }
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting application:', error);
       toast({
         title: "Error",
-        description: "Failed to submit application. Please try again."
+        description: error?.message || "Failed to submit application. Please try again."
       });
     } finally {
       setLoading(false);
