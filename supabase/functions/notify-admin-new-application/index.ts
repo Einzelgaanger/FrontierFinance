@@ -12,9 +12,14 @@ Deno.serve(async (req) => {
 
   try {
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
-    const rawFromEmail = Deno.env.get('RESEND_FROM_EMAIL') || 'noreply@frontierfinance.org'
-    // Ensure proper format - if it's just an email, wrap it
-    const fromEmail = rawFromEmail.includes('<') ? rawFromEmail : rawFromEmail
+    const rawFromEmail = Deno.env.get('RESEND_FROM_EMAIL') || ''
+    console.log('RESEND_FROM_EMAIL raw value:', JSON.stringify(rawFromEmail))
+    // Use a clean email if the secret is empty or malformed
+    const fromEmail = rawFromEmail && rawFromEmail.includes('@') && !rawFromEmail.includes('<')
+      ? `CFF Network <${rawFromEmail}>`
+      : rawFromEmail && rawFromEmail.includes('<')
+        ? rawFromEmail
+        : 'CFF Network <noreply@frontierfinance.org>'
 
     if (!resendApiKey) {
       console.error('RESEND_API_KEY not configured')
