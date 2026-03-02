@@ -74,37 +74,49 @@ Deno.serve(async (req) => {
       day: 'numeric' 
     }) : null
 
+    // Base HTML structure using CFF brand identity
     const html = `<!doctype html>
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>ESCP Network - Application ${isApproved ? 'Approved' : 'Update'}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CFF Network - Application ${isApproved ? 'Approved' : 'Update'}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
-<body style="background:#f8f9fa;margin:0;padding:40px 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
-  <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);overflow:hidden;">
-    <div style="background:#1a1a1a;padding:32px;text-align:center;">
-      <h1 style="color:#f5f5dc;margin:0;font-size:24px;">ESCP Network</h1>
+<body style="background:#ffffff;margin:0;padding:40px 20px;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
+    
+    <!-- Navy Header -->
+    <div style="background:#0f1d2e;padding:36px 40px 28px;text-align:center;">
+      <img src="https://escpnetwork.net/CFF%20LOGO.png" width="160" height="64" alt="CFF Network" style="display:block;margin:0 auto;" />
     </div>
+    
+    <!-- Gold accent bar -->
+    <div style="background:#c49a2b;height:4px;"></div>
+    
+    <!-- Content -->
     <div style="padding:40px 32px;">
-      <h2 style="color:${isApproved ? '#059669' : '#dc2626'};margin:0 0 24px;font-size:20px;">
+      <h2 style="color:${isApproved ? '#059669' : '#dc2626'};margin:0 0 24px;font-size:20px;text-align:center;">
         ${isApproved ? '🎉 Congratulations! Your Application Has Been Approved' : '📋 Application Status Update'}
       </h2>
       
-      <p style="color:#333;font-size:16px;line-height:26px;margin:0 0 20px;">Dear ${applicantName},</p>
+      <p style="color:#1a1a2e;font-size:16px;line-height:26px;margin:0 0 20px;">Dear ${applicantName},</p>
       
       ${isApproved ? `
-        <p style="color:#333;font-size:16px;line-height:26px;margin:0 0 20px;">
-          We are delighted to inform you that your application for <strong>${vehicleName}</strong> to join the ESCP Network has been <strong style="color:#059669;">approved</strong>!
+        <p style="color:#1a1a2e;font-size:16px;line-height:26px;margin:0 0 20px;">
+          We are delighted to inform you that your application for <strong>${vehicleName}</strong> to join the Collaborative For Frontier Finance Network has been <strong style="color:#059669;">approved</strong>!
         </p>
-        <p style="color:#333;font-size:16px;line-height:26px;margin:0 0 20px;">
+        <p style="color:#1a1a2e;font-size:16px;line-height:26px;margin:0 0 20px;">
           You now have full member access to our peer-to-peer learning network. Here's what you can do:
         </p>
-        <div style="background:#fef3c7;border:1px solid #fbbf24;border-radius:8px;padding:16px;margin:0 0 20px;">
-          <p style="color:#92400e;font-size:14px;margin:0;">
+        
+        <div style="background:#fef3c7;border:1px solid #fbbf24;border-radius:8px;padding:16px;margin:0 0 24px;">
+          <p style="color:#92400e;font-size:14px;margin:0;line-height:20px;">
             <strong>⚠️ Important:</strong> To activate your new member access, please <strong>sign out</strong> and <strong>sign back in</strong> to your account.
           </p>
         </div>
-        <ul style="color:#333;font-size:15px;line-height:28px;margin:0 0 24px;padding-left:20px;">
+        
+        <ul style="color:#1a1a2e;font-size:15px;line-height:28px;margin:0 0 24px;padding-left:20px;">
           <li>Access the complete network directory of fund managers</li>
           <li>View detailed survey data and insights</li>
           <li>Participate in knowledge sharing and discussions</li>
@@ -112,12 +124,12 @@ Deno.serve(async (req) => {
           <li>Contribute to our community resources</li>
         </ul>
       ` : `
-        <p style="color:#333;font-size:16px;line-height:26px;margin:0 0 20px;">
-          Thank you for your interest in joining the ESCP Network. After careful review, we regret to inform you that your application for <strong>${vehicleName}</strong> was not approved at this time.
+        <p style="color:#1a1a2e;font-size:16px;line-height:26px;margin:0 0 20px;">
+          Thank you for your interest in joining the Collaborative For Frontier Finance Network. After careful review, we regret to inform you that your application for <strong>${vehicleName}</strong> was not approved at this time.
         </p>
         ${cooldownFormatted ? `
         <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:16px;margin:0 0 20px;">
-          <p style="color:#991b1b;font-size:14px;margin:0;">
+          <p style="color:#991b1b;font-size:14px;margin:0;line-height:20px;">
             <strong>⏳ Reapplication Period:</strong> You may submit a new application after <strong>${cooldownFormatted}</strong>.
           </p>
         </div>
@@ -133,35 +145,45 @@ Deno.serve(async (req) => {
       
       ${isApproved ? `
         <div style="text-align:center;margin:32px 0;">
-          <a href="https://escpnetwork.net/dashboard" style="background:#1a1a1a;color:#f5f5dc;padding:14px 32px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:600;font-size:16px;">
+          <a href="https://escpnetwork.net/dashboard" style="background:#c49a2b;color:#ffffff;padding:16px 40px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:700;font-size:16px;letter-spacing:0.3px;box-shadow:0 2px 8px rgba(196,154,43,0.3);">
             Access Your Dashboard →
           </a>
         </div>
       ` : `
-        <p style="color:#333;font-size:16px;line-height:26px;margin:20px 0 0;">
+        <p style="color:#1a1a2e;font-size:16px;line-height:26px;margin:20px 0 0;">
           We encourage you to revisit your application based on the feedback provided and reapply when eligible. If you have questions, please don't hesitate to reach out.
         </p>
       `}
     </div>
-    <div style="background:#f9fafb;padding:24px 32px;border-top:1px solid #e5e7eb;">
-      <p style="color:#6b7280;font-size:13px;line-height:20px;margin:0;text-align:center;">
-        This email was sent by the ESCP Network.<br/>
-        If you have any questions, please contact our team.
-      </p>
+    
+    <!-- Footer -->
+    <div style="background:#f8f9fa;padding:28px 40px;border-top:1px solid #e8e8ee;text-align:center;">
+      <p style="color:#0f1d2e;font-size:14px;font-weight:700;margin:0 0 4px;">Collaborative For Frontier Finance</p>
+      <p style="color:#5a5a6e;font-size:12px;margin:0 0 12px;">Advancing MSME financing in Africa and the Middle East</p>
+      <hr style="border:none;border-top:1px solid #e8e8ee;margin:0 0 12px;" />
+      <p style="color:#999;font-size:11px;margin:0 0 4px;">© ${new Date().getFullYear()} CFF Network. All rights reserved.</p>
+      <p style="color:#999;font-size:11px;margin:0;"><a href="https://frontierfinance.org" style="color:#c49a2b;text-decoration:none;">frontierfinance.org</a></p>
     </div>
   </div>
 </body>
 </html>`
 
-    const fromEmail = Deno.env.get('RESEND_FROM_EMAIL') || 'onboarding@resend.dev'
+    const rawFromEmail = Deno.env.get('RESEND_FROM_EMAIL') || ''
+    // Use a clean email format: "Name <email@domain.com>"
+    const fromEmail = rawFromEmail && rawFromEmail.includes('@') && !rawFromEmail.includes('<')
+      ? `Collaborative For Frontier Finance <${rawFromEmail}>`
+      : rawFromEmail && rawFromEmail.includes('<')
+        ? rawFromEmail.replace(/.*<(.+)>/, 'Collaborative For Frontier Finance <$1>') // Replace name part if exists
+        : 'Collaborative For Frontier Finance <noreply@frontierfinance.org>'
+
     console.log('Sending email from:', fromEmail, 'to:', recipientEmail)
 
     const { error: emailError } = await resend.emails.send({
-      from: `ESCP Network <${fromEmail}>`,
+      from: fromEmail,
       to: [recipientEmail],
       subject: isApproved 
-        ? '🎉 Welcome to the ESCP Network - Your Application Has Been Approved!' 
-        : 'ESCP Network - Application Status Update',
+        ? '🎉 Welcome to CFF Network - Your Application Has Been Approved!' 
+        : 'CFF Network - Application Status Update',
       html,
     })
 
