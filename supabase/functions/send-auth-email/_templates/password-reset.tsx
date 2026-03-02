@@ -19,16 +19,20 @@ interface PasswordResetEmailProps {
 
 export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
   <Html>
-    <Head />
-    <Preview>You requested a password reset for your CFF Network account. Click the link inside to set a new password.</Preview>
+    <Head>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+      `}</style>
+    </Head>
+    <Preview>Reset your CFF Network password — click the secure link inside to set a new one.</Preview>
     <Body style={main}>
       <Container style={container}>
-        {/* Header with logo */}
+        {/* Navy header with logo */}
         <Section style={headerSection}>
           <Img
             src="https://escpnetwork.net/CFF%20LOGO.png"
-            width="140"
-            height="56"
+            width="160"
+            height="64"
             alt="CFF Network"
             style={logo}
           />
@@ -39,11 +43,13 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
 
         {/* Main content */}
         <Section style={contentSection}>
+          <Section style={iconCircle}>
+            <Text style={iconText}>🔐</Text>
+          </Section>
           <Heading style={h1}>Reset Your Password</Heading>
           <Text style={text}>
-            We received a request to reset the password associated with your
-            CFF Network account. If you made this request, click the button
-            below to choose a new password:
+            We received a request to reset the password for your CFF Network account. 
+            Click the button below to create a new, secure password:
           </Text>
 
           {/* CTA Button */}
@@ -54,7 +60,7 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
           </Section>
 
           <Text style={smallText}>
-            This link expires in 1 hour for security purposes.
+            This link expires in <strong>1 hour</strong> for security purposes.
           </Text>
         </Section>
 
@@ -63,9 +69,10 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
         {/* Security notice */}
         <Section style={noticeSection}>
           <Text style={noticeText}>
-            <strong>Did not request this?</strong> No action is needed — your
-            password will remain unchanged. If you are concerned about your
-            account security, please contact our support team.
+            🛡️ <strong>Didn't request this?</strong> No action is needed — your
+            password will remain unchanged. If you're concerned about your
+            account security, please reach out to our team at{' '}
+            <Link href="mailto:info@frontierfinance.org" style={noticeLink}>info@frontierfinance.org</Link>.
           </Text>
         </Section>
 
@@ -74,22 +81,32 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
         {/* Fallback link */}
         <Section style={contentSection}>
           <Text style={fallbackText}>
-            If the button above does not work, copy and paste this link into
-            your browser:
+            If the button above doesn't work, copy and paste this link into your browser:
           </Text>
           <Text style={linkText}>{resetLink}</Text>
         </Section>
 
         {/* Footer */}
         <Section style={footerSection}>
+          <Img
+            src="https://escpnetwork.net/CFF%20LOGO.png"
+            width="100"
+            height="40"
+            alt="CFF Network"
+            style={{ margin: '0 auto 12px', display: 'block', opacity: 0.6 }}
+          />
           <Text style={footerBrand}>
             Collaborative for Frontier Finance
           </Text>
           <Text style={footerSubtext}>
             Advancing MSME financing in Africa and the Middle East
           </Text>
+          <Hr style={footerDivider} />
           <Text style={copyright}>
             © {new Date().getFullYear()} CFF Network. All rights reserved.
+          </Text>
+          <Text style={copyright}>
+            <Link href="https://frontierfinance.org" style={footerLink}>frontierfinance.org</Link>
           </Text>
         </Section>
       </Container>
@@ -109,18 +126,21 @@ const borderColor = '#e8e8ee'
 
 const main = {
   backgroundColor: '#ffffff',
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
 }
 
 const container = {
   margin: '0 auto',
   maxWidth: '600px',
   backgroundColor: '#ffffff',
+  border: '1px solid #e5e7eb',
+  borderRadius: '12px',
+  overflow: 'hidden' as const,
 }
 
 const headerSection = {
   backgroundColor: navy,
-  padding: '32px 40px 24px',
+  padding: '36px 40px 28px',
   textAlign: 'center' as const,
 }
 
@@ -138,9 +158,20 @@ const contentSection = {
   padding: '32px 40px',
 }
 
+const iconCircle = {
+  textAlign: 'center' as const,
+  marginBottom: '8px',
+}
+
+const iconText = {
+  fontSize: '36px',
+  margin: '0',
+  lineHeight: '1',
+}
+
 const h1 = {
   color: navy,
-  fontSize: '24px',
+  fontSize: '26px',
   fontWeight: '700',
   margin: '0 0 16px',
   padding: '0',
@@ -151,7 +182,7 @@ const h1 = {
 const text = {
   color: textDark,
   fontSize: '15px',
-  lineHeight: '24px',
+  lineHeight: '26px',
   margin: '12px 0',
 }
 
@@ -159,7 +190,7 @@ const smallText = {
   color: textMuted,
   fontSize: '13px',
   textAlign: 'center' as const,
-  margin: '12px 0 0',
+  margin: '16px 0 0',
 }
 
 const buttonContainer = {
@@ -169,15 +200,16 @@ const buttonContainer = {
 
 const button = {
   backgroundColor: gold,
-  borderRadius: '6px',
+  borderRadius: '8px',
   color: '#ffffff',
   display: 'inline-block',
-  fontSize: '15px',
+  fontSize: '16px',
   fontWeight: '700',
   textDecoration: 'none',
   textAlign: 'center' as const,
-  padding: '14px 36px',
+  padding: '16px 40px',
   letterSpacing: '0.3px',
+  boxShadow: '0 2px 8px rgba(196, 154, 43, 0.3)',
 }
 
 const divider = {
@@ -187,14 +219,20 @@ const divider = {
 
 const noticeSection = {
   padding: '24px 40px',
-  backgroundColor: '#f8f8fa',
+  backgroundColor: '#fefce8',
+  borderLeft: `4px solid ${gold}`,
 }
 
 const noticeText = {
-  color: textMuted,
+  color: '#78350f',
   fontSize: '13px',
-  lineHeight: '20px',
+  lineHeight: '22px',
   margin: '0',
+}
+
+const noticeLink = {
+  color: gold,
+  textDecoration: 'underline',
 }
 
 const fallbackText = {
@@ -211,8 +249,8 @@ const linkText = {
 }
 
 const footerSection = {
-  backgroundColor: '#f8f8fa',
-  padding: '24px 40px',
+  backgroundColor: '#f8f9fa',
+  padding: '28px 40px',
   textAlign: 'center' as const,
 }
 
@@ -226,11 +264,22 @@ const footerBrand = {
 const footerSubtext = {
   color: textMuted,
   fontSize: '12px',
-  margin: '0 0 8px',
+  margin: '0 0 12px',
+}
+
+const footerDivider = {
+  borderColor: borderColor,
+  margin: '0 0 12px',
 }
 
 const copyright = {
   color: '#999',
   fontSize: '11px',
-  margin: '0',
+  margin: '0 0 4px',
+}
+
+const footerLink = {
+  color: gold,
+  textDecoration: 'none',
+  fontSize: '11px',
 }
