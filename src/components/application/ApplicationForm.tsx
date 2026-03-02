@@ -203,13 +203,18 @@ const ApplicationForm = () => {
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/profile-picture.${fileExt}`;
 
+      // First try to remove existing file (ignore errors)
+      await supabase.storage
+        .from('profile-pictures')
+        .remove([fileName]);
+
       const { error: uploadError } = await supabase.storage
         .from('profile-pictures')
         .upload(fileName, file, { upsert: true });
 
       if (uploadError) {
-        console.error('Upload error details:', JSON.stringify(uploadError));
-        throw uploadError;
+        console.error('Storage upload error:', JSON.stringify(uploadError));
+        throw new Error(`Storage upload failed: ${uploadError.message}`);
       }
 
       const { data: urlData } = supabase.storage
@@ -219,10 +224,14 @@ const ApplicationForm = () => {
       setProfilePicture(urlData.publicUrl);
 
       // Also update user_profiles
-      await supabase
+      const { error: profileError } = await supabase
         .from('user_profiles')
         .update({ profile_picture_url: urlData.publicUrl })
         .eq('id', user.id);
+
+      if (profileError) {
+        console.error('Profile update error:', profileError);
+      }
 
       toast({ title: "Success", description: "Company logo uploaded" });
     } catch (error) {
