@@ -139,8 +139,11 @@ Deno.serve(async (req) => {
 </body>
 </html>`
 
+    const fromEmail = Deno.env.get('RESEND_FROM_EMAIL') || 'onboarding@resend.dev'
+    console.log('Sending email from:', fromEmail, 'to:', application.email)
+
     const { error: emailError } = await resend.emails.send({
-      from: 'ESCP Network <onboarding@resend.dev>',
+      from: `ESCP Network <${fromEmail}>`,
       to: [application.email],
       subject: isApproved 
         ? '🎉 Welcome to the ESCP Network - Your Application Has Been Approved!' 
