@@ -46,83 +46,82 @@ Deno.serve(async (req) => {
 
     const adminEmails = ['alfred@frontierfinance.org', 'arnold@frontierfinance.org']
 
+    const detailRow = (label: string, value: string) => value ? `
+      <tr>
+        <td style="padding:12px 16px;color:#5a5a6e;font-weight:600;width:40%;border-bottom:1px solid #f0f0f5;font-size:14px;">${label}</td>
+        <td style="padding:12px 16px;color:#1a1a2e;border-bottom:1px solid #f0f0f5;font-size:14px;">${value}</td>
+      </tr>` : ''
+
     const html = `<!doctype html>
 <html>
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>New Membership Application</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
-<body style="background:#f8f8fa;margin:0;padding:40px 20px;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-  <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.07);overflow:hidden;">
-    <div style="background:#1a1a1a;padding:32px;text-align:center;">
-      <h1 style="color:#f5f5dc;margin:0;font-size:22px;letter-spacing:0.5px;">CFF Network</h1>
-      <p style="color:#d4d4a8;margin:8px 0 0;font-size:14px;">New Membership Application</p>
+<body style="background:#ffffff;margin:0;padding:40px 20px;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
+    
+    <!-- Navy Header -->
+    <div style="background:#0f1d2e;padding:36px 40px 28px;text-align:center;">
+      <img src="https://escpnetwork.net/CFF%20LOGO.png" width="160" height="64" alt="CFF Network" style="display:block;margin:0 auto;" />
     </div>
-    <div style="padding:32px;">
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin-bottom:24px;">
-        <p style="color:#92400e;font-size:14px;margin:0;font-weight:600;">
-          📋 A new membership application has been submitted and requires your review.
-        </p>
+    
+    <!-- Gold accent bar -->
+    <div style="background:#c49a2b;height:4px;"></div>
+    
+    <!-- Alert banner -->
+    <div style="background:#fefce8;padding:20px 40px;border-bottom:1px solid #fde68a;">
+      <p style="color:#78350f;font-size:15px;margin:0;font-weight:600;text-align:center;">
+        📋 New Membership Application Received
+      </p>
+    </div>
+    
+    <!-- Content -->
+    <div style="padding:32px 40px;">
+      <p style="color:#1a1a2e;font-size:15px;line-height:26px;margin:0 0 24px;">
+        A new membership application has been submitted to the CFF Network and requires your review. Here are the details:
+      </p>
+
+      <!-- Applicant Details Card -->
+      <div style="border:1px solid #e8e8ee;border-radius:10px;overflow:hidden;margin-bottom:28px;">
+        <div style="background:#0f1d2e;padding:14px 16px;">
+          <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0;letter-spacing:0.3px;">APPLICANT DETAILS</p>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          ${detailRow('Name', applicantName)}
+          ${detailRow('Email', email)}
+          ${detailRow('Vehicle Name', vehicleName)}
+          ${detailRow('Role / Job Title', roleJobTitle)}
+          ${detailRow('Location', location)}
+          ${detailRow('Website', organizationWebsite ? `<a href="${organizationWebsite}" style="color:#c49a2b;text-decoration:none;">${organizationWebsite}</a>` : '')}
+          ${detailRow('Typical Check Size', typicalCheckSize)}
+          ${detailRow('Number of Investments', numberOfInvestments)}
+          ${detailRow('Amount Raised to Date', amountRaisedToDate)}
+          ${detailRow('How They Heard About Us', howHeardAboutNetwork)}
+        </table>
       </div>
 
-      <h2 style="color:#1a1a1a;font-size:18px;margin:0 0 16px;border-bottom:2px solid #f0f0f0;padding-bottom:8px;">Applicant Details</h2>
-      
-      <table style="width:100%;border-collapse:collapse;font-size:14px;">
-        <tr>
-          <td style="padding:8px 12px;color:#6b7280;font-weight:600;width:40%;border-bottom:1px solid #f3f4f6;">Name</td>
-          <td style="padding:8px 12px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">${applicantName}</td>
-        </tr>
-        <tr>
-          <td style="padding:8px 12px;color:#6b7280;font-weight:600;border-bottom:1px solid #f3f4f6;">Email</td>
-          <td style="padding:8px 12px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">${email}</td>
-        </tr>
-        ${vehicleName ? `<tr>
-          <td style="padding:8px 12px;color:#6b7280;font-weight:600;border-bottom:1px solid #f3f4f6;">Vehicle Name</td>
-          <td style="padding:8px 12px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">${vehicleName}</td>
-        </tr>` : ''}
-        ${roleJobTitle ? `<tr>
-          <td style="padding:8px 12px;color:#6b7280;font-weight:600;border-bottom:1px solid #f3f4f6;">Role / Job Title</td>
-          <td style="padding:8px 12px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">${roleJobTitle}</td>
-        </tr>` : ''}
-        ${location ? `<tr>
-          <td style="padding:8px 12px;color:#6b7280;font-weight:600;border-bottom:1px solid #f3f4f6;">Location</td>
-          <td style="padding:8px 12px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">${location}</td>
-        </tr>` : ''}
-        ${organizationWebsite ? `<tr>
-          <td style="padding:8px 12px;color:#6b7280;font-weight:600;border-bottom:1px solid #f3f4f6;">Website</td>
-          <td style="padding:8px 12px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;"><a href="${organizationWebsite}" style="color:#1a56db;">${organizationWebsite}</a></td>
-        </tr>` : ''}
-        ${typicalCheckSize ? `<tr>
-          <td style="padding:8px 12px;color:#6b7280;font-weight:600;border-bottom:1px solid #f3f4f6;">Typical Check Size</td>
-          <td style="padding:8px 12px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">${typicalCheckSize}</td>
-        </tr>` : ''}
-        ${numberOfInvestments ? `<tr>
-          <td style="padding:8px 12px;color:#6b7280;font-weight:600;border-bottom:1px solid #f3f4f6;">Number of Investments</td>
-          <td style="padding:8px 12px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">${numberOfInvestments}</td>
-        </tr>` : ''}
-        ${amountRaisedToDate ? `<tr>
-          <td style="padding:8px 12px;color:#6b7280;font-weight:600;border-bottom:1px solid #f3f4f6;">Amount Raised to Date</td>
-          <td style="padding:8px 12px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">${amountRaisedToDate}</td>
-        </tr>` : ''}
-        ${howHeardAboutNetwork ? `<tr>
-          <td style="padding:8px 12px;color:#6b7280;font-weight:600;border-bottom:1px solid #f3f4f6;">How They Heard About Us</td>
-          <td style="padding:8px 12px;color:#1a1a1a;border-bottom:1px solid #f3f4f6;">${howHeardAboutNetwork}</td>
-        </tr>` : ''}
-      </table>
-
+      <!-- CTA Button -->
       <div style="text-align:center;margin:32px 0 16px;">
-        <a href="https://frontierfinance.org/admin/applications" style="background:#1a1a1a;color:#f5f5dc;padding:14px 32px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:600;font-size:15px;">
+        <a href="https://frontierfinance.org/admin/applications" style="background:#c49a2b;color:#ffffff;padding:16px 40px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:700;font-size:16px;letter-spacing:0.3px;box-shadow:0 2px 8px rgba(196,154,43,0.3);">
           Review Application →
         </a>
       </div>
-      <p style="color:#9ca3af;font-size:12px;text-align:center;margin:0;">
+      <p style="color:#5a5a6e;font-size:13px;text-align:center;margin:0;">
         Log in to the CFF Network admin dashboard to approve or reject this application.
       </p>
     </div>
-    <div style="background:#f9fafb;padding:20px 32px;border-top:1px solid #e5e7eb;">
-      <p style="color:#9ca3af;font-size:12px;line-height:18px;margin:0;text-align:center;">
-        This is an automated notification from the CFF Network platform.
-      </p>
+
+    <!-- Footer -->
+    <div style="background:#f8f9fa;padding:28px 40px;border-top:1px solid #e8e8ee;text-align:center;">
+      <img src="https://escpnetwork.net/CFF%20LOGO.png" width="100" height="40" alt="CFF Network" style="display:block;margin:0 auto 12px;opacity:0.6;" />
+      <p style="color:#0f1d2e;font-size:14px;font-weight:700;margin:0 0 4px;">Collaborative for Frontier Finance</p>
+      <p style="color:#5a5a6e;font-size:12px;margin:0 0 12px;">Advancing MSME financing in Africa and the Middle East</p>
+      <hr style="border:none;border-top:1px solid #e8e8ee;margin:0 0 12px;" />
+      <p style="color:#999;font-size:11px;margin:0 0 4px;">© ${new Date().getFullYear()} CFF Network. All rights reserved.</p>
+      <p style="color:#999;font-size:11px;margin:0;"><a href="https://frontierfinance.org" style="color:#c49a2b;text-decoration:none;">frontierfinance.org</a></p>
     </div>
   </div>
 </body>
