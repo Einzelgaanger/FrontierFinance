@@ -119,6 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
 
           // Handle redirect after successful authentication
+          // Do NOT redirect if user is on /reset-password (they need to stay there to set new password)
           if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && 
               window.location.pathname === '/auth') {
             // Redirect members to network, others to dashboard
