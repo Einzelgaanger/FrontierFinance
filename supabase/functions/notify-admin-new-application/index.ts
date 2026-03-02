@@ -13,7 +13,7 @@ Deno.serve(async (req) => {
   try {
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
     const rawFromEmail = Deno.env.get('RESEND_FROM_EMAIL') || ''
-    console.log('RESEND_FROM_EMAIL raw value:', JSON.stringify(rawFromEmail))
+    // Use a clean email if the secret is empty or malformed
     // Use a clean email if the secret is empty or malformed
     const fromEmail = rawFromEmail && rawFromEmail.includes('@') && !rawFromEmail.includes('<')
       ? `CFF Network <${rawFromEmail}>`
