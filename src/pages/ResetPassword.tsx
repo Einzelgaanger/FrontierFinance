@@ -22,35 +22,55 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [isRecoverySession, setIsRecoverySession] = useState(false);
 
-  // Supabase puts tokens in the URL hash (#access_token=...); fall back to query (?access_token=...)
+  // Recovery can arrive as hash tokens, query tokens, or PKCE code
   const hashParams = new URLSearchParams(location.hash?.startsWith('#') ? location.hash.slice(1) : '');
   const accessToken = hashParams.get('access_token') || searchParams.get('access_token');
   const refreshToken = hashParams.get('refresh_token') || searchParams.get('refresh_token');
   const type = hashParams.get('type') || searchParams.get('type');
+  const authCode = searchParams.get('code');
 
   useEffect(() => {
-    const handlePasswordReset = async () => {
-      if (accessToken && refreshToken && type === 'recovery') {
-        try {
+    const establishRecoverySession = async () => {
+      setError('');
+
+      try {
+        // 1) Legacy implicit flow with tokens in hash/query
+        if (accessToken && refreshToken && type === 'recovery') {
           const { error: sessionError } = await supabase.auth.setSession({
             access_token: accessToken,
-            refresh_token: refreshToken
+            refresh_token: refreshToken,
           });
 
-          if (sessionError) {
-            setError('Invalid or expired reset link. Please request a new password reset.');
-          }
-        } catch (error) {
-          setError('Invalid or expired reset link. Please request a new password reset.');
+          if (sessionError) throw sessionError;
+          setIsRecoverySession(true);
+          return;
         }
-      } else if (!accessToken || !refreshToken || type !== 'recovery') {
+
+        // 2) PKCE flow with one-time code in query
+        if (authCode) {
+          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(authCode);
+          if (exchangeError) throw exchangeError;
+          setIsRecoverySession(true);
+          return;
+        }
+
+        // 3) Supabase may auto-detect session from URL and clean hash before component reads it
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          setIsRecoverySession(true);
+          return;
+        }
+
         setError('Invalid or missing reset token. Please request a new password reset.');
+      } catch {
+        setError('Invalid or expired reset link. Please request a new password reset.');
       }
     };
 
-    handlePasswordReset();
-  }, [accessToken, refreshToken, type]);
+    establishRecoverySession();
+  }, [accessToken, refreshToken, type, authCode]);
 
   const validatePassword = (password: string) => {
     const minLength = 8;
@@ -84,8 +104,8 @@ const ResetPassword = () => {
       return;
     }
 
-    if (!accessToken || type !== 'recovery') {
-      setError('Invalid reset token');
+    if (!isRecoverySession) {
+      setError('Invalid or expired reset link. Please request a new password reset.');
       return;
     }
 
@@ -174,7 +194,7 @@ const ResetPassword = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter new password"
                 className="pl-9 pr-9 h-9 min-h-[36px] bg-slate-50/80 dark:bg-navy-800/30 border-slate-200 dark:border-navy-600/80 focus:border-slate-400 focus:ring-2 focus:ring-slate-400/20 rounded-lg text-sm"
-                disabled={loading || !accessToken || type !== 'recovery'}
+                disabled={loading || !isRecoverySession}
                 autoComplete="new-password"
               />
               <button
@@ -205,7 +225,7 @@ const ResetPassword = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm new password"
                 className="pl-9 pr-9 h-9 min-h-[36px] bg-slate-50/80 dark:bg-navy-800/30 border-slate-200 dark:border-navy-600/80 focus:border-slate-400 focus:ring-2 focus:ring-slate-400/20 rounded-lg text-sm"
-                disabled={loading || !accessToken || type !== 'recovery'}
+                disabled={loading || !isRecoverySession}
                 autoComplete="new-password"
               />
               <button
@@ -223,7 +243,7 @@ const ResetPassword = () => {
           <Button
             type="submit"
             className="w-full h-9 min-h-[36px] bg-slate-900 hover:bg-slate-800 dark:bg-gold-500 dark:hover:bg-gold-400 text-white rounded-lg text-sm font-medium touch-manipulation"
-            disabled={loading || !accessToken || type !== 'recovery' || !password || !confirmPassword}
+            disabled={loading || !isRecoverySession || !password || !confirmPassword}
           >
             {loading ? (
               <div className="flex items-center justify-center gap-2">
