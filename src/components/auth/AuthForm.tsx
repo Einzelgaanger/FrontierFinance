@@ -177,20 +177,6 @@ export default function AuthForm() {
             description: "An account with this email already exists. Please sign in instead.",
             variant: "destructive",
           });
-        } else if (errorMessage.includes('500') || errorMessage.toLowerCase().includes('email')) {
-          toast({
-            title: "Account Created (Email Issue)",
-            description: "Your account was created, but there was an issue sending the confirmation email. Try signing in - your account may already be active. If not, contact support.",
-            variant: "default",
-          });
-          setSignUpForm({
-            email: '',
-            password: '',
-            confirmPassword: '',
-            firstName: '',
-            lastName: '',
-            companyName: ''
-          });
         } else {
           toast({
             title: "Sign Up Failed",
@@ -200,9 +186,9 @@ export default function AuthForm() {
         }
       } else {
         toast({
-          title: "Check Your Email ✉️",
-          description: warning || "We've sent a confirmation link to your email. Please click it to activate your account.",
-          duration: 10000,
+          title: "Account Created! 🎉",
+          description: warning || "Your account is ready. You can now sign in.",
+          duration: 8000,
         });
         setSignUpForm({
           email: '',
@@ -212,6 +198,8 @@ export default function AuthForm() {
           lastName: '',
           companyName: ''
         });
+        // Switch to sign-in tab since the account is ready
+        setActiveTab('signin');
       }
     } catch (error: unknown) {
       const errorMessage = getErrorMessage(error);

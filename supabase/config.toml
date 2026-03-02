@@ -20,3 +20,9 @@ verify_jwt = false
 
 [functions.notify-admin-new-application]
 verify_jwt = false
+
+[functions.public-signup]
+verify_jwt = false
+
+[functions.request-password-reset]
+verify_jwt = false

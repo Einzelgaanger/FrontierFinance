@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3'
+import { Resend } from 'https://esm.sh/resend@4.0.0'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -57,7 +58,7 @@ serve(async (req) => {
     const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
       email,
       password,
-      email_confirm: true, // Auto-confirm email to bypass email service
+      email_confirm: true,
       user_metadata: {
         first_name: first_name || '',
         last_name: last_name || '',
@@ -95,7 +96,6 @@ serve(async (req) => {
 
     if (profileError && !profileError.message.includes('duplicate')) {
       console.error('Error creating user profile:', profileError)
-      // Don't fail - profile might already exist from trigger
     }
 
     // Assign default viewer role
@@ -109,7 +109,6 @@ serve(async (req) => {
 
     if (roleError && !roleError.message.includes('duplicate')) {
       console.error('Error assigning role:', roleError)
-      // Don't fail - role might already exist from trigger
     }
 
     // Create profile entry (if profiles table exists)
@@ -127,8 +126,42 @@ serve(async (req) => {
         console.error('Error creating profile:', profilesError)
       }
     } catch (err) {
-      // Profiles table might not exist, that's okay
       console.log('Profiles table not available or error:', err)
+    }
+
+    // Send welcome email via Resend (bypasses Supabase Auth rate limits)
+    try {
+      const resendApiKey = Deno.env.get('RESEND_API_KEY')
+      if (resendApiKey) {
+        const resend = new Resend(resendApiKey)
+        const rawFrom = Deno.env.get('RESEND_FROM_EMAIL') || 'noreply@frontierfinance.org'
+        const fromAddress = rawFrom.includes('<') ? rawFrom : `CFF Network <${rawFrom}>`
+        const displayName = company_name || first_name || email.split('@')[0]
+
+        const welcomeHtml = `
+          <div style="font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ffffff;padding:24px;">
+            <div style="max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+              <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="CFF Network" width="160" height="64" /></div>
+              <div style="height:4px;background:#c49a2b;"></div>
+              <div style="padding:28px;">
+                <h1 style="margin:0 0 12px;color:#0f1d2e;font-size:24px;">Welcome to CFF Network!</h1>
+                <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">Hello ${displayName}, your account has been created successfully. You can now sign in to access the CFF Network platform.</p>
+                <a href="https://frontierfinance.org/auth" style="display:inline-block;background:#c49a2b;color:#ffffff;text-decoration:none;padding:14px 26px;border-radius:8px;font-weight:700;">Sign In Now</a>
+                <p style="margin:20px 0 0;color:#5a5a6e;font-size:13px;">If you did not create this account, please ignore this email.</p>
+              </div>
+            </div>
+          </div>`
+
+        await resend.emails.send({
+          from: fromAddress,
+          to: [email],
+          subject: 'Welcome to CFF Network - Your Account is Ready',
+          html: welcomeHtml,
+        })
+        console.log('Welcome email sent via Resend to:', email)
+      }
+    } catch (emailErr) {
+      console.error('Failed to send welcome email (non-blocking):', emailErr)
     }
 
     return new Response(
