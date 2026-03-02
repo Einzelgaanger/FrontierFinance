@@ -218,36 +218,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, metadata?: Record<string, unknown>) => {
     try {
-      const baseUrl = window.location.origin;
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            first_name: metadata?.first_name as string || '',
-            last_name: metadata?.last_name as string || '',
-            company_name: metadata?.company_name as string || '',
-            created_via: 'public_signup',
-          },
-          // Redirect to /auth so Auth.tsx handles token exchange then sends to /dashboard
-          emailRedirectTo: `${baseUrl}/auth`,
+      // Use custom public-signup edge function to bypass Supabase Auth rate limits
+      const { data, error } = await supabase.functions.invoke('public-signup', {
+        body: {
+          email,
+          password,
+          first_name: metadata?.first_name as string || '',
+          last_name: metadata?.last_name as string || '',
+          company_name: metadata?.company_name as string || '',
         },
       });
 
       if (error) {
-        console.error('Sign up error:', error);
+        console.error('Sign up edge function error:', error);
         return { error };
       }
 
-      // If user already exists but is unconfirmed, Supabase returns a fake user with no identities
-      if (data?.user && data.user.identities && data.user.identities.length === 0) {
-        return { error: { message: 'An account with this email already exists. Please sign in instead.' } };
+      // The edge function returns { error: '...' } in the body for validation errors
+      if (data?.error) {
+        return { error: { message: data.error } };
       }
 
       return {
         error: null,
         data,
-        warning: 'Please check your email and click the confirmation link to activate your account.',
+        warning: data?.message || 'Account created successfully! You can now sign in.',
       };
     } catch (error) {
       console.error('Sign up error:', error);
@@ -285,12 +280,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   const resetPassword = async (email: string) => {
     try {
-      const baseUrl = window.location.origin;
-      const redirectTo = `${baseUrl}/reset-password`;
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo,
+      // Use custom edge function to bypass Supabase Auth rate limits
+      const { data, error } = await supabase.functions.invoke('request-password-reset', {
+        body: { email },
       });
-      return { error };
+
+      if (error) {
+        console.error('Reset password edge function error:', error);
+        return { error };
+      }
+
+      if (data?.error) {
+        return { error: { message: data.error } };
+      }
+
+      return { error: null };
     } catch (error) {
       console.error('Reset password error:', error);
       return { error };
