@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.add-company-member]
 verify_jwt = false
+
+[functions.notify-admin-new-application]
+verify_jwt = false
