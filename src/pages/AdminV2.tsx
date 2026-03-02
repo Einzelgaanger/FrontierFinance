@@ -608,7 +608,38 @@ const AdminV2 = () => {
 
       if (error) throw error;
 
-      // Log the activity (try both table names)
+      // If approved, update user role to 'member'
+      if (status === 'approved') {
+        const application = membershipRequests.find(r => r.id === requestId);
+        if (application?.user_id) {
+          // Update user_roles
+          await supabase
+            .from('user_roles')
+            .update({ role: 'member' })
+            .eq('user_id', application.user_id);
+
+          // Update user_profiles
+          await supabase
+            .from('user_profiles')
+            .update({ user_role: 'member' })
+            .eq('id', application.user_id);
+        }
+      }
+
+      // Send status email notification
+      try {
+        await supabase.functions.invoke('send-application-status', {
+          body: {
+            applicationId: requestId,
+            status,
+            adminNotes: membershipRequests.find(r => r.id === requestId)?.admin_notes || null,
+          },
+        });
+      } catch (emailErr) {
+        console.error('Failed to send status email:', emailErr);
+      }
+
+      // Log the activity
       const activityData = {
         user_id: user?.id,
         activity_type: `application_${status}`,
@@ -618,7 +649,6 @@ const AdminV2 = () => {
 
       const { error: logError } = await supabase.from('activity_log').insert(activityData);
       if (logError) {
-        // Try alternative table name
         await supabase.from('activity_log').insert({
           user_id: user?.id,
           action: `application_${status}`,

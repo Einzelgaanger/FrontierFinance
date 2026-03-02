@@ -85,6 +85,11 @@ Deno.serve(async (req) => {
         <p style="color:#333;font-size:16px;line-height:26px;margin:0 0 20px;">
           You now have full member access to our peer-to-peer learning network. Here's what you can do:
         </p>
+        <div style="background:#fef3c7;border:1px solid #fbbf24;border-radius:8px;padding:16px;margin:0 0 20px;">
+          <p style="color:#92400e;font-size:14px;margin:0;">
+            <strong>⚠️ Important:</strong> To activate your new member access, please <strong>sign out</strong> and <strong>sign back in</strong> to your account.
+          </p>
+        </div>
         <ul style="color:#333;font-size:15px;line-height:28px;margin:0 0 24px;padding-left:20px;">
           <li>Access the complete network directory of fund managers</li>
           <li>View detailed survey data and insights</li>

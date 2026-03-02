@@ -188,6 +188,16 @@ const ApplicationForm = () => {
       return;
     }
 
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+    if (!allowedTypes.includes(file.type)) {
+      toast({ title: "Error", description: "Please upload a JPG, PNG, WebP, GIF, or SVG image (max 10MB)" });
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: "Error", description: "Image must be under 10MB" });
+      return;
+    }
+
     setUploadingProfilePic(true);
     try {
       const fileExt = file.name.split('.').pop();
@@ -197,7 +207,10 @@ const ApplicationForm = () => {
         .from('profile-pictures')
         .upload(fileName, file, { upsert: true });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error details:', JSON.stringify(uploadError));
+        throw uploadError;
+      }
 
       const { data: urlData } = supabase.storage
         .from('profile-pictures')
@@ -556,7 +569,7 @@ const ApplicationForm = () => {
 
   function renderApplicationForm() {
     return (
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} onKeyDown={(e) => { if (e.key === 'Enter' && (e.target as HTMLElement).tagName !== 'TEXTAREA') e.preventDefault(); }} className="space-y-6">
         <Card className="max-w-6xl mx-auto bg-white/95 backdrop-blur-sm border border-gray-200/50 shadow-xl">
           <CardHeader className="p-8 md:p-10">
             <CardTitle className="text-2xl md:text-3xl">ESCP Network Membership Application</CardTitle>
@@ -771,9 +784,9 @@ const ApplicationForm = () => {
                     )}
                     <div>
                       <label className="cursor-pointer">
-                        <input
+                    <input
                           type="file"
-                          accept="image/*"
+                          accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
                           onChange={handleProfilePictureUpload}
                           className="hidden"
                           disabled={uploadingProfilePic}
