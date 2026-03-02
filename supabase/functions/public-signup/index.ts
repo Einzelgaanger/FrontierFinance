@@ -54,11 +54,11 @@ serve(async (req) => {
       )
     }
 
-    // Create user with admin API - email_confirm: true bypasses email confirmation
+    // Create user with admin API - email_confirm: false so they must verify email first
     const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
       email,
       password,
-      email_confirm: true,
+      email_confirm: false,
       user_metadata: {
         first_name: first_name || '',
         last_name: last_name || '',
@@ -103,11 +103,10 @@ serve(async (req) => {
       .from('user_roles')
       .insert({
         user_id: userId,
-        email: email,
         role: 'viewer'
       })
 
-    if (roleError && !roleError.message.includes('duplicate')) {
+    if (roleError && !roleError.message?.includes('duplicate')) {
       console.error('Error assigning role:', roleError)
     }
 
@@ -129,25 +128,41 @@ serve(async (req) => {
       console.log('Profiles table not available or error:', err)
     }
 
-    // Send welcome email via Resend (bypasses Supabase Auth rate limits)
+    // Generate email confirmation link via admin API (bypasses rate limits)
+    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+      type: 'signup',
+      email,
+      options: {
+        redirectTo: 'https://frontierfinance.org/auth'
+      }
+    })
+
+    if (linkError) {
+      console.error('Error generating confirmation link:', linkError)
+      // User was created but we couldn't send confirmation - still report success
+    }
+
+    // Send confirmation email via Resend
     try {
       const resendApiKey = Deno.env.get('RESEND_API_KEY')
-      if (resendApiKey) {
+      if (resendApiKey && linkData?.properties?.action_link) {
         const resend = new Resend(resendApiKey)
         const rawFrom = Deno.env.get('RESEND_FROM_EMAIL') || 'noreply@frontierfinance.org'
         const fromAddress = rawFrom.includes('<') ? rawFrom : `CFF Network <${rawFrom}>`
         const displayName = company_name || first_name || email.split('@')[0]
+        const confirmLink = linkData.properties.action_link
 
-        const welcomeHtml = `
+        const confirmHtml = `
           <div style="font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ffffff;padding:24px;">
             <div style="max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
               <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="CFF Network" width="160" height="64" /></div>
               <div style="height:4px;background:#c49a2b;"></div>
               <div style="padding:28px;">
-                <h1 style="margin:0 0 12px;color:#0f1d2e;font-size:24px;">Welcome to CFF Network!</h1>
-                <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">Hello ${displayName}, your account has been created successfully. You can now sign in to access the CFF Network platform.</p>
-                <a href="https://frontierfinance.org/auth" style="display:inline-block;background:#c49a2b;color:#ffffff;text-decoration:none;padding:14px 26px;border-radius:8px;font-weight:700;">Sign In Now</a>
+                <h1 style="margin:0 0 12px;color:#0f1d2e;font-size:24px;">Confirm Your Email</h1>
+                <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">Hello ${displayName}, thank you for signing up for CFF Network! Please confirm your email address by clicking the button below.</p>
+                <a href="${confirmLink}" style="display:inline-block;background:#c49a2b;color:#ffffff;text-decoration:none;padding:14px 26px;border-radius:8px;font-weight:700;">Confirm Email Address</a>
                 <p style="margin:20px 0 0;color:#5a5a6e;font-size:13px;">If you did not create this account, please ignore this email.</p>
+                <p style="margin:12px 0 0;color:#5a5a6e;font-size:11px;">Or copy and paste this link: ${confirmLink}</p>
               </div>
             </div>
           </div>`
@@ -155,24 +170,27 @@ serve(async (req) => {
         await resend.emails.send({
           from: fromAddress,
           to: [email],
-          subject: 'Welcome to CFF Network - Your Account is Ready',
-          html: welcomeHtml,
+          subject: 'CFF Network - Confirm Your Email Address',
+          html: confirmHtml,
         })
-        console.log('Welcome email sent via Resend to:', email)
+        console.log('Confirmation email sent via Resend to:', email)
+      } else {
+        console.warn('Missing RESEND_API_KEY or action_link, could not send confirmation email')
       }
     } catch (emailErr) {
-      console.error('Failed to send welcome email (non-blocking):', emailErr)
+      console.error('Failed to send confirmation email (non-blocking):', emailErr)
     }
 
     return new Response(
       JSON.stringify({
         success: true,
+        requires_confirmation: true,
         user: {
           id: userId,
           email: newUser.user.email,
-          email_confirmed: true
+          email_confirmed: false
         },
-        message: 'Account created successfully! You can now sign in.'
+        message: 'Account created! Please check your email to confirm your account before signing in.'
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )

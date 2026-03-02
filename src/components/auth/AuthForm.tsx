@@ -186,9 +186,9 @@ export default function AuthForm() {
         }
       } else {
         toast({
-          title: "Account Created! 🎉",
-          description: warning || "Your account is ready. You can now sign in.",
-          duration: 8000,
+          title: "Check Your Email ✉️",
+          description: warning || "We've sent a confirmation link to your email. Please confirm your account before signing in.",
+          duration: 12000,
         });
         setSignUpForm({
           email: '',
@@ -198,8 +198,7 @@ export default function AuthForm() {
           lastName: '',
           companyName: ''
         });
-        // Switch to sign-in tab since the account is ready
-        setActiveTab('signin');
+        // Stay on signup tab with confirmation message, don't switch to sign-in
       }
     } catch (error: unknown) {
       const errorMessage = getErrorMessage(error);
