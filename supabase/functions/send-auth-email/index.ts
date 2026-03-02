@@ -6,7 +6,9 @@ import { PasswordResetEmail } from './_templates/password-reset.tsx'
 import { WelcomeEmail } from './_templates/welcome-email.tsx'
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY') as string)
-const hookSecret = Deno.env.get('SEND_EMAIL_HOOK_SECRET') as string
+const rawHookSecret = Deno.env.get('SEND_EMAIL_HOOK_SECRET') as string
+// Ensure the secret has the whsec_ prefix that standardwebhooks expects
+const hookSecret = rawHookSecret.startsWith('whsec_') ? rawHookSecret : `whsec_${rawHookSecret}`
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -83,8 +85,8 @@ Deno.serve(async (req) => {
       subject = 'CFF Network - Email Verification'
     }
 
-    // Use verified domain — must match Resend domain to avoid spam
-    const fromAddress = Deno.env.get('RESEND_FROM_EMAIL') || 'CFF Network <onboarding@resend.dev>'
+    const rawFrom = Deno.env.get('RESEND_FROM_EMAIL') || 'noreply@frontierfinance.org'
+    const fromAddress = rawFrom.includes('<') ? rawFrom : `CFF Network <${rawFrom}>`
     const replyTo = Deno.env.get('RESEND_REPLY_TO') || undefined
     const emailPayload: Record<string, unknown> = {
       from: fromAddress,
