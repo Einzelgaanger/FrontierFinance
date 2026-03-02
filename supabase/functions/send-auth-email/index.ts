@@ -69,11 +69,11 @@ Deno.serve(async (req) => {
     const buildRecoveryEmail = (resetLink: string) => `
       <div style="font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ffffff;padding:24px;">
         <div style="max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-          <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="CFF Network" width="160" height="64" /></div>
+          <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="Collaborative For Frontier Finance" width="160" height="64" /></div>
           <div style="height:4px;background:#c49a2b;"></div>
           <div style="padding:28px;">
             <h1 style="margin:0 0 12px;color:#0f1d2e;font-size:24px;">Reset Your Password</h1>
-            <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">We received a request to reset your CFF Network password.</p>
+            <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">We received a request to reset your Collaborative For Frontier Finance password.</p>
             <a href="${resetLink}" style="display:inline-block;background:#c49a2b;color:#ffffff;text-decoration:none;padding:14px 26px;border-radius:8px;font-weight:700;">Reset My Password</a>
             <p style="margin:20px 0 0;color:#5a5a6e;font-size:13px;word-break:break-all;">If the button does not work, copy this link: ${resetLink}</p>
           </div>
@@ -83,10 +83,10 @@ Deno.serve(async (req) => {
     const buildWelcomeEmail = (companyName: string, confirmLink: string) => `
       <div style="font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ffffff;padding:24px;">
         <div style="max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-          <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="CFF Network" width="160" height="64" /></div>
+          <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="Collaborative For Frontier Finance" width="160" height="64" /></div>
           <div style="height:4px;background:#c49a2b;"></div>
           <div style="padding:28px;">
-            <h1 style="margin:0 0 12px;color:#0f1d2e;font-size:24px;">Welcome to CFF Network</h1>
+            <h1 style="margin:0 0 12px;color:#0f1d2e;font-size:24px;">Welcome to Collaborative For Frontier Finance</h1>
             <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">Hello ${companyName}, confirm your email to activate your account.</p>
             <a href="${confirmLink}" style="display:inline-block;background:#c49a2b;color:#ffffff;text-decoration:none;padding:14px 26px;border-radius:8px;font-weight:700;">Confirm My Account</a>
             <p style="margin:20px 0 0;color:#5a5a6e;font-size:13px;word-break:break-all;">If the button does not work, copy this link: ${confirmLink}</p>
@@ -98,20 +98,20 @@ Deno.serve(async (req) => {
     if (email_action_type === 'recovery') {
       const resetLink = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${encodeURIComponent(redirect_to)}`
       html = buildRecoveryEmail(resetLink)
-      subject = 'CFF Network - Password Reset Request'
+      subject = 'Collaborative For Frontier Finance - Password Reset Request'
     } else if (email_action_type === 'signup' || email_action_type === 'invite') {
       const confirmLink = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=signup&redirect_to=${encodeURIComponent(redirect_to)}`
       const companyName = user.user_metadata?.company_name || 'there'
       html = buildWelcomeEmail(companyName, confirmLink)
-      subject = 'Welcome to CFF Network - Confirm Your Email'
+      subject = 'Welcome to Collaborative For Frontier Finance - Confirm Your Email'
     } else {
       const link = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${encodeURIComponent(redirect_to)}`
       html = buildWelcomeEmail('there', link)
-      subject = 'CFF Network - Email Verification'
+      subject = 'Collaborative For Frontier Finance - Email Verification'
     }
 
     const rawFrom = Deno.env.get('RESEND_FROM_EMAIL') || 'noreply@frontierfinance.org'
-    const fromAddress = rawFrom.includes('<') ? rawFrom : `CFF Network <${rawFrom}>`
+    const fromAddress = rawFrom.includes('<') ? rawFrom : `Collaborative For Frontier Finance <${rawFrom}>`
     const replyTo = Deno.env.get('RESEND_REPLY_TO') || undefined
     const emailPayload: Record<string, unknown> = {
       from: fromAddress,

@@ -26,7 +26,7 @@ export const WelcomeEmail = ({ email, companyName, confirmLink }: WelcomeEmailPr
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
       `}</style>
     </Head>
-    <Preview>Welcome to CFF Network — confirm your email to join 200+ fund managers across Africa &amp; the Middle East.</Preview>
+    <Preview>Welcome to Collaborative For Frontier Finance — confirm your email to join 200+ fund managers across Africa &amp; the Middle East.</Preview>
     <Body style={main}>
       <Container style={container}>
         {/* Navy header with logo */}
@@ -35,7 +35,7 @@ export const WelcomeEmail = ({ email, companyName, confirmLink }: WelcomeEmailPr
             src="https://escpnetwork.net/CFF%20LOGO.png"
             width="160"
             height="64"
-            alt="CFF Network"
+            alt="Collaborative For Frontier Finance"
             style={logo}
           />
         </Section>
@@ -151,7 +151,7 @@ export const WelcomeEmail = ({ email, companyName, confirmLink }: WelcomeEmailPr
             src="https://escpnetwork.net/CFF%20LOGO.png"
             width="100"
             height="40"
-            alt="CFF Network"
+            alt="Collaborative For Frontier Finance"
             style={{ margin: '0 auto 12px', display: 'block', opacity: 0.6 }}
           />
           <Text style={footerBrand}>
@@ -162,7 +162,7 @@ export const WelcomeEmail = ({ email, companyName, confirmLink }: WelcomeEmailPr
           </Text>
           <Hr style={footerDivider} />
           <Text style={copyright}>
-            © {new Date().getFullYear()} CFF Network. All rights reserved.
+            © {new Date().getFullYear()} Collaborative For Frontier Finance. All rights reserved.
           </Text>
           <Link href="https://frontierfinance.org" style={footerLink}>frontierfinance.org</Link>
         </Section>

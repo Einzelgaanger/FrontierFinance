@@ -68,16 +68,16 @@ serve(async (req) => {
 
     const resend = new Resend(resendApiKey)
     const rawFrom = Deno.env.get('RESEND_FROM_EMAIL') || 'noreply@frontierfinance.org'
-    const fromAddress = rawFrom.includes('<') ? rawFrom : `CFF Network <${rawFrom}>`
+    const fromAddress = rawFrom.includes('<') ? rawFrom : `Collaborative For Frontier Finance <${rawFrom}>`
 
     const resetHtml = `
       <div style="font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ffffff;padding:24px;">
         <div style="max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-          <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="CFF Network" width="160" height="64" /></div>
+          <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://escpnetwork.net/CFF%20LOGO.png" alt="Collaborative For Frontier Finance" width="160" height="64" /></div>
           <div style="height:4px;background:#c49a2b;"></div>
           <div style="padding:28px;">
             <h1 style="margin:0 0 12px;color:#0f1d2e;font-size:24px;">Reset Your Password</h1>
-            <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">We received a request to reset your CFF Network password. Click the button below to set a new password.</p>
+            <p style="margin:0 0 20px;color:#1a1a2e;line-height:1.6;">We received a request to reset your Collaborative For Frontier Finance password. Click the button below to set a new password.</p>
             <a href="${resetLink}" style="display:inline-block;background:#c49a2b;color:#ffffff;text-decoration:none;padding:14px 26px;border-radius:8px;font-weight:700;">Reset My Password</a>
             <p style="margin:20px 0 0;color:#5a5a6e;font-size:13px;word-break:break-all;">If the button does not work, copy this link: ${resetLink}</p>
             <p style="margin:16px 0 0;color:#5a5a6e;font-size:13px;">If you did not request a password reset, please ignore this email. This link will expire in 1 hour.</p>
@@ -88,7 +88,7 @@ serve(async (req) => {
     const { error: emailError } = await resend.emails.send({
       from: fromAddress,
       to: [email],
-      subject: 'CFF Network - Password Reset Request',
+      subject: 'Collaborative For Frontier Finance - Password Reset Request',
       html: resetHtml,
     })
 

@@ -16,10 +16,10 @@ Deno.serve(async (req) => {
     // Use a clean email if the secret is empty or malformed
     // Use a clean email if the secret is empty or malformed
     const fromEmail = rawFromEmail && rawFromEmail.includes('@') && !rawFromEmail.includes('<')
-      ? `CFF Network <${rawFromEmail}>`
+      ? `Collaborative For Frontier Finance <${rawFromEmail}>`
       : rawFromEmail && rawFromEmail.includes('<')
         ? rawFromEmail
-        : 'CFF Network <noreply@frontierfinance.org>'
+        : 'Collaborative For Frontier Finance <noreply@frontierfinance.org>'
 
     if (!resendApiKey) {
       console.error('RESEND_API_KEY not configured')
@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
     
     <!-- Navy Header -->
     <div style="background:#0f1d2e;padding:36px 40px 28px;text-align:center;">
-      <img src="https://escpnetwork.net/CFF%20LOGO.png" width="160" height="64" alt="CFF Network" style="display:block;margin:0 auto;" />
+      <img src="https://escpnetwork.net/CFF%20LOGO.png" width="160" height="64" alt="Collaborative For Frontier Finance" style="display:block;margin:0 auto;" />
     </div>
     
     <!-- Gold accent bar -->
@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
     <!-- Content -->
     <div style="padding:32px 40px;">
       <p style="color:#1a1a2e;font-size:15px;line-height:26px;margin:0 0 24px;">
-        A new membership application has been submitted to the CFF Network and requires your review. Here are the details:
+        A new membership application has been submitted to the Collaborative For Frontier Finance and requires your review. Here are the details:
       </p>
 
       <!-- Applicant Details Card -->
@@ -117,17 +117,17 @@ Deno.serve(async (req) => {
         </a>
       </div>
       <p style="color:#5a5a6e;font-size:13px;text-align:center;margin:0;">
-        Log in to the CFF Network admin dashboard to approve or reject this application.
+        Log in to the Collaborative For Frontier Finance admin dashboard to approve or reject this application.
       </p>
     </div>
 
     <!-- Footer -->
     <div style="background:#f8f9fa;padding:28px 40px;border-top:1px solid #e8e8ee;text-align:center;">
-      <img src="https://escpnetwork.net/CFF%20LOGO.png" width="100" height="40" alt="CFF Network" style="display:block;margin:0 auto 12px;opacity:0.6;" />
+      <img src="https://escpnetwork.net/CFF%20LOGO.png" width="100" height="40" alt="Collaborative For Frontier Finance" style="display:block;margin:0 auto 12px;opacity:0.6;" />
       <p style="color:#0f1d2e;font-size:14px;font-weight:700;margin:0 0 4px;">Collaborative for Frontier Finance</p>
       <p style="color:#5a5a6e;font-size:12px;margin:0 0 12px;">Advancing MSME financing in Africa and the Middle East</p>
       <hr style="border:none;border-top:1px solid #e8e8ee;margin:0 0 12px;" />
-      <p style="color:#999;font-size:11px;margin:0 0 4px;">© ${new Date().getFullYear()} CFF Network. All rights reserved.</p>
+      <p style="color:#999;font-size:11px;margin:0 0 4px;">© ${new Date().getFullYear()} Collaborative For Frontier Finance. All rights reserved.</p>
       <p style="color:#999;font-size:11px;margin:0;"><a href="https://frontierfinance.org" style="color:#c49a2b;text-decoration:none;">frontierfinance.org</a></p>
     </div>
   </div>
@@ -135,7 +135,7 @@ Deno.serve(async (req) => {
 </html>`
 
     const { error: emailError } = await resend.emails.send({
-      from: fromEmail.includes('<') ? fromEmail : `CFF Network <${fromEmail}>`,
+      from: fromEmail.includes('<') ? fromEmail : `Collaborative For Frontier Finance <${fromEmail}>`,
       to: adminEmails,
       subject: `New Application: ${applicantName}${vehicleName ? ` — ${vehicleName}` : ''}`,
       html,
