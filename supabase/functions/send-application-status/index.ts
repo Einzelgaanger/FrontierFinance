@@ -23,35 +23,49 @@ Deno.serve(async (req) => {
 
     const resend = new Resend(resendApiKey)
 
-    const { applicationId, status, adminNotes, cooldownDate } = await req.json()
+    const body = await req.json()
+    const { applicationId, status, adminNotes, cooldownDate, testMode, email: directEmail, applicantName: directName, vehicleName: directVehicle } = body
 
-    if (!applicationId || !status) {
-      return new Response(
-        JSON.stringify({ error: 'Missing required fields' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+    let applicantName: string
+    let vehicleName: string
+    let recipientEmail: string
+
+    if (testMode && directEmail) {
+      // Direct test mode - skip DB lookup
+      applicantName = directName || 'Test Applicant'
+      vehicleName = directVehicle || 'Test Vehicle'
+      recipientEmail = directEmail
+      console.log('Test mode: sending directly to', directEmail)
+    } else {
+      if (!applicationId || !status) {
+        return new Response(
+          JSON.stringify({ error: 'Missing required fields' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+      const supabase = createClient(supabaseUrl, supabaseKey)
+
+      const { data: application, error: appError } = await supabase
+        .from('applications')
+        .select('user_id, email, company_name, applicant_name, vehicle_name')
+        .eq('id', applicationId)
+        .single()
+
+      if (appError || !application) {
+        console.error('Error fetching application:', appError)
+        return new Response(
+          JSON.stringify({ error: 'Application not found', success: false }),
+          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      applicantName = application.applicant_name || application.company_name || 'Applicant'
+      vehicleName = application.vehicle_name || application.company_name || 'your vehicle'
+      recipientEmail = application.email
     }
-
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    const supabase = createClient(supabaseUrl, supabaseKey)
-
-    const { data: application, error: appError } = await supabase
-      .from('applications')
-      .select('user_id, email, company_name, applicant_name, vehicle_name')
-      .eq('id', applicationId)
-      .single()
-
-    if (appError || !application) {
-      console.error('Error fetching application:', appError)
-      return new Response(
-        JSON.stringify({ error: 'Application not found', success: false }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
-    const applicantName = application.applicant_name || application.company_name || 'Applicant'
-    const vehicleName = application.vehicle_name || application.company_name || 'your vehicle'
     const isApproved = status === 'approved'
     const cooldownFormatted = cooldownDate ? new Date(cooldownDate).toLocaleDateString('en-US', { 
       weekday: 'long', 
@@ -140,11 +154,11 @@ Deno.serve(async (req) => {
 </html>`
 
     const fromEmail = Deno.env.get('RESEND_FROM_EMAIL') || 'onboarding@resend.dev'
-    console.log('Sending email from:', fromEmail, 'to:', application.email)
+    console.log('Sending email from:', fromEmail, 'to:', recipientEmail)
 
     const { error: emailError } = await resend.emails.send({
       from: `ESCP Network <${fromEmail}>`,
-      to: [application.email],
+      to: [recipientEmail],
       subject: isApproved 
         ? '🎉 Welcome to the ESCP Network - Your Application Has Been Approved!' 
         : 'ESCP Network - Application Status Update',
@@ -160,7 +174,7 @@ Deno.serve(async (req) => {
       )
     }
 
-    console.log('Application status email sent to:', application.email, 'Status:', status)
+    console.log('Application status email sent to:', recipientEmail, 'Status:', status)
 
     return new Response(
       JSON.stringify({ success: true }),
