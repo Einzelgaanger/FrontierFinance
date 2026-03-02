@@ -12,7 +12,9 @@ Deno.serve(async (req) => {
 
   try {
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
-    const fromEmail = Deno.env.get('RESEND_FROM_EMAIL') || 'noreply@frontierfinance.org'
+    const rawFromEmail = Deno.env.get('RESEND_FROM_EMAIL') || 'noreply@frontierfinance.org'
+    // Ensure proper format - if it's just an email, wrap it
+    const fromEmail = rawFromEmail.includes('<') ? rawFromEmail : rawFromEmail
 
     if (!resendApiKey) {
       console.error('RESEND_API_KEY not configured')
@@ -128,7 +130,7 @@ Deno.serve(async (req) => {
 </html>`
 
     const { error: emailError } = await resend.emails.send({
-      from: `CFF Network <${fromEmail}>`,
+      from: fromEmail.includes('<') ? fromEmail : `CFF Network <${fromEmail}>`,
       to: adminEmails,
       subject: `New Application: ${applicantName}${vehicleName ? ` — ${vehicleName}` : ''}`,
       html,
