@@ -368,6 +368,26 @@ const ApplicationForm = () => {
 
       if (error) throw error;
 
+      // Notify admins about the new application
+      try {
+        await supabase.functions.invoke('notify-admin-new-application', {
+          body: {
+            applicantName: formData.applicant_name,
+            vehicleName: formData.vehicle_name,
+            email: formData.email,
+            organizationWebsite: formData.organization_website,
+            location: formData.location,
+            roleJobTitle: formData.role_job_title,
+            typicalCheckSize: formData.typical_check_size,
+            numberOfInvestments: formData.number_of_investments,
+            amountRaisedToDate: formData.amount_raised_to_date,
+            howHeardAboutNetwork: formData.how_heard_about_network,
+          },
+        });
+      } catch (notifyErr) {
+        console.error('Failed to notify admins:', notifyErr);
+      }
+
       toast({
         title: "Application Submitted",
         description: "Your membership application has been submitted successfully. You will be notified via email once it's reviewed.",
