@@ -28,8 +28,8 @@ export const ApplicationStatusEmail = ({
     <Head />
     <Preview>
       {status === 'approved' 
-        ? 'Your CFF Network membership application has been approved!' 
-        : 'Update on your CFF Network membership application'}
+        ? 'Your Collaborative For Frontier Finance membership application has been approved!' 
+        : 'Update on your Collaborative For Frontier Finance membership application'}
     </Preview>
     <Body style={main}>
       <Container style={container}>
@@ -51,7 +51,7 @@ export const ApplicationStatusEmail = ({
         {status === 'approved' ? (
           <>
             <Text style={text}>
-              Congratulations! Your application for CFF Network membership has been approved.
+              Congratulations! Your application for Collaborative For Frontier Finance membership has been approved.
             </Text>
             <Text style={infoBox}>
               <strong>You now have access to:</strong><br />
@@ -71,7 +71,7 @@ export const ApplicationStatusEmail = ({
         ) : (
           <>
             <Text style={text}>
-              Thank you for your interest in CFF Network membership. After careful review, 
+              Thank you for your interest in Collaborative For Frontier Finance membership. After careful review, 
               we are unable to approve your application at this time.
             </Text>
             {adminNotes && (
@@ -88,7 +88,7 @@ export const ApplicationStatusEmail = ({
         )}
         <Text style={footer}>
           Best regards,<br />
-          The CFF Network Team
+          The Collaborative For Frontier Finance Team
         </Text>
       </Container>
     </Body>
