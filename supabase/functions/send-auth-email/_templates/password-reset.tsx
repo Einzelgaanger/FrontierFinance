@@ -60,7 +60,7 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
           </Section>
 
           <Text style={smallText}>
-            This link expires in <strong>1 hour</strong> for security purposes.
+            This link expires in 1 hour for security purposes.
           </Text>
         </Section>
 
@@ -69,11 +69,9 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
         {/* Security notice */}
         <Section style={noticeSection}>
           <Text style={noticeText}>
-            🛡️ <strong>Didn't request this?</strong> No action is needed — your
-            password will remain unchanged. If you're concerned about your
-            account security, please reach out to our team at{' '}
-            <Link href="mailto:info@frontierfinance.org" style={noticeLink}>info@frontierfinance.org</Link>.
+            If you did not request this password reset, no action is needed and your password remains unchanged.
           </Text>
+          <Link href="mailto:info@frontierfinance.org" style={noticeLink}>info@frontierfinance.org</Link>
         </Section>
 
         <Hr style={divider} />
@@ -105,9 +103,7 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
           <Text style={copyright}>
             © {new Date().getFullYear()} CFF Network. All rights reserved.
           </Text>
-          <Text style={copyright}>
-            <Link href="https://frontierfinance.org" style={footerLink}>frontierfinance.org</Link>
-          </Text>
+          <Link href="https://frontierfinance.org" style={footerLink}>frontierfinance.org</Link>
         </Section>
       </Container>
     </Body>
