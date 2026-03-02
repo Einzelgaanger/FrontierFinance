@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import AuthForm from "@/components/auth/AuthForm";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -26,11 +27,29 @@ const Auth = () => {
       return;
     }
 
-    if (hashAccessToken && hashRefreshToken && hashType === 'recovery') {
-      // Redirect to reset-password with tokens as query params
-      const qs = `?access_token=${encodeURIComponent(hashAccessToken)}&refresh_token=${encodeURIComponent(hashRefreshToken)}&type=recovery`;
-      navigate(`/reset-password${qs}`, { replace: true });
-      return; // Prevent rendering AuthForm while redirecting
+    if (hashAccessToken && hashRefreshToken) {
+      if (hashType === 'recovery') {
+        // Redirect to reset-password with tokens as query params
+        const qs = `?access_token=${encodeURIComponent(hashAccessToken)}&refresh_token=${encodeURIComponent(hashRefreshToken)}&type=recovery`;
+        navigate(`/reset-password${qs}`, { replace: true });
+        return;
+      }
+
+      if (hashType === 'signup' || hashType === 'email') {
+        // Email confirmation — set session and redirect to dashboard
+        supabase.auth.setSession({
+          access_token: hashAccessToken,
+          refresh_token: hashRefreshToken,
+        }).then(({ error }) => {
+          if (error) {
+            console.error('Error setting session after email confirmation:', error);
+            setExpiredLinkError(true);
+          } else {
+            navigate('/dashboard', { replace: true });
+          }
+        });
+        return;
+      }
     }
 
     // Fallback: Clean up the URL by removing any remaining hash fragments
@@ -49,17 +68,31 @@ const Auth = () => {
       navigate(`/reset-password${location.search}`, { replace: true });
       return;
     }
+
+    if (accessToken && refreshToken && (type === 'signup' || type === 'email')) {
+      supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      }).then(({ error }) => {
+        if (error) {
+          setExpiredLinkError(true);
+        } else {
+          navigate('/dashboard', { replace: true });
+        }
+      });
+      return;
+    }
   }, [location, navigate]);
 
-  // Check if we have recovery tokens in the URL
+  // Check if we have tokens in the URL — don't render auth form while processing
   const params = new URLSearchParams(location.search);
-  const accessToken = params.get('access_token');
-  const refreshToken = params.get('refresh_token');
-  const type = params.get('type');
+  const rawHash = location.hash?.startsWith('#') ? location.hash.slice(1) : '';
+  const hashParams = new URLSearchParams(rawHash);
+  const hasTokens = (params.get('access_token') && params.get('refresh_token')) ||
+                    (hashParams.get('access_token') && hashParams.get('refresh_token'));
   
-  // If we have recovery tokens, don't render the auth form
-  if (accessToken && refreshToken && type === 'recovery') {
-    return null; // This will prevent the auth form from showing while redirecting
+  if (hasTokens) {
+    return null;
   }
 
   return (

@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
       html = await renderAsync(
         React.createElement(PasswordResetEmail, { resetLink })
       )
-      subject = 'Reset Your CFF Network Password'
+      subject = 'CFF Network - Password Reset Request'
     } else if (email_action_type === 'signup' || email_action_type === 'invite') {
       const confirmLink = `${supabaseUrl}/auth/v1/verify?token=${token_hash}&type=signup&redirect_to=${encodeURIComponent(redirect_to)}`
       const companyName = user.user_metadata?.company_name || 'there'
@@ -83,14 +83,18 @@ Deno.serve(async (req) => {
       subject = 'CFF Network - Email Verification'
     }
 
-    // Use verified domain (e.g. hello@frontierfinance.org); fallback for dev only
+    // Use verified domain — must match Resend domain to avoid spam
     const fromAddress = Deno.env.get('RESEND_FROM_EMAIL') || 'CFF Network <onboarding@resend.dev>'
-    const { error } = await resend.emails.send({
+    const replyTo = Deno.env.get('RESEND_REPLY_TO') || undefined
+    const emailPayload: Record<string, unknown> = {
       from: fromAddress,
       to: [user.email],
       subject,
       html,
-    })
+    }
+    if (replyTo) emailPayload.reply_to = replyTo
+
+    const { error } = await resend.emails.send(emailPayload as any)
 
     if (error) {
       console.error('Resend error:', error)

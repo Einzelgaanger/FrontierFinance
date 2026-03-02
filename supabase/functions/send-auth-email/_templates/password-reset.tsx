@@ -20,7 +20,7 @@ interface PasswordResetEmailProps {
 export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
   <Html>
     <Head />
-    <Preview>Reset your CFF Network password</Preview>
+    <Preview>You requested a password reset for your CFF Network account. Click the link inside to set a new password.</Preview>
     <Body style={main}>
       <Container style={container}>
         {/* Header with logo */}
@@ -39,14 +39,11 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
 
         {/* Main content */}
         <Section style={contentSection}>
-          <Section style={iconContainer}>
-            <Text style={iconCircle}>🔒</Text>
-          </Section>
-
           <Heading style={h1}>Reset Your Password</Heading>
           <Text style={text}>
-            We received a request to reset the password for your CFF Network account. 
-            Click the button below to choose a new password:
+            We received a request to reset the password associated with your
+            CFF Network account. If you made this request, click the button
+            below to choose a new password:
           </Text>
 
           {/* CTA Button */}
@@ -66,9 +63,9 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
         {/* Security notice */}
         <Section style={noticeSection}>
           <Text style={noticeText}>
-            <strong>Didn't request this?</strong> No action is needed — your password 
-            will remain unchanged. If you're concerned about your account security, 
-            please contact our support team.
+            <strong>Did not request this?</strong> No action is needed — your
+            password will remain unchanged. If you are concerned about your
+            account security, please contact our support team.
           </Text>
         </Section>
 
@@ -77,7 +74,8 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
         {/* Fallback link */}
         <Section style={contentSection}>
           <Text style={fallbackText}>
-            If the button above doesn't work, copy and paste this link into your browser:
+            If the button above does not work, copy and paste this link into
+            your browser:
           </Text>
           <Text style={linkText}>{resetLink}</Text>
         </Section>
@@ -111,7 +109,7 @@ const borderColor = '#e8e8ee'
 
 const main = {
   backgroundColor: '#ffffff',
-  fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
 }
 
 const container = {
@@ -140,19 +138,9 @@ const contentSection = {
   padding: '32px 40px',
 }
 
-const iconContainer = {
-  textAlign: 'center' as const,
-  marginBottom: '8px',
-}
-
-const iconCircle = {
-  fontSize: '36px',
-  margin: '0',
-}
-
 const h1 = {
   color: navy,
-  fontSize: '26px',
+  fontSize: '24px',
   fontWeight: '700',
   margin: '0 0 16px',
   padding: '0',
@@ -182,7 +170,7 @@ const buttonContainer = {
 const button = {
   backgroundColor: gold,
   borderRadius: '6px',
-  color: navy,
+  color: '#ffffff',
   display: 'inline-block',
   fontSize: '15px',
   fontWeight: '700',
@@ -199,11 +187,11 @@ const divider = {
 
 const noticeSection = {
   padding: '24px 40px',
-  backgroundColor: '#fef9ee',
+  backgroundColor: '#f8f8fa',
 }
 
 const noticeText = {
-  color: '#7a6520',
+  color: textMuted,
   fontSize: '13px',
   lineHeight: '20px',
   margin: '0',

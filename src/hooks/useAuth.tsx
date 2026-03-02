@@ -228,7 +228,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             company_name: metadata?.company_name as string || '',
             created_via: 'public_signup',
           },
-          emailRedirectTo: `${baseUrl}/dashboard`,
+          // Redirect to /auth so Auth.tsx handles token exchange then sends to /dashboard
+          emailRedirectTo: `${baseUrl}/auth`,
         },
       });
 
