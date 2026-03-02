@@ -23,7 +23,7 @@
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="CFF Logo" />
-  <meta property="og:url" content="https://escpnetwork.net" />
+  <meta property="og:url" content="https://frontierfinance.org" />
   <meta property="og:site_name" content="CFF Network" />
 
   <!-- Twitter Card -->
@@ -46,7 +46,7 @@
   <link rel="apple-touch-icon" sizes="57x57" href="/CFF%20LOGO.png" />
 
   <!-- Additional SEO -->
-  <link rel="canonical" href="https://escpnetwork.net" />
+  <link rel="canonical" href="https://frontierfinance.org" />
   <meta name="robots" content="index, follow" />
   <meta name="googlebot" content="index, follow" />
   <link rel="manifest" href="/manifest.json" />
@@ -58,6 +58,17 @@
 </head>
 
 <body>
+  <!-- Redirect old domain to new: escpnetwork.net -> frontierfinance.org -->
+  <script>
+    (function () {
+      var h = window.location.hostname.toLowerCase();
+      if (h === 'escpnetwork.net' || h === 'www.escpnetwork.net') {
+        var target = 'https://frontierfinance.org' + window.location.pathname + window.location.search + window.location.hash;
+        window.location.replace(target);
+        return;
+      }
+    })();
+  </script>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
