@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ReactMarkdown from 'react-markdown';
 import SidebarLayout from '@/components/layout/SidebarLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import {
   Send,
   Brain,
@@ -20,9 +20,14 @@ import {
   ChevronRight,
   Shield,
   BarChart3,
-  Zap
+  Zap,
+  FileText,
+  FileSpreadsheet,
+  File
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import MarkdownRenderer from '@/components/chat/MarkdownRenderer';
+import { downloadAsExcel, downloadAsPdf } from '@/utils/chatExportUtils';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import {
@@ -48,6 +53,14 @@ interface Conversation {
   updated_at: string;
 }
 
+type OutputFormat = 'text' | 'excel' | 'pdf';
+
+const formatOptions: { value: OutputFormat; label: string; icon: React.ReactNode; desc: string }[] = [
+  { value: 'text', label: 'Text', icon: <FileText className="w-4 h-4" />, desc: 'Standard text response' },
+  { value: 'excel', label: 'Excel', icon: <FileSpreadsheet className="w-4 h-4 text-green-600" />, desc: 'Downloadable spreadsheet' },
+  { value: 'pdf', label: 'PDF', icon: <File className="w-4 h-4 text-red-600" />, desc: 'Professional report' },
+];
+
 const AdminChat = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
@@ -59,9 +72,10 @@ const AdminChat = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [outputFormat, setOutputFormat] = useState<OutputFormat | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, userRole } = useAuth();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
@@ -197,7 +211,10 @@ const AdminChat = () => {
       });
 
       const { data, error } = await supabase.functions.invoke('ai-chat', {
-        body: { messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }
+        body: { 
+          messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
+          outputFormat: outputFormat || 'text'
+        }
       });
 
       if (error) throw error;
@@ -471,13 +488,33 @@ const AdminChat = () => {
                               <div
                                 className={`rounded-2xl px-4 py-3 ${message.role === 'user'
                                     ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg max-w-[600px]'
-                                    : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 text-gray-800 shadow-lg border border-blue-200/50 backdrop-blur-sm max-w-[700px]'
+                                    : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 text-gray-800 shadow-lg border border-blue-200/50 backdrop-blur-sm max-w-[90vw] lg:max-w-[800px]'
                                   }`}
                               >
                                 {message.role === 'assistant' ? (
-                                  <div className="text-sm prose prose-sm max-w-none prose-headings:mt-3 prose-headings:mb-2 prose-p:my-2 prose-ul:my-2 prose-li:my-0.5 prose-strong:text-gray-900 prose-strong:font-semibold whitespace-pre-wrap break-words">
-                                    <ReactMarkdown>{message.content}</ReactMarkdown>
-                                  </div>
+                                  <>
+                                    <MarkdownRenderer content={message.content} />
+                                    {/* Download buttons for assistant messages */}
+                                    {userRole === 'admin' && (
+                                      <div className="flex items-center gap-2 mt-3 pt-2 border-t border-slate-200/50">
+                                        <span className="text-[10px] text-slate-400 uppercase tracking-wider">Export:</span>
+                                        <button
+                                          onClick={() => downloadAsExcel(message.content, `portiq-${Date.now()}`)}
+                                          className="flex items-center gap-1 text-[11px] text-green-700 hover:text-green-900 bg-green-50 hover:bg-green-100 px-2 py-1 rounded-md transition-colors"
+                                        >
+                                          <FileSpreadsheet className="w-3 h-3" />
+                                          Excel
+                                        </button>
+                                        <button
+                                          onClick={() => downloadAsPdf(message.content, `portiq-report-${Date.now()}`)}
+                                          className="flex items-center gap-1 text-[11px] text-red-700 hover:text-red-900 bg-red-50 hover:bg-red-100 px-2 py-1 rounded-md transition-colors"
+                                        >
+                                          <File className="w-3 h-3" />
+                                          PDF
+                                        </button>
+                                      </div>
+                                    )}
+                                  </>
                                 ) : (
                                   <div className="text-sm whitespace-pre-wrap break-words">{message.content}</div>
                                 )}
@@ -526,29 +563,67 @@ const AdminChat = () => {
                 </div>
 
                 {/* Floating input */}
-                <div className="absolute bottom-4 left-4 right-4 md:left-1/2 md:right-auto md:transform md:-translate-x-1/2 md:w-[min(600px,100%)] z-10">
-                  <div className="relative bg-white rounded-2xl border-2 border-slate-200 shadow-lg min-h-[44px] max-h-[200px] focus-within:border-blue-400 focus-within:shadow-xl transition-all">
-                    <Textarea
-                      value={input}
-                      onChange={e => {
-                        setInput(e.target.value);
-                        const ta = e.target;
-                        ta.style.height = 'auto';
-                        ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
-                      }}
-                      onKeyDown={handleKeyPress}
-                      placeholder="Ask Portiq about surveys, network data, applications, and more..."
-                      rows={1}
-                      className="resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent pr-12 py-3 pl-4 min-h-[40px] max-h-[184px] overflow-y-auto"
-                      disabled={loading}
-                    />
-                    <Button
-                      onClick={sendMessage}
-                      disabled={loading || !input.trim()}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full w-8 h-8 p-0 shadow-md"
-                    >
-                      <Send className="w-4 h-4" />
-                    </Button>
+                <div className="absolute bottom-4 left-4 right-4 md:left-1/2 md:right-auto md:transform md:-translate-x-1/2 md:w-[min(650px,calc(100%-2rem))] z-10">
+                  {/* Output format indicator */}
+                  {outputFormat && (
+                    <div className="flex items-center gap-2 mb-1.5 px-2">
+                      <span className="text-xs text-slate-500">Output:</span>
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 flex items-center gap-1">
+                        {formatOptions.find(f => f.value === outputFormat)?.icon}
+                        {formatOptions.find(f => f.value === outputFormat)?.label}
+                        <button onClick={() => setOutputFormat(null)} className="ml-1 hover:text-blue-900"><X className="w-3 h-3" /></button>
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex items-end gap-2">
+                    {/* Format dropdown - admin only */}
+                    {userRole === 'admin' && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-[44px] px-2.5 flex-shrink-0 border-slate-200 bg-white rounded-2xl shadow-lg" title="Output format">
+                            <FileText className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" className="w-52">
+                          {formatOptions.map((opt) => (
+                            <DropdownMenuItem
+                              key={opt.value}
+                              onClick={() => setOutputFormat(opt.value === 'text' ? null : opt.value)}
+                              className="flex items-center gap-2"
+                            >
+                              {opt.icon}
+                              <div>
+                                <div className="text-sm font-medium">{opt.label}</div>
+                                <div className="text-xs text-muted-foreground">{opt.desc}</div>
+                              </div>
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                    <div className="relative flex-1 bg-white rounded-2xl border-2 border-slate-200 shadow-lg min-h-[44px] max-h-[200px] focus-within:border-blue-400 focus-within:shadow-xl transition-all">
+                      <Textarea
+                        value={input}
+                        onChange={e => {
+                          setInput(e.target.value);
+                          const ta = e.target;
+                          ta.style.height = 'auto';
+                          ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
+                        }}
+                        onKeyDown={handleKeyPress}
+                        placeholder="Ask Portiq about surveys, network data, applications, and more..."
+                        rows={1}
+                        className="resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent pr-12 py-3 pl-4 min-h-[40px] max-h-[184px] overflow-y-auto"
+                        disabled={loading}
+                      />
+                      <Button
+                        onClick={sendMessage}
+                        disabled={loading || !input.trim()}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full w-8 h-8 p-0 shadow-md"
+                      >
+                        <Send className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Card>

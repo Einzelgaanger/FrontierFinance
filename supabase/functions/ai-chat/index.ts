@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
       )
     }
 
-    const { messages } = await req.json()
+    const { messages, outputFormat } = await req.json()
     const userMessage = messages?.[messages.length - 1]?.content || ''
 
     // Get user role
@@ -256,9 +256,25 @@ ${JSON.stringify(targetedData, null, 2)}
 3. **Cross-year analysis**: When summarizing a company across years, use the column mapping table above. The same company may use different emails across years.
 4. **Format responses clearly**: Use markdown tables for comparative data, bullet points for lists, headers for sections.
 5. **Role enforcement**: ${userRole === 'admin' ? 'You can share all data.' : userRole === 'member' ? 'Do NOT share email addresses or personal contact info.' : 'Only share aggregate statistics and basic org names.'}
-6. **When data is tabular**: Present it in a clean markdown table.
+6. **When data is tabular**: Present it in a clean markdown table. IMPORTANT: Keep tables clean with proper column headers and aligned data.
 7. **Be specific**: Always cite the exact year and source when stating numbers.
-8. **Never fabricate**: If you don't have the answer, say so clearly rather than guessing.`
+8. **Never fabricate**: If you don't have the answer, say so clearly rather than guessing.
+9. **Table formatting rules**: 
+   - Always use proper markdown table syntax with | delimiters and --- header separator.
+   - Keep column headers short and descriptive.
+   - Align numeric data consistently.
+   - For wide tables, split into multiple focused tables rather than one giant table.
+   - Use sub-headers (###) to organize sections.
+${outputFormat === 'excel' ? `
+10. **EXCEL OUTPUT MODE**: The user wants this data as a downloadable Excel file. Structure your response as clean markdown tables that can be easily parsed. Use multiple tables with clear ### section headers. Each table will become a separate sheet. Keep data clean and avoid long text in cells - use abbreviations where possible.` : ''}
+${outputFormat === 'pdf' ? `
+10. **PDF REPORT MODE**: The user wants this as a professional PDF report. Structure your response as a well-organized report with:
+   - A clear title (# heading)
+   - Executive summary paragraph
+   - Well-organized sections with ## and ### headings
+   - Tables for quantitative data
+   - Bullet points for qualitative insights
+   - A brief conclusion/summary at the end` : ''}`
 
     // Call Lovable AI
     const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
