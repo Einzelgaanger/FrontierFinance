@@ -306,7 +306,7 @@ ${JSON.stringify(targetedData, null, 2)}
       p_activity_type: 'ai_usage',
       p_points: 5,
       p_description: 'Used AI assistant'
-    }).then(() => {}).catch(() => {})
+    });
 
     return new Response(
       JSON.stringify({ reply }),
