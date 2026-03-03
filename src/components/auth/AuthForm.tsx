@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Mail, Lock, User, Eye, EyeOff, CheckCircle, ArrowRight, Search, LogIn, KeyRound } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -308,16 +308,19 @@ export default function AuthForm() {
           </TabsTrigger>
         </TabsList>
 
-        <AnimatePresence mode="wait">
-          <TabsContent value="signin" className="mt-0">
-            <motion.form
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 8 }}
-              transition={{ duration: 0.2 }}
-              onSubmit={handleSignIn}
-              className="space-y-4"
-            >
+        {/* Single child per tab so AnimatePresence mode="wait" and keys work correctly */}
+        <div className="mt-0 min-h-[200px]">
+          <AnimatePresence mode="wait">
+            {activeTab === 'signin' && (
+              <motion.form
+                key="signin"
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 8 }}
+                transition={{ duration: 0.2 }}
+                onSubmit={handleSignIn}
+                className="space-y-4"
+              >
               <div className="space-y-1.5">
                 <Label htmlFor="signin-email" className={labelClass}>Email</Label>
                 <div className="relative group">
@@ -386,18 +389,18 @@ export default function AuthForm() {
                   </div>
                 )}
               </Button>
-            </motion.form>
-          </TabsContent>
-
-          <TabsContent value="signup" className="mt-0">
-            <motion.form
-              initial={{ opacity: 0, x: 8 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -8 }}
-              transition={{ duration: 0.2 }}
-              onSubmit={handleSignUp}
-              className="space-y-4"
-            >
+              </motion.form>
+            )}
+            {activeTab === 'signup' && (
+              <motion.form
+                key="signup"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.2 }}
+                onSubmit={handleSignUp}
+                className="space-y-4"
+              >
               <div className="space-y-1.5">
                 <Label htmlFor="company-name" className={labelClass}>Company name</Label>
                 <div className="relative group">
@@ -524,9 +527,10 @@ export default function AuthForm() {
               >
                 {isLoading ? 'Creating account…' : 'Create account'}
               </Button>
-            </motion.form>
-          </TabsContent>
-        </AnimatePresence>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </div>
       </Tabs>
     </AuthLayout>
   );

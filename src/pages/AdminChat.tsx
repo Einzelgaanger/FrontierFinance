@@ -284,15 +284,15 @@ const AdminChat = () => {
               className={`${sidebarOpen ? 'w-72' : 'w-0'
                 } transition-all duration-300 overflow-hidden flex flex-col shrink-0`}
             >
-              <Card className="h-full finance-card flex flex-col">
-                <div className="p-3 border-b border-white/30 flex items-center justify-between flex-shrink-0">
-                  <h3 className="text-sm font-semibold text-slate-800">Conversations</h3>
+              <Card className="h-full finance-card flex flex-col border-border bg-card">
+                <div className="p-3 border-b border-border flex items-center justify-between flex-shrink-0">
+                  <h3 className="text-sm font-semibold text-foreground">Conversations</h3>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={createNewChat}
                     title="New Chat"
-                    className="text-slate-700 hover:bg-white/40 rounded-lg"
+                    className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-lg"
                   >
                     <Plus className="w-4 h-4" />
                   </Button>
@@ -300,21 +300,21 @@ const AdminChat = () => {
                 <div className="flex-1 overflow-y-auto p-2">
                   {loadingConversations ? (
                     <div className="p-4 text-center">
-                      <Loader2 className="w-5 h-5 animate-spin mx-auto text-slate-500" />
+                      <Loader2 className="w-5 h-5 animate-spin mx-auto text-muted-foreground" />
                     </div>
                   ) : conversations.length === 0 ? (
-                    <div className="p-4 text-center text-sm text-slate-600">No conversations yet</div>
+                    <div className="p-4 text-center text-sm text-muted-foreground">No conversations yet</div>
                   ) : (
                     conversations.map(conv => (
                       <div
                         key={conv.id}
-                        className={`group flex items-center gap-2 px-3 py-2.5 rounded-xl cursor-pointer transition-all ${activeConversationId === conv.id
-                            ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-300/50'
-                            : 'hover:bg-white/40 border border-transparent'
+                        className={`group flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-colors border ${activeConversationId === conv.id
+                            ? 'bg-muted/60 border-border shadow-sm'
+                            : 'border-transparent hover:bg-muted/40'
                           }`}
                         onClick={() => selectConversation(conv.id)}
                       >
-                        <MessageSquare className="w-4 h-4 text-slate-500 flex-shrink-0" />
+                        <MessageSquare className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                         {editingId === conv.id ? (
                           <div className="flex-1 flex items-center gap-1">
                             <Input
@@ -353,29 +353,29 @@ const AdminChat = () => {
                           </div>
                         ) : (
                           <>
-                            <span className="flex-1 text-sm text-slate-800 truncate">{conv.title}</span>
+                            <span className="flex-1 text-sm text-foreground truncate">{conv.title}</span>
                             <div className="hidden group-hover:flex items-center gap-0.5">
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-6 w-6 p-0"
+                                className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
                                 onClick={e => {
                                   e.stopPropagation();
                                   setEditingId(conv.id);
                                   setEditTitle(conv.title);
                                 }}
                               >
-                                <Edit3 className="w-3 h-3 text-slate-500" />
+                                <Edit3 className="w-3 h-3" />
                               </Button>
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="h-6 w-6 p-0"
+                                    className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
                                     onClick={e => e.stopPropagation()}
                                   >
-                                    <Trash2 className="w-3 h-3 text-slate-500 hover:text-red-600" />
+                                    <Trash2 className="w-3 h-3" />
                                   </Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
@@ -409,68 +409,68 @@ const AdminChat = () => {
             {/* Toggle sidebar */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="flex items-center justify-center w-8 bg-white border border-slate-200 hover:border-gold-500/30 rounded-r-lg transition-colors shrink-0 shadow-sm"
+              className="flex items-center justify-center w-8 bg-card border border-border hover:bg-muted/50 rounded-r-lg transition-colors shrink-0 shadow-sm text-muted-foreground hover:text-foreground"
             >
               {sidebarOpen ? (
-                <ChevronLeft className="w-4 h-4 text-slate-700" />
+                <ChevronLeft className="w-4 h-4" />
               ) : (
-                <ChevronRight className="w-4 h-4 text-slate-700" />
+                <ChevronRight className="w-4 h-4" />
               )}
             </button>
 
             {/* Main chat card - CFF style */}
             <div className="flex-1 min-w-0 flex items-stretch ml-2">
-              <Card className="flex-1 finance-card flex flex-col relative min-h-0">
-                <CardHeader className="border-b border-slate-200/60 bg-amber-50 flex-shrink-0 py-3 px-4">
+              <Card className="flex-1 finance-card flex flex-col relative min-h-0 border-border bg-card">
+                <CardHeader className="border-b border-slate-200/60 bg-card flex-shrink-0 py-3 px-4">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <CardTitle className="flex items-center gap-2 text-base font-display font-normal text-navy-900">
-                        <div className="w-8 h-8 rounded-lg bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                      <CardTitle className="flex items-center gap-2 text-base font-display font-normal text-foreground">
+                        <div className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shrink-0 shadow-sm">
                           <Brain className="w-4 h-4" />
                         </div>
                         Chat with Portiq
                       </CardTitle>
-                      <CardDescription className="text-xs mt-1 text-slate-600 font-sans">
+                      <CardDescription className="text-xs mt-1 text-muted-foreground font-sans">
                         Ask about surveys, applications, network data, and more. Your conversations are private.
                       </CardDescription>
                     </div>
                     <div className="flex gap-3 shrink-0">
-                      <div className="text-center">
-                        <Zap className="w-3 h-3 text-gold-600 mx-auto mb-0.5" />
-                        <p className="text-[10px] font-medium text-navy-900 leading-tight font-sans">Multi-Table</p>
-                        <p className="text-[10px] text-slate-600 leading-tight font-sans">Access</p>
+                      <div className="text-center rounded-md px-2 py-1 bg-muted/50 border border-border/50">
+                        <Zap className="w-3 h-3 text-amber-600 mx-auto mb-0.5" />
+                        <p className="text-[10px] font-medium text-foreground leading-tight">Multi-Table</p>
+                        <p className="text-[10px] text-muted-foreground leading-tight">Access</p>
                       </div>
-                      <div className="text-center">
-                        <Shield className="w-3 h-3 text-purple-600 mx-auto mb-0.5" />
-                        <p className="text-[10px] font-medium text-purple-900 leading-tight">Secure</p>
-                        <p className="text-[10px] text-purple-700 leading-tight">Admin</p>
+                      <div className="text-center rounded-md px-2 py-1 bg-muted/50 border border-border/50">
+                        <Shield className="w-3 h-3 text-emerald-600 mx-auto mb-0.5" />
+                        <p className="text-[10px] font-medium text-foreground leading-tight">Secure</p>
+                        <p className="text-[10px] text-muted-foreground leading-tight">Admin</p>
                       </div>
-                      <div className="text-center">
-                        <BarChart3 className="w-3 h-3 text-pink-600 mx-auto mb-0.5" />
-                        <p className="text-[10px] font-medium text-pink-900 leading-tight">Smart</p>
-                        <p className="text-[10px] text-pink-700 leading-tight">Insights</p>
+                      <div className="text-center rounded-md px-2 py-1 bg-muted/50 border border-border/50">
+                        <BarChart3 className="w-3 h-3 text-blue-600 mx-auto mb-0.5" />
+                        <p className="text-[10px] font-medium text-foreground leading-tight">Smart</p>
+                        <p className="text-[10px] text-muted-foreground leading-tight">Insights</p>
                       </div>
                     </div>
                   </div>
                 </CardHeader>
 
-                <div className="flex-1 overflow-y-auto min-h-0 p-6 pb-24">
+                <div className="flex-1 overflow-y-auto min-h-0 p-6 pb-24 bg-background/50">
                   <div className="space-y-4">
                     {messages.length === 0 && !activeConversationId ? (
                       <div className="text-center py-12 space-y-4">
-                        <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto">
-                          <Brain className="w-10 h-10 text-blue-600" />
+                        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto bg-muted border border-border shadow-sm">
+                          <Brain className="w-10 h-10 text-muted-foreground" />
                         </div>
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-800 mb-2">Welcome to Portiq</h3>
-                          <p className="text-gray-600 max-w-md mx-auto">
+                        <div className="rounded-lg border border-border bg-card p-6 max-w-md mx-auto shadow-sm">
+                          <h3 className="text-lg font-semibold text-foreground mb-2">Welcome to Portiq</h3>
+                          <p className="text-sm text-muted-foreground">
                             Start a conversation by typing a question below, or open an existing chat from the sidebar.
                           </p>
                         </div>
                       </div>
                     ) : messages.length === 0 ? (
-                      <div className="text-center py-12">
-                        <p className="text-gray-500">Send a message to start the conversation</p>
+                      <div className="text-center py-12 rounded-lg border border-dashed border-border bg-muted/30 max-w-sm mx-auto">
+                        <p className="text-sm text-muted-foreground">Send a message to start the conversation</p>
                       </div>
                     ) : (
                       messages.map((message, index) => (
@@ -486,7 +486,7 @@ const AdminChat = () => {
                               {message.role === 'user' ? (
                                 <>
                                   <AvatarImage src={userProfile?.profile_picture_url} />
-                                  <AvatarFallback className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs">
+                                  <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                                     {userProfile?.company_name?.charAt(0).toUpperCase() ||
                                       userProfile?.full_name?.charAt(0).toUpperCase() ||
                                       user?.email?.charAt(0).toUpperCase() ||
@@ -496,7 +496,7 @@ const AdminChat = () => {
                               ) : (
                                 <>
                                   <AvatarImage src="/robot.png" />
-                                  <AvatarFallback className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                                  <AvatarFallback className="bg-muted text-muted-foreground">
                                     <Brain className="w-4 h-4" />
                                   </AvatarFallback>
                                 </>
@@ -505,16 +505,16 @@ const AdminChat = () => {
                             <div className="flex flex-col">
                               <div
                                 className={`text-xs font-medium mb-1 ${message.role === 'user' ? 'text-right' : 'text-left'
-                                  }`}
+                                  } text-muted-foreground`}
                               >
                                 {message.role === 'user'
                                   ? userProfile?.company_name || userProfile?.full_name || user?.email?.split('@')[0] || 'You'
                                   : 'Portiq'}
                               </div>
                               <div
-                                className={`rounded-2xl px-4 py-3 ${message.role === 'user'
-                                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg max-w-[600px]'
-                                    : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 text-gray-800 shadow-lg border border-blue-200/50 backdrop-blur-sm max-w-[90vw] lg:max-w-[800px]'
+                                className={`rounded-xl px-4 py-3 shadow-sm max-w-[90vw] lg:max-w-[800px] ${message.role === 'user'
+                                    ? 'bg-primary text-primary-foreground border border-primary/90'
+                                    : 'bg-card text-card-foreground border border-border'
                                   }`}
                               >
                                 {message.role === 'assistant' ? (
@@ -531,31 +531,31 @@ const AdminChat = () => {
                     {loading && (
                       <div className="flex justify-start">
                         <div className="flex items-start gap-3">
-                          <Avatar className="w-8 h-8 flex-shrink-0">
+                          <Avatar className="w-8 h-8 flex-shrink-0 border border-border">
                             <AvatarImage src="/robot.png" />
-                            <AvatarFallback className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                            <AvatarFallback className="bg-muted text-muted-foreground">
                               <Brain className="w-4 h-4" />
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex flex-col">
-                            <div className="text-xs font-medium mb-1 text-left">Portiq</div>
-                            <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-2xl px-4 py-3 shadow-lg border border-blue-200/50 backdrop-blur-sm">
+                            <div className="text-xs font-medium mb-1 text-left text-muted-foreground">Portiq</div>
+                            <div className="bg-card rounded-xl px-4 py-3 shadow-sm border border-border">
                               <div className="flex items-center gap-2">
                                 <div className="flex gap-1">
                                   <div
-                                    className="w-2 h-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full animate-bounce"
+                                    className="w-2 h-2 bg-primary/70 rounded-full animate-bounce"
                                     style={{ animationDelay: '0ms' }}
                                   />
                                   <div
-                                    className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-bounce"
+                                    className="w-2 h-2 bg-primary/50 rounded-full animate-bounce"
                                     style={{ animationDelay: '150ms' }}
                                   />
                                   <div
-                                    className="w-2 h-2 bg-gradient-to-r from-pink-500 to-red-500 rounded-full animate-bounce"
+                                    className="w-2 h-2 bg-primary/30 rounded-full animate-bounce"
                                     style={{ animationDelay: '300ms' }}
                                   />
                                 </div>
-                                <span className="text-sm text-gray-600">Portiq is thinking...</span>
+                                <span className="text-sm text-muted-foreground">Portiq is thinking...</span>
                               </div>
                             </div>
                           </div>
@@ -571,11 +571,11 @@ const AdminChat = () => {
                   {/* Output format indicator */}
                   {outputFormat && (
                     <div className="flex items-center gap-2 mb-1.5 px-2">
-                      <span className="text-xs text-slate-500">Output:</span>
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 flex items-center gap-1">
+                      <span className="text-xs text-muted-foreground">Output:</span>
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-secondary/50 text-secondary-foreground border border-border flex items-center gap-1">
                         {formatOptions.find(f => f.value === outputFormat)?.icon}
                         {formatOptions.find(f => f.value === outputFormat)?.label}
-                        <button onClick={() => setOutputFormat(null)} className="ml-1 hover:text-blue-900"><X className="w-3 h-3" /></button>
+                        <button onClick={() => setOutputFormat(null)} className="ml-1 hover:opacity-80 rounded"><X className="w-3 h-3" /></button>
                       </span>
                     </div>
                   )}
@@ -584,7 +584,7 @@ const AdminChat = () => {
                     {userRole === 'admin' && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-[44px] px-2.5 flex-shrink-0 border-slate-200 bg-white rounded-2xl shadow-lg" title="Output format">
+                          <Button variant="outline" size="sm" className="h-[44px] px-2.5 flex-shrink-0 border-border bg-card rounded-xl shadow-sm hover:bg-muted/50" title="Output format">
                             <FileText className="w-4 h-4" />
                           </Button>
                         </DropdownMenuTrigger>
@@ -605,7 +605,7 @@ const AdminChat = () => {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     )}
-                    <div className="relative flex-1 bg-white rounded-2xl border-2 border-slate-200 shadow-lg min-h-[44px] max-h-[200px] focus-within:border-blue-400 focus-within:shadow-xl transition-all">
+                    <div className="relative flex-1 bg-card rounded-xl border border-border shadow-sm min-h-[44px] max-h-[200px] focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
                       <Textarea
                         value={input}
                         onChange={e => {
@@ -623,7 +623,7 @@ const AdminChat = () => {
                       <Button
                         onClick={sendMessage}
                         disabled={loading || !input.trim()}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full w-8 h-8 p-0 shadow-md"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full w-8 h-8 p-0 shadow-sm"
                       >
                         <Send className="w-4 h-4" />
                       </Button>
