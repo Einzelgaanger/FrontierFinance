@@ -132,6 +132,7 @@ serve(async (req) => {
     const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'signup',
       email,
+      password: password,
       options: {
         redirectTo: 'https://frontierfinance.org/auth'
       }
