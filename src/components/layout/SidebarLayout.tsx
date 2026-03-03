@@ -1,66 +1,37 @@
-import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
-  LayoutDashboard,
   BarChart3,
-  Shield,
   Network,
   LogOut,
   Menu,
   X,
-  Crown,
-  ChevronLeft,
-  ChevronRight,
-  FileText,
-  Calendar,
-  Send,
-  User,
-  Brain,
-  BookOpen,
   Home,
   Users,
   ClipboardList,
-  Sparkles,
   Newspaper,
   LockKeyhole,
   UserCircle,
-  PlusCircle,
-  Rocket
+  Brain,
+  Rocket,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
   headerActions?: ReactNode;
 }
 
-interface NotificationItem {
-  id: string;
-  title: string;
-  message: string;
-  type: 'info' | 'success' | 'warning' | 'error';
-  timestamp: string;
-  read: boolean;
-}
-
-interface RecentActivity {
-  id: string;
-  action: string;
-  timestamp: string;
-  icon: any;
-  color: string;
-}
-
 const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
   const { user, userRole, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // mobile
+  const [expanded, setExpanded] = useState(false); // desktop hover
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -76,296 +47,366 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     fetchAvatar();
   }, [user?.id]);
 
-
-  const scrollToTop = () => {
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.documentElement.scrollLeft = 0;
-    document.body.scrollTop = 0;
-    document.body.scrollLeft = 0;
-  };
-
   const handleNavigation = (to: string) => {
-    scrollToTop();
+    window.scrollTo(0, 0);
     navigate(to);
     setSidebarOpen(false);
   };
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/");
+    navigate('/');
   };
 
   const navigationItems = [
     {
-      name: "Dashboard",
-      href: "/dashboard",
+      name: 'Dashboard',
+      href: '/dashboard',
       icon: Home,
-      roles: ["admin", "member", "viewer"],
-      description: (userRole === "viewer" || !userRole) ? "Your overview and insights" : userRole === "member" ? "Your member dashboard and activity" : "Overview and analytics",
-      badge: null,
-      color: "blue"
+      roles: ['admin', 'member', 'viewer'],
     },
     {
-      name: "Network",
-      href: "/network",
+      name: 'Network',
+      href: '/network',
       icon: Users,
-      roles: ["admin", "member", "viewer"],
-      description: (userRole === "viewer" || !userRole) ? "Browse approved fund managers" : "Fund manager directory",
-      badge: null,
-      color: "green"
+      roles: ['admin', 'member', 'viewer'],
     },
     {
-      name: "Application",
-      href: "/application",
+      name: 'Application',
+      href: '/application',
       icon: ClipboardList,
-      roles: ["viewer"],
-      description: "Submit membership application",
-      badge: null,
-      color: "orange"
+      roles: ['viewer'],
     },
     {
-      name: "Community hub",
-      href: "/community",
+      name: 'Community Hub',
+      href: '/community',
       icon: Newspaper,
-      roles: ["admin", "member", "viewer"],
-      description: "Network updates & learning resources",
-      badge: null,
-      color: "teal"
+      roles: ['admin', 'member', 'viewer'],
     },
     {
-      name: "Analytics",
-      href: "/analytics",
+      name: 'Analytics',
+      href: '/analytics',
       icon: BarChart3,
-      roles: ["admin"],
-      description: "Data insights and reports",
-      badge: null,
-      color: "red"
+      roles: ['admin'],
     },
     {
-      name: "Launch +",
-      href: "/admin/launch-plus-analytics",
+      name: 'Launch +',
+      href: '/admin/launch-plus-analytics',
       icon: Rocket,
-      roles: ["admin"],
-      description: "LAUNCH+ assessment submissions",
-      badge: null,
-      color: "purple"
+      roles: ['admin'],
     },
     {
-      name: "Admin Panel",
-      href: "/admin",
+      name: 'Admin Panel',
+      href: '/admin',
       icon: LockKeyhole,
-      roles: ["admin"],
-      description: "User and system management",
-      badge: null,
-      color: "black"
+      roles: ['admin'],
     },
     {
-      name: "My Profile",
-      href: "/profile",
+      name: 'My Profile',
+      href: '/profile',
       icon: UserCircle,
-      roles: ["admin", "member", "viewer"],
-      description: "Manage your company information and profile",
-      badge: null,
-      color: "indigo"
+      roles: ['admin', 'member', 'viewer'],
     },
     {
-      name: "Portiq",
-      href: "/admin-chat",
+      name: 'Portiq',
+      href: '/admin-chat',
       icon: Brain,
-      roles: ["admin", "member"],
-      description: "Personal AI chat assistant",
-      badge: null,
-      color: "purple"
+      roles: ['admin', 'member'],
     },
   ];
 
-
-  const filteredNavItems = navigationItems.filter(item =>
+  const filteredNavItems = navigationItems.filter((item) =>
     userRole ? item.roles.includes(userRole) : item.roles.includes('viewer')
   );
 
-  // Helper function to get clean color classes
-  const getSmoothColorClasses = (color: string, isActive: boolean = false) => {
-    return {
-      icon: isActive ? 'text-black' : 'text-[#f5f5dc]',
-      iconBg: isActive ? 'bg-[#f5f5dc]' : 'bg-[#f5f5dc]/20',
-      text: isActive ? 'text-[#f5f5dc] font-semibold' : 'text-[#f5f5dc]',
-      bg: isActive ? 'bg-[#f5f5dc]/20' : 'bg-transparent',
-      hover: 'hover:bg-[#f5f5dc]/10 hover:shadow-lg hover:scale-[1.02]',
-      border: 'border-transparent',
-      accent: 'bg-[#f5f5dc]'
-    };
-  };
-
   const isActive = (href: string) => {
-    if (href === "/dashboard" && location.pathname === "/dashboard") return true;
-    if (href === "/profile" && location.pathname === "/profile") return true;
-    if (href === "/network" && location.pathname === "/network") return true;
-    if (href === "/analytics" && location.pathname === "/analytics") return true;
-    if (href === "/admin/launch-plus-analytics" && location.pathname === "/admin/launch-plus-analytics") return true;
-    if (href === "/admin" && location.pathname === "/admin") return true;
-    if (href === "/application" && location.pathname === "/application") return true;
-    if (href === "/admin-chat" && location.pathname === "/admin-chat") return true;
-    if (href === "/community" && (location.pathname === "/community" || location.pathname === "/blogs")) return true;
-    return false;
+    if (href === '/community') return location.pathname === '/community' || location.pathname === '/blogs';
+    return location.pathname === href;
   };
 
-
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.metaKey) {
-        switch (e.key.toLowerCase()) {
-          case 'd':
-            e.preventDefault();
-            navigate('/dashboard');
-            break;
-          case 's':
-            e.preventDefault();
-            navigate('/survey');
-            break;
-          case 'n':
-            e.preventDefault();
-            navigate('/network');
-            break;
-          case 'p':
-            e.preventDefault();
-            navigate('/admin');
-            break;
-          case 'b':
-            e.preventDefault();
-            setSidebarCollapsed(!sidebarCollapsed);
-            break;
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [navigate, sidebarCollapsed]);
-
-  return (
-    <div className="min-h-screen min-h-[100dvh] transition-all duration-300 bg-slate-100 overflow-x-hidden">
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden backdrop-blur-sm"
-          onClick={() => setSidebarOpen(false)}
-          aria-hidden
-        />
+  // Desktop sidebar
+  const DesktopSidebar = () => (
+    <motion.div
+      className={cn(
+        'hidden lg:flex flex-col fixed inset-y-0 left-0 z-50',
+        'bg-navy-900 border-r border-navy-800 shadow-2xl',
+        'overflow-hidden'
       )}
-
-      {/* Sidebar - safe area on notched devices */}
-      <div
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 transform transition-all duration-300 ease-in-out lg:translate-x-0",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          "w-64 sm:w-72 lg:w-56",
-          "bg-navy-900 shadow-2xl overflow-y-auto overflow-x-hidden font-sans border-r border-navy-800",
-          "pl-[env(safe-area-inset-left,0)]"
-        )}
-      >
-        <div className="flex flex-col min-h-screen min-h-[100dvh] overflow-hidden">
-          {/* CFF Logo at Top */}
-          <div className="p-4 pt-[max(1rem,env(safe-area-inset-top,0))] border-b border-navy-800">
-            <img
-              src="/CFF%20LOGO.png"
-              alt="CFF Logo"
-              className="h-12 w-auto object-contain mx-auto"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-              }}
-            />
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1 overflow-hidden min-h-0">
-            {filteredNavItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
-              const isPortiq = item.name === "Portiq";
-
-              return (
-                <button
-                  key={item.name}
-                  onClick={() => handleNavigation(item.href)}
-                  className={cn(
-                    "w-full flex items-center gap-3 min-h-[44px] px-4 py-3 rounded-xl transition-all duration-200 group touch-manipulation text-left",
-                    active
-                      ? "bg-gold-500 text-navy-950"
-                      : "text-slate-300 hover:bg-white/10 hover:text-white"
-                  )}
-                  title={item.name}
-                >
-                  {isPortiq ? (
-                    <img
-                      src="/robot.png"
-                      alt="Portiq"
-                      className="w-5 h-5 flex-shrink-0 object-contain"
-                    />
-                  ) : (
-                    <Icon className="w-5 h-5 flex-shrink-0" />
-                  )}
-                  <span className="font-medium text-sm">{item.name}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Email and Profile Picture at Bottom */}
-          <div className="p-4 pb-[max(1rem,env(safe-area-inset-bottom,0))] border-t border-navy-800 space-y-3">
-            {/* Email */}
-            <div className="px-4">
-              <p className="text-xs text-slate-400 mb-1">Email</p>
-              <p className="text-sm text-white truncate">{user?.email}</p>
-            </div>
-
-            {/* Profile Picture */}
-            <div className="flex items-center gap-3 px-4">
-              {avatarUrl ? (
-                <img src={avatarUrl} alt="Profile" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
-              ) : (
-                <div className="w-10 h-10 bg-gold-500 rounded-lg flex items-center justify-center text-navy-950 font-semibold text-sm flex-shrink-0">
-                  {user?.email?.charAt(0).toUpperCase() || 'U'}
-                </div>
-              )}
-              <div>
-                <p className="text-sm font-medium text-white capitalize">
-                  {userRole || 'Viewer'}
-                </p>
-                <button
-                  onClick={handleSignOut}
-                  className="text-xs text-slate-400 hover:text-red-400 transition-colors"
-                >
-                  Sign Out
-                </button>
-              </div>
-            </div>
-          </div>
-
-        </div>
+      animate={{ width: expanded ? 220 : 68 }}
+      transition={{ duration: 0.25, ease: 'easeInOut' }}
+      onMouseEnter={() => setExpanded(true)}
+      onMouseLeave={() => setExpanded(false)}
+    >
+      {/* Logo */}
+      <div className="flex items-center justify-center h-16 border-b border-navy-800 px-3 shrink-0">
+        <img
+          src="/CFF%20LOGO.png"
+          alt="CFF"
+          className={cn(
+            'object-contain transition-all duration-200',
+            expanded ? 'h-10 w-auto' : 'h-8 w-8'
+          )}
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none';
+          }}
+        />
       </div>
 
-      {/* Main Content - no top header bar; pages use their own section-label + title */}
-      <div className="flex flex-col min-w-0 lg:ml-56">
-        {/* Mobile only: menu button to open sidebar - safe area and touch target */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="lg:hidden fixed z-40 text-slate-600 bg-white/95 hover:bg-white shadow-md border border-slate-200/80 rounded-xl min-h-[44px] min-w-[44px] p-0 touch-manipulation top-[max(0.75rem,env(safe-area-inset-top,0))] left-[max(0.75rem,env(safe-area-inset-left,0))]"
-          onClick={() => setSidebarOpen(true)}
-          aria-label="Open menu"
+      {/* Nav items */}
+      <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto overflow-x-hidden">
+        {filteredNavItems.map((item) => {
+          const Icon = item.icon;
+          const active = isActive(item.href);
+          const isPortiq = item.name === 'Portiq';
+
+          return (
+            <button
+              key={item.name}
+              onClick={() => handleNavigation(item.href)}
+              className={cn(
+                'w-full flex items-center gap-3 rounded-xl transition-all duration-200 group',
+                'min-h-[44px] px-3',
+                active
+                  ? 'bg-gold-500 text-navy-950 shadow-md shadow-gold-500/20'
+                  : 'text-slate-300 hover:bg-white/10 hover:text-white'
+              )}
+              title={item.name}
+            >
+              <div className="w-7 h-7 flex items-center justify-center shrink-0">
+                {isPortiq ? (
+                  <img
+                    src="/robot.png"
+                    alt="Portiq"
+                    className="w-5 h-5 object-contain"
+                  />
+                ) : (
+                  <Icon className="w-5 h-5" />
+                )}
+              </div>
+              <AnimatePresence>
+                {expanded && (
+                  <motion.span
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: 'auto' }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-sm font-medium whitespace-nowrap overflow-hidden"
+                  >
+                    {item.name}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Bottom user section */}
+      <div className="border-t border-navy-800 p-2 shrink-0">
+        <div className="flex items-center gap-3 px-2 py-2 rounded-xl">
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt="Profile"
+              className="w-8 h-8 rounded-lg object-cover shrink-0"
+            />
+          ) : (
+            <div className="w-8 h-8 bg-gold-500 rounded-lg flex items-center justify-center text-navy-950 font-bold text-xs shrink-0">
+              {user?.email?.charAt(0).toUpperCase() || 'U'}
+            </div>
+          )}
+          <AnimatePresence>
+            {expanded && (
+              <motion.div
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 'auto' }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden whitespace-nowrap"
+              >
+                <p className="text-xs font-medium text-white capitalize">
+                  {userRole || 'Viewer'}
+                </p>
+                <p className="text-[10px] text-slate-400 truncate max-w-[130px]">
+                  {user?.email}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        <button
+          onClick={handleSignOut}
+          className={cn(
+            'w-full flex items-center gap-3 rounded-xl transition-all duration-200',
+            'min-h-[40px] px-3 text-slate-400 hover:bg-red-500/10 hover:text-red-400'
+          )}
+          title="Sign Out"
         >
-          <Menu className="w-5 h-5" />
-        </Button>
+          <div className="w-7 h-7 flex items-center justify-center shrink-0">
+            <LogOut className="w-4 h-4" />
+          </div>
+          <AnimatePresence>
+            {expanded && (
+              <motion.span
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 'auto' }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.2 }}
+                className="text-sm whitespace-nowrap overflow-hidden"
+              >
+                Sign Out
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
+      </div>
+    </motion.div>
+  );
+
+  // Mobile sidebar
+  const MobileSidebar = () => (
+    <>
+      {/* Overlay */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Drawer */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className={cn(
+              'fixed inset-y-0 left-0 z-50 w-72 lg:hidden',
+              'bg-navy-900 shadow-2xl flex flex-col',
+              'pl-[env(safe-area-inset-left,0)]'
+            )}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between h-16 px-4 border-b border-navy-800 pt-[env(safe-area-inset-top,0)] shrink-0">
+              <img
+                src="/CFF%20LOGO.png"
+                alt="CFF"
+                className="h-10 w-auto object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="w-9 h-9 flex items-center justify-center rounded-lg text-slate-400 hover:bg-white/10 hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Nav */}
+            <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+              {filteredNavItems.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.href);
+                const isPortiq = item.name === 'Portiq';
+
+                return (
+                  <button
+                    key={item.name}
+                    onClick={() => handleNavigation(item.href)}
+                    className={cn(
+                      'w-full flex items-center gap-3 rounded-xl transition-all duration-200',
+                      'min-h-[48px] px-4 text-left',
+                      active
+                        ? 'bg-gold-500 text-navy-950 shadow-md'
+                        : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                    )}
+                  >
+                    {isPortiq ? (
+                      <img
+                        src="/robot.png"
+                        alt="Portiq"
+                        className="w-5 h-5 object-contain shrink-0"
+                      />
+                    ) : (
+                      <Icon className="w-5 h-5 shrink-0" />
+                    )}
+                    <span className="text-sm font-medium">{item.name}</span>
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Bottom */}
+            <div className="border-t border-navy-800 p-4 pb-[max(1rem,env(safe-area-inset-bottom,0))] space-y-3 shrink-0">
+              <div className="flex items-center gap-3 px-2">
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt="Profile"
+                    className="w-10 h-10 rounded-lg object-cover shrink-0"
+                  />
+                ) : (
+                  <div className="w-10 h-10 bg-gold-500 rounded-lg flex items-center justify-center text-navy-950 font-bold text-sm shrink-0">
+                    {user?.email?.charAt(0).toUpperCase() || 'U'}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-white capitalize">
+                    {userRole || 'Viewer'}
+                  </p>
+                  <p className="text-xs text-slate-400 truncate">
+                    {user?.email}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="w-full flex items-center gap-3 rounded-xl min-h-[44px] px-4 text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+              >
+                <LogOut className="w-5 h-5 shrink-0" />
+                <span className="text-sm">Sign Out</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+
+  return (
+    <div className="min-h-screen min-h-[100dvh] bg-slate-100 overflow-x-hidden">
+      <DesktopSidebar />
+      <MobileSidebar />
+
+      {/* Mobile menu button */}
+      <Button
+        variant="ghost"
+        size="sm"
+        className="lg:hidden fixed z-40 text-slate-600 bg-white/95 hover:bg-white shadow-md border border-slate-200/80 rounded-xl min-h-[44px] min-w-[44px] p-0 touch-manipulation top-[max(0.75rem,env(safe-area-inset-top,0))] left-[max(0.75rem,env(safe-area-inset-left,0))]"
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Open menu"
+      >
+        <Menu className="w-5 h-5" />
+      </Button>
+
+      {/* Main content - offset by collapsed sidebar width on desktop */}
+      <div className="flex flex-col min-w-0 lg:ml-[68px]">
         <main className="flex-1 min-h-0 pt-14 sm:pt-16 lg:pt-0 px-3 sm:px-4 lg:px-0 pb-[env(safe-area-inset-bottom,0)]">
-          {headerActions ? (
+          {headerActions && (
             <div className="flex justify-end items-center gap-2 px-4 py-2 lg:px-6">
               {headerActions}
             </div>
-          ) : null}
+          )}
           {children}
         </main>
       </div>
