@@ -196,6 +196,7 @@ const AdminChat = () => {
     }
 
     const userMessage = input.trim();
+    const currentFormat = outputFormat;
     setInput('');
     resetTextareaHeight();
     const userMsg: Message = { role: 'user', content: userMessage };
@@ -213,7 +214,7 @@ const AdminChat = () => {
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: { 
           messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
-          outputFormat: outputFormat || 'text'
+          outputFormat: currentFormat || 'text'
         }
       });
 
@@ -221,15 +222,40 @@ const AdminChat = () => {
 
       const resText = (data as any)?.reply ?? (data as any)?.response;
       if (resText) {
-        const assistantMsg: Message = { role: 'assistant', content: resText };
-        setMessages(prev => [...prev, assistantMsg]);
-        await supabase.from('chat_messages').insert({
-          conversation_id: convId,
-          user_id: user.id,
-          role: 'assistant',
-          content: resText
-        });
+        // If format is excel or pdf, download directly instead of showing in chat
+        if (currentFormat === 'excel') {
+          downloadAsExcel(resText, `portiq-${Date.now()}`);
+          const assistantMsg: Message = { role: 'assistant', content: '📊 Your Excel file has been downloaded.' };
+          setMessages(prev => [...prev, assistantMsg]);
+          await supabase.from('chat_messages').insert({
+            conversation_id: convId,
+            user_id: user.id,
+            role: 'assistant',
+            content: resText
+          });
+        } else if (currentFormat === 'pdf') {
+          downloadAsPdf(resText, `portiq-report-${Date.now()}`);
+          const assistantMsg: Message = { role: 'assistant', content: '📄 Your PDF report has been downloaded.' };
+          setMessages(prev => [...prev, assistantMsg]);
+          await supabase.from('chat_messages').insert({
+            conversation_id: convId,
+            user_id: user.id,
+            role: 'assistant',
+            content: resText
+          });
+        } else {
+          const assistantMsg: Message = { role: 'assistant', content: resText };
+          setMessages(prev => [...prev, assistantMsg]);
+          await supabase.from('chat_messages').insert({
+            conversation_id: convId,
+            user_id: user.id,
+            role: 'assistant',
+            content: resText
+          });
+        }
         await supabase.from('chat_conversations').update({ updated_at: new Date().toISOString() }).eq('id', convId);
+        // Reset format after sending
+        setOutputFormat(null);
       } else {
         throw new Error('Empty response');
       }
@@ -492,29 +518,7 @@ const AdminChat = () => {
                                   }`}
                               >
                                 {message.role === 'assistant' ? (
-                                  <>
-                                    <MarkdownRenderer content={message.content} />
-                                    {/* Download buttons for assistant messages */}
-                                    {userRole === 'admin' && (
-                                      <div className="flex items-center gap-2 mt-3 pt-2 border-t border-slate-200/50">
-                                        <span className="text-[10px] text-slate-400 uppercase tracking-wider">Export:</span>
-                                        <button
-                                          onClick={() => downloadAsExcel(message.content, `portiq-${Date.now()}`)}
-                                          className="flex items-center gap-1 text-[11px] text-green-700 hover:text-green-900 bg-green-50 hover:bg-green-100 px-2 py-1 rounded-md transition-colors"
-                                        >
-                                          <FileSpreadsheet className="w-3 h-3" />
-                                          Excel
-                                        </button>
-                                        <button
-                                          onClick={() => downloadAsPdf(message.content, `portiq-report-${Date.now()}`)}
-                                          className="flex items-center gap-1 text-[11px] text-red-700 hover:text-red-900 bg-red-50 hover:bg-red-100 px-2 py-1 rounded-md transition-colors"
-                                        >
-                                          <File className="w-3 h-3" />
-                                          PDF
-                                        </button>
-                                      </div>
-                                    )}
-                                  </>
+                                  <MarkdownRenderer content={message.content} />
                                 ) : (
                                   <div className="text-sm whitespace-pre-wrap break-words">{message.content}</div>
                                 )}
