@@ -72,9 +72,12 @@ export default function AdminEditProfileDialog({ open, onClose, userId, onSaved 
     const fileExt = file.name.split('.').pop();
     const filePath = `${userId}/profile.${fileExt}`;
 
+    // Remove existing file first to avoid upsert RLS issues
+    await supabase.storage.from('profile-pictures').remove([filePath]);
+
     const { error: uploadError } = await supabase.storage
       .from('profile-pictures')
-      .upload(filePath, file, { upsert: true });
+      .upload(filePath, file, { upsert: false, contentType: file.type });
 
     if (uploadError) {
       toast({ title: 'Upload failed', description: uploadError.message, variant: 'destructive' });
@@ -83,7 +86,8 @@ export default function AdminEditProfileDialog({ open, onClose, userId, onSaved 
     }
 
     const { data: urlData } = supabase.storage.from('profile-pictures').getPublicUrl(filePath);
-    setForm(prev => ({ ...prev, profile_photo_url: urlData.publicUrl }));
+    // Append cache-buster to force refresh
+    setForm(prev => ({ ...prev, profile_photo_url: `${urlData.publicUrl}?t=${Date.now()}` }));
     setUploading(false);
   };
 
