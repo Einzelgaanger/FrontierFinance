@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -72,9 +72,12 @@ export default function AdminEditProfileDialog({ open, onClose, userId, onSaved 
     const fileExt = file.name.split('.').pop();
     const filePath = `${userId}/profile.${fileExt}`;
 
+    // Remove existing file first to avoid upsert RLS issues
+    await supabase.storage.from('profile-pictures').remove([filePath]);
+
     const { error: uploadError } = await supabase.storage
       .from('profile-pictures')
-      .upload(filePath, file, { upsert: true });
+      .upload(filePath, file, { upsert: false, contentType: file.type });
 
     if (uploadError) {
       toast({ title: 'Upload failed', description: uploadError.message, variant: 'destructive' });
@@ -83,7 +86,8 @@ export default function AdminEditProfileDialog({ open, onClose, userId, onSaved 
     }
 
     const { data: urlData } = supabase.storage.from('profile-pictures').getPublicUrl(filePath);
-    setForm(prev => ({ ...prev, profile_photo_url: urlData.publicUrl }));
+    // Append cache-buster to force refresh
+    setForm(prev => ({ ...prev, profile_photo_url: `${urlData.publicUrl}?t=${Date.now()}` }));
     setUploading(false);
   };
 
@@ -119,6 +123,7 @@ export default function AdminEditProfileDialog({ open, onClose, userId, onSaved 
             <Pencil className="w-5 h-5" />
             Edit Profile
           </DialogTitle>
+          <DialogDescription>Update this user's profile information and photo.</DialogDescription>
         </DialogHeader>
 
         {loading ? (
