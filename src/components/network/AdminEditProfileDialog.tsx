@@ -123,6 +123,7 @@ export default function AdminEditProfileDialog({ open, onClose, userId, onSaved 
             <Pencil className="w-5 h-5" />
             Edit Profile
           </DialogTitle>
+          <DialogDescription>Update this user's profile information and photo.</DialogDescription>
         </DialogHeader>
 
         {loading ? (
