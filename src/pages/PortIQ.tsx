@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import ReactMarkdown from 'react-markdown';
+import MarkdownRenderer from '@/components/chat/MarkdownRenderer';
 import SidebarLayout from '@/components/layout/SidebarLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -401,9 +401,7 @@ const PortIQ = () => {
                                     }`}
                                   >
                                     {message.role === 'assistant' ? (
-                                      <div className="text-sm prose prose-sm max-w-none prose-headings:mt-3 prose-headings:mb-1.5 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0 prose-strong:text-slate-900 prose-table:text-xs prose-th:px-2 prose-th:py-1 prose-td:px-2 prose-td:py-1 prose-table:border-collapse [&_table]:w-full [&_th]:bg-slate-100 [&_th]:border [&_th]:border-slate-300 [&_td]:border [&_td]:border-slate-200 whitespace-pre-wrap break-words">
-                                        <ReactMarkdown>{message.content}</ReactMarkdown>
-                                      </div>
+                                      <MarkdownRenderer content={message.content} />
                                     ) : (
                                       <div className="text-sm whitespace-pre-wrap break-words">{message.content}</div>
                                     )}
