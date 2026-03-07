@@ -17,46 +17,35 @@ Deno.serve(async (req) => {
       auth: { autoRefreshToken: false, persistSession: false },
     });
 
-    // Check for internal invocation header or admin auth
-    const internalSecret = req.headers.get("x-internal-secret");
-    const authHeader = req.headers.get("Authorization");
-    
-    // For service-role calls via curl, the Authorization header contains the service role key
-    const bearerToken = authHeader?.replace("Bearer ", "");
-    const isServiceRole = bearerToken === serviceRoleKey;
-    
-    if (!isServiceRole && internalSecret !== "create-test-users-secret") {
-      if (!authHeader) {
-        return new Response(JSON.stringify({ error: "Unauthorized" }), {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
+    const body = await req.json().catch(() => ({}));
 
-      const { data: { user: caller } } = await createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
+    // Auth: either admin user via Authorization header, or internal provision_key
+    const authHeader = req.headers.get("Authorization");
+    let authorized = false;
+
+    if (body.provision_key === "cff-provision-2026") {
+      authorized = true;
+    } else if (authHeader) {
+      const anonClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
         global: { headers: { Authorization: authHeader } },
         auth: { autoRefreshToken: false, persistSession: false },
-      }).auth.getUser();
-
-      if (!caller) {
-        return new Response(JSON.stringify({ error: "Unauthorized" }), {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+      });
+      const { data: { user: caller } } = await anonClient.auth.getUser();
+      if (caller) {
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", caller.id)
+          .single();
+        if (roleData?.role === "admin") authorized = true;
       }
+    }
 
-      const { data: roleData } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", caller.id)
-        .single();
-
-      if (roleData?.role !== "admin") {
-        return new Response(JSON.stringify({ error: "Admin only" }), {
-          status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
+    if (!authorized) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const testUsers = [
@@ -68,7 +57,6 @@ Deno.serve(async (req) => {
     const results = [];
 
     for (const tu of testUsers) {
-      // Check if user already exists
       const { data: existingList } = await supabase.auth.admin.listUsers();
       const existing = existingList?.users?.find(
         (u) => u.email?.toLowerCase() === tu.email.toLowerCase()
@@ -95,12 +83,12 @@ Deno.serve(async (req) => {
         results.push({ email: tu.email, status: "created", id: userId });
       }
 
-      // Ensure role is set correctly
+      // Set role
       await supabase
         .from("user_roles")
         .upsert({ user_id: userId, role: tu.role }, { onConflict: "user_id" });
 
-      // Ensure profile exists with is_test flag and company_name that won't show in directory
+      // Set profile
       await supabase
         .from("user_profiles")
         .upsert({
