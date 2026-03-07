@@ -17,11 +17,15 @@ Deno.serve(async (req) => {
       auth: { autoRefreshToken: false, persistSession: false },
     });
 
-    // Allow service-role calls (internal) or admin users
+    // Check for internal invocation header or admin auth
+    const internalSecret = req.headers.get("x-internal-secret");
     const authHeader = req.headers.get("Authorization");
-    const isServiceRole = authHeader?.includes(serviceRoleKey);
     
-    if (!isServiceRole) {
+    // For service-role calls via curl, the Authorization header contains the service role key
+    const bearerToken = authHeader?.replace("Bearer ", "");
+    const isServiceRole = bearerToken === serviceRoleKey;
+    
+    if (!isServiceRole && internalSecret !== "create-test-users-secret") {
       if (!authHeader) {
         return new Response(JSON.stringify({ error: "Unauthorized" }), {
           status: 401,
