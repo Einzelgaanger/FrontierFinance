@@ -145,7 +145,7 @@ Deno.serve(async (req) => {
       
       ${isApproved ? `
         <div style="text-align:center;margin:32px 0;">
-          <a href="https://escpnetwork.net/dashboard" style="background:#c49a2b;color:#ffffff;padding:16px 40px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:700;font-size:16px;letter-spacing:0.3px;box-shadow:0 2px 8px rgba(196,154,43,0.3);">
+          <a href="https://frontierfinance.org/dashboard" style="background:#c49a2b;color:#ffffff;padding:16px 40px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:700;font-size:16px;letter-spacing:0.3px;box-shadow:0 2px 8px rgba(196,154,43,0.3);">
             Access Your Dashboard →
           </a>
         </div>
