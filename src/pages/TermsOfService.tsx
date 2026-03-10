@@ -63,7 +63,7 @@ const TermsOfService = () => {
               To prevent duplicate organizational accounts, the Platform restricts new registrations from company email
               domains that are already associated with an existing account. If your organization already has an account,
               you should contact your organization's account holder or reach out to{' '}
-              <a href="mailto:dev@frontierfinance.org" className="text-primary hover:underline">dev@frontierfinance.org</a>{' '}
+               <a href="mailto:developer@frontierfinance.org" className="text-primary hover:underline">developer@frontierfinance.org</a>{' '}
               for assistance with account access or data transfer.
             </p>
 
@@ -86,7 +86,7 @@ const TermsOfService = () => {
             <p className="text-muted-foreground leading-relaxed">
               You are responsible for maintaining the confidentiality of your login credentials and for all activities that
               occur under your account. You must notify us immediately at{' '}
-              <a href="mailto:dev@frontierfinance.org" className="text-primary hover:underline">dev@frontierfinance.org</a>{' '}
+              <a href="mailto:developer@frontierfinance.org" className="text-primary hover:underline">developer@frontierfinance.org</a>{' '}
               upon becoming aware of any unauthorized use of your account.
             </p>
           </section>
@@ -343,7 +343,7 @@ const TermsOfService = () => {
               <p className="font-semibold text-foreground">Collaborative for Frontier Finance</p>
               <p className="text-muted-foreground">Email: <a href="mailto:hello@frontierfinance.org" className="text-primary hover:underline">hello@frontierfinance.org</a></p>
               <p className="text-muted-foreground">Website: <a href="https://frontierfinance.org" className="text-primary hover:underline">frontierfinance.org</a></p>
-              <p className="text-muted-foreground">Technical Support: <a href="mailto:dev@frontierfinance.org" className="text-primary hover:underline">dev@frontierfinance.org</a></p>
+              <p className="text-muted-foreground">Technical Support: <a href="mailto:developer@frontierfinance.org" className="text-primary hover:underline">developer@frontierfinance.org</a></p>
             </div>
           </section>
 
