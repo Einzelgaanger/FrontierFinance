@@ -203,6 +203,8 @@ const AppRoutes = () => {
                 <Route path="/our-events" element={<OurEvents />} />
                 <Route path="/escp-network" element={<ESCPNetwork />} />
                 <Route path="/partnership" element={<Partnership />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<TermsOfService />} />
                 <Route path="*" element={<NotFound />} />
       </Routes>
       {/* Floating Feedback Button - appears on all pages */}
