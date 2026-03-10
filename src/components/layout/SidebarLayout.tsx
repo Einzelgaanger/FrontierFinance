@@ -44,15 +44,13 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     fetchAvatar();
   }, [user?.id]);
 
-  // Lock body scroll and prevent scrollbar flash when mobile menu is open
+  // Remove body lock when mobile menu closes (class is added synchronously on open)
   useEffect(() => {
     if (!sidebarOpen) return;
     const isMobile = window.matchMedia('(max-width: 1023px)').matches;
     if (!isMobile) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = prev;
+      document.body.classList.remove('mobile-menu-open');
     };
   }, [sidebarOpen]);
 
@@ -347,7 +345,11 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
         variant="ghost"
         size="sm"
         className="lg:hidden fixed z-40 text-slate-600 bg-white/95 hover:bg-white shadow-md border border-slate-200/80 rounded-xl min-h-[44px] min-w-[44px] p-0 touch-manipulation top-[max(0.75rem,env(safe-area-inset-top,0))] left-[max(0.75rem,env(safe-area-inset-left,0))]"
-        onClick={() => setSidebarOpen(true)}
+        onClick={() => {
+          const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+          if (isMobile) document.body.classList.add('mobile-menu-open');
+          setSidebarOpen(true);
+        }}
         aria-label="Open menu"
       >
         <Menu className="w-5 h-5" />

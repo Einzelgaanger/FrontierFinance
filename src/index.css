@@ -428,6 +428,16 @@
   opacity: 0;
 }
 
+/* Mobile sidebar open: lock body scroll and hide scrollbar before first paint */
+body.mobile-menu-open {
+  overflow: hidden !important;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+body.mobile-menu-open::-webkit-scrollbar {
+  display: none !important;
+}
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
