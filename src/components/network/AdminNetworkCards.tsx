@@ -401,8 +401,15 @@ const AdminNetworkCards = () => {
         profilesMap.set(profile.id, profile);
       });
 
-      // Build final manager list from survey data
-      const processedManagers = Array.from(userSurveyMap.values()).map(survey => {
+      // Build final manager list from survey data, only including users approved for directory
+      const approvedUserIds = new Set(
+        (profilesResult.data || [])
+          .filter((p: any) => p.show_in_directory === true)
+          .map((p: any) => p.id)
+      );
+      const processedManagers = Array.from(userSurveyMap.values())
+        .filter(survey => approvedUserIds.has(survey.user_id))
+        .map(survey => {
         const profile = profilesMap.get(survey.user_id);
         
         return {
