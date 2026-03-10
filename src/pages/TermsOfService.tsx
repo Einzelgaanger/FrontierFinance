@@ -86,7 +86,7 @@ const TermsOfService = () => {
             <p className="text-muted-foreground leading-relaxed">
               You are responsible for maintaining the confidentiality of your login credentials and for all activities that
               occur under your account. You must notify us immediately at{' '}
-              <a href="mailto:dev@frontierfinance.org" className="text-primary hover:underline">dev@frontierfinance.org</a>{' '}
+              <a href="mailto:developer@frontierfinance.org" className="text-primary hover:underline">developer@frontierfinance.org</a>{' '}
               upon becoming aware of any unauthorized use of your account.
             </p>
           </section>
