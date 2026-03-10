@@ -63,7 +63,7 @@ const TermsOfService = () => {
               To prevent duplicate organizational accounts, the Platform restricts new registrations from company email
               domains that are already associated with an existing account. If your organization already has an account,
               you should contact your organization's account holder or reach out to{' '}
-              <a href="mailto:dev@frontierfinance.org" className="text-primary hover:underline">dev@frontierfinance.org</a>{' '}
+               <a href="mailto:developer@frontierfinance.org" className="text-primary hover:underline">developer@frontierfinance.org</a>{' '}
               for assistance with account access or data transfer.
             </p>
 
