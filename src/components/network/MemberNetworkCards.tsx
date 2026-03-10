@@ -324,7 +324,7 @@ const MemberNetworkCards = () => {
         supabase.from('survey_responses_2022').select('user_id, organisation, name, email, geographic_markets, investment_type, fund_operations, current_ftes').eq('submission_status', 'completed'),
         supabase.from('survey_responses_2023').select('user_id, organisation_name, fund_name, email_address, geographic_markets, fund_type_status, fte_staff_current').eq('submission_status', 'completed'),
         supabase.from('survey_responses_2024').select('user_id, organisation_name, fund_name, email_address, geographic_markets, fund_type_status, fte_staff_current').eq('submission_status', 'completed'),
-        supabase.from('user_profiles').select('id, email, company_name').eq('show_in_directory', true),
+        supabase.from('user_profiles').select('id, email, company_name, show_in_directory'),
         supabase.from('user_roles').select('user_id, role')
       ]);
 
@@ -407,8 +407,15 @@ const MemberNetworkCards = () => {
         userRolesMap.set(userRole.user_id, userRole.role);
       });
 
-      // Build final manager list from survey data
-      const processedManagers = Array.from(userSurveyMap.values()).map(survey => {
+      // Build final manager list from survey data, only including users approved for directory
+      const approvedUserIds = new Set(
+        (profilesResult.data || [])
+          .filter((p: any) => p.show_in_directory === true)
+          .map((p: any) => p.id)
+      );
+      const processedManagers = Array.from(userSurveyMap.values())
+        .filter(survey => approvedUserIds.has(survey.user_id))
+        .map(survey => {
         const profile = profilesMap.get(survey.user_id);
         const userRole = userRolesMap.get(survey.user_id) || 'member';
         
