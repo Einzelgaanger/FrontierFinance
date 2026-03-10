@@ -248,7 +248,7 @@ const PrivacyPolicy = () => {
               <p className="font-semibold text-foreground">Collaborative for Frontier Finance</p>
               <p className="text-muted-foreground">Email: <a href="mailto:hello@frontierfinance.org" className="text-primary hover:underline">hello@frontierfinance.org</a></p>
               <p className="text-muted-foreground">Website: <a href="https://frontierfinance.org" className="text-primary hover:underline">frontierfinance.org</a></p>
-              <p className="text-muted-foreground">For technical/data issues: <a href="mailto:dev@frontierfinance.org" className="text-primary hover:underline">dev@frontierfinance.org</a></p>
+              <p className="text-muted-foreground">For technical/data issues: <a href="mailto:developer@frontierfinance.org" className="text-primary hover:underline">developer@frontierfinance.org</a></p>
             </div>
           </section>
 
