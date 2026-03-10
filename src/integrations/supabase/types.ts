@@ -2062,7 +2062,6 @@ export type Database = {
           phone: string | null
           profile_picture_url: string | null
           role_title: string | null
-          show_in_directory: boolean
           updated_at: string | null
           user_role: string
           website: string | null
@@ -2082,7 +2081,6 @@ export type Database = {
           phone?: string | null
           profile_picture_url?: string | null
           role_title?: string | null
-          show_in_directory?: boolean
           updated_at?: string | null
           user_role?: string
           website?: string | null
@@ -2102,7 +2100,6 @@ export type Database = {
           phone?: string | null
           profile_picture_url?: string | null
           role_title?: string | null
-          show_in_directory?: boolean
           updated_at?: string | null
           user_role?: string
           website?: string | null
