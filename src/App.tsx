@@ -49,6 +49,8 @@ import LearningHub from "./pages/LearningHub";
 import MarketInsightArticle from "./pages/MarketInsightArticle";
 import OurEvents from "./pages/OurEvents";
 import Partnership from "./pages/Partnership";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 import { FeedbackButton } from "./components/feedback/FeedbackButton";
 import Navbar from "./components/layout/Navbar";
 import ScrollToTop from "./components/ScrollToTop";
@@ -61,10 +63,12 @@ const AUTH_ROUTES = ['/auth', '/forgot-password', '/reset-password'];
 const ROUTES_WITH_NAVBAR = [
   '/',
   '/about',
-  '/escp-network',
   '/learning-hub',
   '/our-events',
+  '/escp-network',
   '/partnership',
+  '/privacy',
+  '/terms',
 ];
 const pathHasNavbar = (path: string) =>
   ROUTES_WITH_NAVBAR.includes(path) ||
@@ -201,6 +205,8 @@ const AppRoutes = () => {
                 <Route path="/our-events" element={<OurEvents />} />
                 <Route path="/escp-network" element={<ESCPNetwork />} />
                 <Route path="/partnership" element={<Partnership />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<TermsOfService />} />
                 <Route path="*" element={<NotFound />} />
       </Routes>
       {/* Floating Feedback Button - appears on all pages */}

@@ -314,12 +314,9 @@ export function AgentPlan({ initialTasks, className }: AgentPlanProps) {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        type: prefersReducedMotion ? "tween" : "spring",
-        stiffness: 500,
-        damping: 30,
-        duration: prefersReducedMotion ? 0.2 : undefined,
-      },
+      transition: prefersReducedMotion
+        ? { type: "tween" as const, duration: 0.2 }
+        : { type: "spring" as const, stiffness: 500, damping: 30 },
     },
     exit: {
       opacity: 0,
@@ -332,26 +329,26 @@ export function AgentPlan({ initialTasks, className }: AgentPlanProps) {
     hidden: {
       opacity: 0,
       height: 0,
-      overflow: "hidden",
+      overflow: "hidden" as const,
     },
     visible: {
       height: "auto",
       opacity: 1,
-      overflow: "visible",
+      overflow: "visible" as const,
       transition: {
         duration: 0.25,
         staggerChildren: prefersReducedMotion ? 0 : 0.05,
-        when: "beforeChildren",
-        ease: [0.2, 0.65, 0.3, 0.9],
+        when: "beforeChildren" as const,
+        ease: [0.2, 0.65, 0.3, 0.9] as [number, number, number, number],
       },
     },
     exit: {
       height: 0,
       opacity: 0,
-      overflow: "hidden",
+      overflow: "hidden" as const,
       transition: {
         duration: 0.2,
-        ease: [0.2, 0.65, 0.3, 0.9],
+        ease: [0.2, 0.65, 0.3, 0.9] as [number, number, number, number],
       },
     },
   };
@@ -364,12 +361,9 @@ export function AgentPlan({ initialTasks, className }: AgentPlanProps) {
     visible: {
       opacity: 1,
       x: 0,
-      transition: {
-        type: prefersReducedMotion ? "tween" : "spring",
-        stiffness: 500,
-        damping: 25,
-        duration: prefersReducedMotion ? 0.2 : undefined,
-      },
+      transition: prefersReducedMotion
+        ? { type: "tween" as const, duration: 0.2 }
+        : { type: "spring" as const, stiffness: 500, damping: 25 },
     },
     exit: {
       opacity: 0,
@@ -382,15 +376,15 @@ export function AgentPlan({ initialTasks, className }: AgentPlanProps) {
     hidden: {
       opacity: 0,
       height: 0,
-      overflow: "hidden",
+      overflow: "hidden" as const,
     },
     visible: {
       opacity: 1,
       height: "auto",
-      overflow: "visible",
+      overflow: "visible" as const,
       transition: {
         duration: 0.25,
-        ease: [0.2, 0.65, 0.3, 0.9],
+        ease: [0.2, 0.65, 0.3, 0.9] as [number, number, number, number],
       },
     },
   };
@@ -401,7 +395,7 @@ export function AgentPlan({ initialTasks, className }: AgentPlanProps) {
       scale: prefersReducedMotion ? 1 : [1, 1.08, 1],
       transition: {
         duration: 0.35,
-        ease: [0.34, 1.56, 0.64, 1],
+        ease: [0.34, 1.56, 0.64, 1] as [number, number, number, number],
       },
     },
   };
