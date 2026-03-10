@@ -135,7 +135,7 @@ const NetworkV2 = React.memo(() => {
 
       // Fetch user profiles, roles, survey data, and company members (to exclude secondary members)
       const [userProfilesResult, userRolesResult, companyMembersResult, survey2021Result, survey2022Result, survey2023Result, survey2024Result] = await Promise.all([
-        supabase.from('user_profiles').select('id, company_name, email, full_name, role_title, profile_picture_url, user_role, is_active, created_at'),
+        supabase.from('user_profiles').select('id, company_name, email, full_name, role_title, profile_picture_url, user_role, is_active, created_at').eq('show_in_directory', true),
         supabase.from('user_roles' as any).select('user_id, role'),
         supabase.from('company_members').select('company_user_id, member_user_id'),
         supabase.from('survey_responses_2021').select('id, user_id, email_address, firm_name, participant_name, role_title, company_name, completed_at'),
