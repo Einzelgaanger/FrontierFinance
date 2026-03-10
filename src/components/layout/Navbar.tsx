@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, ChevronRight, LogIn, UserPlus, Home, Info, Users, BookOpen, Calendar, Handshake, Rocket } from 'lucide-react';
+import { Menu, X, ChevronRight, LogIn, UserPlus, Home, Info, Users, BookOpen, Calendar, Handshake } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -49,7 +49,6 @@ const Navbar = () => {
         { name: 'Learning Hub', path: '/learning-hub', icon: BookOpen },
         { name: 'Events', path: '/our-events', icon: Calendar },
         { name: 'Partnerships', path: '/partnership', icon: Handshake },
-        { name: 'Launch +', path: '/launch-plus-intro', icon: Rocket },
     ];
 
     const showSolidBg = isScrolled;

@@ -46,48 +46,48 @@ export default function Footer() {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2" aria-hidden />
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-violet-500/5 rounded-full blur-3xl translate-y-1/2" aria-hidden />
       <div className="absolute top-1/2 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl translate-x-1/2" aria-hidden />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 lg:pt-14 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] sm:pb-8 relative">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-6 lg:gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-12 lg:pt-14 pb-[max(1rem,env(safe-area-inset-bottom,0px))] sm:pb-8 relative">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
           {/* Brand */}
-          <div className="lg:col-span-5 space-y-3 sm:space-y-4">
+          <div className="lg:col-span-5 space-y-2 sm:space-y-4">
             <Link to="/" className="inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 rounded">
               <img
                 src="/CFF%20LOGO.png"
                 alt="Collaborative for Frontier Finance"
-                className="h-10 sm:h-12 w-auto object-contain hover:opacity-95 transition-opacity"
+                className="h-8 sm:h-12 w-auto object-contain hover:opacity-95 transition-opacity"
               />
             </Link>
-            <p className="text-slate-400 text-sm sm:text-base max-w-md leading-relaxed">
+            <p className="text-slate-400 text-xs sm:text-base max-w-md leading-snug sm:leading-relaxed">
               A multi-stakeholder initiative increasing access to capital for small and growing businesses in emerging markets through networks, research, and initiatives.
             </p>
-            <div className="flex gap-2">
-              <a href="https://www.linkedin.com/company/collaborative-for-frontier-finance/" target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-lg bg-[#0A66C2]/20 text-[#0A66C2] hover:bg-[#0A66C2]/30 hover:text-[#0A66C2]/90 transition-all duration-300" aria-label="LinkedIn">
-                <LinkedInLogo className="w-5 h-5" />
+            <div className="flex gap-1.5 sm:gap-2">
+              <a href="https://www.linkedin.com/company/collaborative-for-frontier-finance/" target="_blank" rel="noopener noreferrer" className="p-2 sm:p-2.5 rounded-lg bg-[#0A66C2]/20 text-[#0A66C2] hover:bg-[#0A66C2]/30 hover:text-[#0A66C2]/90 transition-all duration-300" aria-label="LinkedIn">
+                <LinkedInLogo className="w-4 h-4 sm:w-5 sm:h-5" />
               </a>
-              <a href="https://x.com/CollabFFinance" target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-lg bg-white/10 text-slate-300 hover:bg-white/15 hover:text-white transition-all duration-300" aria-label="X (Twitter)">
-                <XTwitterLogo className="w-5 h-5" />
+              <a href="https://x.com/CollabFFinance" target="_blank" rel="noopener noreferrer" className="p-2 sm:p-2.5 rounded-lg bg-white/10 text-slate-300 hover:bg-white/15 hover:text-white transition-all duration-300" aria-label="X (Twitter)">
+                <XTwitterLogo className="w-4 h-4 sm:w-5 sm:h-5" />
               </a>
-              <a href="https://youtube.com/@collabforfrontierfinance?si=ua-ztIRJTQFjWasS" target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-lg bg-[#FF0000]/20 text-[#FF0000] hover:bg-[#FF0000]/30 hover:text-[#ff3333] transition-all duration-300" aria-label="YouTube">
-                <YouTubeLogo className="w-5 h-5" />
+              <a href="https://youtube.com/@collabforfrontierfinance?si=ua-ztIRJTQFjWasS" target="_blank" rel="noopener noreferrer" className="p-2 sm:p-2.5 rounded-lg bg-[#FF0000]/20 text-[#FF0000] hover:bg-[#FF0000]/30 hover:text-[#ff3333] transition-all duration-300" aria-label="YouTube">
+                <YouTubeLogo className="w-4 h-4 sm:w-5 sm:h-5" />
               </a>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="lg:col-span-3">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] mb-3 text-slate-400">
+            <h3 className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.18em] sm:tracking-[0.2em] mb-1.5 sm:mb-3 text-slate-400">
               Quick Links
             </h3>
-            <ul className="space-y-0.5 text-sm">
+            <ul className="space-y-0 sm:space-y-0.5 text-xs sm:text-sm">
               {quickLinks.map(({ to, label, accent }) => (
                 <li key={to}>
                   <Link
                     to={to}
-                    className={`inline-flex items-center gap-2 min-h-[44px] py-2 px-3 -mx-2 rounded-lg transition-all duration-200 group ${linkAccentClasses[accent]}`}
+                    className={`inline-flex items-center gap-1.5 sm:gap-2 min-h-[36px] sm:min-h-[44px] py-1.5 sm:py-2 px-2 sm:px-3 -mx-2 rounded-lg transition-all duration-200 group ${linkAccentClasses[accent]}`}
                   >
-                    <span className="dot w-1.5 h-1.5 rounded-full transition-colors duration-200" />
+                    <span className="dot w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full transition-colors duration-200" />
                     {label}
-                    <ArrowUpRight className="arrow w-3.5 h-3.5 opacity-0 -translate-y-0.5 translate-x-0.5 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-200 shrink-0" />
+                    <ArrowUpRight className="arrow w-3 h-3 sm:w-3.5 sm:h-3.5 opacity-0 -translate-y-0.5 translate-x-0.5 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-200 shrink-0" />
                   </Link>
                 </li>
               ))}
@@ -95,38 +95,38 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div className="lg:col-span-4">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] mb-3 text-slate-400">
+          <div className="lg:col-span-4 sm:col-span-2">
+            <h3 className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.18em] sm:tracking-[0.2em] mb-1.5 sm:mb-3 text-slate-400">
               Contact
             </h3>
-            <ul className="space-y-2.5 text-sm">
-              <li className="flex items-center gap-2.5 group">
-                <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-sky-500/20 text-sky-400 shrink-0 group-hover:bg-sky-500/30 transition-all duration-300" aria-hidden>
-                  <Mail className="w-4 h-4" />
+            <ul className="space-y-1.5 sm:space-y-2.5 text-xs sm:text-sm">
+              <li className="flex items-center gap-2 sm:gap-2.5 group">
+                <span className="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-sky-500/20 text-sky-400 shrink-0 group-hover:bg-sky-500/30 transition-all duration-300" aria-hidden>
+                  <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </span>
-                <a href="mailto:hello@frontierfinance.org" className="text-slate-400 hover:text-sky-400 transition-colors leading-relaxed">
+                <a href="mailto:hello@frontierfinance.org" className="text-slate-400 hover:text-sky-400 transition-colors leading-snug sm:leading-relaxed break-all">
                   hello@frontierfinance.org
                 </a>
               </li>
-              <li className="flex items-center gap-2.5 group">
-                <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-400 shrink-0 group-hover:bg-emerald-500/30 transition-all duration-300" aria-hidden>
-                  <Globe className="w-4 h-4" />
+              <li className="flex items-center gap-2 sm:gap-2.5 group">
+                <span className="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-emerald-500/20 text-emerald-400 shrink-0 group-hover:bg-emerald-500/30 transition-all duration-300" aria-hidden>
+                  <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </span>
-                <span className="text-slate-400 leading-relaxed">Global Network — operating remotely in key hubs</span>
+                <span className="text-slate-400 leading-snug sm:leading-relaxed">Global Network — operating remotely in key hubs</span>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-8 sm:mt-10 pt-5">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-sm">
-            <p className="text-slate-500">
+        <div className="mt-5 sm:mt-10 pt-4 sm:pt-5">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-3 text-xs sm:text-sm">
+            <p className="text-slate-500 text-center sm:text-left">
               &copy; {currentYear} Collaborative for Frontier Finance. All rights reserved.
             </p>
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-              <Link to="/privacy" className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-slate-500 hover:text-amber-400 transition-colors font-medium -m-2 p-2 rounded-lg">Privacy</Link>
-              <Link to="/terms" className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-slate-500 hover:text-violet-400 transition-colors font-medium -m-2 p-2 rounded-lg">Terms</Link>
+            <div className="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 gap-y-1 sm:gap-y-2">
+              <Link to="/privacy" className="min-h-[36px] sm:min-h-[44px] min-w-[36px] sm:min-w-[44px] inline-flex items-center justify-center text-slate-500 hover:text-amber-400 transition-colors font-medium -m-1.5 sm:-m-2 p-1.5 sm:p-2 rounded-lg text-xs sm:text-sm">Privacy</Link>
+              <Link to="/terms" className="min-h-[36px] sm:min-h-[44px] min-w-[36px] sm:min-w-[44px] inline-flex items-center justify-center text-slate-500 hover:text-violet-400 transition-colors font-medium -m-1.5 sm:-m-2 p-1.5 sm:p-2 rounded-lg text-xs sm:text-sm">Terms</Link>
             </div>
           </div>
         </div>

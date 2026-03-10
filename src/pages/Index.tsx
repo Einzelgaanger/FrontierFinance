@@ -4,7 +4,6 @@ import Mission from '@/components/home/Mission';
 import Pillars from '@/components/home/Pillars';
 import PartnersSection from '@/components/home/PartnersSection';
 import Impact from '@/components/home/Impact';
-import NewsletterSection from '@/components/home/NewsletterSection';
 
 const Index = () => {
   return (
@@ -14,7 +13,6 @@ const Index = () => {
       <Pillars />
       <PartnersSection />
       <Impact />
-      <NewsletterSection />
       <Footer />
     </div>
   );

@@ -15,11 +15,9 @@ import {
   LockKeyhole,
   UserCircle,
   Brain,
-  Rocket,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
-import { AnimatePresence, motion } from 'framer-motion';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
@@ -31,7 +29,6 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false); // mobile
-  const [expanded, setExpanded] = useState(false); // desktop hover
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -46,6 +43,18 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     };
     fetchAvatar();
   }, [user?.id]);
+
+  // Lock body scroll and prevent scrollbar flash when mobile menu is open
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    if (!isMobile) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [sidebarOpen]);
 
   const handleNavigation = (to: string) => {
     window.scrollTo(0, 0);
@@ -90,12 +99,6 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
       roles: ['admin'],
     },
     {
-      name: 'Launch +',
-      href: '/admin/launch-plus-analytics',
-      icon: Rocket,
-      roles: ['admin'],
-    },
-    {
       name: 'Admin Panel',
       href: '/admin',
       icon: LockKeyhole,
@@ -124,28 +127,21 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     return location.pathname === href;
   };
 
-  // Desktop sidebar
+  // Desktop sidebar — always fully open, no collapse
   const DesktopSidebar = () => (
-    <motion.div
+    <div
       className={cn(
-        'hidden lg:flex flex-col fixed inset-y-0 left-0 z-50',
+        'hidden lg:flex flex-col fixed inset-y-0 left-0 z-50 w-[220px]',
         'bg-navy-900 border-r border-navy-800 shadow-2xl',
         'overflow-hidden'
       )}
-      animate={{ width: expanded ? 220 : 68 }}
-      transition={{ duration: 0.25, ease: 'easeInOut' }}
-      onMouseEnter={() => setExpanded(true)}
-      onMouseLeave={() => setExpanded(false)}
     >
       {/* Logo */}
       <div className="flex items-center justify-center h-16 border-b border-navy-800 px-3 shrink-0">
         <img
           src="/CFF%20LOGO.png"
           alt="CFF"
-          className={cn(
-            'object-contain transition-all duration-200',
-            expanded ? 'h-10 w-auto' : 'h-8 w-8'
-          )}
+          className="object-contain h-10 w-auto"
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = 'none';
           }}
@@ -164,7 +160,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
               key={item.name}
               onClick={() => handleNavigation(item.href)}
               className={cn(
-                'w-full flex items-center gap-3 rounded-xl transition-all duration-200 group',
+                'w-full flex items-center gap-3 rounded-xl transition-all duration-200',
                 'min-h-[44px] px-3',
                 active
                   ? 'bg-gold-500 text-navy-950 shadow-md shadow-gold-500/20'
@@ -183,19 +179,9 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                   <Icon className="w-5 h-5" />
                 )}
               </div>
-              <AnimatePresence>
-                {expanded && (
-                  <motion.span
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: 'auto' }}
-                    exit={{ opacity: 0, width: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="text-sm font-medium whitespace-nowrap overflow-hidden"
-                  >
-                    {item.name}
-                  </motion.span>
-                )}
-              </AnimatePresence>
+              <span className="text-sm font-medium whitespace-nowrap truncate">
+                {item.name}
+              </span>
             </button>
           );
         })}
@@ -215,24 +201,14 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
               {user?.email?.charAt(0).toUpperCase() || 'U'}
             </div>
           )}
-          <AnimatePresence>
-            {expanded && (
-              <motion.div
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
-                exit={{ opacity: 0, width: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden whitespace-nowrap"
-              >
-                <p className="text-xs font-medium text-white capitalize">
-                  {userRole || 'Viewer'}
-                </p>
-                <p className="text-[10px] text-slate-400 truncate max-w-[130px]">
-                  {user?.email}
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <div className="min-w-0 overflow-hidden">
+            <p className="text-xs font-medium text-white capitalize">
+              {userRole || 'Viewer'}
+            </p>
+            <p className="text-[10px] text-slate-400 truncate">
+              {user?.email}
+            </p>
+          </div>
         </div>
         <button
           onClick={handleSignOut}
@@ -245,55 +221,31 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
           <div className="w-7 h-7 flex items-center justify-center shrink-0">
             <LogOut className="w-4 h-4" />
           </div>
-          <AnimatePresence>
-            {expanded && (
-              <motion.span
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
-                exit={{ opacity: 0, width: 0 }}
-                transition={{ duration: 0.2 }}
-                className="text-sm whitespace-nowrap overflow-hidden"
-              >
-                Sign Out
-              </motion.span>
-            )}
-          </AnimatePresence>
+          <span className="text-sm whitespace-nowrap">Sign Out</span>
         </button>
       </div>
-    </motion.div>
+    </div>
   );
 
-  // Mobile sidebar
+  // Mobile sidebar — static show/hide, no animations
   const MobileSidebar = () => (
     <>
-      {/* Overlay */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-      </AnimatePresence>
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden
+        />
+      )}
 
-      {/* Drawer */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            initial={{ x: '-100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className={cn(
-              'fixed inset-y-0 left-0 z-50 w-72 lg:hidden',
-              'bg-navy-900 shadow-2xl flex flex-col',
-              'pl-[env(safe-area-inset-left,0)]'
-            )}
-          >
+      {sidebarOpen && (
+        <div
+          className={cn(
+            'fixed inset-y-0 left-0 z-50 w-72 lg:hidden',
+            'bg-navy-900 shadow-2xl flex flex-col',
+            'pl-[env(safe-area-inset-left,0)]'
+          )}
+        >
             {/* Header */}
             <div className="flex items-center justify-between h-16 px-4 border-b border-navy-800 pt-[env(safe-area-inset-top,0)] shrink-0">
               <img
@@ -313,7 +265,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
             </div>
 
             {/* Nav */}
-            <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+            <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto overflow-x-hidden scrollbar-hide">
               {filteredNavItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.href);
@@ -377,14 +329,16 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
                 <span className="text-sm">Sign Out</span>
               </button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </div>
+      )}
     </>
   );
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-slate-100 overflow-x-hidden">
+    <div
+      className="min-h-screen min-h-[100dvh] bg-slate-100 overflow-x-hidden"
+      data-layout="sidebar-layout"
+    >
       <DesktopSidebar />
       <MobileSidebar />
 
@@ -399,8 +353,8 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
         <Menu className="w-5 h-5" />
       </Button>
 
-      {/* Main content - offset by collapsed sidebar width on desktop */}
-      <div className="flex flex-col min-w-0 lg:ml-[68px]">
+      {/* Main content - offset by sidebar width on desktop */}
+      <div className="flex flex-col min-w-0 lg:ml-[220px]">
         <main className="flex-1 min-h-0 pt-14 sm:pt-16 lg:pt-0 px-3 sm:px-4 lg:px-0 pb-[env(safe-area-inset-bottom,0)]">
           {headerActions && (
             <div className="flex justify-end items-center gap-2 px-4 py-2 lg:px-6">
