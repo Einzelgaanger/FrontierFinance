@@ -63,10 +63,12 @@ const AUTH_ROUTES = ['/auth', '/forgot-password', '/reset-password'];
 const ROUTES_WITH_NAVBAR = [
   '/',
   '/about',
-  '/escp-network',
   '/learning-hub',
   '/our-events',
+  '/escp-network',
   '/partnership',
+  '/privacy',
+  '/terms',
 ];
 const pathHasNavbar = (path: string) =>
   ROUTES_WITH_NAVBAR.includes(path) ||
