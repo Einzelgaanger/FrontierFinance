@@ -49,6 +49,8 @@ import LearningHub from "./pages/LearningHub";
 import MarketInsightArticle from "./pages/MarketInsightArticle";
 import OurEvents from "./pages/OurEvents";
 import Partnership from "./pages/Partnership";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 import { FeedbackButton } from "./components/feedback/FeedbackButton";
 import Navbar from "./components/layout/Navbar";
 import ScrollToTop from "./components/ScrollToTop";
