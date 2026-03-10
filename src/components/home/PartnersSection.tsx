@@ -5,28 +5,28 @@ import { Button } from '@/components/ui/button';
 
 const PartnersSection = () => {
   return (
-    <section className="pt-8 sm:pt-14 lg:pt-16 pb-10 sm:pb-24 lg:pb-28 bg-slate-50/80 relative overflow-hidden">
+    <section className="pt-8 sm:pt-14 lg:pt-20 pb-10 sm:pb-24 lg:pb-24 bg-slate-50/80 relative overflow-hidden">
       <div className="absolute inset-0 bg-slate-50/50" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 min-w-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-16 lg:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="inline-block text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-gold-600 mb-2 sm:mb-4 font-sans">Community</span>
-            <h2 className="text-lg sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-normal text-navy-900 mb-3 sm:mb-6 leading-[1.15]">
+            <span className="inline-block text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-gold-600 mb-2 sm:mb-4 lg:mb-3 font-sans">Community</span>
+            <h2 className="text-lg sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-display font-normal text-navy-900 mb-3 sm:mb-6 leading-[1.15]">
               Who's Involved in the <span className="text-gold-600">Collaborative</span> for Frontier Finance?
             </h2>
-            <div className="w-14 sm:w-20 h-0.5 sm:h-1 bg-gold-500 rounded-full mb-5 sm:mb-8" />
-            <p className="text-xs sm:text-lg text-slate-700 leading-snug sm:leading-[1.7] font-sans font-light">
+            <div className="w-14 sm:w-20 h-0.5 sm:h-1 bg-gold-500 rounded-full mb-5 sm:mb-8 lg:mb-6" />
+            <p className="text-xs sm:text-lg lg:text-base text-slate-700 leading-snug sm:leading-[1.7] font-sans font-light">
               With input from <span className="font-semibold text-gold-600">80+ fund managers, funders, and fieldbuilders</span> over the past year, the Collaborative for Frontier Finance is a multi-stakeholder initiative.
             </p>
-            <Link to="/partnership" className="inline-flex mt-5 sm:mt-10">
+            <Link to="/partnership" className="inline-flex mt-5 sm:mt-10 lg:mt-8">
               <Button
                 size="lg"
-                className="w-full sm:w-auto min-h-[40px] sm:min-h-[48px] text-sm sm:text-base bg-navy-900 hover:bg-navy-800 text-white font-semibold rounded-full px-6 sm:px-8 shadow-finance-lg group transition-all duration-300 hover:-translate-y-0.5"
+                className="w-full sm:w-auto min-h-[40px] sm:min-h-[48px] lg:min-h-12 lg:text-base text-sm sm:text-base bg-navy-900 hover:bg-navy-800 text-white font-semibold rounded-full px-6 sm:px-8 lg:px-6 shadow-finance-lg group transition-all duration-300 hover:-translate-y-0.5"
               >
                 See partners
                 <ArrowRight className="ml-1.5 sm:ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
@@ -41,12 +41,12 @@ const PartnersSection = () => {
             className="flex justify-center lg:justify-end"
           >
             <div className="relative">
-              <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-xl sm:rounded-2xl bg-navy-900/5 border border-slate-200/80 flex items-center justify-center">
-                <Users className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 text-gold-500/40" />
+              <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-72 lg:h-72 rounded-xl sm:rounded-2xl bg-navy-900/5 border border-slate-200/80 flex items-center justify-center">
+                <Users className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-28 lg:h-28 text-gold-500/40" />
               </div>
-              <div className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 bg-white rounded-lg sm:rounded-xl shadow-card-hover border border-slate-100 px-4 py-3 sm:px-6 sm:py-4">
-                <span className="text-2xl sm:text-4xl font-display font-normal text-gold-600">80+</span>
-                <p className="text-[10px] sm:text-sm text-slate-600 font-sans font-medium mt-0.5 sm:mt-1">stakeholders</p>
+              <div className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 bg-white rounded-lg sm:rounded-xl shadow-card-hover border border-slate-100 px-4 py-3 sm:px-6 sm:py-4 lg:px-5 lg:py-3">
+                <span className="text-2xl sm:text-4xl lg:text-3xl font-display font-normal text-gold-600">80+</span>
+                <p className="text-[10px] sm:text-sm lg:text-xs text-slate-600 font-sans font-medium mt-0.5 sm:mt-1">stakeholders</p>
               </div>
             </div>
           </motion.div>

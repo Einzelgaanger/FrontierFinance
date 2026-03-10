@@ -32,25 +32,25 @@ const Pillars = () => {
     ];
 
     return (
-        <section id="how-it-works" className="pt-8 sm:pt-14 lg:pt-16 pb-8 sm:pb-14 lg:pb-16 bg-[#faf6f0] relative scroll-mt-20">
+        <section id="how-it-works" className="pt-8 sm:pt-14 lg:pt-20 pb-8 sm:pb-14 lg:pb-20 bg-[#faf6f0] relative scroll-mt-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-5 sm:mb-16">
-                    <span className="inline-block text-[10px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.25em] text-gold-600 font-sans">Our Approach</span>
-                    <h2 className="text-base sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-normal text-navy-900 mt-1.5 sm:mt-3 mb-2 sm:mb-6 px-2 leading-tight">
+                <div className="text-center mb-5 sm:mb-16 lg:mb-12">
+                    <span className="inline-block text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.25em] text-gold-600 font-sans">Our Approach</span>
+                    <h2 className="text-lg sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-display font-normal text-navy-900 mt-1.5 sm:mt-3 mb-2 sm:mb-6 px-2 leading-tight">
                         How Does the Collaborative for <span className="text-gold-600">Frontier Finance</span> Work?
                     </h2>
-                    <div className="w-12 sm:w-20 h-0.5 bg-gold-500 mx-auto rounded-full mb-3 sm:mb-8" />
-                    <p className="text-[11px] sm:text-lg md:text-xl text-slate-600 max-w-4xl mx-auto font-sans font-light leading-snug sm:leading-[1.7] mb-2 sm:mb-6 px-1">
+                    <div className="w-12 sm:w-20 h-0.5 bg-gold-500 mx-auto rounded-full mb-3 sm:mb-8 lg:mb-6" />
+                    <p className="text-[12px] sm:text-lg md:text-xl lg:text-lg text-slate-600 max-w-4xl mx-auto font-sans font-light leading-snug sm:leading-[1.7] mb-2 sm:mb-6 px-1">
                         The Collaborative for Frontier Finance works with diverse stakeholders – including fund managers, funders, and fieldbuilders – to accelerate financing solutions that target SGBs. We aim to set a common action agenda for SGB finance; to test and scale promising financing models; and to facilitate the flow of capital to the SGB market.
                     </p>
-                    <p className="text-[10px] sm:text-base text-slate-600 max-w-4xl mx-auto font-sans font-light leading-snug sm:leading-relaxed mb-3 sm:mb-10 px-1">
+                    <p className="text-[11px] sm:text-base lg:text-sm text-slate-600 max-w-4xl mx-auto font-sans font-light leading-snug sm:leading-relaxed mb-3 sm:mb-10 lg:mb-8 px-1">
                         With a bias to action, CFF works with stakeholders to identify, co-design and launch initiatives – specific solutions to SGB financing challenges – that are too complex for any one stakeholder to launch on their own.
                     </p>
-                    <p className="text-[10px] sm:text-sm font-display font-normal text-navy-800 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-4 sm:mb-12">We do this in three ways:</p>
+                    <p className="text-[10px] sm:text-sm lg:text-xs font-display font-normal text-navy-800 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-4 sm:mb-12 lg:mb-8">We do this in three ways:</p>
                 </div>
 
                 {/* Mobile: horizontal scroll; Desktop: 3-column grid */}
-                <div className="flex md:grid md:grid-cols-3 gap-3 sm:gap-6 md:gap-8 overflow-x-auto snap-x snap-mandatory md:overflow-visible pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 md:pb-0 scrollbar-hide">
+                <div className="flex md:grid md:grid-cols-3 gap-3 sm:gap-6 md:gap-6 lg:gap-8 overflow-x-auto snap-x snap-mandatory md:overflow-visible pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 md:pb-0 scrollbar-hide">
                     {pillars.map((pillar, index) => (
                         <motion.div
                             key={pillar.id}
@@ -76,12 +76,12 @@ const Pillars = () => {
                             </div>
 
                             <div className="p-4 sm:p-8 flex-1 flex flex-col">
-                                <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-gold-600 font-sans mb-1 sm:mb-1.5">{pillar.subtitle}</span>
-                                <h3 className="text-base sm:text-2xl md:text-3xl font-display font-normal text-navy-900 mb-1 sm:mb-2">{pillar.title}</h3>
-                                <p className="text-gold-700/90 text-xs sm:text-base font-serif italic mb-2 sm:mb-4 border-l-2 border-gold-400/60 pl-3 sm:pl-4">
+                                <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-gold-600 font-sans mb-1 sm:mb-1.5">{pillar.subtitle}</span>
+                                <h3 className="text-base sm:text-2xl md:text-3xl lg:text-2xl font-display font-normal text-navy-900 mb-1 sm:mb-2">{pillar.title}</h3>
+                                <p className="text-gold-700/90 text-xs sm:text-base lg:text-sm font-serif italic mb-2 sm:mb-4 border-l-2 border-gold-400/60 pl-3 sm:pl-4">
                                     {pillar.lead}
                                 </p>
-                                <p className="text-slate-600 text-[11px] sm:text-base flex-1 leading-snug sm:leading-relaxed font-sans">
+                                <p className="text-slate-600 text-[11px] sm:text-base lg:text-sm flex-1 leading-snug sm:leading-relaxed font-sans">
                                     {pillar.description}
                                 </p>
                             </div>
@@ -89,9 +89,9 @@ const Pillars = () => {
                     ))}
                 </div>
 
-                <div className="text-center mt-5 sm:mt-10">
+                <div className="text-center mt-5 sm:mt-10 lg:mt-8">
                     <Link to="/about#how-we-work" className="inline-block">
-                        <Button size="lg" variant="outline" className="w-full sm:w-auto min-h-[40px] sm:min-h-[48px] text-sm sm:text-base rounded-full border-2 border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white font-semibold px-6 sm:px-8 transition-all duration-300 group">
+                        <Button size="lg" variant="outline" className="w-full sm:w-auto min-h-[40px] sm:min-h-[48px] lg:min-h-12 lg:text-base text-sm sm:text-base rounded-full border-2 border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white font-semibold px-6 sm:px-8 lg:px-6 transition-all duration-300 group">
                             How we work
                             <ArrowRight className="ml-1.5 sm:ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                         </Button>

@@ -52,7 +52,7 @@ function AnimatedStat({
       className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-5"
     >
       <span
-        className={`font-display tabular-nums font-normal ${index === 1 ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-gold-300' : 'text-2xl sm:text-4xl md:text-5xl text-white'}`}
+        className={`font-display tabular-nums font-normal ${index === 1 ? 'text-2xl sm:text-4xl md:text-5xl lg:text-5xl text-gold-300' : 'text-2xl sm:text-4xl md:text-5xl lg:text-5xl text-white'}`}
       >
         {formatted}
       </span>
@@ -85,16 +85,16 @@ const Hero = () => {
         <div className="absolute inset-0 bg-navy-950/45" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-[max(5rem,calc(4.5rem+env(safe-area-inset-top,0px)))] sm:pt-20 pb-10 sm:pb-20 w-full min-w-0">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-10 lg:gap-12 xl:gap-16 items-center min-h-0 lg:min-h-[calc(100vh-8rem)]">
-          {/* 1: Headline + tagline (phone: first; lg: left column top) */}
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-[max(5rem,calc(4.5rem+env(safe-area-inset-top,0px)))] sm:pt-20 lg:pt-24 pb-10 sm:pb-20 lg:pb-24 w-full min-w-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-10 lg:gap-8 xl:gap-12 items-center min-h-0 lg:min-h-[calc(100vh-8rem)]">
+          {/* 1: Headline + tagline (phone: first; lg: left column top) — mobile: bigger; laptop: original */}
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="order-1 lg:col-span-7 lg:col-start-1 text-center lg:text-left lg:pr-12 xl:pr-16"
           >
-            <h1 className="text-[2.35rem] sm:text-[3rem] md:text-[3.75rem] lg:text-[4.5rem] xl:text-[5.75rem] font-marck font-semibold text-white leading-[1.12] tracking-tight">
+            <h1 className="text-[2.35rem] sm:text-[3rem] md:text-[3.75rem] lg:text-[4rem] xl:text-[5rem] font-marck font-semibold text-white leading-[1.12] tracking-tight">
               We Are Building a Better{' '}
               <br className="hidden sm:block" />
               <span className="text-gold-200 font-marck">
@@ -102,37 +102,37 @@ const Hero = () => {
               </span>
             </h1>
 
-            <p className="text-sm sm:text-lg md:text-xl text-slate-200 max-w-xl mt-6 sm:mt-10 mx-auto lg:mx-0 leading-snug sm:leading-[1.7] font-sans font-medium">
+            <p className="text-sm sm:text-lg md:text-xl lg:text-lg text-slate-200 max-w-xl mt-6 sm:mt-10 lg:mt-8 mx-auto lg:mx-0 leading-snug sm:leading-[1.7] font-sans font-medium">
               The Collaborative for Frontier Finance is a multi-stakeholder initiative that aims to increase access to capital for small and growing businesses in emerging markets.
             </p>
           </motion.div>
 
-          {/* 2: Impact numbers (phone: second, above buttons; lg: right column) */}
+          {/* 2: Impact numbers (phone: second, above buttons; lg: right column) — mobile: more top margin; laptop: original */}
           <motion.div
             ref={statsRef}
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="order-2 lg:col-span-5 lg:col-start-8 relative mt-6 sm:mt-8"
+            className="order-2 lg:col-span-5 lg:col-start-8 relative mt-6 sm:mt-8 lg:mt-0"
           >
             {/* Short vertical line in the middle between sections (lg only) */}
             <div className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 xl:-translate-x-8 w-px h-40 bg-gold-500/60" aria-hidden />
-            <p className="font-display text-gold-400 text-[10px] sm:text-sm font-semibold uppercase tracking-[0.25em] sm:tracking-[0.3em] mb-3 sm:mb-6">
+            <p className="font-display text-gold-400 text-[10px] sm:text-sm font-semibold uppercase tracking-[0.25em] sm:tracking-[0.3em] mb-3 sm:mb-6 lg:mb-4">
               Our Impact in Numbers
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-6 lg:gap-4">
               {heroStats.map((stat, i) => (
                 <AnimatedStat key={stat.title} stat={stat} index={i} startCount={isInView} />
               ))}
             </div>
           </motion.div>
 
-          {/* 3: Buttons (phone: third, below stats; lg: left column below tagline) */}
+          {/* 3: Buttons (phone: third, below stats; lg: left column below tagline) — mobile: more top margin; laptop: original */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="order-3 lg:col-span-7 lg:col-start-1 lg:row-start-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-2 sm:gap-4 mt-6 sm:mt-8"
+            className="order-3 lg:col-span-7 lg:col-start-1 lg:row-start-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-2 sm:gap-4 mt-6 sm:mt-8 lg:mt-6"
           >
             <a
               href="https://fvco2.share-eu1.hsforms.com/2GephDJrwRPay5zTsxJoG2A"
@@ -142,19 +142,19 @@ const Hero = () => {
             >
               <Button
                 size="lg"
-                className="w-full sm:w-auto min-h-[40px] sm:min-h-[48px] bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold px-5 sm:px-8 h-10 sm:h-14 text-sm sm:text-lg rounded-full shadow-finance-lg shadow-gold-500/25 hover:shadow-gold-glow transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+                className="w-full sm:w-auto min-h-[40px] sm:min-h-[48px] lg:min-h-12 lg:h-12 bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold px-5 sm:px-8 lg:px-6 h-10 sm:h-14 text-sm sm:text-lg lg:text-base rounded-full shadow-finance-lg shadow-gold-500/25 hover:shadow-gold-glow transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
               >
                 Sign up for updates
-                <ArrowRight className="ml-1.5 sm:ml-2 h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+                <ArrowRight className="ml-1.5 sm:ml-2 lg:ml-1.5 h-4 w-4 sm:h-5 sm:w-5 lg:h-4 lg:w-4 shrink-0" />
               </Button>
             </a>
             <Link to="/#how-it-works" onClick={scrollToHowItWorks} className="w-full sm:w-auto flex justify-center lg:justify-start">
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto min-h-[40px] sm:min-h-[48px] border-2 border-white text-white bg-white/10 hover:bg-white/20 hover:border-gold-400 hover:text-gold-100 px-5 sm:px-8 h-10 sm:h-14 text-sm sm:text-lg rounded-full backdrop-blur-md font-semibold shadow-[0_0_0_1px_rgba(255,255,255,0.1)] transition-all duration-300 hover:-translate-y-0.5"
+                className="w-full sm:w-auto min-h-[40px] sm:min-h-[48px] lg:min-h-12 lg:h-12 border-2 border-white text-white bg-white/10 hover:bg-white/20 hover:border-gold-400 hover:text-gold-100 px-5 sm:px-8 lg:px-6 h-10 sm:h-14 text-sm sm:text-lg lg:text-base rounded-full backdrop-blur-md font-semibold shadow-[0_0_0_1px_rgba(255,255,255,0.1)] transition-all duration-300 hover:-translate-y-0.5"
               >
-                <PlayCircle className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5 shrink-0" aria-hidden />
+                <PlayCircle className="mr-1.5 sm:mr-2 lg:mr-1.5 h-4 w-4 sm:h-5 sm:w-5 lg:h-4 lg:w-4 shrink-0" aria-hidden />
                 How It Works
               </Button>
             </Link>
