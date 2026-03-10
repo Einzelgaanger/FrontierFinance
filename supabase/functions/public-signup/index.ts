@@ -78,7 +78,7 @@ serve(async (req) => {
       if (domainMatches && domainMatches.length > 0) {
         return new Response(
           JSON.stringify({
-            error: `An account from your organization (@${emailDomain}) already exists in our system. Please use the search tool on the signup page to find available company emails, then sign in using "Forgot Password." If you no longer have access to that email and need your data transferred to a different company email, please contact dev@frontierfinance.org.`
+            error: `An account from your organization (@${emailDomain}) already exists in our system. Please use the search tool on the signup page to find available company emails, then sign in using "Forgot Password." If you no longer have access to that email and need your data transferred to a different company email, please contact developer@frontierfinance.org.`
           }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
