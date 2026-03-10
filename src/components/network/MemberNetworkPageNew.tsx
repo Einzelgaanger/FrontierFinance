@@ -49,6 +49,7 @@ export default function MemberNetworkPageNew() {
           .from('user_profiles')
           .select('id, email, company_name, description, website, profile_picture_url, user_role')
           .not('email', 'like', '%.test@escpnetwork.net')
+          .eq('show_in_directory', true)
           .order('company_name'),
         supabase.from('company_members').select('company_user_id, member_user_id'),
         supabase.from('survey_responses_2021').select('user_id').eq('submission_status', 'completed'),
