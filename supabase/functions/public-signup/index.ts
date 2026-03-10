@@ -54,6 +54,37 @@ serve(async (req) => {
       )
     }
 
+    // Block signups from company domains that already exist in the database
+    const genericDomains = new Set([
+      'gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com',
+      'yahoo.com', 'yahoo.co.uk', 'yahoo.fr', 'yahoo.de', 'yahoo.co.in',
+      'aol.com', 'icloud.com', 'me.com', 'mac.com',
+      'protonmail.com', 'proton.me', 'pm.me',
+      'zoho.com', 'zohomail.com', 'yandex.com', 'mail.com', 'gmx.com', 'gmx.net',
+      'tutanota.com', 'tutamail.com', 'fastmail.com',
+      'mail.ru', 'inbox.com', 'email.com', 'usa.com',
+      'consultant.com', 'europe.com', 'asia.com', 'post.com',
+    ])
+
+    const emailDomain = email.toLowerCase().split('@')[1]
+    if (emailDomain && !genericDomains.has(emailDomain)) {
+      // Check if any existing user_profiles already use this company domain
+      const { data: domainMatches } = await supabase
+        .from('user_profiles')
+        .select('email')
+        .ilike('email', `%@${emailDomain}`)
+        .limit(1)
+
+      if (domainMatches && domainMatches.length > 0) {
+        return new Response(
+          JSON.stringify({
+            error: `An account from your organization (@${emailDomain}) already exists in our system. Please use the search tool on the signup page to find available company emails, then sign in using "Forgot Password." If you no longer have access to that email and need your data transferred to a different company email, please contact dev@frontierfinance.org.`
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+    }
+
     // Create user with admin API - email_confirm: false so they must verify email first
     const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
       email,
