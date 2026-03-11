@@ -1,0 +1,1 @@
+UPDATE public.user_profiles SET show_in_directory = false WHERE id IN ('9480045d-a6b2-4668-ab80-b381d88adaba', '92d51cf1-4a26-4a8c-9f3d-b5d44a88b819');
