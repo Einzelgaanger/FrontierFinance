@@ -48,11 +48,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    const testUsers = [
+    const defaultUsers = [
       { email: "admin@cff.com", password: "Admin123", role: "admin", full_name: "Test Admin" },
       { email: "member@cff.com", password: "Member123", role: "member", full_name: "Test Member" },
       { email: "viewer@cff.com", password: "Viewer123", role: "viewer", full_name: "Test Viewer" },
     ];
+
+    // Allow custom users from body
+    const testUsers = body.users && Array.isArray(body.users) ? body.users : defaultUsers;
 
     const results = [];
 
