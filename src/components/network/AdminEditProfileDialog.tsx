@@ -93,22 +93,35 @@ export default function AdminEditProfileDialog({ open, onClose, userId, onSaved 
 
   const handleSave = async () => {
     setSaving(true);
-    const { error } = await supabase
-      .from('user_profiles')
-      .update({
-        company_name: form.company_name,
-        email: form.email,
+    
+    // Use edge function to update both user_profiles and auth.users (for email changes)
+    const { data, error } = await supabase.functions.invoke('update-user-email', {
+      body: {
+        userId,
+        newEmail: form.email,
+        companyName: form.company_name,
+        fullName: form.full_name,
         description: form.description,
         website: form.website,
-        profile_picture_url: form.profile_photo_url,
-        full_name: form.full_name,
-      })
-      .eq('id', userId);
+        profilePhotoUrl: form.profile_photo_url,
+      },
+    });
 
     if (error) {
       toast({ title: 'Update failed', description: error.message, variant: 'destructive' });
+    } else if (data?.authError) {
+      toast({ 
+        title: 'Profile updated, but auth email failed', 
+        description: `Profile saved. Auth email update error: ${data.authError}. The user may need to use the old email to log in.`,
+        variant: 'destructive',
+      });
+      onSaved();
+      onClose();
     } else {
-      toast({ title: 'Profile updated', description: 'Changes saved successfully.' });
+      const desc = data?.emailChanged && data?.authUpdated
+        ? 'Profile and login email updated successfully.'
+        : 'Changes saved successfully.';
+      toast({ title: 'Profile updated', description: desc });
       onSaved();
       onClose();
     }
