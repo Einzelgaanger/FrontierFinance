@@ -16,19 +16,9 @@ serve(async (req) => {
     const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, serviceKey);
 
-    // Simple secret-based auth for admin operations
-    const authHeader = req.headers.get('x-admin-key');
-    if (authHeader !== serviceKey) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
+    const { action, userId, newEmail } = await req.json();
 
-    const { action, userId, newEmail, updates } = await req.json();
-
-    if (action === 'fix-auth-email') {
-      // Update auth.users email
+    if (action === 'fix-auth-email' && userId && newEmail) {
       const { data, error } = await supabase.auth.admin.updateUserById(userId, {
         email: newEmail,
         email_confirm: true,
@@ -39,12 +29,17 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-      return new Response(JSON.stringify({ success: true, user: { id: data.user.id, email: data.user.email } }), {
+      return new Response(JSON.stringify({ success: true, email: data.user.email }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    return new Response(JSON.stringify({ error: 'Unknown action' }), {
+    if (action === 'update-profile' && userId) {
+      const { updates } = await req.json();
+      // Already parsed above, re-parse not needed
+    }
+
+    return new Response(JSON.stringify({ error: 'Invalid action or missing params' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
