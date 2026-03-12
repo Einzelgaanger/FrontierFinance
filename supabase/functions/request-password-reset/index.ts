@@ -27,7 +27,7 @@ serve(async (req) => {
     }
 
     // Generate a password reset link using admin API (bypasses Auth rate limits)
-    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+    let { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'recovery',
       email,
       options: {
@@ -35,9 +35,79 @@ serve(async (req) => {
       }
     })
 
-    if (linkError) {
+    // If user not found in auth, check user_profiles and auto-create auth account
+    if (linkError && linkError.message?.includes('User with this email not found')) {
+      console.log('User not found in auth, checking user_profiles for:', email)
+      
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('id, email, company_name, full_name')
+        .ilike('email', email.trim())
+        .maybeSingle()
+
+      if (profile) {
+        console.log('Found profile, syncing auth user for:', profile.email, 'with ID:', profile.id)
+        
+        // First try to update existing auth user's email (handles ID exists but email mismatch)
+        const { error: updateError } = await supabase.auth.admin.updateUserById(profile.id, {
+          email: profile.email,
+          email_confirm: true,
+        })
+
+        if (updateError) {
+          console.log('Update failed (user may not exist in auth), trying to create:', updateError.message)
+          // User doesn't exist in auth at all - create them
+          const tempPassword = `CFF_${crypto.randomUUID().slice(0, 12)}!`
+          const { error: createError } = await supabase.auth.admin.createUser({
+            id: profile.id,
+            email: profile.email,
+            password: tempPassword,
+            email_confirm: true,
+            user_metadata: {
+              company_name: profile.company_name,
+              full_name: profile.full_name,
+            },
+          })
+
+          if (createError) {
+            console.error('Error creating auth user:', createError)
+            return new Response(
+              JSON.stringify({ success: true, message: 'If an account exists with this email, a password reset link has been sent.' }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            )
+          }
+        } else {
+          console.log('Auth user email updated to match profile for:', profile.email)
+        }
+
+        // Retry generating the reset link now that the auth user exists
+        console.log('Auth user created, retrying reset link generation for:', profile.email)
+        const retryResult = await supabase.auth.admin.generateLink({
+          type: 'recovery',
+          email: profile.email,
+          options: {
+            redirectTo: 'https://frontierfinance.org/reset-password',
+          }
+        })
+        linkData = retryResult.data
+        linkError = retryResult.error
+        
+        if (linkError) {
+          console.error('Error generating reset link after creating user:', linkError)
+          return new Response(
+            JSON.stringify({ success: true, message: 'If an account exists with this email, a password reset link has been sent.' }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+      } else {
+        console.log('Email not found in user_profiles either:', email)
+        return new Response(
+          JSON.stringify({ success: true, message: 'If an account exists with this email, a password reset link has been sent.' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+    } else if (linkError) {
       console.error('Error generating reset link:', linkError)
-      // Don't reveal if user exists or not for security
       return new Response(
         JSON.stringify({ success: true, message: 'If an account exists with this email, a password reset link has been sent.' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
