@@ -46,25 +46,20 @@ serve(async (req) => {
         .maybeSingle()
 
       if (profile) {
-        console.log('Found profile, creating auth user for:', profile.email, 'with ID:', profile.id)
+        console.log('Found profile, syncing auth user for:', profile.email, 'with ID:', profile.id)
         
-        // Create auth user with matching profile ID
-        const tempPassword = `CFF_${crypto.randomUUID().slice(0, 12)}!`
-        const { error: createError } = await supabase.auth.admin.createUser({
-          id: profile.id,
+        // First try to update existing auth user's email (handles ID exists but email mismatch)
+        const { error: updateError } = await supabase.auth.admin.updateUserById(profile.id, {
           email: profile.email,
-          password: tempPassword,
           email_confirm: true,
-          user_metadata: {
-            company_name: profile.company_name,
-            full_name: profile.full_name,
-          },
         })
 
-        if (createError) {
-          console.error('Error creating auth user:', createError)
-          // Try without specifying ID (in case ID conflicts)
-          const { error: createError2 } = await supabase.auth.admin.createUser({
+        if (updateError) {
+          console.log('Update failed (user may not exist in auth), trying to create:', updateError.message)
+          // User doesn't exist in auth at all - create them
+          const tempPassword = `CFF_${crypto.randomUUID().slice(0, 12)}!`
+          const { error: createError } = await supabase.auth.admin.createUser({
+            id: profile.id,
             email: profile.email,
             password: tempPassword,
             email_confirm: true,
@@ -73,13 +68,16 @@ serve(async (req) => {
               full_name: profile.full_name,
             },
           })
-          if (createError2) {
-            console.error('Error creating auth user (retry):', createError2)
+
+          if (createError) {
+            console.error('Error creating auth user:', createError)
             return new Response(
               JSON.stringify({ success: true, message: 'If an account exists with this email, a password reset link has been sent.' }),
               { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             )
           }
+        } else {
+          console.log('Auth user email updated to match profile for:', profile.email)
         }
 
         // Retry generating the reset link now that the auth user exists
