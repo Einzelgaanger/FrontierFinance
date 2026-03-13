@@ -223,12 +223,12 @@ serve(async (req) => {
           show_in_directory: false,
         });
 
-        // Create user_roles
-        await supabase.from('user_roles').insert({
+        // Set user_roles to member (upsert to override trigger's default 'viewer')
+        await supabase.from('user_roles').upsert({
           user_id: memberUserId,
           email: memberEmail,
           role: 'member',
-        });
+        }, { onConflict: 'user_id' });
       }
 
       // Insert company_members

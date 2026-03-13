@@ -145,12 +145,12 @@ serve(async (req) => {
         company_id: company_user_id
       }).single()
 
-      // Create user_roles entry as member
-      await supabaseAdmin.from('user_roles').insert({
+      // Set user_roles to member (upsert to override trigger's default 'viewer')
+      await supabaseAdmin.from('user_roles').upsert({
         user_id: memberUserId,
         email: member_email,
         role: 'member'
-      }).single()
+      }, { onConflict: 'user_id' }).single()
     }
 
     // Insert into company_members (new members get 24h temp password expiry for display)
