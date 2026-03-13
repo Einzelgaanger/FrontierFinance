@@ -99,16 +99,19 @@ export default function AdminAnalytics() {
   const [surveyData, setSurveyData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const yearSelectionActions = (
-    <div className="flex items-center gap-2">
+  const yearButtons = (
+    <div className="flex items-center gap-1.5 shrink-0">
       {AVAILABLE_YEARS.map((year) => {
         const isActive = selectedYear === year;
         return (
           <Button
             key={year}
-            variant={isActive ? 'default' : 'secondary'}
-            className={`h-8 px-3 text-xs ${isActive ? 'shadow-md' : 'opacity-80 hover:opacity-100'
-              }`}
+            variant="ghost"
+            size="sm"
+            className={`h-8 px-3 text-xs rounded-lg font-sans ${isActive
+              ? 'bg-navy-900 text-gold-400 hover:bg-navy-800 shadow-finance'
+              : 'bg-slate-50 text-navy-900 border border-slate-200 hover:border-gold-500/40 hover:bg-amber-50/50'
+            }`}
             onClick={() => setSelectedYear(year)}
             aria-pressed={isActive}
           >
@@ -296,77 +299,68 @@ export default function AdminAnalytics() {
 
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">{currentSection.title}</h2>
-            <p className="text-muted-foreground mt-1">Analyzing {surveyData.length} survey responses</p>
+            <h2 className="text-xl font-display font-normal text-navy-900">{currentSection.title}</h2>
+            <p className="text-xs text-slate-500 font-sans mt-0.5">{surveyData.length} survey responses</p>
           </div>
-          <Button onClick={fetchSurveyData} variant="outline" size="sm" className="gap-2">
+          <Button onClick={fetchSurveyData} variant="outline" size="sm" className="gap-2 rounded-xl border-slate-200 text-navy-900 hover:border-gold-500 font-sans">
             <RefreshCw className="h-4 w-4" />
-            Refresh Data
+            Refresh data
           </Button>
         </div>
 
-        {/* Summary Cards with Gradients */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="relative overflow-hidden border-none">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-blue-600/5 to-transparent" />
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
-              <CardTitle className="text-sm font-medium">Total Responses</CardTitle>
-              <div className="p-2 bg-blue-500/10 rounded-lg">
-                <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+          <div className="finance-card p-5">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs section-label">Total responses</p>
+                <p className="text-2xl font-display font-normal text-navy-900 tabular-nums mt-1">{surveyData.length}</p>
+                <p className="text-xs text-slate-500 font-sans mt-1">Completed surveys</p>
               </div>
-            </CardHeader>
-            <CardContent className="relative">
-              <div className="text-3xl font-bold">{surveyData.length}</div>
-              <p className="text-xs text-muted-foreground mt-1">Completed surveys</p>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-none">
-            <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-green-600/5 to-transparent" />
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
-              <CardTitle className="text-sm font-medium">Fields Analyzed</CardTitle>
-              <div className="p-2 bg-green-500/10 rounded-lg">
-                <Activity className="h-5 w-5 text-green-600 dark:text-green-400" />
+              <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                <Users className="h-5 w-5" />
               </div>
-            </CardHeader>
-            <CardContent className="relative">
-              <div className="text-3xl font-bold">{currentSection.fields.length}</div>
-              <p className="text-xs text-muted-foreground mt-1">Data points</p>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-none">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-purple-600/5 to-transparent" />
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
-              <CardTitle className="text-sm font-medium">Survey Year</CardTitle>
-              <div className="p-2 bg-purple-500/10 rounded-lg">
-                <Calendar className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+            </div>
+          </div>
+          <div className="finance-card p-5">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs section-label">Fields analyzed</p>
+                <p className="text-2xl font-display font-normal text-navy-900 tabular-nums mt-1">{currentSection.fields.length}</p>
+                <p className="text-xs text-slate-500 font-sans mt-1">Data points</p>
               </div>
-            </CardHeader>
-            <CardContent className="relative">
-              <div className="text-3xl font-bold">{selectedYear}</div>
-              <p className="text-xs text-muted-foreground mt-1">Current dataset</p>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-none">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-600/5 to-transparent" />
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
-              <CardTitle className="text-sm font-medium">Section Progress</CardTitle>
-              <div className="p-2 bg-orange-500/10 rounded-lg">
-                <Target className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+              <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                <Activity className="h-5 w-5" />
               </div>
-            </CardHeader>
-            <CardContent className="relative">
-              <div className="text-3xl font-bold">{selectedSection} / {sections.length}</div>
-              <p className="text-xs text-muted-foreground mt-1">Sections reviewed</p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+          <div className="finance-card p-5">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs section-label">Survey year</p>
+                <p className="text-2xl font-display font-normal text-navy-900 tabular-nums mt-1">{selectedYear}</p>
+                <p className="text-xs text-slate-500 font-sans mt-1">Current dataset</p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                <Calendar className="h-5 w-5" />
+              </div>
+            </div>
+          </div>
+          <div className="finance-card p-5">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs section-label">Section progress</p>
+                <p className="text-2xl font-display font-normal text-navy-900 tabular-nums mt-1">{selectedSection} / {sections.length}</p>
+                <p className="text-xs text-slate-500 font-sans mt-1">Sections reviewed</p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0">
+                <Target className="h-5 w-5" />
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Field Analytics */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {currentSection.fields.map((field, idx) => {
             const distribution = calculateDistribution(field);
@@ -379,40 +373,38 @@ export default function AdminAnalytics() {
             const hasNumericData = stats !== null && stats.count > 0 && !shouldHideNumericSummary;
 
             return (
-              <Card key={field} className="hover-lift">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{formatFieldName(field)}</CardTitle>
-                      <CardDescription className="mt-1">
-                        {hasNumericData ? `${stats.count} numeric values` : `${distribution.reduce((sum, d) => sum + d.value, 0)} responses`}
-                      </CardDescription>
-                    </div>
-                    <Badge variant="secondary" className="ml-2">
-                      {hasNumericData ? 'Numeric' : 'Categorical'}
-                    </Badge>
+              <div key={field} className="finance-card overflow-hidden">
+                <div className="px-5 py-4 border-b border-slate-200/80 flex items-start justify-between">
+                  <div>
+                    <h3 className="font-display font-normal text-navy-900 text-lg">{formatFieldName(field)}</h3>
+                    <p className="text-xs text-slate-500 font-sans mt-0.5">
+                      {hasNumericData ? `${stats.count} numeric values` : `${distribution.reduce((sum, d) => sum + d.value, 0)} responses`}
+                    </p>
                   </div>
-                </CardHeader>
-                <CardContent>
+                  <Badge variant="secondary" className="rounded-lg border-slate-200 text-slate-600 font-sans text-[11px]">
+                    {hasNumericData ? 'Numeric' : 'Categorical'}
+                  </Badge>
+                </div>
+                <div className="p-5">
                   {hasNumericData ? (
                     <div className="space-y-4">
                       {!shouldHideNumericSummary && (
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                          <div className="p-3 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900">
-                            <p className="text-xs font-medium text-muted-foreground mb-1">Average</p>
-                            <p className="text-xl font-bold">{stats.avg.toLocaleString(undefined, { maximumFractionDigits: 1 })}</p>
+                          <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80">
+                            <p className="text-xs font-medium text-slate-500 font-sans mb-1">Average</p>
+                            <p className="text-xl font-display font-normal text-navy-900 tabular-nums">{stats.avg.toLocaleString(undefined, { maximumFractionDigits: 1 })}</p>
                           </div>
-                          <div className="p-3 rounded-lg bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
-                            <p className="text-xs font-medium text-muted-foreground mb-1">Median</p>
-                            <p className="text-xl font-bold">{stats.median.toLocaleString(undefined, { maximumFractionDigits: 1 })}</p>
+                          <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80">
+                            <p className="text-xs font-medium text-slate-500 font-sans mb-1">Median</p>
+                            <p className="text-xl font-display font-normal text-navy-900 tabular-nums">{stats.median.toLocaleString(undefined, { maximumFractionDigits: 1 })}</p>
                           </div>
-                          <div className="p-3 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950 dark:to-orange-900">
-                            <p className="text-xs font-medium text-muted-foreground mb-1">Min</p>
-                            <p className="text-xl font-bold">{stats.min.toLocaleString()}</p>
+                          <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80">
+                            <p className="text-xs font-medium text-slate-500 font-sans mb-1">Min</p>
+                            <p className="text-xl font-display font-normal text-navy-900 tabular-nums">{stats.min.toLocaleString()}</p>
                           </div>
-                          <div className="p-3 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900">
-                            <p className="text-xs font-medium text-muted-foreground mb-1">Max</p>
-                            <p className="text-xl font-bold">{stats.max.toLocaleString()}</p>
+                          <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80">
+                            <p className="text-xs font-medium text-slate-500 font-sans mb-1">Max</p>
+                            <p className="text-xl font-display font-normal text-navy-900 tabular-nums">{stats.max.toLocaleString()}</p>
                           </div>
                         </div>
                       )}
@@ -506,13 +498,13 @@ export default function AdminAnalytics() {
                       </div>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-                      <PieChartIcon className="h-12 w-12 mb-3 opacity-20" />
+                    <div className="flex flex-col items-center justify-center py-12 text-slate-500 font-sans">
+                      <PieChartIcon className="h-12 w-12 mb-3 opacity-20 text-gold-500/50" />
                       <p className="text-sm">No data available for this field</p>
                     </div>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>
@@ -523,17 +515,17 @@ export default function AdminAnalytics() {
   if (userRole !== 'admin') {
     return (
       <SidebarLayout>
-        <div className="flex items-center justify-center h-64">
-          <p className="text-muted-foreground">Access denied. Admin only.</p>
+        <div className="min-h-screen bg-[#faf6f0] flex items-center justify-center">
+          <p className="text-slate-600 font-sans">Access denied. Admin only.</p>
         </div>
       </SidebarLayout>
     );
   }
 
   const renderLoadingSkeleton = () => (
-    <SidebarLayout headerActions={yearSelectionActions}>
-      <div className="container mx-auto p-6 space-y-6">
-        <div className="rounded-2xl border border-blue-900/15 bg-white shadow-md p-5 space-y-3">
+    <SidebarLayout>
+      <div className="min-h-screen bg-[#faf6f0] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <div className="finance-card p-5 space-y-3">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <Skeleton className="h-3 w-32 rounded-full" />
             <Skeleton className="h-2.5 w-44 rounded-full" />
@@ -601,24 +593,31 @@ export default function AdminAnalytics() {
   const sections = SURVEY_SECTIONS[selectedYear as keyof typeof SURVEY_SECTIONS] || [];
 
   return (
-    <SidebarLayout headerActions={yearSelectionActions}>
-      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
-        <div className="container mx-auto p-6 sm:p-8 space-y-6">
-          <div className="mb-8">
-            <span className="section-label">Analytics</span>
-            <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">
-              Survey Analytics
-            </h1>
-            <div className="w-14 h-0.5 bg-gold-500/60 mt-3 rounded-full" />
-            <p className="text-sm text-slate-600 mt-3 font-sans">Explore survey responses by year and section</p>
+    <SidebarLayout>
+      <div className="min-h-screen bg-[#faf6f0] font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
+        {/* Page header — same pattern as Community, Admin, Network */}
+        <header className="sticky top-0 z-20 border-b border-slate-200/60 bg-[#faf6f0]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <div className="flex flex-wrap items-baseline gap-2 min-w-0">
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Analytics</span>
+                <h1 className="text-base sm:text-lg font-display font-normal text-navy-900">Survey analytics</h1>
+                <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+                <p className="text-[10px] text-slate-500 font-sans hidden sm:inline">Explore survey responses by year and section</p>
+              </div>
+              {yearButtons}
+            </div>
           </div>
+        </header>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6 min-w-0 overflow-x-hidden">
           <div className="finance-card p-5">
             <div className="flex items-center justify-between flex-wrap gap-3 mb-2">
               <div className="flex items-center gap-2">
-                <Briefcase className="h-4 w-4 text-navy-900" />
-                <span className="text-xs font-semibold text-navy-900 uppercase tracking-[0.18em]">Survey Sections</span>
+                <div className="w-8 h-0.5 bg-gold-500 rounded-full" />
+                <span className="text-[11px] font-bold uppercase tracking-wider text-gold-600 font-sans">Survey sections</span>
               </div>
-              <span className="text-[11px] text-slate-500">Choose a focus area to explore metrics</span>
+              <span className="text-[11px] text-slate-500 font-sans">Choose a focus area</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {sections.map((section) => {
@@ -628,9 +627,9 @@ export default function AdminAnalytics() {
                     key={section.id}
                     size="sm"
                     variant="ghost"
-                    className={`h-9 px-4 text-[11px] font-medium tracking-wide transition-all rounded-full ${isActive
-                        ? 'bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white shadow-md hover:brightness-110'
-                        : 'bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100'
+                    className={`h-9 px-4 text-[11px] font-medium tracking-wide transition-all rounded-xl font-sans ${isActive
+                        ? 'bg-navy-900 text-gold-400 hover:bg-navy-800 shadow-finance'
+                        : 'bg-slate-50 text-navy-900 border border-slate-200 hover:border-gold-500/40 hover:bg-amber-50/50'
                       }`}
                     onClick={() => setSelectedSection(section.id)}
                     aria-pressed={isActive}

@@ -32,7 +32,8 @@ import {
   Shield,
   BarChart3,
   ArrowLeft,
-  Pencil
+  Pencil,
+  Loader2
 } from 'lucide-react';
 import { getSurveySections } from '@/utils/surveySectionMappings';
 import { getQuestionLabel } from '@/utils/surveyQuestionLabels';
@@ -387,10 +388,10 @@ const FundManagerDetail = () => {
   if (loading) {
     return (
       <SidebarLayout>
-        <div className="min-h-screen bg-gradient-to-b from-amber-50/70 via-slate-100 to-slate-200 flex items-center justify-center p-6 font-sans">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-10 w-10 rounded-full border-2 border-gold-500/60 border-t-gold-500 animate-spin" />
-            <p className="text-slate-600">Loading profile...</p>
+        <div className="min-h-screen bg-[#faf6f0] flex items-center justify-center p-6 font-sans antialiased">
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-gold-500" />
+            <p className="text-xs text-slate-600 font-sans">Loading profile…</p>
           </div>
         </div>
       </SidebarLayout>
@@ -400,12 +401,25 @@ const FundManagerDetail = () => {
   if (!fundManager) {
     return (
       <SidebarLayout>
-        <div className="min-h-screen bg-gradient-to-b from-amber-50/70 via-slate-100 to-slate-200 flex items-center justify-center p-6 font-sans">
-          <div className="text-center max-w-md">
-            <span className="section-label text-gold-600">Network</span>
-            <h1 className="text-2xl font-display font-normal text-navy-900 mt-1 mb-2">Profile not found</h1>
-            <p className="text-slate-600 mb-6">The requested fund manager could not be found.</p>
-            <Button onClick={() => navigate('/network')} className="rounded-xl bg-navy-900 hover:bg-navy-800 text-white">
+        <div className="min-h-screen bg-[#faf6f0] font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
+          <header className="sticky top-0 z-20 border-b border-slate-200/60 bg-[#faf6f0]">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <div className="flex flex-wrap items-baseline gap-2 min-w-0">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Network</span>
+                  <h1 className="text-base sm:text-lg font-display font-normal text-navy-900">Profile not found</h1>
+                  <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+                  <p className="text-[10px] text-slate-500 font-sans hidden sm:inline">The requested profile could not be found</p>
+                </div>
+                <Button onClick={() => navigate('/network')} variant="outline" size="sm" className="h-8 rounded-lg border-slate-200 text-navy-900 hover:border-gold-500/40 font-sans text-xs">
+                  <ArrowLeft className="w-3.5 h-3.5 mr-1.5" />
+                  Back to Network
+                </Button>
+              </div>
+            </div>
+          </header>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex justify-center">
+            <Button onClick={() => navigate('/network')} className="rounded-xl bg-navy-900 hover:bg-navy-800 text-white shadow-finance font-sans text-sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Network
             </Button>
@@ -575,29 +589,44 @@ const FundManagerDetail = () => {
   ) : null;
 
   return (
-    <SidebarLayout headerActions={yearSelectionActions}>
-       <div className="min-h-screen bg-gradient-to-b from-amber-50/70 via-slate-100 to-slate-200 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
+    <SidebarLayout>
+       <div className="min-h-screen bg-[#faf6f0] font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
 
-         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 pb-8 sm:pb-12 min-w-0 overflow-x-hidden">
-            <div className="mb-4 sm:mb-6">
-              <Button variant="outline" onClick={() => navigate('/network')} className="min-h-[44px] border-2 border-slate-300 text-navy-800 hover:text-navy-900 hover:bg-amber-100 hover:border-gold-500 rounded-xl font-medium touch-manipulation w-full sm:w-auto">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Network
-              </Button>
-            </div>
+         <header className="sticky top-0 z-20 border-b border-slate-200/60 bg-[#faf6f0]">
+           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3">
+             <div className="flex flex-wrap items-baseline justify-between gap-2">
+               <div className="flex flex-wrap items-baseline gap-2 min-w-0">
+                 <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Network</span>
+                 <h1 className="text-base sm:text-lg font-display font-normal text-navy-900 truncate">{fundManager.firm_name || 'Profile'}</h1>
+                 <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+                 <p className="text-[10px] text-slate-500 font-sans hidden sm:inline truncate">Company information & survey data</p>
+               </div>
+               <div className="flex items-center gap-2">
+                 {yearSelectionActions}
+                 <Button variant="outline" size="sm" onClick={() => navigate('/network')} className="h-8 rounded-lg border-slate-200 text-navy-900 hover:border-gold-500/40 font-sans text-xs shrink-0">
+                   <ArrowLeft className="w-3.5 h-3.5 mr-1.5" />
+                   Back to Network
+                 </Button>
+               </div>
+             </div>
+           </div>
+         </header>
+
+         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-8 sm:pb-12 min-w-0 overflow-x-hidden">
 
             {/* Company Information Section - CFF style */}
             <div className="mb-6 sm:mb-8">
-              <div className="finance-card overflow-hidden border-2 border-slate-200 hover:border-gold-400/80 shadow-md">
+              <div className="rounded-xl border border-slate-200/90 bg-white shadow-finance overflow-hidden">
                 <div className="relative flex flex-col lg:flex-row items-start justify-between gap-4">
                   <div className="flex-1 w-full min-w-0 p-4 sm:p-6 lg:max-w-[65%]">
-                     <div className="flex items-center space-x-3 mb-6">
-                      <div className="w-10 h-10 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center shrink-0 shadow-md">
-                        <Building2 className="w-5 h-5" />
+                     <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Company</span>
+                        <h2 className="text-base font-display font-normal text-navy-900">Company Information</h2>
                       </div>
-                      <h2 className="text-lg font-display font-semibold text-navy-900">Company Information</h2>
                        {userRole === 'admin' && (
-                        <div className="ml-auto flex items-center gap-2">
+                        <div className="flex items-center gap-2">
                           <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); setTeamDialogOpen(true); }}>
                             <Users className="w-3.5 h-3.5 mr-1.5" />
                             Manage Team
@@ -693,7 +722,7 @@ const FundManagerDetail = () => {
                  </div>
 
                 {/* Right side - Large Profile Picture inside card */}
-                <div className="w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 flex-none border-4 border-gold-400/60 shadow-lg rounded-xl overflow-hidden ml-auto mr-2 mt-4 mb-6">
+                <div className="w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 flex-none border border-slate-200/90 shadow-finance rounded-xl overflow-hidden ml-auto mr-4 mt-4 mb-6">
                    {fundManager.profile_picture_url ? (
                      <img 
                        src={fundManager.profile_picture_url} 
@@ -728,13 +757,14 @@ const FundManagerDetail = () => {
                   return (
                     <>
                       {/* Section Selector - CFF directory-style */}
-                      <div className="rounded-2xl border-2 border-slate-200 bg-white shadow-md p-5 mb-6">
-                        <div className="flex items-center justify-between flex-wrap gap-3 mb-2">
+                      <div className="rounded-xl border border-slate-200/90 bg-white shadow-finance p-4 sm:p-5 mb-6">
+                        <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
                           <div className="flex items-center gap-2">
-                            <Briefcase className="h-4 w-4 text-gold-600" />
-                            <span className="text-xs font-semibold text-gold-700 uppercase tracking-[0.18em]">Survey Sections</span>
+                            <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Survey</span>
+                            <span className="text-base font-display font-normal text-navy-900">Sections</span>
                           </div>
-                          <span className="text-xs text-slate-600 font-medium">Choose a focus area to explore data</span>
+                          <span className="text-[10px] text-slate-500 font-sans">Choose a focus area</span>
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {sections.map((section) => {
@@ -761,30 +791,31 @@ const FundManagerDetail = () => {
                       </div>
 
                       {/* Section Content */}
-                      <div className="space-y-6">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h2 className="text-3xl font-bold text-navy-900">{currentSection.title}</h2>
-                            <p className="text-slate-700 mt-1 font-medium">Survey year {selectedYear}</p>
+                      <div className="space-y-4">
+                        <div className="flex flex-wrap items-baseline justify-between gap-2">
+                          <div className="flex flex-wrap items-baseline gap-2">
+                            <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Year {selectedYear}</span>
+                            <h2 className="text-base font-display font-normal text-navy-900">{currentSection.title}</h2>
                             {surveys.find(s => s.year === selectedYear)?.submittedBy && (
-                              <p className="text-slate-500 text-sm mt-0.5">Submitted by {surveys.find(s => s.year === selectedYear)?.submittedBy}</p>
+                              <p className="text-[10px] text-slate-500 font-sans">Submitted by {surveys.find(s => s.year === selectedYear)?.submittedBy}</p>
                             )}
                           </div>
-                          <Badge className="bg-gold-200 text-gold-800 border-0 font-medium" variant="secondary">
+                          <Badge className="bg-gold-100 text-gold-800 border-0 font-sans text-[10px] font-medium" variant="secondary">
                             {currentSection.fields.length} fields
                           </Badge>
                         </div>
 
-                        <Card className="border-2 border-slate-200 shadow-md bg-white">
-                          <CardHeader className="bg-amber-50 border-b-2 border-slate-200 rounded-t-md">
-                            <CardTitle className="flex items-center justify-between text-navy-900">
-                              <span className="text-lg font-bold">{currentSection.title}</span>
+                        <Card className="rounded-xl border border-slate-200/90 shadow-finance bg-white overflow-hidden">
+                          <CardHeader className="border-b border-slate-200/80 bg-slate-50/50 py-3 px-4 sm:px-6">
+                            <CardTitle className="text-sm font-display font-normal text-navy-900">
+                              {currentSection.title}
                             </CardTitle>
                           </CardHeader>
-                          <CardContent className="pt-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          <CardContent className="pt-4 sm:pt-5 px-4 sm:px-6 pb-5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                               {currentSection.fields.map((field: string) => (
-                                <div key={field} className="rounded-lg border-2 border-slate-200 bg-slate-50/50 hover:bg-amber-50 p-4 hover:shadow-md hover:border-gold-400/60 transition-all">
+                                <div key={field} className="rounded-xl border border-slate-200/90 bg-white p-3 sm:p-4 hover:border-gold-400/50 hover:shadow-finance transition-all">
                                   <p className="font-semibold text-[11px] uppercase tracking-wide text-slate-700 mb-2">
                                     {getQuestionLabel(field, selectedYear)}
                                   </p>

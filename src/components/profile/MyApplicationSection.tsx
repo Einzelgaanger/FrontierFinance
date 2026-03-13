@@ -248,130 +248,121 @@ export default function MyApplicationSection() {
 
   if (loading) {
     return (
-      <Card className="bg-white border-gray-200 shadow-lg">
-        <CardContent className="p-6 flex items-center justify-center">
-          <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
-        </CardContent>
-      </Card>
+      <div className="rounded-2xl border border-slate-200/90 bg-white shadow-finance p-6 flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-gold-500" />
+      </div>
     );
   }
 
   return (
-    <Card className="bg-white border-gray-200 shadow-lg">
-      <CardHeader className="cursor-pointer" onClick={() => setExpanded(!expanded)}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <ClipboardList className="w-5 h-5 text-blue-600" />
-            <div>
-              <CardTitle className="text-xl text-gray-800">Membership Application</CardTitle>
-              <CardDescription className="text-gray-600">
-                {application ? 'View and update your application details' : 'Fill in your membership application profile'}
-              </CardDescription>
-            </div>
+    <div className="rounded-xl border border-slate-200/90 bg-white shadow-finance overflow-hidden">
+      <button type="button" className="w-full text-left" onClick={() => setExpanded(!expanded)}>
+        <div className="px-4 py-2.5 border-b border-slate-200/80 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-6 h-0.5 bg-gold-500 rounded-full shrink-0" />
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gold-600 font-sans shrink-0">Application</span>
+            <h2 className="font-display font-normal text-navy-900 text-base truncate">Membership application</h2>
+            <span className="text-[11px] text-slate-500 font-sans truncate hidden sm:inline">— {application ? 'View/update' : 'Fill in profile'}</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 shrink-0">
             {getStatusBadge()}
-            {expanded ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+            {expanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
           </div>
         </div>
-      </CardHeader>
+      </button>
 
       {expanded && (
-        <CardContent className="space-y-6 border-t border-gray-100 pt-6">
+        <CardContent className="space-y-4 border-t border-slate-200/80 pt-4 px-4 pb-4">
           {application?.admin_notes && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p className="text-sm font-medium text-blue-800">Admin Notes:</p>
-              <p className="text-sm text-blue-700 mt-1">{application.admin_notes}</p>
+            <div className="rounded-lg bg-amber-50/80 border border-amber-200/80 p-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-gold-600 font-sans">Admin notes</p>
+              <p className="text-xs text-slate-700 font-sans mt-0.5">{application.admin_notes}</p>
             </div>
           )}
 
-          {/* Basic Information */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Basic Information</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">Name</Label>
-                <Input value={formData.applicant_name} onChange={(e) => updateField('applicant_name', e.target.value)} placeholder="Your full name" className="bg-white border-gray-300" />
+          <div className="space-y-3">
+            <h3 className="text-[11px] font-bold uppercase tracking-wider text-gold-600 font-sans border-b border-slate-200/80 pb-1.5">Basic information</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label className="text-[11px] font-medium text-slate-500 font-sans">Name</Label>
+                <Input value={formData.applicant_name} onChange={(e) => updateField('applicant_name', e.target.value)} placeholder="Your full name" className="rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
               </div>
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">Email</Label>
-                <Input value={formData.email} onChange={(e) => updateField('email', e.target.value)} placeholder="Email" className="bg-white border-gray-300" />
+              <div className="space-y-1">
+                <Label className="text-[11px] font-medium text-slate-500 font-sans">Email</Label>
+                <Input value={formData.email} onChange={(e) => updateField('email', e.target.value)} placeholder="Email" className="rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
               </div>
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">Vehicle Name</Label>
-                <Input value={formData.vehicle_name} onChange={(e) => updateField('vehicle_name', e.target.value)} placeholder="Fund/vehicle name" className="bg-white border-gray-300" />
+              <div className="space-y-1">
+                <Label className="text-[11px] font-medium text-slate-500 font-sans">Vehicle name</Label>
+                <Input value={formData.vehicle_name} onChange={(e) => updateField('vehicle_name', e.target.value)} placeholder="Fund/vehicle name" className="rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
               </div>
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">Website</Label>
-                <Input value={formData.organization_website} onChange={(e) => updateField('organization_website', e.target.value)} placeholder="https://..." className="bg-white border-gray-300" />
+              <div className="space-y-1">
+                <Label className="text-[11px] font-medium text-slate-500 font-sans">Website</Label>
+                <Input value={formData.organization_website} onChange={(e) => updateField('organization_website', e.target.value)} placeholder="https://..." className="rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
               </div>
             </div>
           </div>
 
-          {/* Role & Team */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Role & Team</h3>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Role/Job Title</Label>
-              <Textarea value={formData.role_job_title} onChange={(e) => updateField('role_job_title', e.target.value)} placeholder="Your role..." rows={3} className="bg-white border-gray-300 resize-none" />
+          <div className="space-y-3">
+            <h3 className="text-[11px] font-bold uppercase tracking-wider text-gold-600 font-sans border-b border-slate-200/80 pb-1.5">Role & team</h3>
+            <div className="space-y-1">
+              <Label className="text-[11px] font-medium text-slate-500 font-sans">Role / job title</Label>
+              <Textarea value={formData.role_job_title} onChange={(e) => updateField('role_job_title', e.target.value)} placeholder="Your role..." rows={2} className="rounded-lg border-slate-200 font-sans text-sm resize-none focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
             </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Team Size</Label>
-              <Textarea value={formData.team_size} onChange={(e) => updateField('team_size', e.target.value)} placeholder="Team details..." rows={3} className="bg-white border-gray-300 resize-none" />
+            <div className="space-y-1">
+              <Label className="text-[11px] font-medium text-slate-500 font-sans">Team size</Label>
+              <Textarea value={formData.team_size} onChange={(e) => updateField('team_size', e.target.value)} placeholder="Team details..." rows={2} className="rounded-lg border-slate-200 font-sans text-sm resize-none focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
             </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Location</Label>
-              <Textarea value={formData.location} onChange={(e) => updateField('location', e.target.value)} placeholder="Location..." rows={2} className="bg-white border-gray-300 resize-none" />
-            </div>
-          </div>
-
-          {/* Investment Details */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Investment Details</h3>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Investment Thesis</Label>
-              <Textarea value={formData.investment_thesis} onChange={(e) => updateField('investment_thesis', e.target.value)} placeholder="Investment thesis..." rows={4} className="bg-white border-gray-300 resize-none" />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">Ticket Size</Label>
-                <Input value={formData.typical_check_size} onChange={(e) => updateField('typical_check_size', e.target.value)} placeholder="e.g., $100k-$500k" className="bg-white border-gray-300" />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">Number of Investments</Label>
-                <Input value={formData.number_of_investments} onChange={(e) => updateField('number_of_investments', e.target.value)} placeholder="Investments made" className="bg-white border-gray-300" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Capital Raised</Label>
-              <Textarea value={formData.amount_raised_to_date} onChange={(e) => updateField('amount_raised_to_date', e.target.value)} placeholder="Capital commitments..." rows={3} className="bg-white border-gray-300 resize-none" />
+            <div className="space-y-1">
+              <Label className="text-[11px] font-medium text-slate-500 font-sans">Location</Label>
+              <Textarea value={formData.location} onChange={(e) => updateField('location', e.target.value)} placeholder="Location..." rows={1} className="rounded-lg border-slate-200 font-sans text-sm resize-none focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
             </div>
           </div>
 
-          {/* Documents */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Supporting Documents</h3>
+          <div className="space-y-3">
+            <h3 className="text-[11px] font-bold uppercase tracking-wider text-gold-600 font-sans border-b border-slate-200/80 pb-1.5">Investment details</h3>
+            <div className="space-y-1">
+              <Label className="text-[11px] font-medium text-slate-500 font-sans">Investment thesis</Label>
+              <Textarea value={formData.investment_thesis} onChange={(e) => updateField('investment_thesis', e.target.value)} placeholder="Investment thesis..." rows={3} className="rounded-lg border-slate-200 font-sans text-sm resize-none focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label className="text-[11px] font-medium text-slate-500 font-sans">Ticket size</Label>
+                <Input value={formData.typical_check_size} onChange={(e) => updateField('typical_check_size', e.target.value)} placeholder="e.g. $100k–$500k" className="rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[11px] font-medium text-slate-500 font-sans">Number of investments</Label>
+                <Input value={formData.number_of_investments} onChange={(e) => updateField('number_of_investments', e.target.value)} placeholder="Investments made" className="rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-[11px] font-medium text-slate-500 font-sans">Capital raised</Label>
+              <Textarea value={formData.amount_raised_to_date} onChange={(e) => updateField('amount_raised_to_date', e.target.value)} placeholder="Capital commitments..." rows={2} className="rounded-lg border-slate-200 font-sans text-sm resize-none focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="text-[11px] font-bold uppercase tracking-wider text-gold-600 font-sans border-b border-slate-200/80 pb-1.5">Supporting documents</h3>
             <div className="space-y-3">
-              <label className="cursor-pointer">
+              <label className="cursor-pointer block">
                 <input type="file" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg" onChange={handleFileUpload} className="hidden" disabled={uploading || uploadedFiles.length >= 10} />
-                <div className="border-2 border-dashed rounded-lg p-4 text-center hover:border-blue-400 transition-colors cursor-pointer">
-                  <Upload className="w-6 h-6 mx-auto text-gray-400 mb-1" />
-                  <p className="text-sm text-gray-600">{uploading ? 'Uploading...' : 'Click to upload files'}</p>
+                <div className="border-2 border-dashed border-slate-200 rounded-lg p-3 text-center hover:border-gold-500/50 transition-colors">
+                  <Upload className="w-5 h-5 mx-auto text-gold-600 mb-0.5" />
+                  <p className="text-xs text-slate-600 font-sans">{uploading ? 'Uploading…' : 'Click to upload'}</p>
                 </div>
               </label>
               <div className="flex gap-2">
-                <Input placeholder="Or paste a link" value={linkInput} onChange={(e) => setLinkInput(e.target.value)} disabled={uploadedFiles.length >= 10} className="bg-white border-gray-300" />
-                <Button type="button" variant="outline" onClick={addLink} disabled={!linkInput.trim() || uploadedFiles.length >= 10} size="sm"><LinkIcon className="w-4 h-4" /></Button>
+                <Input placeholder="Or paste a link" value={linkInput} onChange={(e) => setLinkInput(e.target.value)} disabled={uploadedFiles.length >= 10} className="rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
+                <Button type="button" variant="outline" onClick={addLink} disabled={!linkInput.trim() || uploadedFiles.length >= 10} size="sm" className="rounded-lg h-8 border-slate-200 text-navy-900 hover:border-gold-500 hover:bg-gold-50/50"><LinkIcon className="w-3.5 h-3.5" /></Button>
               </div>
               {uploadedFiles.length > 0 && (
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {uploadedFiles.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-50 rounded-lg p-2">
+                    <div key={index} className="flex items-center justify-between bg-slate-50/80 rounded-lg p-1.5 border border-slate-200/80">
                       <div className="flex items-center gap-2 min-w-0">
-                        {file.type === 'file' ? <FileText className="w-4 h-4 text-blue-600 flex-shrink-0" /> : <LinkIcon className="w-4 h-4 text-blue-600 flex-shrink-0" />}
-                        <span className="text-sm truncate">{file.name}</span>
+                        {file.type === 'file' ? <FileText className="w-4 h-4 text-gold-600 flex-shrink-0" /> : <LinkIcon className="w-4 h-4 text-gold-600 flex-shrink-0" />}
+                        <span className="text-sm font-sans truncate text-navy-900">{file.name}</span>
                       </div>
-                      <Button type="button" variant="ghost" size="sm" onClick={() => removeFile(index)}><X className="w-4 h-4" /></Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => removeFile(index)} className="text-slate-500 hover:text-navy-900"><X className="w-4 h-4" /></Button>
                     </div>
                   ))}
                 </div>
@@ -379,38 +370,36 @@ export default function MyApplicationSection() {
             </div>
           </div>
 
-          {/* Network & Expectations */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Network & Expectations</h3>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Information Sharing Topics</Label>
+          <div className="space-y-3">
+            <h3 className="text-[11px] font-bold uppercase tracking-wider text-gold-600 font-sans border-b border-slate-200/80 pb-1.5">Network & expectations</h3>
+            <div className="space-y-1.5">
+              <Label className="text-[11px] font-medium text-slate-500 font-sans">Information sharing topics</Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {INFORMATION_SHARING_TOPICS.map((topic) => (
                   <div key={topic} className="flex items-start space-x-2">
-                    <Checkbox id={`profile-${topic}`} checked={formData.information_sharing_topics.includes(topic)} onCheckedChange={() => toggleTopic(topic)} />
-                    <label htmlFor={`profile-${topic}`} className="text-sm text-gray-700 cursor-pointer">{topic}</label>
+                    <Checkbox id={`profile-${topic}`} checked={formData.information_sharing_topics.includes(topic)} onCheckedChange={() => toggleTopic(topic)} className="border-slate-300 data-[state=checked]:bg-gold-500 data-[state=checked]:border-gold-500" />
+                    <label htmlFor={`profile-${topic}`} className="text-xs text-slate-700 font-sans cursor-pointer">{topic}</label>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Expectations from Network</Label>
-              <Textarea value={formData.expectations_from_network} onChange={(e) => updateField('expectations_from_network', e.target.value)} placeholder="What do you expect..." rows={3} className="bg-white border-gray-300 resize-none" />
+            <div className="space-y-1">
+              <Label className="text-[11px] font-medium text-slate-500 font-sans">Expectations from network</Label>
+              <Textarea value={formData.expectations_from_network} onChange={(e) => updateField('expectations_from_network', e.target.value)} placeholder="What do you expect..." rows={2} className="rounded-lg border-slate-200 font-sans text-sm resize-none focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
             </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">How did you hear about us?</Label>
-              <Textarea value={formData.how_heard_about_network} onChange={(e) => updateField('how_heard_about_network', e.target.value)} placeholder="How did you hear..." rows={2} className="bg-white border-gray-300 resize-none" />
+            <div className="space-y-1">
+              <Label className="text-[11px] font-medium text-slate-500 font-sans">How did you hear about us?</Label>
+              <Textarea value={formData.how_heard_about_network} onChange={(e) => updateField('how_heard_about_network', e.target.value)} placeholder="How did you hear..." rows={1} className="rounded-lg border-slate-200 font-sans text-sm resize-none focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
             </div>
           </div>
 
-          {/* Save Button */}
-          <div className="pt-4 border-t border-gray-200">
-            <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 shadow-lg">
-              {saving ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Saving...</> : <><Save className="w-4 h-4 mr-2" />Save Application Profile</>}
+          <div className="pt-3 border-t border-slate-200/80">
+            <Button onClick={handleSave} disabled={saving} size="sm" className="rounded-lg h-8 bg-navy-900 hover:bg-navy-800 text-white font-sans font-medium shadow-finance text-xs">
+              {saving ? <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Saving…</> : <><Save className="w-3.5 h-3.5 mr-1.5" /> Save application</>}
             </Button>
           </div>
         </CardContent>
       )}
-    </Card>
+    </div>
   );
 }

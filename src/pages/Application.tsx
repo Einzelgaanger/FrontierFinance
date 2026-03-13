@@ -5,17 +5,8 @@ import ApplicationForm from '@/components/application/ApplicationForm';
 const Application: React.FC = () => {
   return (
     <SidebarLayout>
-      <div 
-        className="min-h-screen p-6 md:p-8 lg:p-10"
-        style={{
-          backgroundImage: 'url(/CFF.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-        }}
-      >
-        <div className="relative z-10 py-4">
+      <div className="min-h-screen bg-[#faf6f0] px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="max-w-4xl mx-auto min-w-0">
           <ApplicationForm />
         </div>
       </div>

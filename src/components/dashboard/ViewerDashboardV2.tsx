@@ -690,12 +690,18 @@ const ViewerDashboardV2 = () => {
   // Preview/Landing Page – CFF design
   if (!showApplicationForm) {
     return (
-      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900 overflow-x-hidden">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-8 sm:pb-10 min-w-0">
-          <span className="section-label">Viewer</span>
-          <h1 className="text-xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">Dashboard</h1>
-          <div className="w-14 h-0.5 bg-gold-500/60 rounded-full my-3" aria-hidden />
-          <p className="text-sm text-slate-600 mb-6 sm:mb-8 font-sans">Apply for membership and explore resources.</p>
+      <div className="min-h-screen bg-[#faf6f0] font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900 overflow-x-hidden">
+        <header className="sticky top-0 z-20 border-b border-slate-200/60 bg-[#faf6f0]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3">
+            <div className="flex flex-wrap items-baseline gap-2 min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Viewer</span>
+              <h1 className="text-base sm:text-lg font-display font-normal text-navy-900">Dashboard</h1>
+              <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+              <p className="text-[10px] text-slate-500 font-sans hidden sm:inline">Apply for membership and explore resources</p>
+            </div>
+          </div>
+        </header>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 pb-8 sm:pb-10 min-w-0">
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch">
             <div className="finance-card p-5 sm:p-8">
@@ -801,31 +807,29 @@ const ViewerDashboardV2 = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900 overflow-x-hidden">
-      <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-4 min-w-0">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-          <Button
-            variant="outline"
-            onClick={() => setShowApplicationForm(false)}
-            className="flex items-center min-h-[44px] border-slate-200 text-navy-900 hover:bg-white hover:border-gold-500/30 font-sans touch-manipulation w-full sm:w-auto"
-          >
-            <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
-            Back to Overview
-          </Button>
+    <div className="min-h-screen bg-[#faf6f0] font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900 overflow-x-hidden">
+      <header className="sticky top-0 z-20 border-b border-slate-200/60 bg-[#faf6f0]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <div className="flex flex-wrap items-baseline gap-2 min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Application</span>
+              <h1 className="text-base sm:text-lg font-display font-normal text-navy-900">Membership application</h1>
+              <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+              <p className="text-[10px] text-slate-500 font-sans hidden sm:inline">Organization, team and investment activity</p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowApplicationForm(false)}
+              className="h-8 px-2.5 border-slate-200 text-navy-900 hover:border-gold-500/40 rounded-lg text-xs font-sans shrink-0"
+            >
+              <ArrowRight className="w-3.5 h-3.5 mr-1.5 rotate-180" />
+              Back
+            </Button>
+          </div>
         </div>
-        <div className="text-center mb-6">
-          <span className="section-label">Application</span>
-          <h1 className="text-2xl md:text-3xl font-display font-normal text-navy-900 mt-1 mb-2">
-            Membership application
-          </h1>
-          <div className="w-14 h-0.5 bg-gold-500/60 rounded-full mx-auto my-2" aria-hidden />
-          <p className="text-sm text-slate-600 max-w-2xl mx-auto font-sans">
-            Provide a concise overview of your organization, team and investment activity to support the review process.
-          </p>
-        </div>
-      </div>
-
-      <div className="relative z-10 max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 pb-6 sm:pb-8 min-w-0">
+      </header>
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-6 sm:pb-8 min-w-0">
         <div className="finance-card overflow-hidden">
           <div className="p-4 sm:p-8 md:p-10">
             <div className="space-y-6">

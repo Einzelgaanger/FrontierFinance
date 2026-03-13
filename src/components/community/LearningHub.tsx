@@ -192,9 +192,8 @@ export function LearningHub() {
         }`}
       >
         <CardContent className="p-0 overflow-hidden">
-          {/* Media / thumbnail – same frame as detail (image and video) */}
           {thumbOrMedia ? (
-            <div className="aspect-[16/10] w-full overflow-hidden rounded-t-lg border-b border-slate-200 bg-slate-100 relative">
+            <div className="aspect-[16/9] w-full overflow-hidden rounded-t-md border-b border-slate-200 bg-slate-100 relative">
               <img
                 src={thumbOrMedia}
                 alt={resource.title}
@@ -202,27 +201,27 @@ export function LearningHub() {
               />
               {isVideo && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors pointer-events-none">
-                  <div className="p-2.5 rounded-full bg-white/90 shadow">
-                    <Play className="h-5 w-5 text-slate-900" />
+                  <div className="p-1.5 rounded-full bg-white/90 shadow">
+                    <Play className="h-4 w-4 text-slate-900" />
                   </div>
                 </div>
               )}
               {featured && (
-                <div className="absolute top-2 left-2">
-                  <Badge className="bg-amber-500 text-white border-0 text-[10px] h-5 gap-1">
-                    <Star className="h-2.5 w-2.5" />
+                <div className="absolute top-1.5 left-1.5">
+                  <Badge className="bg-amber-500 text-white border-0 text-[9px] h-4 gap-0.5 px-1">
+                    <Star className="h-2 w-2" />
                     Featured
                   </Badge>
                 </div>
               )}
             </div>
           ) : (
-            <div className="aspect-[16/10] w-full flex items-center justify-center rounded-t-lg border-b border-slate-200 bg-slate-200/60 relative">
-              <MediaIcon className="h-10 w-10 text-slate-500" />
+            <div className="aspect-[16/9] w-full flex items-center justify-center rounded-t-md border-b border-slate-200 bg-slate-200/60 relative">
+              <MediaIcon className="h-8 w-8 text-slate-500" />
               {featured && (
-                <div className="absolute top-2 left-2">
-                  <Badge className="bg-amber-500 text-white border-0 text-[10px] h-5 gap-1">
-                    <Star className="h-2.5 w-2.5" />
+                <div className="absolute top-1.5 left-1.5">
+                  <Badge className="bg-amber-500 text-white border-0 text-[9px] h-4 gap-0.5 px-1">
+                    <Star className="h-2 w-2" />
                     Featured
                   </Badge>
                 </div>
@@ -230,38 +229,38 @@ export function LearningHub() {
             </div>
           )}
 
-          <div className="p-4 min-w-0">
-            <div className="flex items-center gap-1.5 mb-2 flex-wrap">
-              <Badge variant="outline" className="text-[10px] h-5 px-1.5 border-slate-200 text-slate-600 shrink-0">
+          <div className="p-3 min-w-0">
+            <div className="flex items-center gap-1 mb-1.5 flex-wrap">
+              <Badge variant="outline" className="text-[9px] h-4 px-1 border-slate-200 text-slate-600 shrink-0">
                 {topicLabel}
               </Badge>
-              <Badge variant="secondary" className="text-[10px] h-5 gap-1 px-1.5 bg-slate-100 text-slate-600 shrink-0">
-                <MediaIcon className="h-2.5 w-2.5" />
+              <Badge variant="secondary" className="text-[9px] h-4 gap-0.5 px-1 bg-slate-100 text-slate-600 shrink-0">
+                <MediaIcon className="h-2 w-2" />
                 {mediaLabel}
               </Badge>
             </div>
-            <h3 className="font-medium text-slate-900 text-sm mb-1.5 line-clamp-2 group-hover:text-sky-700 transition-colors leading-snug break-words">
+            <h3 className="font-medium text-slate-900 text-xs mb-1 line-clamp-2 group-hover:text-sky-700 transition-colors leading-snug break-words">
               {resource.title}
             </h3>
             {resource.description && (
-              <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed break-words">
+              <p className="text-[11px] text-slate-500 line-clamp-2 mb-2 leading-snug break-words">
                 {resource.description}
               </p>
             )}
-            <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 gap-2">
-              <div className="flex items-center gap-3 text-xs font-medium text-slate-500">
-                <span className="flex items-center gap-1">
-                  <Heart className={`h-3.5 w-3.5 ${resource.is_liked ? "fill-red-500 text-red-500" : ""}`} />
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100 gap-1">
+              <div className="flex items-center gap-2 text-[11px] font-medium text-slate-500">
+                <span className="flex items-center gap-0.5">
+                  <Heart className={`h-3 w-3 ${resource.is_liked ? "fill-red-500 text-red-500" : ""}`} />
                   {resource.like_count ?? 0} like{(resource.like_count ?? 0) !== 1 ? "s" : ""}
                 </span>
-                <span className="flex items-center gap-1">
-                  <MessageCircle className="h-3.5 w-3.5" />
+                <span className="flex items-center gap-0.5">
+                  <MessageCircle className="h-3 w-3" />
                   {resource.comment_count ?? 0} comment{(resource.comment_count ?? 0) !== 1 ? "s" : ""}
                 </span>
                 <AttachmentDisplay resourceId={resource.id} compact />
               </div>
               {resource.resource_url && (
-                <ExternalLink className="h-3.5 w-3.5 text-slate-400 group-hover:text-sky-600 transition-colors shrink-0" />
+                <ExternalLink className="h-3 w-3 text-slate-400 group-hover:text-sky-600 transition-colors shrink-0" />
               )}
             </div>
           </div>
@@ -271,56 +270,56 @@ export function LearningHub() {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
       {/* Compact Stats Row */}
-      <div className="flex items-center gap-6 py-3 px-4 bg-slate-50 rounded-lg border border-slate-100">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-slate-200/60 rounded">
-            <BookOpen className="h-3.5 w-3.5 text-slate-600" />
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4 py-2 px-3 bg-slate-50 rounded-lg border border-slate-100 min-w-0">
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="p-1 bg-slate-200/60 rounded">
+            <BookOpen className="h-3 w-3 text-slate-600" />
           </div>
-          <div>
-            <span className="text-lg font-semibold text-slate-900">{stats.total}</span>
-            <span className="text-xs text-slate-500 ml-1.5">resources</span>
-          </div>
-        </div>
-        <div className="h-6 w-px bg-slate-200" />
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-slate-200/60 rounded">
-            <LinkIcon className="h-3.5 w-3.5 text-slate-600" />
-          </div>
-          <div>
-            <span className="text-lg font-semibold text-slate-900">{stats.links}</span>
-            <span className="text-xs text-slate-500 ml-1.5">links</span>
+          <div className="min-w-0">
+            <span className="text-base font-semibold text-slate-900">{stats.total}</span>
+            <span className="text-[11px] text-slate-500 ml-1">resources</span>
           </div>
         </div>
-        <div className="h-6 w-px bg-slate-200" />
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-slate-200/60 rounded">
-            <ImageIcon className="h-3.5 w-3.5 text-slate-600" />
+        <div className="h-4 w-px bg-slate-200 shrink-0" />
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="p-1 bg-slate-200/60 rounded">
+            <LinkIcon className="h-3 w-3 text-slate-600" />
           </div>
-          <div>
-            <span className="text-lg font-semibold text-slate-900">{stats.images}</span>
-            <span className="text-xs text-slate-500 ml-1.5">images</span>
+          <div className="min-w-0">
+            <span className="text-base font-semibold text-slate-900">{stats.links}</span>
+            <span className="text-[11px] text-slate-500 ml-1">links</span>
           </div>
         </div>
-        <div className="h-6 w-px bg-slate-200" />
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-slate-200/60 rounded">
-            <Video className="h-3.5 w-3.5 text-slate-600" />
+        <div className="h-4 w-px bg-slate-200 shrink-0" />
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="p-1 bg-slate-200/60 rounded">
+            <ImageIcon className="h-3 w-3 text-slate-600" />
           </div>
-          <div>
-            <span className="text-lg font-semibold text-slate-900">{stats.videos}</span>
-            <span className="text-xs text-slate-500 ml-1.5">videos</span>
+          <div className="min-w-0">
+            <span className="text-base font-semibold text-slate-900">{stats.images}</span>
+            <span className="text-[11px] text-slate-500 ml-1">images</span>
+          </div>
+        </div>
+        <div className="h-4 w-px bg-slate-200 shrink-0" />
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="p-1 bg-slate-200/60 rounded">
+            <Video className="h-3 w-3 text-slate-600" />
+          </div>
+          <div className="min-w-0">
+            <span className="text-base font-semibold text-slate-900">{stats.videos}</span>
+            <span className="text-[11px] text-slate-500 ml-1">videos</span>
           </div>
         </div>
         {userRole === 'admin' && (
-          <div className="ml-auto">
+          <div className="ml-auto shrink-0">
             <Button
               onClick={() => setIsCreateModalOpen(true)}
               size="sm"
-              className="bg-blue-600 hover:bg-blue-700 text-white h-8 px-3 text-xs font-medium"
+              className="bg-blue-600 hover:bg-blue-700 text-white h-7 px-2.5 text-[11px] font-medium"
             >
-              <PlusCircle className="h-3.5 w-3.5 mr-1.5" />
+              <PlusCircle className="h-3 w-3 mr-1" />
               Add resource
             </Button>
           </div>
@@ -328,25 +327,22 @@ export function LearningHub() {
       </div>
 
       {/* Search & Filters Row */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        {/* Search */}
-        <div className="relative flex-1 w-full sm:max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 min-w-0">
+        <div className="relative flex-1 w-full sm:max-w-[200px] min-w-0">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-400" />
           <Input
             placeholder="Search resources..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 h-9 text-sm border-slate-200"
+            className="pl-8 h-8 text-xs border-slate-200 min-w-0"
           />
         </div>
-
-        {/* Filters */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <Filter className="h-3.5 w-3.5 text-slate-400" />
+        <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+          <Filter className="h-3 w-3 text-slate-400 shrink-0" />
           <select
             value={selectedTopic}
             onChange={(e) => setSelectedTopic(e.target.value)}
-            className="h-8 rounded-md border border-slate-200 bg-white px-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-slate-300"
+            className="h-7 rounded border border-slate-200 bg-white px-2 text-[11px] focus:outline-none focus:ring-1 focus:ring-slate-300"
           >
             <option value="all">All topics</option>
             {Object.entries(topicConfig).map(([key, { label }]) => (
@@ -356,31 +352,28 @@ export function LearningHub() {
           <select
             value={selectedMediaType}
             onChange={(e) => setSelectedMediaType(e.target.value)}
-            className="h-8 rounded-md border border-slate-200 bg-white px-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-slate-300"
+            className="h-7 rounded border border-slate-200 bg-white px-2 text-[11px] focus:outline-none focus:ring-1 focus:ring-slate-300"
           >
             <option value="all">All media</option>
             <option value="link">Link</option>
             <option value="image">Image</option>
             <option value="video">Video</option>
           </select>
-
-          {/* View Toggle */}
-          <div className="flex border border-slate-200 rounded overflow-hidden ml-1">
+          <div className="flex border border-slate-200 rounded overflow-hidden shrink-0">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 ${viewMode === 'grid' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
+              className={`p-1 ${viewMode === 'grid' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
             >
-              <LayoutGrid className="h-3.5 w-3.5 text-slate-600" />
+              <LayoutGrid className="h-3 w-3 text-slate-600" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 ${viewMode === 'list' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
+              className={`p-1 ${viewMode === 'list' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
             >
-              <List className="h-3.5 w-3.5 text-slate-600" />
+              <List className="h-3 w-3 text-slate-600" />
             </button>
           </div>
-
-          <span className="text-xs text-slate-400 ml-1">
+          <span className="text-[11px] text-slate-400 shrink-0">
             {filteredResources.length} {filteredResources.length === 1 ? 'result' : 'results'}
           </span>
         </div>
@@ -388,51 +381,51 @@ export function LearningHub() {
 
       {/* Content */}
       {loading ? (
-        <div className={`grid gap-3 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+        <div className={`grid gap-2 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <Card key={i} className="animate-pulse border-slate-200">
               <CardContent className="p-0">
-                <div className="aspect-[16/10] bg-slate-100" />
-                <div className="p-4 space-y-2">
-                  <div className="flex gap-1.5">
-                    <div className="h-5 w-14 rounded bg-slate-100" />
-                    <div className="h-5 w-12 rounded bg-slate-100" />
+                <div className="aspect-[16/9] bg-slate-100" />
+                <div className="p-3 space-y-1.5">
+                  <div className="flex gap-1">
+                    <div className="h-4 w-12 rounded bg-slate-100" />
+                    <div className="h-4 w-10 rounded bg-slate-100" />
                   </div>
-                  <div className="h-4 w-3/4 rounded bg-slate-100" />
-                  <div className="h-3 w-full rounded bg-slate-100" />
+                  <div className="h-3 w-3/4 rounded bg-slate-100" />
+                  <div className="h-2.5 w-full rounded bg-slate-100" />
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
       ) : filteredResources.length === 0 ? (
-        <div className="py-16 text-center">
-          <div className="mx-auto w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
-            <BookOpen className="h-5 w-5 text-slate-400" />
+        <div className="py-10 text-center">
+          <div className="mx-auto w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mb-2">
+            <BookOpen className="h-4 w-4 text-slate-400" />
           </div>
-          <h3 className="text-sm font-medium text-slate-900 mb-1">No resources found</h3>
-          <p className="text-xs text-slate-500 mb-4">
+          <h3 className="text-xs font-medium text-slate-900 mb-0.5">No resources found</h3>
+          <p className="text-[11px] text-slate-500 mb-3">
             {searchQuery || selectedTopic !== 'all' || selectedMediaType !== 'all'
               ? "Try adjusting your filters."
               : "Resources will appear here once added."}
           </p>
           {userRole === 'admin' && (
-            <Button onClick={() => setIsCreateModalOpen(true)} size="sm" variant="outline" className="h-8 text-xs">
-              <PlusCircle className="h-3.5 w-3.5 mr-1.5" />
+            <Button onClick={() => setIsCreateModalOpen(true)} size="sm" variant="outline" className="h-7 text-[11px]">
+              <PlusCircle className="h-3 w-3 mr-1" />
               Add resource
             </Button>
           )}
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Featured Section */}
           {featuredResources.length > 0 && (
             <div>
-              <div className="flex items-center gap-2 mb-3">
-                <Star className="h-4 w-4 text-amber-500" />
-                <h2 className="text-sm font-semibold text-slate-900">Featured</h2>
+              <div className="flex items-center gap-1.5 mb-2">
+                <Star className="h-3.5 w-3.5 text-amber-500" />
+                <h2 className="text-xs font-semibold text-slate-900">Featured</h2>
               </div>
-              <div className={`grid gap-3 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+              <div className={`grid gap-2 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
                 {featuredResources.map((resource) => (
                   <ResourceCard key={resource.id} resource={resource} featured />
                 ))}
@@ -444,9 +437,9 @@ export function LearningHub() {
           {regularResources.length > 0 && (
             <div>
               {featuredResources.length > 0 && (
-                <h2 className="text-sm font-semibold text-slate-900 mb-3">All resources</h2>
+                <h2 className="text-xs font-semibold text-slate-900 mb-2">All resources</h2>
               )}
-              <div className={`grid gap-3 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+              <div className={`grid gap-2 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
                 {regularResources.map((resource) => (
                   <ResourceCard key={resource.id} resource={resource} />
                 ))}

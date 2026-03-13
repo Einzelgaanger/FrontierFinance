@@ -5,12 +5,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { useCompanyMembership } from '@/hooks/useCompanyMembership';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Upload, Mail, Globe, Building2, FileText, Lock, Eye, EyeOff, CheckCircle, XCircle, Shield, Activity, User } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import MyApplicationSection from '@/components/profile/MyApplicationSection';
 import CompanyMembersSection from '@/components/profile/CompanyMembersSection';
 
@@ -334,11 +335,26 @@ export default function MyProfile() {
     }
   };
 
+  const [descExpanded, setDescExpanded] = useState(false);
+  const hasDesc = profile.description && profile.description.trim().length > 0;
+  const isLongDesc = hasDesc && profile.description!.length > 120;
+
   if (loading) {
     return (
       <SidebarLayout>
-        <div className="flex items-center justify-center min-h-screen">
-          <Loader2 className="w-8 h-8 animate-spin" />
+        <div className="min-h-screen bg-[#faf6f0] flex flex-col">
+          <header className="border-b border-slate-200/60 bg-[#faf6f0] py-3 sm:py-4">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+              <div className="flex items-baseline gap-2.5">
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Account</span>
+                <h1 className="text-lg sm:text-xl font-display font-normal text-navy-900">My Profile</h1>
+                <div className="w-6 h-0.5 bg-gold-500 rounded-full" />
+              </div>
+            </div>
+          </header>
+          <div className="flex-1 flex items-center justify-center py-16">
+            <Loader2 className="w-6 h-6 animate-spin text-gold-500" />
+          </div>
         </div>
       </SidebarLayout>
     );
@@ -346,205 +362,133 @@ export default function MyProfile() {
 
   return (
     <SidebarLayout>
-      <div className="min-h-screen bg-white">
-        <div className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-8 lg:px-8 min-w-0 overflow-x-hidden">
-          {/* Page Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">My Profile</h1>
-            <p className="text-gray-600">Manage your account information and settings</p>
+      <div className="min-h-screen bg-[#faf6f0] selection:bg-gold-500/20 selection:text-navy-900">
+        <header className="sticky top-0 z-20 border-b border-slate-200/60 bg-[#faf6f0]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3">
+            <div className="flex flex-wrap items-baseline gap-2 min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Account</span>
+              <h1 className="text-base sm:text-lg font-display font-normal text-navy-900">My Profile</h1>
+              <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+              <p className="text-[10px] text-slate-500 font-sans hidden sm:inline">Account and settings</p>
+            </div>
           </div>
+        </header>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left Column - Profile Card */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-5 min-w-0 overflow-x-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            {/* Left: compact identity strip */}
             <div className="lg:col-span-4">
-              <Card className="bg-white border-gray-200 shadow-lg">
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center space-y-4">
-                    {/* Avatar */}
-                    <Avatar className="w-32 h-32 rounded-2xl border-4 border-white shadow-lg">
-                      <AvatarImage src={profile.profile_picture_url} className="object-cover" />
-                      <AvatarFallback className="text-4xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-2xl">
-                        {profile.company_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
-                      </AvatarFallback>
-                    </Avatar>
-                    
-                    <Label htmlFor="avatar-upload" className="cursor-pointer">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        disabled={uploading}
-                        className="border-gray-300 text-gray-700 hover:bg-gray-50 bg-white"
-                        asChild
-                      >
-                        <span>
-                          {uploading ? (
-                            <>
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                              Uploading...
-                            </>
-                          ) : (
-                            <>
-                              <Upload className="w-4 h-4 mr-2" />
-                              Change Photo
-                            </>
-                          )}
-                        </span>
-                      </Button>
+              <div className="rounded-xl border border-slate-200/90 bg-white shadow-finance p-4">
+                <div className="flex gap-4">
+                  <Avatar className="w-16 h-16 rounded-xl border border-gold-500/20 shrink-0">
+                    <AvatarImage src={profile.profile_picture_url} className="object-cover" />
+                    <AvatarFallback className="text-xl font-display font-normal bg-navy-900 text-gold-400 rounded-xl">
+                      {profile.company_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    {profile.full_name && (
+                      <div className="flex items-center gap-1.5">
+                        <User className="w-3.5 h-3.5 text-gold-600 shrink-0" />
+                        <span className="text-sm font-medium text-navy-900 font-sans truncate">{profile.full_name}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <Mail className="w-3.5 h-3.5 text-gold-600 shrink-0" />
+                      <span className="text-xs font-medium text-navy-900 break-all font-sans truncate block" title={user?.email}>{user?.email}</span>
+                    </div>
+                    {isTeamMember && companyProfile && (
+                      <div className="flex items-center gap-1.5 mt-1.5 pt-1.5 border-t border-slate-100">
+                        <Building2 className="w-3.5 h-3.5 text-gold-600 shrink-0" />
+                        {companyProfile.profile_picture_url && (
+                          <Avatar className="w-5 h-5 rounded-md border border-slate-200 shrink-0">
+                            <AvatarImage src={companyProfile.profile_picture_url} className="object-cover" />
+                            <AvatarFallback className="text-[10px] bg-amber-100 text-amber-800">{companyProfile.company_name?.charAt(0) || 'C'}</AvatarFallback>
+                          </Avatar>
+                        )}
+                        <span className="text-xs font-medium text-navy-900 font-sans truncate">{companyProfile.company_name}</span>
+                      </div>
+                    )}
+                    <Label htmlFor="avatar-upload" className="mt-2 inline-block cursor-pointer">
+                      <span className="text-[11px] font-medium text-gold-600 hover:text-gold-700 font-sans flex items-center gap-1">
+                        {uploading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
+                        {uploading ? 'Uploading…' : 'Change photo'}
+                      </span>
                     </Label>
-                    <input
-                      id="avatar-upload"
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp"
-                      className="hidden"
-                      onChange={handleUploadAvatar}
-                      disabled={uploading}
-                      aria-label="Upload profile picture"
-                      title="Upload profile picture"
-                    />
-
-                     {/* Name & Email */}
-                     <div className="w-full pt-4 border-t border-gray-200 space-y-3">
-                       {profile.full_name && (
-                         <div className="space-y-1 text-center">
-                           <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                             <User className="w-4 h-4" />
-                             <span className="font-medium">Name</span>
-                           </div>
-                           <p className="text-sm font-medium text-gray-900">{profile.full_name}</p>
-                         </div>
-                       )}
-                       <div className="space-y-1 text-center">
-                         <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                           <Mail className="w-4 h-4" />
-                           <span className="font-medium">Email Address</span>
-                         </div>
-                         <p className="text-sm font-medium text-gray-900 break-all">{user?.email}</p>
-                       </div>
-                       {/* Company badge for team members */}
-                       {isTeamMember && companyProfile && (
-                         <div className="space-y-2 text-center pt-2 border-t border-gray-100">
-                           <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                             <Building2 className="w-4 h-4" />
-                             <span className="font-medium">Company</span>
-                           </div>
-                           <div className="flex items-center justify-center gap-2">
-                             {companyProfile.profile_picture_url && (
-                               <Avatar className="w-8 h-8 border border-gray-200">
-                                 <AvatarImage src={companyProfile.profile_picture_url} className="object-cover" />
-                                 <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
-                                   {companyProfile.company_name?.charAt(0) || 'C'}
-                                 </AvatarFallback>
-                               </Avatar>
-                             )}
-                             <span className="text-sm font-medium text-gray-900">{companyProfile.company_name}</span>
-                           </div>
-                         </div>
-                       )}
-                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                <input id="avatar-upload" type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={handleUploadAvatar} disabled={uploading} aria-label="Upload profile picture" />
+              </div>
             </div>
 
-            {/* Right Column - Form Sections */}
-            <div className="lg:col-span-8 space-y-6">
-              {/* Company Information Card — read-only for team members */}
-              <Card className="bg-white border-gray-200 shadow-lg">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-xl text-gray-800">
-                    <Building2 className="w-5 h-5 mr-2 text-blue-600" />
-                    {isTeamMember ? 'Company' : 'Company Information'}
-                  </CardTitle>
-                  <CardDescription className="text-gray-600">
-                    {isTeamMember
-                      ? 'Company profile is managed by your primary account holder. Your name and email are shown below.'
-                      : 'Update your company details and description'}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-5">
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                      <Building2 className="w-4 h-4 text-gray-500" />
-                      Company Name
-                    </Label>
-                    {isTeamMember ? (
-                      <p className="text-sm text-gray-900">{profile.company_name || '—'}</p>
-                    ) : (
-                      <Input
-                        id="company_name"
-                        value={profile.company_name}
-                        onChange={(e) => setProfile(prev => ({ ...prev, company_name: e.target.value }))}
-                        placeholder="Enter your company name"
-                        className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white"
-                      />
-                    )}
+            <div className="lg:col-span-8 space-y-4">
+              {/* Company — compact */}
+              <div className="rounded-xl border border-slate-200/90 bg-white shadow-finance overflow-hidden">
+                <div className="px-4 py-2.5 border-b border-slate-200/80 flex items-center gap-2">
+                  <div className="w-6 h-0.5 bg-gold-500 rounded-full" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gold-600 font-sans">Company</span>
+                  <h2 className="font-display font-normal text-navy-900 text-base">{isTeamMember ? 'Company' : 'Company information'}</h2>
+                  <span className="text-[11px] text-slate-500 font-sans ml-1">— {isTeamMember ? 'Managed by primary.' : 'Edit below.'}</span>
+                </div>
+                <CardContent className="p-4 space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Building2 className="w-3.5 h-3.5 text-gold-600 shrink-0" />
+                      <Label htmlFor="company_name" className="text-[11px] font-medium text-slate-500 font-sans shrink-0">Name</Label>
+                      {isTeamMember ? (
+                        <p className="text-sm font-medium text-navy-900 font-sans truncate">{profile.company_name || '—'}</p>
+                      ) : (
+                        <Input id="company_name" value={profile.company_name} onChange={(e) => setProfile(prev => ({ ...prev, company_name: e.target.value }))} placeholder="Company name" className="flex-1 min-w-0 rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Globe className="w-3.5 h-3.5 text-gold-600 shrink-0" />
+                      <Label htmlFor="website" className="text-[11px] font-medium text-slate-500 font-sans shrink-0">Website</Label>
+                      {isTeamMember ? (
+                        profile.website ? (
+                          <a href={profile.website} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-gold-600 hover:text-gold-700 truncate font-sans underline decoration-gold-500/40">{profile.website}</a>
+                        ) : (
+                          <span className="text-sm text-slate-500 font-sans">—</span>
+                        )
+                      ) : (
+                        <Input id="website" type="url" value={profile.website} onChange={(e) => setProfile(prev => ({ ...prev, website: e.target.value }))} placeholder="https://…" className="flex-1 min-w-0 rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
+                      )}
+                    </div>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-gray-500" />
-                      Company Website
-                    </Label>
+                  <div>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <FileText className="w-3.5 h-3.5 text-gold-600 shrink-0" />
+                      <span className="text-[11px] font-medium text-slate-500 font-sans">Description</span>
+                    </div>
                     {isTeamMember ? (
-                      <p className="text-sm text-gray-900">{profile.website ? <a href={profile.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{profile.website}</a> : '—'}</p>
-                    ) : (
-                      <Input
-                        id="website"
-                        type="url"
-                        value={profile.website}
-                        onChange={(e) => setProfile(prev => ({ ...prev, website: e.target.value }))}
-                        placeholder="https://example.com"
-                        className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white"
-                      />
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-gray-500" />
-                      Company Description
-                    </Label>
-                    {isTeamMember ? (
-                      <p className="text-sm text-gray-700 whitespace-pre-wrap">{profile.description || '—'}</p>
+                      hasDesc ? (
+                        <>
+                          <p className={cn('text-sm text-slate-700 font-sans leading-snug', !descExpanded && 'line-clamp-2')}>{profile.description}</p>
+                          {isLongDesc && (
+                            <button type="button" onClick={() => setDescExpanded(!descExpanded)} className="mt-1 text-[11px] font-semibold text-gold-600 hover:text-gold-700 font-sans">
+                              {descExpanded ? 'Read less' : 'Read more'}
+                            </button>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-sm text-slate-500 font-sans">—</span>
+                      )
                     ) : (
                       <>
-                        <Textarea
-                          id="description"
-                          value={profile.description}
-                          onChange={(e) => setProfile(prev => ({ ...prev, description: e.target.value }))}
-                          placeholder="Brief description of your company, investment focus, and key highlights"
-                          rows={6}
-                          className="resize-none border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white"
-                        />
-                        <p className="text-xs text-gray-500">Provide a concise overview of your company and investment strategy</p>
+                        <Textarea id="description" value={profile.description} onChange={(e) => setProfile(prev => ({ ...prev, description: e.target.value }))} placeholder="Brief description of your company and investment focus" rows={3} className="resize-none rounded-lg border-slate-200 font-sans text-sm focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
+                        <p className="text-[11px] text-slate-500 font-sans mt-0.5">Concise overview</p>
                       </>
                     )}
                   </div>
-
                   {!isTeamMember && (
-                    <div className="pt-4 border-t border-gray-200">
-                      <Button
-                        onClick={handleSave}
-                        disabled={saving}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 shadow-lg"
-                      >
-                        {saving ? (
-                          <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Saving Changes...
-                          </>
-                        ) : (
-                          <>
-                            <CheckCircle className="w-4 h-4 mr-2" />
-                            Save Changes
-                          </>
-                        )}
+                    <div className="pt-2 border-t border-slate-200/80">
+                      <Button onClick={handleSave} disabled={saving} size="sm" className="rounded-lg h-8 bg-navy-900 hover:bg-navy-800 text-white font-sans font-medium shadow-finance text-xs">
+                        {saving ? <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Saving…</> : <><CheckCircle className="w-3.5 h-3.5 mr-1.5" /> Save changes</>}
                       </Button>
                     </div>
                   )}
                 </CardContent>
-              </Card>
+              </div>
 
               {/* Application Profile Section */}
               <MyApplicationSection />
@@ -552,174 +496,99 @@ export default function MyProfile() {
               {/* Company Team Members — only for primary account */}
               <CompanyMembersSection />
 
-              {/* Team activity log — only for primary */}
+              {/* Team activity — primary only */}
               {!membershipLoading && !isTeamMember && (
-                <Card className="bg-white border-gray-200 shadow-lg">
-                  <CardHeader>
-                    <CardTitle className="flex items-center text-xl text-gray-800">
-                      <Activity className="w-5 h-5 mr-2 text-blue-600" />
-                      Team activity
-                    </CardTitle>
-                    <CardDescription className="text-gray-600">
-                      Who in your company did what (posts, applications, surveys)
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
+                <div className="rounded-xl border border-slate-200/90 bg-white shadow-finance overflow-hidden">
+                  <div className="px-4 py-2.5 border-b border-slate-200/80 flex items-center gap-2">
+                    <div className="w-6 h-0.5 bg-gold-500 rounded-full" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-gold-600 font-sans">Activity</span>
+                    <h2 className="font-display font-normal text-navy-900 text-base">Team activity</h2>
+                    <span className="text-[11px] text-slate-500 font-sans ml-1">— Posts, applications, surveys</span>
+                  </div>
+                  <div className="p-3">
                     {activityLoading ? (
-                      <div className="flex justify-center py-6"><Loader2 className="w-6 h-6 animate-spin text-gray-400" /></div>
+                      <div className="flex justify-center py-4"><Loader2 className="w-5 h-5 animate-spin text-gold-500" /></div>
                     ) : activityLog.length === 0 ? (
-                      <p className="text-sm text-gray-500 py-4">No team activity yet.</p>
+                      <p className="text-xs text-slate-500 font-sans py-3">No team activity yet.</p>
                     ) : (
-                      <ul className="space-y-2 max-h-80 overflow-y-auto">
+                      <ul className="space-y-0 max-h-56 overflow-y-auto">
                         {activityLog.map((entry) => (
-                          <li key={entry.id} className="flex items-start gap-2 py-2 border-b border-gray-100 last:border-0 text-sm">
-                            <User className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
-                            <div>
-                              <span className="font-medium text-gray-900">{entry.member_name || entry.member_email}</span>
-                              <span className="text-gray-500"> {entry.action_label || entry.action_type}</span>
-                              <span className="text-gray-400 text-xs block">{new Date(entry.created_at).toLocaleString()}</span>
+                          <li key={entry.id} className="flex items-start gap-2 py-2 border-b border-slate-100 last:border-0 text-xs font-sans">
+                            <User className="w-3.5 h-3.5 text-gold-600 shrink-0 mt-0.5" />
+                            <div className="min-w-0">
+                              <span className="font-medium text-navy-900">{entry.member_name || entry.member_email}</span>
+                              <span className="text-slate-500"> {entry.action_label || entry.action_type}</span>
+                              <span className="text-slate-400 text-[10px] block mt-0.5">{new Date(entry.created_at).toLocaleString()}</span>
                             </div>
                           </li>
                         ))}
                       </ul>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               )}
 
-              {/* Password Change Card */}
-              <Card className="bg-white border-gray-200 shadow-lg">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-xl text-gray-800">
-                    <Shield className="w-5 h-5 mr-2 text-blue-600" />
-                    Security Settings
-                  </CardTitle>
-                  <CardDescription className="text-gray-600">
-                    Update your password to keep your account secure. Your new password must be at least 8 characters long and include uppercase, lowercase, number, and special character.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-5">
-                  <div className="space-y-2">
-                    <Label htmlFor="currentPassword" className="text-sm font-medium text-gray-700">Current Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                      <Input
-                        id="currentPassword"
-                        type={showCurrentPassword ? "text" : "password"}
-                        value={passwordForm.currentPassword}
-                        onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
-                        placeholder="Enter your current password"
-                        className="pl-10 pr-10 border-gray-300 focus:border-blue-500 bg-white"
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                      >
-                        {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
+              {/* Security — compact */}
+              <div className="rounded-xl border border-slate-200/90 bg-white shadow-finance overflow-hidden">
+                <div className="px-4 py-2.5 border-b border-slate-200/80 flex items-center gap-2">
+                  <div className="w-6 h-0.5 bg-gold-500 rounded-full" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gold-600 font-sans">Security</span>
+                  <h2 className="font-display font-normal text-navy-900 text-base">Password</h2>
+                  <span className="text-[11px] text-slate-500 font-sans ml-1">— 8+ chars, mixed case, number, special</span>
+                </div>
+                <div className="p-4 space-y-3">
+                  <div>
+                    <Label htmlFor="currentPassword" className="text-[11px] font-medium text-slate-500 font-sans">Current</Label>
+                    <div className="relative mt-0.5">
+                      <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gold-600 w-3.5 h-3.5" />
+                      <Input id="currentPassword" type={showCurrentPassword ? "text" : "password"} value={passwordForm.currentPassword} onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))} placeholder="Current password" className="pl-9 pr-9 rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
+                      <button type="button" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy-900" onClick={() => setShowCurrentPassword(!showCurrentPassword)} aria-label={showCurrentPassword ? "Hide password" : "Show password"}>{showCurrentPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}</button>
                     </div>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="newPassword" className="text-sm font-medium text-gray-700">New Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                      <Input
-                        id="newPassword"
-                        type={showNewPassword ? "text" : "password"}
-                        value={passwordForm.newPassword}
-                        onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
-                        placeholder="Enter your new password"
-                        className="pl-10 pr-10 border-gray-300 focus:border-blue-500 bg-white"
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                        onClick={() => setShowNewPassword(!showNewPassword)}
-                      >
-                        {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
+                  <div>
+                    <Label htmlFor="newPassword" className="text-[11px] font-medium text-slate-500 font-sans">New</Label>
+                    <div className="relative mt-0.5">
+                      <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gold-600 w-3.5 h-3.5" />
+                      <Input id="newPassword" type={showNewPassword ? "text" : "password"} value={passwordForm.newPassword} onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))} placeholder="New password" className="pl-9 pr-9 rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
+                      <button type="button" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy-900" onClick={() => setShowNewPassword(!showNewPassword)} aria-label={showNewPassword ? "Hide password" : "Show password"}>{showNewPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}</button>
                     </div>
-                    
                     {passwordForm.newPassword && (
-                      <div className="space-y-2 mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <div className="flex items-center gap-2 text-xs">
-                          <div className={`w-2 h-2 rounded-full ${passwordStrength.strength === 'weak' ? 'bg-red-400' : passwordStrength.strength === 'medium' ? 'bg-yellow-400' : 'bg-green-400'}`} />
-                          <span className="text-gray-700 font-medium">
-                            Password strength: <span className="capitalize">{passwordStrength.strength}</span>
-                          </span>
+                      <div className="mt-1.5 p-2 rounded-lg bg-slate-50/80 border border-slate-200/80 space-y-1.5">
+                        <div className="flex items-center gap-1.5 text-[11px] font-sans">
+                          <div className={cn('w-1.5 h-1.5 rounded-full', passwordStrength.strength === 'weak' ? 'bg-red-400' : passwordStrength.strength === 'medium' ? 'bg-amber-400' : 'bg-emerald-500')} />
+                          <span className="text-slate-700 font-medium">{passwordStrength.strength}</span>
                         </div>
-                        
-                        <div className="grid grid-cols-2 gap-2 text-xs mt-2">
+                        <div className="grid grid-cols-2 gap-1.5 text-[11px]">
                           {Object.entries(passwordStrength.checks).map(([key, value]) => (
-                            <div key={key} className="flex items-center gap-1.5">
-                              {value ? <CheckCircle className="w-3.5 h-3.5 text-green-500" /> : <XCircle className="w-3.5 h-3.5 text-red-400" />}
-                              <span className={value ? 'text-green-600 font-medium' : 'text-gray-500'}>
-                                {key === 'length' ? '8+ chars' : 
-                                 key === 'uppercase' ? 'Uppercase' :
-                                 key === 'lowercase' ? 'Lowercase' :
-                                 key === 'number' ? 'Number' : 'Special char'}
-                              </span>
+                            <div key={key} className="flex items-center gap-1 font-sans">
+                              {value ? <CheckCircle className="w-3 h-3 text-emerald-500" /> : <XCircle className="w-3 h-3 text-red-400" />}
+                              <span className={value ? 'text-emerald-700 font-medium' : 'text-slate-500'}>{key === 'length' ? '8+' : key === 'uppercase' ? 'A–Z' : key === 'lowercase' ? 'a–z' : key === 'number' ? '0–9' : 'Special'}</span>
                             </div>
                           ))}
                         </div>
                       </div>
                     )}
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">Confirm New Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                      <Input
-                        id="confirmPassword"
-                        type={showConfirmPassword ? "text" : "password"}
-                        value={passwordForm.confirmPassword}
-                        onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                        placeholder="Confirm your new password"
-                        className="pl-10 pr-10 border-gray-300 focus:border-blue-500 bg-white"
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      >
-                        {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
+                  <div>
+                    <Label htmlFor="confirmPassword" className="text-[11px] font-medium text-slate-500 font-sans">Confirm</Label>
+                    <div className="relative mt-0.5">
+                      <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gold-600 w-3.5 h-3.5" />
+                      <Input id="confirmPassword" type={showConfirmPassword ? "text" : "password"} value={passwordForm.confirmPassword} onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))} placeholder="Confirm new password" className="pl-9 pr-9 rounded-lg border-slate-200 font-sans text-sm h-8 focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
+                      <button type="button" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy-900" onClick={() => setShowConfirmPassword(!showConfirmPassword)} aria-label={showConfirmPassword ? "Hide password" : "Show password"}>{showConfirmPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}</button>
                     </div>
-                    
                     {passwordForm.confirmPassword && (
-                      <div className="flex items-center gap-2 text-xs mt-1">
-                        {passwordsMatch ? 
-                          <><CheckCircle className="w-3.5 h-3.5 text-green-500" /><span className="text-green-600 font-medium">Passwords match</span></> :
-                          <><XCircle className="w-3.5 h-3.5 text-red-400" /><span className="text-red-500 font-medium">Passwords don't match</span></>
-                        }
+                      <div className="flex items-center gap-1.5 text-[11px] mt-0.5 font-sans">
+                        {passwordsMatch ? <><CheckCircle className="w-3 h-3 text-emerald-500" /><span className="text-emerald-600 font-medium">Match</span></> : <><XCircle className="w-3 h-3 text-red-400" /><span className="text-red-500 font-medium">No match</span></>}
                       </div>
                     )}
                   </div>
-
-                  <div className="pt-2">
-                    <Button 
-                      onClick={handlePasswordChange}
-                      disabled={updatingPassword || !passwordForm.currentPassword || !passwordForm.newPassword || !passwordsMatch || passwordStrength.score < 3}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
-                    >
-                      {updatingPassword ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Updating Password...
-                        </>
-                      ) : (
-                        <>
-                          <Lock className="w-4 h-4 mr-2" />
-                          Update Password
-                        </>
-                      )}
+                  <div className="pt-1">
+                    <Button onClick={handlePasswordChange} disabled={updatingPassword || !passwordForm.currentPassword || !passwordForm.newPassword || !passwordsMatch || passwordStrength.score < 3} size="sm" className="w-full rounded-lg h-8 bg-navy-900 hover:bg-navy-800 text-white font-sans font-medium shadow-finance text-xs">
+                      {updatingPassword ? <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Updating…</> : <><Lock className="w-3.5 h-3.5 mr-1.5" /> Update password</>}
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
           </div>
         </div>

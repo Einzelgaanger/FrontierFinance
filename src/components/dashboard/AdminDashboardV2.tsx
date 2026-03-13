@@ -623,49 +623,44 @@ const AdminDashboardV2 = () => {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-y-auto bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 min-w-0 overflow-x-hidden">
-        {/* Page header – CFF external style: section-label, font-display, gold line */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <div>
-            <span className="section-label">Overview</span>
-            <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 mt-1 tracking-tight">Admin Dashboard</h1>
-            <div className="w-14 h-0.5 bg-gold-500/60 rounded-full my-3" aria-hidden />
-            <p className="text-sm text-slate-600 font-sans">
-              Applications, members, and community activity
-            </p>
-            {!loading && overview && (
-              <p className="text-xs text-slate-500 mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-sans">
-                <span><span className="font-medium tabular-nums text-navy-800">{overview.members}</span> members</span>
-                <span>·</span>
-                <span><span className="font-medium tabular-nums text-navy-800">{overview.viewers}</span> viewers</span>
-                <span>·</span>
-                <span><span className="font-medium tabular-nums text-navy-800">{overview.surveyTotal}</span> survey responses</span>
-                {overview.pending > 0 && (
-                  <>
-                    <span>·</span>
-                    <span className="font-medium text-gold-600">{overview.pending} pending</span>
-                  </>
-                )}
-              </p>
-            )}
-            {lastUpdated && (
-              <p className="text-xs text-slate-400 mt-1 font-sans">
-                Last updated {lastUpdated.toLocaleTimeString()}
-              </p>
-            )}
+    <div className="min-h-screen overflow-y-auto bg-[#faf6f0] font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
+      {/* Page header — same pattern as Admin, Community, Analytics */}
+      <header className="sticky top-0 z-20 border-b border-slate-200/60 bg-[#faf6f0]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <div className="flex flex-wrap items-baseline gap-2 min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Overview</span>
+              <h1 className="text-base sm:text-lg font-display font-normal text-navy-900">Admin Dashboard</h1>
+              <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+              <p className="text-[10px] text-slate-500 font-sans hidden sm:inline">Applications, members, and community activity</p>
+              {!loading && overview && (
+                <p className="text-[10px] text-slate-500 font-sans hidden md:inline ml-1">
+                  · <span className="tabular-nums text-navy-800">{overview.members}</span> members
+                  · <span className="tabular-nums text-navy-800">{overview.viewers}</span> viewers
+                  {overview.pending > 0 && <span> · <span className="text-gold-600">{overview.pending} pending</span></span>}
+                </p>
+              )}
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              {lastUpdated && (
+                <span className="text-[10px] text-slate-400 font-sans hidden sm:inline">Updated {lastUpdated.toLocaleTimeString()}</span>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => fetchAllData()}
+                disabled={loading}
+                className="h-8 px-2.5 border-slate-200 text-slate-600 hover:bg-white hover:border-gold-500/40 rounded-lg text-xs font-sans"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+            </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => fetchAllData()}
-            disabled={loading}
-            className="border-slate-200 text-slate-600 hover:bg-white hover:border-gold-500/30 shrink-0 font-sans"
-          >
-            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
-          </Button>
         </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 min-w-0 overflow-x-hidden">
 
         {/* Executive summary – needs attention (CFF: gold accent) */}
         {!loading && overview && overview.pending > 0 && (

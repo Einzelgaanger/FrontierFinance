@@ -34,75 +34,62 @@ export default function Community() {
 
   return (
     <SidebarLayout>
-      <div
-        className="min-h-screen bg-slate-900/80"
-        style={{
-          backgroundImage: 'url(/CFF.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        <div className="max-w-7xl w-full px-3 py-4 sm:px-6 lg:px-8 min-w-0 overflow-x-hidden">
-          <div className="bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            {/* Clean Header */}
-            <div className="border-b border-slate-100 px-5 py-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <h1 className="text-lg font-semibold text-slate-900">Community</h1>
-                  <span className="text-xs text-slate-400">|</span>
-                  <p className="text-sm text-slate-500">
-                    {activeTab === 'blogs' 
-                      ? "Network updates and insights"
-                      : "Curated learning resources"}
-                  </p>
-                </div>
-                
-                {/* Tab Switcher */}
-                <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg">
-                  <button
-                    onClick={() => setActiveTab('blogs')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                      activeTab === 'blogs' 
-                        ? 'bg-white text-slate-900 shadow-sm' 
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <MessageSquare className="h-3.5 w-3.5" />
-                    Updates
-                  </button>
-                  <button
-                    onClick={() => canAccessLearning && setActiveTab('learning')}
-                    disabled={!canAccessLearning}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                      activeTab === 'learning' 
-                        ? 'bg-white text-slate-900 shadow-sm' 
-                        : 'text-slate-600 hover:text-slate-900'
-                    } ${!canAccessLearning ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
-                    {!canAccessLearning && <Lock className="h-3 w-3" />}
-                    <GraduationCap className="h-3.5 w-3.5" />
-                    Learning
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Viewer Notice */}
-            {userRole === 'viewer' && activeTab === 'blogs' && (
-              <div className="mx-5 mt-4 flex items-center gap-2 py-2 px-3 bg-amber-50 border border-amber-100 rounded-lg">
-                <Info className="h-3.5 w-3.5 text-amber-600 shrink-0" />
-                <p className="text-xs text-amber-800">
-                  Learning resources are available to members. Apply for membership for full access.
+      <div className="min-h-screen bg-[#faf6f0] font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
+        {/* Page header — compact, same pattern as other app pages */}
+        <header className="sticky top-0 z-20 border-b border-slate-200/60 bg-[#faf6f0]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <div className="flex flex-wrap items-baseline gap-2 min-w-0">
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Community</span>
+                <h1 className="text-base sm:text-lg font-display font-normal text-navy-900">Hub</h1>
+                <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+                <p className="text-[10px] text-slate-500 font-sans hidden sm:inline">
+                  {activeTab === 'blogs' ? "Network updates and insights" : "Curated learning resources"}
                 </p>
               </div>
-            )}
-
-            {/* Content Area */}
-            <div className="p-5">
-              {activeTab === 'blogs' ? <BlogFeed /> : <LearningHub />}
+              {/* Tab switcher — navy/gold */}
+              <div className="flex items-center gap-0.5 bg-white border border-slate-200/80 rounded-lg p-0.5 shadow-finance">
+                <button
+                  onClick={() => setActiveTab('blogs')}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium font-sans transition-all ${
+                    activeTab === 'blogs'
+                      ? 'bg-navy-900 text-gold-400 shadow-finance'
+                      : 'text-navy-900 hover:bg-gold-50/80'
+                  }`}
+                >
+                  <MessageSquare className="h-3 w-3" />
+                  Updates
+                </button>
+                <button
+                  onClick={() => canAccessLearning && setActiveTab('learning')}
+                  disabled={!canAccessLearning}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium font-sans transition-all ${
+                    activeTab === 'learning'
+                      ? 'bg-navy-900 text-gold-400 shadow-finance'
+                      : 'text-navy-900 hover:bg-gold-50/80'
+                  } ${!canAccessLearning ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  {!canAccessLearning && <Lock className="h-2.5 w-2.5 shrink-0" />}
+                  <GraduationCap className="h-3 w-3" />
+                  Learning
+                </button>
+              </div>
             </div>
           </div>
+        </header>
+
+        <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-3 sm:py-4 min-w-0 overflow-x-hidden">
+          {/* Viewer notice */}
+          {userRole === 'viewer' && activeTab === 'blogs' && (
+            <div className="mb-3 flex items-center gap-1.5 py-1.5 px-2.5 bg-amber-50/80 border border-amber-200/80 rounded-lg">
+              <Info className="h-3 w-3 text-gold-600 shrink-0" />
+              <p className="text-[11px] text-amber-800 font-sans">
+                Learning resources are available to members. Apply for membership for full access.
+              </p>
+            </div>
+          )}
+
+          {activeTab === 'blogs' ? <BlogFeed /> : <LearningHub />}
         </div>
       </div>
     </SidebarLayout>

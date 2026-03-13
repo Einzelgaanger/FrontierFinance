@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -212,43 +211,37 @@ export default function CompanyMembersSection() {
   };
 
   return (
-    <Card className="bg-white border-gray-200 shadow-lg">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center text-xl text-gray-800">
-              <Users className="w-5 h-5 mr-2 text-blue-600" />
-              Company Team Members
-            </CardTitle>
-            <CardDescription className="text-gray-600">
-              Manage your team members. They can log in and access the platform but won&apos;t appear in the directory.
-            </CardDescription>
-          </div>
-          <Dialog
-            open={dialogOpen}
-            onOpenChange={(open) => {
-              setDialogOpen(open);
-              if (!open) setJustAddedMember(null);
-            }}
-          >
-            <DialogTrigger asChild>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                <UserPlus className="w-4 h-4 mr-2" />
-                Add Member
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-white">
+    <div className="rounded-xl border border-slate-200/90 bg-white shadow-finance overflow-hidden">
+      <div className="px-4 py-2.5 border-b border-slate-200/80 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-6 h-0.5 bg-gold-500 rounded-full shrink-0" />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-gold-600 font-sans shrink-0">Team</span>
+          <h2 className="font-display font-normal text-navy-900 text-base truncate">Company team members</h2>
+          <span className="text-[11px] text-slate-500 font-sans truncate hidden sm:inline">— Manage access, not in directory</span>
+        </div>
+        <Dialog
+          open={dialogOpen}
+          onOpenChange={(open) => {
+            setDialogOpen(open);
+            if (!open) setJustAddedMember(null);
+          }}
+        >
+          <DialogTrigger asChild>
+            <Button size="sm" className="rounded-lg h-8 bg-navy-900 hover:bg-navy-800 text-white font-sans shadow-finance text-xs">
+              <UserPlus className="w-3.5 h-3.5 mr-1.5" />
+              Add member
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-white rounded-2xl border-slate-200">
               <DialogHeader>
-                <DialogTitle>{justAddedMember ? 'Member added — save this password' : 'Add Team Member'}</DialogTitle>
-                <DialogDescription>
-                  {justAddedMember
-                    ? 'Copy the password or send a reset link. We cannot show this password again after you close this dialog.'
-                    : 'Create a team member account. They can log in, post, and complete surveys under your company. Their temporary password expires in 24 hours — they should reset it on first login.'}
+                <DialogTitle className="font-display text-navy-900">{justAddedMember ? 'Member added — save this password' : 'Add team member'}</DialogTitle>
+                <DialogDescription className="text-slate-500 font-sans">
+                  {justAddedMember ? 'Copy the password or send a reset link. We cannot show this password again after you close this dialog.' : 'Create a team member account. They can log in under your company. Temporary password expires in 24 hours — they should reset on first login.'}
                 </DialogDescription>
               </DialogHeader>
               {justAddedMember ? (
                 <div className="space-y-4 pt-4">
-                  <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+                  <div className="rounded-xl border border-amber-200/80 bg-amber-50/80 p-3 text-sm text-amber-800 font-sans">
                     <p className="font-medium">{justAddedMember.name || justAddedMember.email}</p>
                     <p className="text-amber-700">{justAddedMember.email}</p>
                   </div>
@@ -294,9 +287,7 @@ export default function CompanyMembersSection() {
                       {sendingResetTo === justAddedMember.email ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <KeyRound className="w-4 h-4 mr-2" />}
                       Send reset link now
                     </Button>
-                    <Button type="button" onClick={finishAddMemberFlow} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
-                      Done
-                    </Button>
+                    <Button type="button" onClick={finishAddMemberFlow} className="flex-1 rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-sans shadow-finance">Done</Button>
                   </div>
                 </div>
               ) : (
@@ -356,80 +347,51 @@ export default function CompanyMembersSection() {
                     </div>
                     <p className="text-xs text-gray-500">Share this password securely. They must reset it within 24 hours. You can also send a reset link from Forgot password using their email.</p>
                   </div>
-                  <Button
-                    onClick={handleAddMember}
-                    disabled={adding || !newMember.email || !newMember.password}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    {adding ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Adding...</> : <><UserPlus className="w-4 h-4 mr-2" />Add Member</>}
+                  <Button onClick={handleAddMember} disabled={adding || !newMember.email || !newMember.password} className="w-full rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-sans shadow-finance">
+                    {adding ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Adding...</> : <><UserPlus className="w-4 h-4 mr-2" /> Add member</>}
                   </Button>
                 </div>
               )}
             </DialogContent>
           </Dialog>
-        </div>
-      </CardHeader>
-      <CardContent>
+      </div>
+      <div className="p-4">
         {loading ? (
-          <div className="flex justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+          <div className="flex justify-center py-5">
+            <Loader2 className="w-5 h-5 animate-spin text-gold-500" />
           </div>
         ) : members.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <Users className="w-10 h-10 mx-auto mb-2 opacity-30" />
-            <p>No secondary members added yet</p>
+          <div className="text-center py-5 text-slate-500 font-sans">
+            <Users className="w-8 h-8 mx-auto mb-1.5 opacity-30 text-gold-500/50" />
+            <p className="text-xs">No secondary members yet</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {members.map((member) => (
-              <div key={member.id} className="flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-gray-50">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <Mail className="w-4 h-4 text-blue-600" />
+              <div key={member.id} className="flex items-center justify-between p-2.5 rounded-lg border border-slate-200/80 bg-slate-50/80">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-7 h-7 rounded-md bg-gold-500/10 flex items-center justify-center shrink-0">
+                    <Mail className="w-3.5 h-3.5 text-gold-600" />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{member.member_name || member.member_email}</p>
-                    <p className="text-xs text-gray-500">{member.member_email}</p>
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium text-navy-900 font-sans truncate">{member.member_name || member.member_email}</p>
+                    <p className="text-[11px] text-slate-500 font-sans truncate">{member.member_email}</p>
                     {member.role_in_company && (
-                      <p className="text-xs text-blue-600">{member.role_in_company}</p>
+                      <p className="text-[11px] text-gold-600 font-sans">{member.role_in_company}</p>
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleGeneratePasswordLink(member.member_user_id, member.member_email)}
-                    disabled={generatingLinkFor === member.member_user_id}
-                    className="text-gray-500 hover:text-blue-600 hover:bg-blue-50"
-                    title="Generate one-time password link"
-                  >
+                <div className="flex items-center gap-1 shrink-0">
+                  <Button variant="ghost" size="sm" onClick={() => handleGeneratePasswordLink(member.member_user_id, member.member_email)} disabled={generatingLinkFor === member.member_user_id} className="text-slate-500 hover:text-gold-600 hover:bg-gold-50/50 rounded-lg" title="Generate one-time password link">
                     {generatingLinkFor === member.member_user_id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link className="w-4 h-4" />}
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSendResetLink(member.member_email)}
-                    disabled={sendingResetTo === member.member_email}
-                    className="text-gray-500 hover:text-blue-600 hover:bg-blue-50"
-                    title="Send password reset email"
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => handleSendResetLink(member.member_email)} disabled={sendingResetTo === member.member_email} className="text-slate-500 hover:text-gold-600 hover:bg-gold-50/50 rounded-lg" title="Send password reset email">
                     {sendingResetTo === member.member_email ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />}
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => openEditDialog(member)}
-                    className="text-gray-500 hover:text-blue-600 hover:bg-blue-50"
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => openEditDialog(member)} className="text-slate-500 hover:text-gold-600 hover:bg-gold-50/50 rounded-lg">
                     <Pencil className="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleRemoveMember(member.id)}
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => handleRemoveMember(member.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
@@ -438,59 +400,40 @@ export default function CompanyMembersSection() {
           </div>
         )}
 
-        {/* Generated Password Link Display */}
         {generatedPasswordLink && (
-          <div className="mt-4 bg-green-50 border border-green-200 rounded-xl p-4">
-            <p className="text-xs font-semibold text-green-800 mb-2">
-              🔗 One-Time Password Link (send to the team member — it expires after viewing):
-            </p>
+          <div className="mt-3 rounded-lg bg-emerald-50/80 border border-emerald-200/80 p-3">
+            <p className="text-xs font-semibold text-emerald-800 font-sans mb-2">One-time password link (send to the team member — expires after viewing):</p>
             <div className="flex items-center gap-2">
-              <code className="flex-1 text-xs bg-white border border-green-300 rounded-lg p-2 break-all select-all">
-                {generatedPasswordLink}
-              </code>
-              <Button size="sm" variant="outline" onClick={copyPasswordLink}>
-                {linkCopied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
+              <code className="flex-1 text-xs bg-white border border-emerald-300 rounded-lg p-2 break-all select-all font-sans">{generatedPasswordLink}</code>
+              <Button size="sm" variant="outline" onClick={copyPasswordLink} className="rounded-xl border-slate-200 text-navy-900 hover:border-gold-500">
+                {linkCopied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
               </Button>
             </div>
-            <p className="text-[10px] text-green-700 mt-2">
-              ⚠️ You cannot see the password. Only the person who opens this link will see it once.
-            </p>
+            <p className="text-[10px] text-emerald-700 font-sans mt-2">You cannot see the password. Only the person who opens this link will see it once.</p>
           </div>
         )}
-      </CardContent>
+      </div>
 
-      {/* Edit Member Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="bg-white">
+        <DialogContent className="bg-white rounded-2xl border-slate-200">
           <DialogHeader>
-            <DialogTitle>Edit Team Member</DialogTitle>
-            <DialogDescription>Update member details.</DialogDescription>
+            <DialogTitle className="font-display text-navy-900">Edit team member</DialogTitle>
+            <DialogDescription className="text-slate-500 font-sans">Update member details.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-4">
-            <div className="space-y-2">
-              <Label>Name</Label>
-              <Input
-                value={editForm.name}
-                onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))}
-                className="bg-white border-gray-300"
-              />
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium text-slate-500 font-sans">Name</Label>
+              <Input value={editForm.name} onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))} className="rounded-xl border-slate-200 font-sans focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
             </div>
-            <div className="space-y-2">
-              <Label>Role in Company</Label>
-              <Input
-                value={editForm.role}
-                onChange={(e) => setEditForm(prev => ({ ...prev, role: e.target.value }))}
-                placeholder="e.g. Analyst, Associate"
-                className="bg-white border-gray-300"
-              />
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium text-slate-500 font-sans">Role in company</Label>
+              <Input value={editForm.role} onChange={(e) => setEditForm(prev => ({ ...prev, role: e.target.value }))} placeholder="e.g. Analyst, Associate" className="rounded-xl border-slate-200 font-sans focus-visible:ring-gold-500/30 focus-visible:border-gold-500/50" />
             </div>
-            <Button onClick={handleEditMember} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-              Save Changes
-            </Button>
+            <Button onClick={handleEditMember} className="w-full rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-sans shadow-finance">Save changes</Button>
           </div>
         </DialogContent>
       </Dialog>
-    </Card>
+    </div>
   );
 }
 

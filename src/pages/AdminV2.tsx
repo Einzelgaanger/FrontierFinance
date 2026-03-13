@@ -810,7 +810,7 @@ const AdminV2 = () => {
   if (userRole !== 'admin') {
     return (
       <SidebarLayout>
-        <div className="min-h-screen bg-slate-100 flex items-center justify-center font-sans antialiased">
+        <div className="min-h-screen bg-[#faf6f0] flex items-center justify-center font-sans antialiased">
           <div className="text-center px-6">
             <div className="w-14 h-14 rounded-xl bg-navy-900 text-gold-500 flex items-center justify-center mx-auto mb-4">
               <Shield className="w-8 h-8" />
@@ -825,30 +825,32 @@ const AdminV2 = () => {
 
   return (
     <SidebarLayout>
-      <div className="min-h-screen bg-slate-100 font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10 min-w-0 overflow-x-hidden">
-          <span className="section-label">Admin</span>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-display font-normal text-navy-900 tracking-tight mt-1">
-                Applications & activity
-              </h1>
-              <div className="w-14 h-0.5 bg-gold-500/60 rounded-full my-2" aria-hidden />
-              <p className="text-sm text-slate-600 font-sans">
-                Applications, members, and community activity
-              </p>
+      <div className="min-h-screen bg-[#faf6f0] font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900">
+        {/* Page header — same pattern as Community, PortIQ, Analytics */}
+        <header className="sticky top-0 z-20 border-b border-slate-200/60 bg-[#faf6f0]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <div className="flex flex-wrap items-baseline gap-2 min-w-0">
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">Admin</span>
+                <h1 className="text-base sm:text-lg font-display font-normal text-navy-900">Applications & activity</h1>
+                <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+                <p className="text-[10px] text-slate-500 font-sans hidden sm:inline">Applications, members, and community activity</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => fetchAllData()}
+                disabled={loading}
+                className="h-8 px-2.5 border-slate-200 text-slate-600 hover:bg-white hover:border-gold-500/40 shrink-0 rounded-lg text-xs font-sans"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => fetchAllData()}
-              disabled={loading}
-              className="border-slate-200 text-slate-600 hover:bg-white hover:border-gold-500/30 shrink-0 rounded-lg font-sans"
-            >
-              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
           </div>
+        </header>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 min-w-0 overflow-x-hidden">
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
             <Card className="finance-card overflow-hidden">

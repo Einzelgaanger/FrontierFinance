@@ -22,17 +22,16 @@ const Dashboard = () => {
   // Show loading while user role is being determined
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-[#faf6f0] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-slate-200 border-t-gold-500"></div>
       </div>
     );
   }
 
-  // Don't render any dashboard content until we have a confirmed role
   if (!userRole) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-[#faf6f0] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-slate-200 border-t-gold-500"></div>
       </div>
     );
   }
@@ -63,11 +62,11 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#faf6f0]">
       <Header />
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 min-w-0 overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 min-w-0 overflow-x-hidden">
         <div className="text-center py-8">
-          <p className="text-gray-500">Unknown user role</p>
+          <p className="text-slate-600 font-sans">Unknown user role</p>
         </div>
       </div>
     </div>

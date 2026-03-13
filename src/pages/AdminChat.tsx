@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import SidebarLayout from '@/components/layout/SidebarLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -275,52 +274,64 @@ const AdminChat = () => {
   };
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-[#faf6f0] selection:bg-gold-500/20 selection:text-navy-900">
       <SidebarLayout>
-        <div className="h-screen bg-slate-100 overflow-hidden font-sans antialiased">
-          <div className="relative z-10 h-full flex p-4 pt-20">
+        {/* Compact page header — navy/gold */}
+        <header className="sticky top-0 z-20 border-b border-slate-200/60 bg-[#faf6f0]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3">
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600 font-sans">AI</span>
+              <h1 className="text-base sm:text-lg font-display font-normal text-navy-900">PortIQ · Admin</h1>
+              <div className="w-5 h-0.5 bg-gold-500 rounded-full shrink-0" aria-hidden />
+              <p className="text-[10px] text-slate-500 font-sans hidden sm:inline">Multi-table access — surveys, applications, network</p>
+            </div>
+          </div>
+        </header>
+
+        <div className="flex-1 flex min-h-0 overflow-hidden">
+          <div className="flex flex-1 p-3 sm:p-4 min-w-0">
             {/* Conversations sidebar */}
             <div
-              className={`${sidebarOpen ? 'w-72' : 'w-0'
+              className={`${sidebarOpen ? 'w-64' : 'w-0'
                 } transition-all duration-300 overflow-hidden flex flex-col shrink-0`}
             >
-              <Card className="h-full finance-card flex flex-col border-border bg-card">
-                <div className="p-3 border-b border-border flex items-center justify-between flex-shrink-0">
-                  <h3 className="text-sm font-semibold text-foreground">Conversations</h3>
+              <div className="h-full flex flex-col rounded-xl border border-slate-200/90 bg-white shadow-finance overflow-hidden">
+                <div className="px-3 py-2.5 border-b border-slate-200/80 flex items-center justify-between flex-shrink-0">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gold-600 font-sans">Conversations</span>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={createNewChat}
                     title="New Chat"
-                    className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-lg"
+                    className="h-7 w-7 p-0 text-navy-900 hover:bg-gold-50/80 rounded-lg"
                   >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="w-3.5 h-3.5" />
                   </Button>
                 </div>
                 <div className="flex-1 overflow-y-auto p-2">
                   {loadingConversations ? (
                     <div className="p-4 text-center">
-                      <Loader2 className="w-5 h-5 animate-spin mx-auto text-muted-foreground" />
+                      <Loader2 className="w-5 h-5 animate-spin mx-auto text-gold-500" />
                     </div>
                   ) : conversations.length === 0 ? (
-                    <div className="p-4 text-center text-sm text-muted-foreground">No conversations yet</div>
+                    <div className="p-3 text-center text-[11px] text-slate-500 font-sans">No conversations yet</div>
                   ) : (
                     conversations.map(conv => (
                       <div
                         key={conv.id}
-                        className={`group flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-colors border ${activeConversationId === conv.id
-                            ? 'bg-muted/60 border-border shadow-sm'
-                            : 'border-transparent hover:bg-muted/40'
+                        className={`group flex items-center gap-2 px-2.5 py-2 rounded-lg cursor-pointer transition-colors ${activeConversationId === conv.id
+                            ? 'bg-gold-50/80 border border-gold-200/80 text-navy-900'
+                            : 'border border-transparent hover:bg-slate-50 text-slate-700'
                           }`}
                         onClick={() => selectConversation(conv.id)}
                       >
-                        <MessageSquare className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        <MessageSquare className="w-3.5 h-3.5 text-gold-600 flex-shrink-0" />
                         {editingId === conv.id ? (
-                          <div className="flex-1 flex items-center gap-1">
+                          <div className="flex-1 flex items-center gap-1 min-w-0">
                             <Input
                               value={editTitle}
                               onChange={e => setEditTitle(e.target.value)}
-                              className="h-7 text-sm bg-white border-slate-200"
+                              className="h-6 text-xs bg-white border-slate-200 font-sans"
                               onClick={e => e.stopPropagation()}
                               onKeyDown={e => {
                                 if (e.key === 'Enter') renameConversation(conv.id);
@@ -331,18 +342,18 @@ const AdminChat = () => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-6 w-6 p-0"
+                              className="h-5 w-5 p-0 shrink-0"
                               onClick={e => {
                                 e.stopPropagation();
                                 renameConversation(conv.id);
                               }}
                             >
-                              <Check className="w-3 h-3" />
+                              <Check className="w-3 h-3 text-gold-600" />
                             </Button>
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-6 w-6 p-0"
+                              className="h-5 w-5 p-0 shrink-0"
                               onClick={e => {
                                 e.stopPropagation();
                                 setEditingId(null);
@@ -353,12 +364,12 @@ const AdminChat = () => {
                           </div>
                         ) : (
                           <>
-                            <span className="flex-1 text-sm text-foreground truncate">{conv.title}</span>
-                            <div className="hidden group-hover:flex items-center gap-0.5">
+                            <span className="flex-1 text-xs text-navy-900 font-sans truncate">{conv.title}</span>
+                            <div className="hidden group-hover:flex items-center gap-0.5 shrink-0">
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                                className="h-5 w-5 p-0 text-slate-500 hover:text-navy-900"
                                 onClick={e => {
                                   e.stopPropagation();
                                   setEditingId(conv.id);
@@ -372,7 +383,7 @@ const AdminChat = () => {
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                                    className="h-5 w-5 p-0 text-slate-500 hover:text-red-600"
                                     onClick={e => e.stopPropagation()}
                                   >
                                     <Trash2 className="w-3 h-3" />
@@ -403,74 +414,60 @@ const AdminChat = () => {
                     ))
                   )}
                 </div>
-              </Card>
+              </div>
             </div>
 
             {/* Toggle sidebar */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="flex items-center justify-center w-8 bg-card border border-border hover:bg-muted/50 rounded-r-lg transition-colors shrink-0 shadow-sm text-muted-foreground hover:text-foreground"
+              className="flex items-center justify-center w-7 bg-white border border-slate-200/80 hover:bg-gold-50/80 rounded-r-lg transition-colors shrink-0 shadow-finance text-slate-500 hover:text-navy-900"
             >
               {sidebarOpen ? (
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-3.5 h-3.5" />
               ) : (
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-3.5 h-3.5" />
               )}
             </button>
 
-            {/* Main chat card - CFF style */}
-            <div className="flex-1 min-w-0 flex items-stretch ml-2">
-              <Card className="flex-1 finance-card flex flex-col relative min-h-0 border-border bg-card">
-                <CardHeader className="border-b border-slate-200/60 bg-card flex-shrink-0 py-3 px-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <CardTitle className="flex items-center gap-2 text-base font-display font-normal text-foreground">
-                        <div className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shrink-0 shadow-sm">
-                          <Brain className="w-4 h-4" />
-                        </div>
-                        Chat with Portiq
-                      </CardTitle>
-                      <CardDescription className="text-xs mt-1 text-muted-foreground font-sans">
-                        Ask about surveys, applications, network data, and more. Your conversations are private.
-                      </CardDescription>
+            {/* Main chat area */}
+            <div className="flex-1 min-w-0 flex flex-col ml-2 rounded-xl border border-slate-200/90 bg-white shadow-finance overflow-hidden">
+                <div className="border-b border-slate-200/80 px-4 py-2.5 flex items-center justify-between flex-shrink-0 bg-white">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-navy-900 flex items-center justify-center shrink-0">
+                      <Brain className="w-3.5 h-3.5 text-gold-400" />
                     </div>
-                    <div className="flex gap-3 shrink-0">
-                      <div className="text-center rounded-md px-2 py-1 bg-muted/50 border border-border/50">
-                        <Zap className="w-3 h-3 text-amber-600 mx-auto mb-0.5" />
-                        <p className="text-[10px] font-medium text-foreground leading-tight">Multi-Table</p>
-                        <p className="text-[10px] text-muted-foreground leading-tight">Access</p>
-                      </div>
-                      <div className="text-center rounded-md px-2 py-1 bg-muted/50 border border-border/50">
-                        <Shield className="w-3 h-3 text-emerald-600 mx-auto mb-0.5" />
-                        <p className="text-[10px] font-medium text-foreground leading-tight">Secure</p>
-                        <p className="text-[10px] text-muted-foreground leading-tight">Admin</p>
-                      </div>
-                      <div className="text-center rounded-md px-2 py-1 bg-muted/50 border border-border/50">
-                        <BarChart3 className="w-3 h-3 text-blue-600 mx-auto mb-0.5" />
-                        <p className="text-[10px] font-medium text-foreground leading-tight">Smart</p>
-                        <p className="text-[10px] text-muted-foreground leading-tight">Insights</p>
-                      </div>
-                    </div>
+                    <span className="text-xs font-semibold text-navy-900 font-sans">Chat with PortIQ</span>
                   </div>
-                </CardHeader>
+                  <div className="flex gap-1.5 shrink-0">
+                    <span className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-gold-50/80 border border-gold-200/60 text-[10px] font-medium text-gold-700 font-sans">
+                      <Zap className="w-3 h-3" /> Multi-table
+                    </span>
+                    <span className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200/80 text-[10px] font-medium text-slate-600 font-sans">
+                      <Shield className="w-3 h-3" /> Admin
+                    </span>
+                  </div>
+                </div>
 
-                <div className="flex-1 overflow-y-auto min-h-0 p-6 pb-24 bg-background/50">
+                <div className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-5 pb-28 bg-slate-50/30">
                   <div className="space-y-4">
                     {messages.length === 0 && !activeConversationId ? (
-                      <div className="text-center py-12 space-y-4">
-                        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto bg-muted border border-border shadow-sm">
-                          <Brain className="w-10 h-10 text-muted-foreground" />
+                      <div className="text-center py-10 space-y-4">
+                        <div className="relative inline-flex">
+                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-navy-900 to-navy-800 flex items-center justify-center shadow-finance ring-2 ring-gold-500/30">
+                            <Brain className="w-7 h-7 text-gold-400" />
+                          </div>
+                          <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-gold-500 border-2 border-white" aria-hidden />
                         </div>
-                        <div className="rounded-lg border border-border bg-card p-6 max-w-md mx-auto shadow-sm">
-                          <h3 className="text-lg font-semibold text-foreground mb-2">Welcome to Portiq</h3>
-                          <p className="text-sm text-muted-foreground">
-                            Start a conversation by typing a question below, or open an existing chat from the sidebar.
+                        <div className="rounded-xl border border-slate-200/80 bg-white p-4 max-w-sm mx-auto shadow-sm">
+                          <h3 className="text-sm font-semibold text-navy-900 mb-1 font-sans">Welcome to PortIQ</h3>
+                          <p className="text-[11px] text-slate-600 font-sans">
+                            Start a conversation below or open an existing chat from the sidebar.
                           </p>
                         </div>
                       </div>
                     ) : messages.length === 0 ? (
-                      <div className="text-center py-12 rounded-lg border border-dashed border-border bg-muted/30 max-w-sm mx-auto">
-                        <p className="text-sm text-muted-foreground">Send a message to start the conversation</p>
+                      <div className="text-center py-10 rounded-xl border border-dashed border-slate-200 bg-slate-50/50 max-w-sm mx-auto">
+                        <p className="text-[11px] text-slate-500 font-sans">Send a message to start</p>
                       </div>
                     ) : (
                       messages.map((message, index) => (
@@ -480,13 +477,13 @@ const AdminChat = () => {
                         >
                           <div
                             className={`flex ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
-                              } items-start gap-3 max-w-[80%] w-full`}
+                              } items-start gap-2.5 max-w-[85%] w-full`}
                           >
-                            <Avatar className="w-8 h-8 flex-shrink-0">
+                            <Avatar className="w-7 h-7 flex-shrink-0 mt-0.5">
                               {message.role === 'user' ? (
                                 <>
                                   <AvatarImage src={userProfile?.profile_picture_url} />
-                                  <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                                  <AvatarFallback className="bg-navy-900 text-gold-400 text-xs">
                                     {userProfile?.company_name?.charAt(0).toUpperCase() ||
                                       userProfile?.full_name?.charAt(0).toUpperCase() ||
                                       user?.email?.charAt(0).toUpperCase() ||
@@ -496,31 +493,29 @@ const AdminChat = () => {
                               ) : (
                                 <>
                                   <AvatarImage src="/robot.png" />
-                                  <AvatarFallback className="bg-muted text-muted-foreground">
-                                    <Brain className="w-4 h-4" />
+                                  <AvatarFallback className="bg-navy-900 text-gold-400">
+                                    <Brain className="w-3.5 h-3.5" />
                                   </AvatarFallback>
                                 </>
                               )}
                             </Avatar>
-                            <div className="flex flex-col">
-                              <div
-                                className={`text-xs font-medium mb-1 ${message.role === 'user' ? 'text-right' : 'text-left'
-                                  } text-muted-foreground`}
-                              >
+                            <div className="flex flex-col min-w-0">
+                              <span className={`text-[10px] font-medium mb-0.5 ${message.role === 'user' ? 'text-right' : 'text-left'} text-slate-500 font-sans`}>
                                 {message.role === 'user'
                                   ? userProfile?.company_name || userProfile?.full_name || user?.email?.split('@')[0] || 'You'
-                                  : 'Portiq'}
-                              </div>
+                                  : 'PortIQ'}
+                              </span>
                               <div
-                                className={`rounded-xl px-4 py-3 shadow-sm max-w-[90vw] lg:max-w-[800px] ${message.role === 'user'
-                                    ? 'bg-primary text-primary-foreground border border-primary/90'
-                                    : 'bg-card text-card-foreground border border-border'
-                                  }`}
+                                className={`rounded-2xl px-4 py-2.5 ${
+                                  message.role === 'user'
+                                    ? 'bg-navy-900 text-gold-50 border border-navy-800'
+                                    : 'bg-white text-slate-800 border border-slate-200/90 shadow-sm'
+                                }`}
                               >
                                 {message.role === 'assistant' ? (
                                   <MarkdownRenderer content={message.content} />
                                 ) : (
-                                  <div className="text-sm whitespace-pre-wrap break-words">{message.content}</div>
+                                  <div className="text-sm whitespace-pre-wrap break-words font-sans">{message.content}</div>
                                 )}
                               </div>
                             </div>
@@ -530,32 +525,23 @@ const AdminChat = () => {
                     )}
                     {loading && (
                       <div className="flex justify-start">
-                        <div className="flex items-start gap-3">
-                          <Avatar className="w-8 h-8 flex-shrink-0 border border-border">
+                        <div className="flex items-start gap-2.5">
+                          <Avatar className="w-7 h-7 flex-shrink-0 mt-0.5">
                             <AvatarImage src="/robot.png" />
-                            <AvatarFallback className="bg-muted text-muted-foreground">
-                              <Brain className="w-4 h-4" />
+                            <AvatarFallback className="bg-navy-900 text-gold-400">
+                              <Brain className="w-3.5 h-3.5" />
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex flex-col">
-                            <div className="text-xs font-medium mb-1 text-left text-muted-foreground">Portiq</div>
-                            <div className="bg-card rounded-xl px-4 py-3 shadow-sm border border-border">
+                            <span className="text-[10px] font-medium mb-0.5 text-slate-500 font-sans">PortIQ</span>
+                            <div className="bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
                               <div className="flex items-center gap-2">
                                 <div className="flex gap-1">
-                                  <div
-                                    className="w-2 h-2 bg-primary/70 rounded-full animate-bounce"
-                                    style={{ animationDelay: '0ms' }}
-                                  />
-                                  <div
-                                    className="w-2 h-2 bg-primary/50 rounded-full animate-bounce"
-                                    style={{ animationDelay: '150ms' }}
-                                  />
-                                  <div
-                                    className="w-2 h-2 bg-primary/30 rounded-full animate-bounce"
-                                    style={{ animationDelay: '300ms' }}
-                                  />
+                                  <div className="w-1.5 h-1.5 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                  <div className="w-1.5 h-1.5 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                  <div className="w-1.5 h-1.5 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                                 </div>
-                                <span className="text-sm text-muted-foreground">Portiq is thinking...</span>
+                                <span className="text-[11px] text-slate-500 font-sans">Analyzing...</span>
                               </div>
                             </div>
                           </div>
@@ -566,29 +552,27 @@ const AdminChat = () => {
                   </div>
                 </div>
 
-                {/* Floating input */}
-                <div className="absolute bottom-4 left-4 right-4 md:left-1/2 md:right-auto md:transform md:-translate-x-1/2 md:w-[min(650px,calc(100%-2rem))] z-10">
-                  {/* Output format indicator */}
+                {/* Input area */}
+                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 bg-white border-t border-slate-200/80 z-10">
                   {outputFormat && (
-                    <div className="flex items-center gap-2 mb-1.5 px-2">
-                      <span className="text-xs text-muted-foreground">Output:</span>
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-secondary/50 text-secondary-foreground border border-border flex items-center gap-1">
+                    <div className="flex items-center gap-2 mb-2 px-1">
+                      <span className="text-[11px] text-slate-500 font-sans">Output:</span>
+                      <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-gold-50 text-gold-700 flex items-center gap-1 font-sans">
                         {formatOptions.find(f => f.value === outputFormat)?.icon}
                         {formatOptions.find(f => f.value === outputFormat)?.label}
-                        <button onClick={() => setOutputFormat(null)} className="ml-1 hover:opacity-80 rounded"><X className="w-3 h-3" /></button>
+                        <button onClick={() => setOutputFormat(null)} className="ml-1 hover:text-navy-900"><X className="w-3 h-3" /></button>
                       </span>
                     </div>
                   )}
                   <div className="flex items-end gap-2">
-                    {/* Format dropdown - admin only */}
                     {userRole === 'admin' && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-[44px] px-2.5 flex-shrink-0 border-border bg-card rounded-xl shadow-sm hover:bg-muted/50" title="Output format">
+                          <Button variant="outline" size="sm" className="h-9 px-2 flex-shrink-0 rounded-xl border-slate-200 text-navy-900 hover:border-gold-500 font-sans" title="Output format">
                             <FileText className="w-4 h-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start" className="w-52">
+                        <DropdownMenuContent align="start" className="w-48">
                           {formatOptions.map((opt) => (
                             <DropdownMenuItem
                               key={opt.value}
@@ -605,32 +589,31 @@ const AdminChat = () => {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     )}
-                    <div className="relative flex-1 bg-card rounded-xl border border-border shadow-sm min-h-[44px] max-h-[200px] focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+                    <div className="flex-1 relative">
                       <Textarea
                         value={input}
                         onChange={e => {
                           setInput(e.target.value);
                           const ta = e.target;
                           ta.style.height = 'auto';
-                          ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
+                          ta.style.height = Math.min(ta.scrollHeight, 150) + 'px';
                         }}
                         onKeyDown={handleKeyPress}
-                        placeholder="Ask Portiq about surveys, network data, applications, and more..."
+                        placeholder="Ask PortIQ about surveys, network data, applications..."
                         rows={1}
-                        className="resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent pr-12 py-3 pl-4 min-h-[40px] max-h-[184px] overflow-y-auto"
+                        className="resize-none min-h-[36px] max-h-[150px] pr-12 py-2 pl-3 text-sm rounded-xl border-slate-200 focus-visible:ring-gold-500/30 font-sans bg-white"
                         disabled={loading}
                       />
                       <Button
                         onClick={sendMessage}
                         disabled={loading || !input.trim()}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full w-8 h-8 p-0 shadow-sm"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 rounded-lg bg-navy-900 hover:bg-navy-800 text-gold-400 shadow-finance"
                       >
                         <Send className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
                 </div>
-              </Card>
             </div>
           </div>
         </div>
