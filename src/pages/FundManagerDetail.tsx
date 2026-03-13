@@ -595,10 +595,15 @@ const FundManagerDetail = () => {
                         <Building2 className="w-5 h-5" />
                       </div>
                       <h2 className="text-lg font-display font-semibold text-navy-900">Company Information</h2>
-                      {userRole === 'admin' && (
-                        <Button size="sm" variant="outline" className="ml-auto" onClick={(e) => { e.stopPropagation(); setEditDialogOpen(true); }}>
-                          <Pencil className="w-3.5 h-3.5 mr-1.5" />
-                          Edit
+                       {userRole === 'admin' && (
+                        <div className="ml-auto flex items-center gap-2">
+                          <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); setTeamDialogOpen(true); }}>
+                            <Users className="w-3.5 h-3.5 mr-1.5" />
+                            Manage Team
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); setEditDialogOpen(true); }}>
+                            <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                            Edit
                         </Button>
                       )}
                     </div>
