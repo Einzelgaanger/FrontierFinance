@@ -66,17 +66,28 @@ serve(async (req) => {
     }
 
     const { data: roleData } = await supabase.from('user_roles').select('role').eq('user_id', caller.id).single();
-    if (!roleData || roleData.role !== 'admin') {
-      return new Response(JSON.stringify({ error: 'Admin access required' }), {
-        status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
+    const isAdmin = roleData?.role === 'admin';
 
     const { userId, userEmail } = await req.json();
     if (!userId || !userEmail) {
       return new Response(JSON.stringify({ error: 'userId and userEmail are required' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
+    }
+
+    // Allow admins OR primary account holders generating for their own team members
+    if (!isAdmin) {
+      const { data: memberRecord } = await supabase
+        .from('company_members')
+        .select('id')
+        .eq('company_user_id', caller.id)
+        .eq('member_user_id', userId)
+        .maybeSingle();
+      if (!memberRecord) {
+        return new Response(JSON.stringify({ error: 'You can only generate password links for your own team members' }), {
+          status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
     }
 
     // Generate a strong password

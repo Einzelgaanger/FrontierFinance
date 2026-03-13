@@ -32,6 +32,7 @@ export default function MyProfile() {
   const [loading, setLoading] = useState(true);
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
   const [activityLoading, setActivityLoading] = useState(false);
+  const [companyProfile, setCompanyProfile] = useState<{ company_name: string; profile_picture_url: string | null } | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [profile, setProfile] = useState({
@@ -73,6 +74,19 @@ export default function MyProfile() {
   useEffect(() => {
     fetchProfile();
   }, [user]);
+
+  // Fetch company profile for team members (to show company logo)
+  useEffect(() => {
+    if (!companyUserId || !isTeamMember) return;
+    (async () => {
+      const { data } = await supabase
+        .from('user_profiles')
+        .select('company_name, profile_picture_url')
+        .eq('id', companyUserId)
+        .single();
+      if (data) setCompanyProfile(data);
+    })();
+  }, [companyUserId, isTeamMember]);
 
   useEffect(() => {
     if (!user?.id || isTeamMember) return;
@@ -389,25 +403,45 @@ export default function MyProfile() {
                       title="Upload profile picture"
                     />
 
-                    {/* Name & Email */}
-                    <div className="w-full pt-4 border-t border-gray-200 space-y-3">
-                      {profile.full_name && (
-                        <div className="space-y-1 text-center">
-                          <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                            <User className="w-4 h-4" />
-                            <span className="font-medium">Name</span>
-                          </div>
-                          <p className="text-sm font-medium text-gray-900">{profile.full_name}</p>
-                        </div>
-                      )}
-                      <div className="space-y-1 text-center">
-                        <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                          <Mail className="w-4 h-4" />
-                          <span className="font-medium">Email Address</span>
-                        </div>
-                        <p className="text-sm font-medium text-gray-900 break-all">{user?.email}</p>
-                      </div>
-                    </div>
+                     {/* Name & Email */}
+                     <div className="w-full pt-4 border-t border-gray-200 space-y-3">
+                       {profile.full_name && (
+                         <div className="space-y-1 text-center">
+                           <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                             <User className="w-4 h-4" />
+                             <span className="font-medium">Name</span>
+                           </div>
+                           <p className="text-sm font-medium text-gray-900">{profile.full_name}</p>
+                         </div>
+                       )}
+                       <div className="space-y-1 text-center">
+                         <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                           <Mail className="w-4 h-4" />
+                           <span className="font-medium">Email Address</span>
+                         </div>
+                         <p className="text-sm font-medium text-gray-900 break-all">{user?.email}</p>
+                       </div>
+                       {/* Company badge for team members */}
+                       {isTeamMember && companyProfile && (
+                         <div className="space-y-2 text-center pt-2 border-t border-gray-100">
+                           <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                             <Building2 className="w-4 h-4" />
+                             <span className="font-medium">Company</span>
+                           </div>
+                           <div className="flex items-center justify-center gap-2">
+                             {companyProfile.profile_picture_url && (
+                               <Avatar className="w-8 h-8 border border-gray-200">
+                                 <AvatarImage src={companyProfile.profile_picture_url} className="object-cover" />
+                                 <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
+                                   {companyProfile.company_name?.charAt(0) || 'C'}
+                                 </AvatarFallback>
+                               </Avatar>
+                             )}
+                             <span className="text-sm font-medium text-gray-900">{companyProfile.company_name}</span>
+                           </div>
+                         </div>
+                       )}
+                     </div>
                   </div>
                 </CardContent>
               </Card>

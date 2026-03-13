@@ -22,6 +22,7 @@ interface Blog {
     full_name: string;
     company_name: string;
     profile_picture_url: string | null;
+    company_logo_url: string | null;
     total_points?: number;
   };
   is_liked?: boolean;
@@ -67,7 +68,15 @@ export function BlogDetailModal({ blog, open, onOpenChange, onToggleLike }: Blog
                   </span>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground">{blog.author?.company_name}</p>
+              <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+                {blog.author?.company_logo_url && (
+                  <Avatar className="h-4 w-4 border border-slate-200 inline-flex">
+                    <AvatarImage src={blog.author.company_logo_url} className="object-cover" />
+                    <AvatarFallback className="text-[6px]">{blog.author?.company_name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                )}
+                {blog.author?.company_name}
+              </p>
               <p className="text-xs text-muted-foreground">
                 {format(new Date(blog.created_at), "MMMM d, yyyy 'at' h:mm a")}
               </p>

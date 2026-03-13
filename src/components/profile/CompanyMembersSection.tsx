@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useCompanyMembership } from '@/hooks/useCompanyMembership';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Users, UserPlus, Loader2, Trash2, Mail, Eye, EyeOff, Pencil, KeyRound, Copy, Check } from 'lucide-react';
+import { Users, UserPlus, Loader2, Trash2, Mail, Eye, EyeOff, Pencil, KeyRound, Copy, Check, Link } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface CompanyMember {
@@ -37,6 +37,9 @@ export default function CompanyMembersSection() {
   const [newMember, setNewMember] = useState({ email: '', name: '', password: '' });
   const [editForm, setEditForm] = useState({ name: '', role: '' });
   const [copiedPassword, setCopiedPassword] = useState(false);
+  const [generatingLinkFor, setGeneratingLinkFor] = useState<string | null>(null);
+  const [generatedPasswordLink, setGeneratedPasswordLink] = useState<string | null>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const isPrimaryMember = userRole === 'member' && !isTeamMember;
 
@@ -181,6 +184,29 @@ export default function CompanyMembersSection() {
       toast({ title: 'Failed to send', description: err?.message || 'Could not send reset email', variant: 'destructive' });
     } finally {
       setSendingResetTo(null);
+    }
+  };
+
+  const handleGeneratePasswordLink = async (memberUserId: string, memberEmail: string) => {
+    setGeneratingLinkFor(memberUserId);
+    setGeneratedPasswordLink(null);
+    const { data, error } = await supabase.functions.invoke('generate-password-link', {
+      body: { userId: memberUserId, userEmail: memberEmail }
+    });
+    if (error || data?.error) {
+      toast({ title: 'Error', description: data?.error || error?.message, variant: 'destructive' });
+    } else {
+      setGeneratedPasswordLink(data.link);
+      toast({ title: 'Password link generated', description: 'Copy and send to the team member. It can only be viewed once.' });
+    }
+    setGeneratingLinkFor(null);
+  };
+
+  const copyPasswordLink = async () => {
+    if (generatedPasswordLink) {
+      await navigator.clipboard.writeText(generatedPasswordLink);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 3000);
     }
   };
 
@@ -372,6 +398,16 @@ export default function CompanyMembersSection() {
                   <Button
                     variant="ghost"
                     size="sm"
+                    onClick={() => handleGeneratePasswordLink(member.member_user_id, member.member_email)}
+                    disabled={generatingLinkFor === member.member_user_id}
+                    className="text-gray-500 hover:text-blue-600 hover:bg-blue-50"
+                    title="Generate one-time password link"
+                  >
+                    {generatingLinkFor === member.member_user_id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => handleSendResetLink(member.member_email)}
                     disabled={sendingResetTo === member.member_email}
                     className="text-gray-500 hover:text-blue-600 hover:bg-blue-50"
@@ -398,6 +434,26 @@ export default function CompanyMembersSection() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Generated Password Link Display */}
+        {generatedPasswordLink && (
+          <div className="mt-4 bg-green-50 border border-green-200 rounded-xl p-4">
+            <p className="text-xs font-semibold text-green-800 mb-2">
+              🔗 One-Time Password Link (send to the team member — it expires after viewing):
+            </p>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 text-xs bg-white border border-green-300 rounded-lg p-2 break-all select-all">
+                {generatedPasswordLink}
+              </code>
+              <Button size="sm" variant="outline" onClick={copyPasswordLink}>
+                {linkCopied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
+              </Button>
+            </div>
+            <p className="text-[10px] text-green-700 mt-2">
+              ⚠️ You cannot see the password. Only the person who opens this link will see it once.
+            </p>
           </div>
         )}
       </CardContent>
@@ -436,3 +492,4 @@ export default function CompanyMembersSection() {
     </Card>
   );
 }
+
