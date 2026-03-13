@@ -187,7 +187,29 @@ export default function CompanyMembersSection() {
     }
   };
 
-  return (
+  const handleGeneratePasswordLink = async (memberUserId: string, memberEmail: string) => {
+    setGeneratingLinkFor(memberUserId);
+    setGeneratedPasswordLink(null);
+    const { data, error } = await supabase.functions.invoke('generate-password-link', {
+      body: { userId: memberUserId, userEmail: memberEmail }
+    });
+    if (error || data?.error) {
+      toast({ title: 'Error', description: data?.error || error?.message, variant: 'destructive' });
+    } else {
+      setGeneratedPasswordLink(data.link);
+      toast({ title: 'Password link generated', description: 'Copy and send to the team member. It can only be viewed once.' });
+    }
+    setGeneratingLinkFor(null);
+  };
+
+  const copyPasswordLink = async () => {
+    if (generatedPasswordLink) {
+      await navigator.clipboard.writeText(generatedPasswordLink);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 3000);
+    }
+  };
+
     <Card className="bg-white border-gray-200 shadow-lg">
       <CardHeader>
         <div className="flex items-center justify-between">
