@@ -440,6 +440,7 @@ export function BlogFeed() {
                           <MessageCircle className="h-3.5 w-3.5" />
                           <span>{blog.comment_count} comment{blog.comment_count !== 1 ? 's' : ''}</span>
                         </span>
+                        <AttachmentDisplay blogId={blog.id} compact />
                       </div>
                       <span className="text-[11px] text-slate-400">
                         {format(new Date(blog.created_at), "MMM d, yyyy")}

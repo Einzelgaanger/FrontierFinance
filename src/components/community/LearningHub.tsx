@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { CreateLearningResourceModal } from "./CreateLearningResourceModal";
+import { AttachmentDisplay } from "./AttachmentDisplay";
 
 interface LearningResource {
   id: string;
