@@ -238,7 +238,13 @@ export default function BlogDetail() {
                   <span className="ml-1.5">{getBadge(blog.author.total_points).icon}</span>
                 )}
               </p>
-              <p className="text-sm text-slate-500 break-words">
+              <p className="text-sm text-slate-500 break-words flex items-center gap-1.5">
+                {blog.author?.company_logo_url && (
+                  <Avatar className="h-4 w-4 border border-slate-200 inline-flex">
+                    <AvatarImage src={blog.author.company_logo_url} className="object-cover" />
+                    <AvatarFallback className="text-[6px] bg-slate-100">{blog.author?.company_name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                )}
                 {blog.author?.company_name && <span>{blog.author.company_name} · </span>}
                 {format(new Date(blog.created_at), "MMM d, yyyy")}
               </p>
