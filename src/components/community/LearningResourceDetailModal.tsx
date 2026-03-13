@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { Heart, ExternalLink, Star, Link as LinkIcon, Video } from "lucide-react";
 import { LearningResourceCommentSection } from "./LearningResourceCommentSection";
+import { AttachmentDisplay } from "./AttachmentDisplay";
 
 const topicConfig: Record<string, string> = {
   investment_thesis: "Investment thesis",
