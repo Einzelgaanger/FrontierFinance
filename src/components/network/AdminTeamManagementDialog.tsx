@@ -7,8 +7,9 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import {
-  Loader2, Users, Mail, UserPlus, Trash2, ArrowUpDown, KeyRound, Copy, CheckCircle, Pencil, Save, X, Crown, User
+  Loader2, Users, Mail, UserPlus, Trash2, ArrowUpDown, KeyRound, Copy, CheckCircle, Pencil, Save, X, Crown, User, Send
 } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle
@@ -35,7 +36,9 @@ export default function AdminTeamManagementDialog({
   open, onClose, companyUserId, companyName, primaryEmail, onSaved
 }: AdminTeamManagementDialogProps) {
   const { toast } = useToast();
+  const { resetPassword } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [sendingResetTo, setSendingResetTo] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [editingPrimaryEmail, setEditingPrimaryEmail] = useState(false);
@@ -188,6 +191,19 @@ export default function AdminTeamManagementDialog({
     }
   };
 
+  const handleSendResetEmail = async (email: string) => {
+    setSendingResetTo(email);
+    try {
+      const { error } = await resetPassword(email);
+      if (error) throw error;
+      toast({ title: 'Reset email sent', description: `Password reset email sent to ${email}` });
+    } catch (err: any) {
+      toast({ title: 'Failed', description: err?.message || 'Could not send reset email', variant: 'destructive' });
+    } finally {
+      setSendingResetTo(null);
+    }
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={onClose}>
@@ -244,8 +260,8 @@ export default function AdminTeamManagementDialog({
                   )}
                 </div>
 
-                {/* Password link for primary */}
-                <div className="mt-3 flex items-center gap-2">
+                {/* Password link & Reset email for primary */}
+                <div className="mt-3 flex items-center gap-2 flex-wrap">
                   <Button
                     size="sm"
                     variant="outline"
@@ -255,6 +271,16 @@ export default function AdminTeamManagementDialog({
                   >
                     {generatingFor === companyUserId ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <KeyRound className="w-3 h-3 mr-1" />}
                     Generate Password Link
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-xs"
+                    disabled={sendingResetTo === primaryEmail}
+                    onClick={() => handleSendResetEmail(primaryEmail)}
+                  >
+                    {sendingResetTo === primaryEmail ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Send className="w-3 h-3 mr-1" />}
+                    Send Reset Email
                   </Button>
                 </div>
               </div>
@@ -357,6 +383,14 @@ export default function AdminTeamManagementDialog({
                                 onClick={() => { setEditingMemberId(member.id); setEditMemberName(member.member_name || ''); setEditMemberEmail(member.member_email); }}
                               >
                                 <Pencil className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                size="sm" variant="ghost" className="h-7 w-7 p-0"
+                                title="Send reset email"
+                                disabled={sendingResetTo === member.member_email}
+                                onClick={() => handleSendResetEmail(member.member_email)}
+                              >
+                                {sendingResetTo === member.member_email ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
                               </Button>
                               <Button
                                 size="sm" variant="ghost" className="h-7 w-7 p-0"
