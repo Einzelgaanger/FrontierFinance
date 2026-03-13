@@ -134,7 +134,11 @@ export function BlogFeed() {
       fetchBlogs();
     }
 
-    const handleOpenModal = () => setIsCreateModalOpen(true);
+    const handleOpenModal = () => {
+      if (canCreatePost) {
+        setIsCreateModalOpen(true);
+      }
+    };
     window.addEventListener('openCreateBlogModal', handleOpenModal);
 
     const blogsChannel = supabase
