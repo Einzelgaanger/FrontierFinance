@@ -102,6 +102,21 @@
     display: none;
   }
 
+  /* On viewports with hamburger menu: never show document scrollbar (avoids flash on open/close) */
+  @media (max-width: 1023px) {
+    html,
+    body {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
@@ -428,14 +443,38 @@
   opacity: 0;
 }
 
-/* Mobile sidebar open: lock body scroll and hide scrollbar before first paint */
-body.mobile-menu-open {
+/* Mobile sidebar open: fix body + hide scrollbar everywhere so no flash */
+html.mobile-menu-open {
   overflow: hidden !important;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+html.mobile-menu-open::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+html.mobile-menu-open #root {
+  overflow: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+html.mobile-menu-open #root::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+body.mobile-menu-open {
+  position: fixed !important;
+  overflow: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  overscroll-behavior: none;
 }
 body.mobile-menu-open::-webkit-scrollbar {
   display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .scrollbar-hide {

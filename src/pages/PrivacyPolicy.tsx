@@ -1,8 +1,13 @@
+import { useEffect } from 'react';
 import Footer from '@/components/layout/Footer';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 const PrivacyPolicy = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground font-sans antialiased">
       {/* Header */}

@@ -99,7 +99,7 @@ const Navbar = () => {
 
                     {/* CTA Buttons */}
                     <div className="hidden lg:flex items-center space-x-4">
-                        <Link to="/auth" onClick={scrollToTop}>
+                        <Link to="/get-started?intent=signin" onClick={scrollToTop}>
                             <Button
                                 variant="ghost"
                                 className={cn(
@@ -110,7 +110,7 @@ const Navbar = () => {
                                 Sign In
                             </Button>
                         </Link>
-                        <Link to="/auth?tab=signup" onClick={scrollToTop}>
+                        <Link to="/get-started?intent=join" onClick={scrollToTop}>
                             <Button className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold rounded-full px-6 shadow-finance shadow-gold-500/20 hover:shadow-gold-glow transition-all duration-300 hover:-translate-y-0.5">
                                 Join Network
                             </Button>
@@ -195,12 +195,12 @@ const Navbar = () => {
                                 );
                             })}
                             <div className="pt-4 mt-3 space-y-2 border-t border-white/10">
-                                <Link to="/auth" onClick={() => { scrollToTop(); setIsMobileMenuOpen(false); }} className="block">
+                                <Link to="/get-started?intent=signin" onClick={() => { scrollToTop(); setIsMobileMenuOpen(false); }} className="block">
                                     <span className="flex items-center justify-center gap-2 w-full min-h-[40px] px-4 py-2.5 rounded-lg text-sm font-medium border border-slate-500/50 text-slate-300 bg-white/5 hover:bg-slate-500/10 hover:text-white hover:border-slate-400/50 transition-colors">
                                         <LogIn className="h-4 w-4" /> Sign In
                                     </span>
                                 </Link>
-                                <Link to="/auth?tab=signup" onClick={() => { scrollToTop(); setIsMobileMenuOpen(false); }} className="block">
+                                <Link to="/get-started?intent=join" onClick={() => { scrollToTop(); setIsMobileMenuOpen(false); }} className="block">
                                     <span className="flex items-center justify-center gap-2 w-full min-h-[40px] px-4 py-2.5 rounded-lg text-sm font-semibold bg-gold-500 text-navy-950 hover:bg-gold-400 shadow-sm hover:shadow transition-colors">
                                         <UserPlus className="h-4 w-4" /> Join Network
                                     </span>

@@ -1,40 +1,35 @@
-import { useEffect } from "react";
+import { useLayoutEffect, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 function scrollToTop() {
-  window.scrollTo(0, 0);
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   document.documentElement.scrollTop = 0;
   document.documentElement.scrollLeft = 0;
   document.body.scrollTop = 0;
   document.body.scrollLeft = 0;
 }
 
+// Prevent browser from restoring scroll on navigation (e.g. when returning to privacy/terms)
+if (typeof history !== "undefined" && "scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
 /**
  * Scrolls to the top whenever the route (pathname) changes.
- * Ensures users always land at the top when navigating via header or hamburger.
+ * useLayoutEffect runs before paint so the user never sees a mid-page scroll position.
  */
 export default function ScrollToTop() {
   const { pathname } = useLocation();
 
-  useEffect(() => {
-    // Disable browser scroll restoration so we control scroll on navigation
-    if ("scrollRestoration" in history) {
-      history.scrollRestoration = "manual";
-    }
-
+  useLayoutEffect(() => {
     scrollToTop();
+  }, [pathname]);
 
-    // Run again after React has committed the new route and browser has painted
-    const rafId = requestAnimationFrame(() => {
-      scrollToTop();
-      requestAnimationFrame(scrollToTop);
-    });
-
-    const t1 = window.setTimeout(scrollToTop, 50);
-    const t2 = window.setTimeout(scrollToTop, 150);
-
+  // Delayed scroll for long pages (e.g. privacy, terms) in case content/layout finishes after paint
+  useEffect(() => {
+    const t1 = window.setTimeout(scrollToTop, 100);
+    const t2 = window.setTimeout(scrollToTop, 400);
     return () => {
-      cancelAnimationFrame(rafId);
       window.clearTimeout(t1);
       window.clearTimeout(t2);
     };

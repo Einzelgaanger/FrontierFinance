@@ -1,4 +1,5 @@
-import { useState, useEffect, type ReactNode } from 'react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { flushSync } from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { AppOnboardingTrigger } from '@/components/onboarding/AppOnboardingTour';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
@@ -30,6 +32,9 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false); // mobile
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const savedScrollY = useRef(0);
+  const scrollLockStyleId = 'mobile-menu-scroll-lock';
+  const [coverStripVisible, setCoverStripVisible] = useState(false);
 
   useEffect(() => {
     const fetchAvatar = async () => {
@@ -44,13 +49,25 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     fetchAvatar();
   }, [user?.id]);
 
-  // Remove body lock when mobile menu closes (class is added synchronously on open)
+  // Remove body lock and restore scroll when mobile menu closes (delay so no scrollbar flash)
   useEffect(() => {
     if (!sidebarOpen) return;
     const isMobile = window.matchMedia('(max-width: 1023px)').matches;
     if (!isMobile) return;
     return () => {
+      const y = savedScrollY.current;
+      document.getElementById(scrollLockStyleId)?.remove();
+      document.documentElement.classList.remove('mobile-menu-open');
       document.body.classList.remove('mobile-menu-open');
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      requestAnimationFrame(() => {
+        window.scrollTo(0, y);
+        requestAnimationFrame(() => window.scrollTo(0, y));
+      });
+      setTimeout(() => setCoverStripVisible(false), 120);
     };
   }, [sidebarOpen]);
 
@@ -235,12 +252,22 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
           aria-hidden
         />
       )}
+      {/* Cover right edge so OS scrollbar never shows; keep briefly after close to avoid flash */}
+      {(sidebarOpen || coverStripVisible) && (
+        <div
+          className={cn(
+            'fixed right-0 top-0 bottom-0 w-10 z-[41] lg:hidden pointer-events-none',
+            sidebarOpen ? 'bg-black/60' : 'bg-slate-100'
+          )}
+          aria-hidden
+        />
+      )}
 
       {sidebarOpen && (
         <div
           className={cn(
-            'fixed inset-y-0 left-0 z-50 w-72 lg:hidden',
-            'bg-navy-900 shadow-2xl flex flex-col',
+            'fixed inset-y-0 left-0 z-50 w-72 lg:hidden overflow-hidden flex flex-col',
+            'bg-navy-900 shadow-2xl',
             'pl-[env(safe-area-inset-left,0)]'
           )}
         >
@@ -333,8 +360,12 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
   );
 
   return (
+    <AppOnboardingTrigger userRole={userRole as 'viewer' | 'member' | 'admin' | null} userId={user?.id}>
     <div
-      className="min-h-screen min-h-[100dvh] bg-slate-100 overflow-x-hidden"
+      className={cn(
+        'min-h-screen min-h-[100dvh] bg-slate-100 overflow-x-hidden',
+        sidebarOpen && 'max-lg:overflow-y-hidden max-lg:overscroll-none'
+      )}
       data-layout="sidebar-layout"
     >
       <DesktopSidebar />
@@ -347,8 +378,26 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
         className="lg:hidden fixed z-40 text-slate-600 bg-white/95 hover:bg-white shadow-md border border-slate-200/80 rounded-xl min-h-[44px] min-w-[44px] p-0 touch-manipulation top-[max(0.75rem,env(safe-area-inset-top,0))] left-[max(0.75rem,env(safe-area-inset-left,0))]"
         onClick={() => {
           const isMobile = window.matchMedia('(max-width: 1023px)').matches;
-          if (isMobile) document.body.classList.add('mobile-menu-open');
-          setSidebarOpen(true);
+          if (isMobile) {
+            savedScrollY.current = window.scrollY;
+            document.documentElement.classList.add('mobile-menu-open');
+            document.body.classList.add('mobile-menu-open');
+            document.body.style.top = `-${savedScrollY.current}px`;
+            document.body.style.left = '0';
+            document.body.style.right = '0';
+            document.body.style.width = '100%';
+            let el = document.getElementById(scrollLockStyleId);
+            if (!el) {
+              el = document.createElement('style');
+              el.id = scrollLockStyleId;
+              el.textContent = `html.mobile-menu-open,body.mobile-menu-open{overflow:hidden!important;scrollbar-width:none!important;-ms-overflow-style:none!important}html.mobile-menu-open::-webkit-scrollbar,body.mobile-menu-open::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}`;
+              document.head.appendChild(el);
+            }
+          }
+          flushSync(() => {
+            setSidebarOpen(true);
+            setCoverStripVisible(true);
+          });
         }}
         aria-label="Open menu"
       >
@@ -367,6 +416,7 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
         </main>
       </div>
     </div>
+    </AppOnboardingTrigger>
   );
 };
 

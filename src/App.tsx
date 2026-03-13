@@ -10,6 +10,7 @@ import LoadingScreen from "@/components/ui/loading-screen";
 import { useLoadingStore } from "@/store/loading-store";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import GetStarted from "./pages/GetStarted";
 import Dashboard from "./pages/Dashboard";
 import NetworkWrapper from "./components/NetworkWrapper";
 import FundManagerDetail from "./pages/FundManagerDetail";
@@ -59,10 +60,11 @@ const queryClient = new QueryClient();
 
 const AUTH_ROUTES = ['/auth', '/forgot-password', '/reset-password'];
 
-// Only show the homepage/marketing Navbar on these routes. App pages (dashboard, admin, network, etc.) use SidebarLayout and should not show the fixed Navbar.
+// Only show the homepage/marketing Navbar on these routes. Get-started shows navbar so users can go back. App pages (dashboard, admin, network, etc.) use SidebarLayout and should not show the fixed Navbar.
 const ROUTES_WITH_NAVBAR = [
   '/',
   '/about',
+  '/get-started',
   '/learning-hub',
   '/our-events',
   '/escp-network',
@@ -84,6 +86,7 @@ const AppRoutes = () => {
       {showNavbar && <Navbar />}
       <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/get-started" element={<GetStarted />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/dashboard" element={
                   <ProtectedRoute>

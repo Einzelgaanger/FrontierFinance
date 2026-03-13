@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -225,7 +225,8 @@ export default function AuthForm() {
           Already have a company in the network?
         </p>
         <p className="text-[11px] text-slate-500 dark:text-navy-400 mb-2">
-          Search by company name or email to sign in or reset your password — no need to create a new account.
+          Search by company name or email to sign in or reset your password — no need to create a new account.{' '}
+          <Link to="/get-started?intent=signin" className="font-medium text-gold-600 dark:text-gold-400 hover:underline">First time? See how it works</Link>
         </p>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
