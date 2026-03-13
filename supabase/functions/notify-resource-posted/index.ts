@@ -200,7 +200,7 @@ serve(async (req) => {
       <div style="font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ffffff;padding:24px;">
         <div style="max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
           <div style="background:#0f1d2e;padding:28px;text-align:center;">
-            <img src="https://escpnetwork.net/CFF%20LOGO.png" alt="Collaborative For Frontier Finance" width="160" height="64" />
+            <img src="https://cffcff.lovable.app/CFF%20LOGO.png" alt="Collaborative For Frontier Finance" width="160" height="64" />
           </div>
           <div style="height:4px;background:linear-gradient(90deg,#c49a2b,#d4aa3b);"></div>
           <div style="padding:28px;">
