@@ -210,6 +210,7 @@ export default function CompanyMembersSection() {
     }
   };
 
+  return (
     <Card className="bg-white border-gray-200 shadow-lg">
       <CardHeader>
         <div className="flex items-center justify-between">
