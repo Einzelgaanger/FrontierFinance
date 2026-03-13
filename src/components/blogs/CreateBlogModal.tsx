@@ -372,6 +372,15 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
             />
           </div>
 
+          {/* Additional Attachments */}
+          <div className="border-t pt-4">
+            <AttachmentManager
+              attachments={attachments}
+              onChange={setAttachments}
+              bucket="blog-media"
+            />
+          </div>
+
           <div className="flex justify-end gap-3">
             <Button
               type="button"
