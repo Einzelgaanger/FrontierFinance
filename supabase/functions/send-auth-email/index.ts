@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
     const buildWelcomeEmail = (companyName: string, confirmLink: string) => `
       <div style="font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#ffffff;padding:24px;">
         <div style="max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
-          <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://cffcff.lovable.app/CFF%20LOGO.png" alt="Collaborative For Frontier Finance" width="160" height="64" /></div>
+          <div style="background:#0f1d2e;padding:28px;text-align:center;"><img src="https://frontierfinance.org/CFF%20LOGO.png" alt="Collaborative For Frontier Finance" width="160" height="64" /></div>
           <div style="height:4px;background:#c49a2b;"></div>
           <div style="padding:28px;">
             <h1 style="margin:0 0 12px;color:#0f1d2e;font-size:24px;">Welcome to Collaborative For Frontier Finance</h1>
