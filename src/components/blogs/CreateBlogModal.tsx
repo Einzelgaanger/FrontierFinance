@@ -206,6 +206,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
       });
       setSelectedFile(null);
       setThumbnailFile(null);
+      setAttachments([]);
       onOpenChange(false);
       onSuccess();
     } catch (error: any) {
