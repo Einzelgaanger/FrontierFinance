@@ -62,7 +62,7 @@ export default function Blogs() {
 
       // Fetch author profiles and credits
       const userIds = [...new Set(blogsData?.map(blog => blog.user_id) || [])];
-      const [profilesRes, creditsRes] = await Promise.all([
+      const [profilesRes, creditsRes, companyMembersRes] = await Promise.all([
         supabase
           .from("user_profiles")
           .select("id, full_name, company_name, profile_picture_url")
@@ -70,8 +70,27 @@ export default function Blogs() {
         supabase
           .from("user_credits")
           .select("user_id, total_points")
-          .in("user_id", userIds)
+          .in("user_id", userIds),
+        supabase
+          .from("company_members")
+          .select("member_user_id, company_user_id")
+          .in("member_user_id", userIds)
+          .eq("is_active", true)
       ]);
+
+      // Fetch company logos for team members
+      const companyUserIds = [...new Set(companyMembersRes.data?.map(cm => cm.company_user_id) || [])];
+      let companyProfiles: Record<string, { company_name: string; profile_picture_url: string | null }> = {};
+      if (companyUserIds.length > 0) {
+        const { data: cpData } = await supabase
+          .from("user_profiles")
+          .select("id, company_name, profile_picture_url")
+          .in("id", companyUserIds);
+        cpData?.forEach(cp => {
+          companyProfiles[cp.id] = { company_name: cp.company_name, profile_picture_url: cp.profile_picture_url };
+        });
+      }
+      const memberToCompany = new Map(companyMembersRes.data?.map(cm => [cm.member_user_id, cm.company_user_id]) || []);
 
       // Fetch user likes
       let userLikes = new Set<string>();
@@ -104,13 +123,15 @@ export default function Blogs() {
       const blogsWithAuthors = (blogsData?.map(blog => {
         const profile = profilesRes.data?.find(p => p.id === blog.user_id);
         const credit = creditsRes.data?.find(c => c.user_id === blog.user_id);
+        const companyId = memberToCompany.get(blog.user_id);
+        const companyLogo = companyId ? companyProfiles[companyId]?.profile_picture_url : null;
         return {
           ...blog,
           media_type: blog.media_type as 'text' | 'image' | 'video' | null,
           like_count: likeCountMap.get(blog.id) || 0,
           comment_count: commentCountMap.get(blog.id) || 0,
           is_liked: userLikes.has(blog.id),
-          author: profile ? { ...profile, total_points: credit?.total_points || 0 } : undefined
+          author: profile ? { ...profile, total_points: credit?.total_points || 0, company_logo_url: companyLogo || profile.profile_picture_url } : undefined
         };
       }) || []) as Blog[];
 
