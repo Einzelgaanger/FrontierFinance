@@ -140,6 +140,15 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
 
       if (error) throw error;
 
+      // Save attachments
+      if (attachments.length > 0 && inserted?.id) {
+        await saveAttachments(attachments, {
+          blogId: inserted.id,
+          userId: user.id,
+          bucket: "blog-media",
+        });
+      }
+
       if (isTeamMember && companyUserId) {
         await logMemberActivity(
           companyUserId,
