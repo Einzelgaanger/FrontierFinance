@@ -49,7 +49,7 @@ interface Blog {
 }
 
 export function BlogFeed() {
-  const { user } = useAuth();
+  const { user, userRole } = useAuth();
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,6 +57,8 @@ export function BlogFeed() {
   const [activeFilter, setActiveFilter] = useState<'all' | 'text' | 'image' | 'video'>('all');
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  const canCreatePost = userRole === 'member' || userRole === 'admin';
 
   const fetchBlogs = useCallback(async () => {
     try {
@@ -132,7 +134,11 @@ export function BlogFeed() {
       fetchBlogs();
     }
 
-    const handleOpenModal = () => setIsCreateModalOpen(true);
+    const handleOpenModal = () => {
+      if (canCreatePost) {
+        setIsCreateModalOpen(true);
+      }
+    };
     window.addEventListener('openCreateBlogModal', handleOpenModal);
 
     const blogsChannel = supabase
@@ -146,7 +152,7 @@ export function BlogFeed() {
       window.removeEventListener('openCreateBlogModal', handleOpenModal);
       supabase.removeChannel(blogsChannel);
     };
-  }, [user, fetchBlogs]);
+  }, [user, fetchBlogs, canCreatePost]);
 
   const stats = useMemo(() => ({
     totalPosts: blogs.length,
@@ -243,16 +249,18 @@ export function BlogFeed() {
             <span className="text-[11px] text-slate-500 ml-1">interactions</span>
           </div>
         </div>
-        <div className="ml-auto shrink-0">
-          <Button 
-            onClick={() => setIsCreateModalOpen(true)}
-            size="sm"
-            className="bg-slate-900 hover:bg-slate-800 text-white h-7 px-2.5 text-[11px] font-medium"
-          >
-            <PlusCircle className="h-3 w-3 mr-1" />
-            New post
-          </Button>
-        </div>
+        {canCreatePost && (
+          <div className="ml-auto shrink-0">
+            <Button 
+              onClick={() => setIsCreateModalOpen(true)}
+              size="sm"
+              className="bg-slate-900 hover:bg-slate-800 text-white h-7 px-2.5 text-[11px] font-medium"
+            >
+              <PlusCircle className="h-3 w-3 mr-1" />
+              New post
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Search & Filters Row */}
@@ -337,7 +345,7 @@ export function BlogFeed() {
               ? "Be the first to share your insights."
               : "Try adjusting your search or filters."}
           </p>
-          {blogs.length === 0 && (
+          {blogs.length === 0 && canCreatePost && (
             <Button onClick={() => setIsCreateModalOpen(true)} size="sm" variant="outline" className="h-7 text-[11px]">
               <PlusCircle className="h-3 w-3 mr-1" />
               Create post

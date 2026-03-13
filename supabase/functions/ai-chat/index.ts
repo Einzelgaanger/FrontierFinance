@@ -39,6 +39,8 @@ Deno.serve(async (req) => {
       .eq('user_id', user.id)
       .maybeSingle()
     const userRole = roleData?.role || 'viewer'
+    const isViewer = userRole === 'viewer'
+    const effectiveOutputFormat = isViewer ? 'text' : outputFormat
 
     // Service role client for full data access
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')

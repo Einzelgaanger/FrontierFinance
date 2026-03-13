@@ -26,7 +26,7 @@ interface CreateBlogModalProps {
 }
 
 export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogModalProps) {
-  const { user } = useAuth();
+  const { user, userRole } = useAuth();
   const { isTeamMember, companyUserId } = useCompanyMembership();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -100,6 +100,12 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+
+    const canCreateBlogPost = userRole === 'member' || userRole === 'admin';
+    if (!canCreateBlogPost) {
+      toast.error("Only members and admins can publish blog posts");
+      return;
+    }
 
     setLoading(true);
     try {

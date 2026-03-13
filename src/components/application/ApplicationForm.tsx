@@ -114,9 +114,27 @@ const ApplicationForm = () => {
   // Save draft to database
   const saveDraft = useCallback(async () => {
     if (!user?.id || isReadOnly) return;
-    
-    // Only save if form has some data
-    if (!formData.applicant_name && !formData.email && !formData.vehicle_name) return;
+
+    // Only auto-save once the user has entered meaningful application content
+    const hasMeaningfulDraftData = Boolean(
+      formData.applicant_name.trim() ||
+      formData.vehicle_name.trim() ||
+      formData.organization_website.trim() ||
+      formData.role_job_title.trim() ||
+      formData.team_size.trim() ||
+      formData.location.trim() ||
+      formData.investment_thesis.trim() ||
+      formData.typical_check_size.trim() ||
+      formData.number_of_investments.trim() ||
+      formData.amount_raised_to_date.trim() ||
+      formData.expectations_from_network.trim() ||
+      formData.how_heard_about_network.trim() ||
+      formData.information_sharing_topics.length > 0 ||
+      uploadedFiles.length > 0 ||
+      Boolean(profilePicture)
+    );
+
+    if (!hasMeaningfulDraftData) return;
 
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
