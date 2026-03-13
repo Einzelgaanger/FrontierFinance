@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -13,8 +13,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Loader2, BookOpen, Upload, Link as LinkIcon, Image, Video } from "lucide-react";
+import { Loader2, BookOpen, Upload, Link as LinkIcon, Image, Video, Mail, X, Users, UserMinus, UserCheck } from "lucide-react";
 
 const LEARNING_TOPICS = [
   { value: "investment_thesis", label: "Investment thesis" },
@@ -58,6 +59,58 @@ export function CreateLearningResourceModal({
     caption: "",
     is_featured: false,
   });
+
+  // Notification state
+  const [sendNotification, setSendNotification] = useState(false);
+  const [notifyMode, setNotifyMode] = useState<'all_members' | 'specific' | 'all_except'>('all_members');
+  const [emailInput, setEmailInput] = useState("");
+  const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
+  const [sendingNotification, setSendingNotification] = useState(false);
+
+  // Fetch member emails for autocomplete
+  const [memberEmails, setMemberEmails] = useState<{ email: string; name: string }[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  useEffect(() => {
+    if (open && sendNotification) {
+      fetchMemberEmails();
+    }
+  }, [open, sendNotification]);
+
+  const fetchMemberEmails = async () => {
+    const { data } = await supabase
+      .from('user_profiles')
+      .select('email, full_name, user_role')
+      .in('user_role', ['member', 'admin'])
+      .order('full_name');
+    if (data) {
+      setMemberEmails(data.map(d => ({ email: d.email, name: d.full_name || d.email })));
+    }
+  };
+
+  const addEmail = (email: string) => {
+    const trimmed = email.trim().toLowerCase();
+    if (trimmed && !selectedEmails.includes(trimmed)) {
+      setSelectedEmails(prev => [...prev, trimmed]);
+    }
+    setEmailInput("");
+    setShowSuggestions(false);
+  };
+
+  const removeEmail = (email: string) => {
+    setSelectedEmails(prev => prev.filter(e => e !== email));
+  };
+
+  const handleEmailKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      if (emailInput.trim()) addEmail(emailInput);
+    }
+  };
+
+  const filteredSuggestions = memberEmails.filter(
+    m => (m.email.toLowerCase().includes(emailInput.toLowerCase()) || m.name.toLowerCase().includes(emailInput.toLowerCase())) && !selectedEmails.includes(m.email.toLowerCase())
+  );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -191,6 +244,37 @@ export function CreateLearningResourceModal({
       if (error) throw error;
 
       toast.success("Learning resource created");
+
+      // Send notification if enabled
+      if (sendNotification) {
+        setSendingNotification(true);
+        toast.info("Sending email notifications...");
+        try {
+          const { data: notifData, error: notifError } = await supabase.functions.invoke('notify-resource-posted', {
+            body: {
+              resourceTitle: formData.title,
+              resourceDescription: formData.description.trim() || null,
+              resourceUrl: resourceUrl || null,
+              thumbnailUrl,
+              topic: formData.topic === "other" ? formData.topic_other : formData.topic,
+              mediaType: formData.media_type,
+              notifyMode,
+              specificEmails: selectedEmails,
+            }
+          });
+          if (notifError || notifData?.error) {
+            toast.error(`Notification failed: ${notifData?.error || notifError?.message}`);
+          } else {
+            toast.success(`📧 Sent to ${notifData.sentCount} of ${notifData.totalRecipients} recipients`);
+          }
+        } catch (err) {
+          console.error('Notification error:', err);
+          toast.error('Failed to send notifications');
+        } finally {
+          setSendingNotification(false);
+        }
+      }
+
       setFormData({
         title: "",
         description: "",
@@ -205,6 +289,9 @@ export function CreateLearningResourceModal({
       });
       setSelectedFile(null);
       setThumbnailFile(null);
+      setSendNotification(false);
+      setSelectedEmails([]);
+      setNotifyMode('all_members');
       onOpenChange(false);
       onSuccess();
     } catch (err: unknown) {
@@ -273,7 +360,7 @@ export function CreateLearningResourceModal({
             )}
           </div>
 
-          {/* Media: Link vs Upload (like posts) */}
+          {/* Media: Link vs Upload */}
           <div className="min-w-0">
             <Label>Media</Label>
             <RadioGroup
@@ -455,6 +542,120 @@ export function CreateLearningResourceModal({
             />
           </div>
 
+          {/* Email Notification Section */}
+          <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-amber-700" />
+                <div>
+                  <Label className="text-sm font-medium text-amber-900">Email notification</Label>
+                  <p className="text-xs text-amber-700">
+                    AI-polished email sent to selected members
+                  </p>
+                </div>
+              </div>
+              <Switch
+                checked={sendNotification}
+                onCheckedChange={setSendNotification}
+              />
+            </div>
+
+            {sendNotification && (
+              <div className="space-y-3 pt-2 border-t border-amber-200">
+                {/* Notify Mode */}
+                <div>
+                  <Label className="text-xs text-amber-800 font-medium">Send to</Label>
+                  <div className="flex gap-2 mt-1.5 flex-wrap">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={notifyMode === 'all_members' ? 'default' : 'outline'}
+                      className={notifyMode === 'all_members' ? 'bg-amber-600 hover:bg-amber-700 text-white' : 'border-amber-300 text-amber-800'}
+                      onClick={() => { setNotifyMode('all_members'); setSelectedEmails([]); }}
+                    >
+                      <Users className="h-3.5 w-3.5 mr-1" />
+                      All members
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={notifyMode === 'specific' ? 'default' : 'outline'}
+                      className={notifyMode === 'specific' ? 'bg-amber-600 hover:bg-amber-700 text-white' : 'border-amber-300 text-amber-800'}
+                      onClick={() => setNotifyMode('specific')}
+                    >
+                      <UserCheck className="h-3.5 w-3.5 mr-1" />
+                      Specific emails
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={notifyMode === 'all_except' ? 'default' : 'outline'}
+                      className={notifyMode === 'all_except' ? 'bg-amber-600 hover:bg-amber-700 text-white' : 'border-amber-300 text-amber-800'}
+                      onClick={() => setNotifyMode('all_except')}
+                    >
+                      <UserMinus className="h-3.5 w-3.5 mr-1" />
+                      All except
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Email input for specific/exclude modes */}
+                {(notifyMode === 'specific' || notifyMode === 'all_except') && (
+                  <div className="relative">
+                    <Label className="text-xs text-amber-800">
+                      {notifyMode === 'specific' ? 'Emails to send to' : 'Emails to exclude'}
+                    </Label>
+                    <div className="mt-1">
+                      {selectedEmails.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-2">
+                          {selectedEmails.map(email => (
+                            <Badge key={email} variant="secondary" className="bg-amber-100 text-amber-800 text-xs pr-1">
+                              {email}
+                              <button type="button" onClick={() => removeEmail(email)} className="ml-1 hover:text-red-600">
+                                <X className="h-3 w-3" />
+                              </button>
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                      <Input
+                        value={emailInput}
+                        onChange={(e) => { setEmailInput(e.target.value); setShowSuggestions(true); }}
+                        onKeyDown={handleEmailKeyDown}
+                        onFocus={() => setShowSuggestions(true)}
+                        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                        placeholder="Type email or name to search..."
+                        className="bg-white border-amber-300"
+                      />
+                      {showSuggestions && emailInput.length > 0 && filteredSuggestions.length > 0 && (
+                        <div className="absolute z-50 w-full mt-1 bg-white border border-amber-200 rounded-lg shadow-lg max-h-40 overflow-y-auto">
+                          {filteredSuggestions.slice(0, 8).map(m => (
+                            <button
+                              key={m.email}
+                              type="button"
+                              className="w-full text-left px-3 py-2 hover:bg-amber-50 text-sm flex justify-between items-center"
+                              onMouseDown={(e) => { e.preventDefault(); addEmail(m.email); }}
+                            >
+                              <span className="font-medium text-slate-800">{m.name}</span>
+                              <span className="text-xs text-slate-500">{m.email}</span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-amber-600 mt-1">Press Enter or comma to add. Type to search members.</p>
+                  </div>
+                )}
+
+                {notifyMode === 'all_members' && (
+                  <p className="text-xs text-amber-700 bg-amber-100 rounded-md px-3 py-2">
+                    📧 Will be sent to all members and admins (primary + team members). Viewers are excluded.
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
           <div className="flex justify-end gap-3 pt-4 border-t">
             <Button
               type="button"
@@ -466,13 +667,13 @@ export function CreateLearningResourceModal({
             </Button>
             <Button
               type="submit"
-              disabled={loading || uploading}
+              disabled={loading || uploading || sendingNotification}
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
-              {(loading || uploading) && (
+              {(loading || uploading || sendingNotification) && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {uploading ? "Uploading…" : "Publish resource"}
+              {sendingNotification ? "Sending emails…" : uploading ? "Uploading…" : sendNotification ? "Publish & notify" : "Publish resource"}
             </Button>
           </div>
         </form>
