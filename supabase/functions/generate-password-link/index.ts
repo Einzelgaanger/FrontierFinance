@@ -66,11 +66,7 @@ serve(async (req) => {
     }
 
     const { data: roleData } = await supabase.from('user_roles').select('role').eq('user_id', caller.id).single();
-    if (!roleData || roleData.role !== 'admin') {
-      return new Response(JSON.stringify({ error: 'Admin access required' }), {
-        status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
+    const isAdmin = roleData?.role === 'admin';
 
     const { userId, userEmail } = await req.json();
     if (!userId || !userEmail) {
