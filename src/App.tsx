@@ -42,6 +42,7 @@ import DevTasks from "./pages/DevTasks";
 import Day1Presentation from "./pages/Day1Presentation";
 import Day2Presentation from "./pages/Day2Presentation";
 import Drew from "./pages/Drew";
+import ViewPassword from "./pages/ViewPassword";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import About from "./pages/About";
 import ESCPNetwork from "./pages/ESCPNetwork";
