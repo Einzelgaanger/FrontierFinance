@@ -191,6 +191,19 @@ export default function AdminTeamManagementDialog({
     }
   };
 
+  const handleSendResetEmail = async (email: string) => {
+    setSendingResetTo(email);
+    try {
+      const { error } = await resetPassword(email);
+      if (error) throw error;
+      toast({ title: 'Reset email sent', description: `Password reset email sent to ${email}` });
+    } catch (err: any) {
+      toast({ title: 'Failed', description: err?.message || 'Could not send reset email', variant: 'destructive' });
+    } finally {
+      setSendingResetTo(null);
+    }
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={onClose}>
