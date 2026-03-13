@@ -98,7 +98,7 @@ export default function BlogDetail() {
         comment_count: commentCounts?.length || 0,
         is_liked: isLiked,
         author: profileRes.data
-          ? { ...profileRes.data, total_points: creditRes.data?.total_points || 0 }
+          ? { ...profileRes.data, total_points: creditRes.data?.total_points || 0, company_logo_url: companyLogoUrl || profileRes.data.profile_picture_url }
           : undefined,
       };
 
