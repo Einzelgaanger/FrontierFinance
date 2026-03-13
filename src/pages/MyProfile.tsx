@@ -32,6 +32,7 @@ export default function MyProfile() {
   const [loading, setLoading] = useState(true);
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
   const [activityLoading, setActivityLoading] = useState(false);
+  const [companyProfile, setCompanyProfile] = useState<{ company_name: string; profile_picture_url: string | null } | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [profile, setProfile] = useState({
