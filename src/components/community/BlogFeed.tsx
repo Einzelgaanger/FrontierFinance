@@ -249,16 +249,18 @@ export function BlogFeed() {
             <span className="text-[11px] text-slate-500 ml-1">interactions</span>
           </div>
         </div>
-        <div className="ml-auto shrink-0">
-          <Button 
-            onClick={() => setIsCreateModalOpen(true)}
-            size="sm"
-            className="bg-slate-900 hover:bg-slate-800 text-white h-7 px-2.5 text-[11px] font-medium"
-          >
-            <PlusCircle className="h-3 w-3 mr-1" />
-            New post
-          </Button>
-        </div>
+        {canCreatePost && (
+          <div className="ml-auto shrink-0">
+            <Button 
+              onClick={() => setIsCreateModalOpen(true)}
+              size="sm"
+              className="bg-slate-900 hover:bg-slate-800 text-white h-7 px-2.5 text-[11px] font-medium"
+            >
+              <PlusCircle className="h-3 w-3 mr-1" />
+              New post
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Search & Filters Row */}
