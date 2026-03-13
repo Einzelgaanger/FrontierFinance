@@ -152,6 +152,7 @@ const FundManagerDetail = () => {
   const [selectedSection, setSelectedSection] = useState<number>(1);
   const [fieldVisibility, setFieldVisibility] = useState<Record<string, { viewer: boolean; member: boolean; admin: boolean }>>({});
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [teamDialogOpen, setTeamDialogOpen] = useState(false);
   const [teamMembers, setTeamMembers] = useState<Array<{ member_user_id: string; member_name: string | null; member_email: string; role_in_company: string | null }>>([]);
 
   const fetchFundManagerData = useCallback(async () => {
