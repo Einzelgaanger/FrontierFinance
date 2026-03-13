@@ -260,8 +260,8 @@ export default function AdminTeamManagementDialog({
                   )}
                 </div>
 
-                {/* Password link for primary */}
-                <div className="mt-3 flex items-center gap-2">
+                {/* Password link & Reset email for primary */}
+                <div className="mt-3 flex items-center gap-2 flex-wrap">
                   <Button
                     size="sm"
                     variant="outline"
@@ -271,6 +271,16 @@ export default function AdminTeamManagementDialog({
                   >
                     {generatingFor === companyUserId ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <KeyRound className="w-3 h-3 mr-1" />}
                     Generate Password Link
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-xs"
+                    disabled={sendingResetTo === primaryEmail}
+                    onClick={() => handleSendResetEmail(primaryEmail)}
+                  >
+                    {sendingResetTo === primaryEmail ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Send className="w-3 h-3 mr-1" />}
+                    Send Reset Email
                   </Button>
                 </div>
               </div>
