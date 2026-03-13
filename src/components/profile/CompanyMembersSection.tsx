@@ -435,6 +435,26 @@ export default function CompanyMembersSection() {
             ))}
           </div>
         )}
+
+        {/* Generated Password Link Display */}
+        {generatedPasswordLink && (
+          <div className="mt-4 bg-green-50 border border-green-200 rounded-xl p-4">
+            <p className="text-xs font-semibold text-green-800 mb-2">
+              🔗 One-Time Password Link (send to the team member — it expires after viewing):
+            </p>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 text-xs bg-white border border-green-300 rounded-lg p-2 break-all select-all">
+                {generatedPasswordLink}
+              </code>
+              <Button size="sm" variant="outline" onClick={copyPasswordLink}>
+                {linkCopied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
+              </Button>
+            </div>
+            <p className="text-[10px] text-green-700 mt-2">
+              ⚠️ You cannot see the password. Only the person who opens this link will see it once.
+            </p>
+          </div>
+        )}
       </CardContent>
 
       {/* Edit Member Dialog */}
