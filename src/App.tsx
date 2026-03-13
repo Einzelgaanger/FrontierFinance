@@ -208,6 +208,7 @@ const AppRoutes = () => {
                 <Route path="/partnership" element={<Partnership />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/view-password/:token" element={<ViewPassword />} />
                 <Route path="*" element={<NotFound />} />
       </Routes>
       {/* Floating Feedback Button - appears on all pages */}
