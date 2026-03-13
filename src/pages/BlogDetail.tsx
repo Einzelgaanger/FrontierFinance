@@ -51,14 +51,25 @@ export default function BlogDetail() {
 
       if (blogError) throw blogError;
 
-      const [profileRes, creditRes] = await Promise.all([
+      const [profileRes, creditRes, memberRes] = await Promise.all([
         supabase
           .from("user_profiles")
           .select("id, full_name, company_name, profile_picture_url")
           .eq("id", blogData.user_id)
           .single(),
         supabase.from("user_credits").select("total_points").eq("user_id", blogData.user_id).single(),
+        supabase.from("company_members").select("company_user_id").eq("member_user_id", blogData.user_id).eq("is_active", true).maybeSingle(),
       ]);
+
+      let companyLogoUrl: string | null = null;
+      if (memberRes.data?.company_user_id) {
+        const { data: cp } = await supabase
+          .from("user_profiles")
+          .select("profile_picture_url")
+          .eq("id", memberRes.data.company_user_id)
+          .single();
+        companyLogoUrl = cp?.profile_picture_url || null;
+      }
 
       let isLiked = false;
       if (user) {

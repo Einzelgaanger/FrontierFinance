@@ -429,7 +429,15 @@ export default function Blogs() {
                                 </span>
                               )}
                             </div>
-                            <p className="text-[10px] text-slate-600 truncate">{blog.author?.company_name || 'Member'}</p>
+                            <div className="flex items-center gap-1">
+                              {blog.author?.company_logo_url && (
+                                <Avatar className="h-3.5 w-3.5 border border-slate-200 flex-shrink-0">
+                                  <AvatarImage src={blog.author.company_logo_url} className="object-cover" />
+                                  <AvatarFallback className="text-[6px] bg-slate-100">{blog.author?.company_name?.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                              )}
+                              <p className="text-[10px] text-slate-600 truncate">{blog.author?.company_name || 'Member'}</p>
+                            </div>
                           </div>
                         </div>
                         <Badge 
