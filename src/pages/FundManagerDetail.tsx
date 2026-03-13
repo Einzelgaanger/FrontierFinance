@@ -811,12 +811,22 @@ const FundManagerDetail = () => {
        </div>
 
       {userRole === 'admin' && id && (
-        <AdminEditProfileDialog
-          open={editDialogOpen}
-          onClose={() => setEditDialogOpen(false)}
-          userId={id}
-          onSaved={() => fetchFundManagerData()}
-        />
+        <>
+          <AdminEditProfileDialog
+            open={editDialogOpen}
+            onClose={() => setEditDialogOpen(false)}
+            userId={id}
+            onSaved={() => fetchFundManagerData()}
+          />
+          <AdminTeamManagementDialog
+            open={teamDialogOpen}
+            onClose={() => setTeamDialogOpen(false)}
+            companyUserId={id}
+            companyName={fundManager?.firm_name || companyName || ''}
+            primaryEmail={fundManager?.email_address || ''}
+            onSaved={() => fetchFundManagerData()}
+          />
+        </>
       )}
     </SidebarLayout>
   );
