@@ -38,3 +38,6 @@ verify_jwt = false
 
 [functions.admin-manage-team]
 verify_jwt = false
+
+[functions.notify-resource-posted]
+verify_jwt = false
