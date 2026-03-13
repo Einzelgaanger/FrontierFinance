@@ -37,6 +37,8 @@ const PortIQ = () => {
   const { toast } = useToast();
   const { user, userRole } = useAuth();
 
+  const isViewer = userRole === 'viewer';
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
   };
