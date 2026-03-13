@@ -243,8 +243,17 @@ export function CreateLearningResourceModal({
         created_by: user.id,
       };
 
-      const { error } = await supabase.from("learning_resources").insert(payload);
+      const { data: insertedData, error } = await supabase.from("learning_resources").insert(payload).select('id').single();
       if (error) throw error;
+
+      // Save attachments
+      if (attachments.length > 0 && insertedData?.id) {
+        await saveAttachments(attachments, {
+          resourceId: insertedData.id,
+          userId: user.id,
+          bucket: "learning-media",
+        });
+      }
 
       toast.success("Learning resource created");
 
