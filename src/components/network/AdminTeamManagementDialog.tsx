@@ -36,7 +36,9 @@ export default function AdminTeamManagementDialog({
   open, onClose, companyUserId, companyName, primaryEmail, onSaved
 }: AdminTeamManagementDialogProps) {
   const { toast } = useToast();
+  const { resetPassword } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [sendingResetTo, setSendingResetTo] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [editingPrimaryEmail, setEditingPrimaryEmail] = useState(false);
