@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
     
     <!-- Navy Header -->
     <div style="background:#0f1d2e;padding:36px 40px 28px;text-align:center;">
-      <img src="https://cffcff.lovable.app/CFF%20LOGO.png" width="160" height="64" alt="Collaborative For Frontier Finance" style="display:block;margin:0 auto;" />
+      <img src="https://frontierfinance.org/CFF%20LOGO.png" width="160" height="64" alt="Collaborative For Frontier Finance" style="display:block;margin:0 auto;" />
     </div>
     
     <!-- Gold accent bar -->
