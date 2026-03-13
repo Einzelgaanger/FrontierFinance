@@ -605,7 +605,9 @@ const FundManagerDetail = () => {
                             <Pencil className="w-3.5 h-3.5 mr-1.5" />
                             Edit
                         </Button>
-                      )}
+                          </Button>
+                        </div>
+                       )}
                     </div>
 
                    <div className="space-y-4">
