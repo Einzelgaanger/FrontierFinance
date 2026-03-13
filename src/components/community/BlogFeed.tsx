@@ -58,6 +58,8 @@ export function BlogFeed() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
+  const canCreatePost = userRole === 'member' || userRole === 'admin';
+
   const fetchBlogs = useCallback(async () => {
     try {
       const { data: blogsData, error: blogsError } = await supabase
