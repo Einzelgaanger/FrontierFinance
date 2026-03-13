@@ -137,8 +137,8 @@ const PortIQ = () => {
 
     let userMessage = input.trim();
     
-    // Prepend format instruction if selected
-    if (outputFormat) {
+    // Prepend format instruction if selected (member/admin only)
+    if (!isViewer && outputFormat) {
       const formatLabel = outputFormat === 'excel' ? 'spreadsheet/table' : outputFormat === 'pdf' ? 'detailed report' : 'text';
       userMessage = `[Output format: ${formatLabel}] ${userMessage}`;
       setOutputFormat(null);
