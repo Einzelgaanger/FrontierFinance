@@ -35,7 +35,7 @@ const PortIQ = () => {
   const [outputFormat, setOutputFormat] = useState<OutputFormat | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, userRole } = useAuth();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });

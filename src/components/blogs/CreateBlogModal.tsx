@@ -26,7 +26,7 @@ interface CreateBlogModalProps {
 }
 
 export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogModalProps) {
-  const { user } = useAuth();
+  const { user, userRole } = useAuth();
   const { isTeamMember, companyUserId } = useCompanyMembership();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
