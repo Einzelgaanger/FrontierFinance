@@ -7,8 +7,9 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import {
-  Loader2, Users, Mail, UserPlus, Trash2, ArrowUpDown, KeyRound, Copy, CheckCircle, Pencil, Save, X, Crown, User
+  Loader2, Users, Mail, UserPlus, Trash2, ArrowUpDown, KeyRound, Copy, CheckCircle, Pencil, Save, X, Crown, User, Send
 } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle
