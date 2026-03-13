@@ -152,7 +152,7 @@ export function BlogFeed() {
       window.removeEventListener('openCreateBlogModal', handleOpenModal);
       supabase.removeChannel(blogsChannel);
     };
-  }, [user, fetchBlogs]);
+  }, [user, fetchBlogs, canCreatePost]);
 
   const stats = useMemo(() => ({
     totalPosts: blogs.length,
