@@ -50,6 +50,7 @@ export function CreateLearningResourceModal({
   const [useUrl, setUseUrl] = useState(true);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
