@@ -693,6 +693,45 @@ export type Database = {
           },
         ]
       }
+      password_links: {
+        Row: {
+          created_at: string
+          created_by: string
+          encrypted_password: string
+          expires_at: string
+          id: string
+          is_used: boolean
+          token: string
+          user_email: string
+          user_id: string
+          viewed_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          encrypted_password: string
+          expires_at?: string
+          id?: string
+          is_used?: boolean
+          token?: string
+          user_email: string
+          user_id: string
+          viewed_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          encrypted_password?: string
+          expires_at?: string
+          id?: string
+          is_used?: boolean
+          token?: string
+          user_email?: string
+          user_id?: string
+          viewed_at?: string | null
+        }
+        Relationships: []
+      }
       survey_responses_2021: {
         Row: {
           additional_comments: string | null

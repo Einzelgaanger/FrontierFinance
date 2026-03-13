@@ -37,6 +37,7 @@ import {
 import { getSurveySections } from '@/utils/surveySectionMappings';
 import { getQuestionLabel } from '@/utils/surveyQuestionLabels';
 import AdminEditProfileDialog from '@/components/network/AdminEditProfileDialog';
+import AdminTeamManagementDialog from '@/components/network/AdminTeamManagementDialog';
 
 interface FundManager {
   id: string;
@@ -151,6 +152,7 @@ const FundManagerDetail = () => {
   const [selectedSection, setSelectedSection] = useState<number>(1);
   const [fieldVisibility, setFieldVisibility] = useState<Record<string, { viewer: boolean; member: boolean; admin: boolean }>>({});
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [teamDialogOpen, setTeamDialogOpen] = useState(false);
   const [teamMembers, setTeamMembers] = useState<Array<{ member_user_id: string; member_name: string | null; member_email: string; role_in_company: string | null }>>([]);
 
   const fetchFundManagerData = useCallback(async () => {
@@ -594,12 +596,18 @@ const FundManagerDetail = () => {
                         <Building2 className="w-5 h-5" />
                       </div>
                       <h2 className="text-lg font-display font-semibold text-navy-900">Company Information</h2>
-                      {userRole === 'admin' && (
-                        <Button size="sm" variant="outline" className="ml-auto" onClick={(e) => { e.stopPropagation(); setEditDialogOpen(true); }}>
-                          <Pencil className="w-3.5 h-3.5 mr-1.5" />
-                          Edit
-                        </Button>
-                      )}
+                       {userRole === 'admin' && (
+                        <div className="ml-auto flex items-center gap-2">
+                          <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); setTeamDialogOpen(true); }}>
+                            <Users className="w-3.5 h-3.5 mr-1.5" />
+                            Manage Team
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); setEditDialogOpen(true); }}>
+                            <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                            Edit
+                          </Button>
+                        </div>
+                       )}
                     </div>
 
                    <div className="space-y-4">
@@ -803,12 +811,22 @@ const FundManagerDetail = () => {
        </div>
 
       {userRole === 'admin' && id && (
-        <AdminEditProfileDialog
-          open={editDialogOpen}
-          onClose={() => setEditDialogOpen(false)}
-          userId={id}
-          onSaved={() => fetchFundManagerData()}
-        />
+        <>
+          <AdminEditProfileDialog
+            open={editDialogOpen}
+            onClose={() => setEditDialogOpen(false)}
+            userId={id}
+            onSaved={() => fetchFundManagerData()}
+          />
+          <AdminTeamManagementDialog
+            open={teamDialogOpen}
+            onClose={() => setTeamDialogOpen(false)}
+            companyUserId={id}
+            companyName={fundManager?.firm_name || companyName || ''}
+            primaryEmail={fundManager?.email_address || ''}
+            onSaved={() => fetchFundManagerData()}
+          />
+        </>
       )}
     </SidebarLayout>
   );
