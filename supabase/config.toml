@@ -29,3 +29,12 @@ verify_jwt = false
 
 [functions.remind-pending-applications]
 verify_jwt = false
+
+[functions.generate-password-link]
+verify_jwt = false
+
+[functions.view-password]
+verify_jwt = false
+
+[functions.admin-manage-team]
+verify_jwt = false
