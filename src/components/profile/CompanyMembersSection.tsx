@@ -372,6 +372,16 @@ export default function CompanyMembersSection() {
                   <Button
                     variant="ghost"
                     size="sm"
+                    onClick={() => handleGeneratePasswordLink(member.member_user_id, member.member_email)}
+                    disabled={generatingLinkFor === member.member_user_id}
+                    className="text-gray-500 hover:text-blue-600 hover:bg-blue-50"
+                    title="Generate one-time password link"
+                  >
+                    {generatingLinkFor === member.member_user_id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => handleSendResetLink(member.member_email)}
                     disabled={sendingResetTo === member.member_email}
                     className="text-gray-500 hover:text-blue-600 hover:bg-blue-50"
