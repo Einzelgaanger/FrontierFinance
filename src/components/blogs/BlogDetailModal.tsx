@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { Image, Video, FileText, Heart } from "lucide-react";
 import { BlogCommentSection } from "./BlogCommentSection";
+import { AttachmentDisplay } from "@/components/community/AttachmentDisplay";
 import { getBadge } from "@/utils/badgeSystem";
 
 interface Blog {
