@@ -42,6 +42,7 @@ import DevTasks from "./pages/DevTasks";
 import Day1Presentation from "./pages/Day1Presentation";
 import Day2Presentation from "./pages/Day2Presentation";
 import Drew from "./pages/Drew";
+import ViewPassword from "./pages/ViewPassword";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import About from "./pages/About";
 import ESCPNetwork from "./pages/ESCPNetwork";
@@ -207,6 +208,7 @@ const AppRoutes = () => {
                 <Route path="/partnership" element={<Partnership />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/view-password/:token" element={<ViewPassword />} />
                 <Route path="*" element={<NotFound />} />
       </Routes>
       {/* Floating Feedback Button - appears on all pages */}
