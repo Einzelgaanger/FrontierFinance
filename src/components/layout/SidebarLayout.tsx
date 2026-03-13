@@ -127,9 +127,9 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
     },
     {
       name: 'Portiq',
-      href: '/admin-chat',
+      href: userRole === 'admin' || userRole === 'member' ? '/admin-chat' : '/portiq',
       icon: Brain,
-      roles: ['admin', 'member'],
+      roles: ['admin', 'member', 'viewer'],
     },
   ];
 

@@ -431,7 +431,7 @@ const PortIQ = () => {
                     </div>
                     
                     <div className="border-t border-slate-200/80 bg-white p-3 sm:p-4">
-                      {outputFormat && (
+                      {!isViewer && outputFormat && (
                         <div className="flex items-center gap-2 mb-2 px-1">
                           <span className="text-xs text-slate-500 font-sans">Output:</span>
                           <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gold-50 text-gold-700 flex items-center gap-1 font-sans">
@@ -441,29 +441,36 @@ const PortIQ = () => {
                           </span>
                         </div>
                       )}
+                      {isViewer && (
+                        <div className="mb-2 px-1">
+                          <span className="text-xs text-slate-500 font-sans">Viewer mode: limited, high-level insights only.</span>
+                        </div>
+                      )}
                       <div className="flex items-end gap-2">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" className="h-9 px-2 flex-shrink-0 rounded-xl border-slate-200 text-navy-900 hover:border-gold-500 font-sans" title="Output format">
-                              <FileText className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="start" className="w-48">
-                            {formatOptions.map((opt) => (
-                              <DropdownMenuItem
-                                key={opt.value}
-                                onClick={() => setOutputFormat(opt.value)}
-                                className="flex items-center gap-2"
-                              >
-                                {opt.icon}
-                                <div>
-                                  <div className="text-sm font-medium">{opt.label}</div>
-                                  <div className="text-xs text-muted-foreground">{opt.desc}</div>
-                                </div>
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        {!isViewer && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="outline" size="sm" className="h-9 px-2 flex-shrink-0 rounded-xl border-slate-200 text-navy-900 hover:border-gold-500 font-sans" title="Output format">
+                                <FileText className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className="w-48">
+                              {formatOptions.map((opt) => (
+                                <DropdownMenuItem
+                                  key={opt.value}
+                                  onClick={() => setOutputFormat(opt.value)}
+                                  className="flex items-center gap-2"
+                                >
+                                  {opt.icon}
+                                  <div>
+                                    <div className="text-sm font-medium">{opt.label}</div>
+                                    <div className="text-xs text-muted-foreground">{opt.desc}</div>
+                                  </div>
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
 
                         <div className="flex-1 relative">
                           <Textarea

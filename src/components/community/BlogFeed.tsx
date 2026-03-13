@@ -345,7 +345,7 @@ export function BlogFeed() {
               ? "Be the first to share your insights."
               : "Try adjusting your search or filters."}
           </p>
-          {blogs.length === 0 && (
+          {blogs.length === 0 && canCreatePost && (
             <Button onClick={() => setIsCreateModalOpen(true)} size="sm" variant="outline" className="h-7 text-[11px]">
               <PlusCircle className="h-3 w-3 mr-1" />
               Create post

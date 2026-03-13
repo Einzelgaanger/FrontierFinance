@@ -101,6 +101,12 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
     e.preventDefault();
     if (!user) return;
 
+    const canCreateBlogPost = userRole === 'member' || userRole === 'admin';
+    if (!canCreateBlogPost) {
+      toast.error("Only members and admins can publish blog posts");
+      return;
+    }
+
     setLoading(true);
     try {
       let mediaUrl = formData.media_url;
