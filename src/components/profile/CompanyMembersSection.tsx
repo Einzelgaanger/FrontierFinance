@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useCompanyMembership } from '@/hooks/useCompanyMembership';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Users, UserPlus, Loader2, Trash2, Mail, Eye, EyeOff, Pencil, KeyRound, Copy, Check } from 'lucide-react';
+import { Users, UserPlus, Loader2, Trash2, Mail, Eye, EyeOff, Pencil, KeyRound, Copy, Check, Link } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface CompanyMember {
