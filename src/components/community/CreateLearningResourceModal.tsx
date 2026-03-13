@@ -301,6 +301,7 @@ export function CreateLearningResourceModal({
       });
       setSelectedFile(null);
       setThumbnailFile(null);
+      setAttachments([]);
       setSendNotification(false);
       setSelectedEmails([]);
       setNotifyMode('all_members');
