@@ -37,6 +37,7 @@ import {
 import { getSurveySections } from '@/utils/surveySectionMappings';
 import { getQuestionLabel } from '@/utils/surveyQuestionLabels';
 import AdminEditProfileDialog from '@/components/network/AdminEditProfileDialog';
+import AdminTeamManagementDialog from '@/components/network/AdminTeamManagementDialog';
 
 interface FundManager {
   id: string;
