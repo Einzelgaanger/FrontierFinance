@@ -24,10 +24,7 @@ const getContentLabel = (contentType: string) =>
 const getHubLabel = (contentType: string) =>
   contentType === 'blog_post' ? 'Community Hub' : 'Learning Hub';
 
-const getPlatformUrl = (contentType: string) =>
-  contentType === 'blog_post'
-    ? 'https://frontierfinance.org/community?tab=blogs'
-    : 'https://frontierfinance.org/community?tab=learning';
+const getPlatformUrl = () => 'https://frontierfinance.org';
 
 const getMediaLabel = (mediaType?: string) => {
   if (!mediaType) return 'Article';
@@ -176,7 +173,7 @@ serve(async (req) => {
     }
 
     // Step 3: Build the email HTML
-    const platformUrl = getPlatformUrl(contentType);
+    const platformUrl = getPlatformUrl();
     // Always link to the platform — drive traffic to the website, not external URLs
     const destinationUrl = platformUrl;
     const previewImage = thumbnailUrl || (mediaType?.toLowerCase() === 'image' ? resourceUrl : null);
