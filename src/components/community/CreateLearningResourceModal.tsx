@@ -17,6 +17,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Loader2, BookOpen, Upload, Link as LinkIcon, Image, Video, Mail, X, Users, UserMinus, UserCheck } from "lucide-react";
+import { AttachmentManager, type Attachment } from "./AttachmentManager";
+import { saveAttachments } from "./saveAttachments";
 
 const LEARNING_TOPICS = [
   { value: "investment_thesis", label: "Investment thesis" },
