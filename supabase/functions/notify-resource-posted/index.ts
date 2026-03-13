@@ -177,7 +177,8 @@ serve(async (req) => {
 
     // Step 3: Build the email HTML
     const platformUrl = getPlatformUrl(contentType);
-    const destinationUrl = resourceUrl || platformUrl;
+    // Always link to the platform — drive traffic to the website, not external URLs
+    const destinationUrl = platformUrl;
     const previewImage = thumbnailUrl || (mediaType?.toLowerCase() === 'image' ? resourceUrl : null);
 
     const safeTitle = escapeHtml(resourceTitle);
