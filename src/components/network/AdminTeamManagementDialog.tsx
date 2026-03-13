@@ -391,6 +391,7 @@ export default function AdminTeamManagementDialog({
                                 onClick={() => handleSendResetEmail(member.member_email)}
                               >
                                 {sendingResetTo === member.member_email ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+                              </Button>
                               <Button
                                 size="sm" variant="ghost" className="h-7 w-7 p-0"
                                 title="Generate password link"
