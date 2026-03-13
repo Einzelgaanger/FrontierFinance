@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { CreateBlogModal } from "@/components/blogs/CreateBlogModal";
+import { AttachmentDisplay } from "@/components/community/AttachmentDisplay";
 import { format } from "date-fns";
 import { getBadge } from "@/utils/badgeSystem";
 
