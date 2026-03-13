@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -310,6 +311,9 @@ export function CreateLearningResourceModal({
             <BookOpen className="h-5 w-5 text-blue-600" />
             Add Learning Resource
           </DialogTitle>
+          <DialogDescription>
+            Publish a learning resource and optionally send a branded marketing email to selected members.
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-5 min-w-0">
