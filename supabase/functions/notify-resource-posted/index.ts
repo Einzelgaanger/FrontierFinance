@@ -24,10 +24,7 @@ const getContentLabel = (contentType: string) =>
 const getHubLabel = (contentType: string) =>
   contentType === 'blog_post' ? 'Community Hub' : 'Learning Hub';
 
-const getPlatformUrl = (contentType: string) =>
-  contentType === 'blog_post'
-    ? 'https://frontierfinance.org/community?tab=blogs'
-    : 'https://frontierfinance.org/community?tab=learning';
+const getPlatformUrl = () => 'https://frontierfinance.org';
 
 const getMediaLabel = (mediaType?: string) => {
   if (!mediaType) return 'Article';
