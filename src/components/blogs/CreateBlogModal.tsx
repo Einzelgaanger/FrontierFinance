@@ -16,6 +16,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { Loader2, Upload, Link as LinkIcon } from "lucide-react";
+import { AttachmentManager, type Attachment } from "@/components/community/AttachmentManager";
+import { saveAttachments } from "@/components/community/saveAttachments";
 
 interface CreateBlogModalProps {
   open: boolean;
