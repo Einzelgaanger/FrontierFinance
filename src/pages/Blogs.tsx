@@ -28,6 +28,7 @@ interface Blog {
     full_name: string;
     company_name: string;
     profile_picture_url: string | null;
+    company_logo_url: string | null;
     total_points?: number;
   };
   is_liked?: boolean;
