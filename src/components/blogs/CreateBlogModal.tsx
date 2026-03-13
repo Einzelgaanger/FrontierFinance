@@ -16,6 +16,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { Loader2, Upload, Link as LinkIcon } from "lucide-react";
+import { AttachmentManager, type Attachment } from "@/components/community/AttachmentManager";
+import { saveAttachments } from "@/components/community/saveAttachments";
 
 interface CreateBlogModalProps {
   open: boolean;
@@ -32,6 +34,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
   const [useUrl, setUseUrl] = useState(true);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -137,6 +140,15 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
 
       if (error) throw error;
 
+      // Save attachments
+      if (attachments.length > 0 && inserted?.id) {
+        await saveAttachments(attachments, {
+          blogId: inserted.id,
+          userId: user.id,
+          bucket: "blog-media",
+        });
+      }
+
       if (isTeamMember && companyUserId) {
         await logMemberActivity(
           companyUserId,
@@ -194,6 +206,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
       });
       setSelectedFile(null);
       setThumbnailFile(null);
+      setAttachments([]);
       onOpenChange(false);
       onSuccess();
     } catch (error: any) {
@@ -356,6 +369,15 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
               placeholder="Share your thoughts..."
               rows={6}
               className="resize-none break-words min-w-0"
+            />
+          </div>
+
+          {/* Additional Attachments */}
+          <div className="border-t pt-4">
+            <AttachmentManager
+              attachments={attachments}
+              onChange={setAttachments}
+              bucket="blog-media"
             />
           </div>
 

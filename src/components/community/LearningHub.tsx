@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { CreateLearningResourceModal } from "./CreateLearningResourceModal";
+import { AttachmentDisplay } from "./AttachmentDisplay";
 
 interface LearningResource {
   id: string;
@@ -257,6 +258,7 @@ export function LearningHub() {
                   <MessageCircle className="h-3.5 w-3.5" />
                   {resource.comment_count ?? 0} comment{(resource.comment_count ?? 0) !== 1 ? "s" : ""}
                 </span>
+                <AttachmentDisplay resourceId={resource.id} compact />
               </div>
               {resource.resource_url && (
                 <ExternalLink className="h-3.5 w-3.5 text-slate-400 group-hover:text-sky-600 transition-colors shrink-0" />

@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { Image, Video, FileText, Heart } from "lucide-react";
 import { BlogCommentSection } from "./BlogCommentSection";
+import { AttachmentDisplay } from "@/components/community/AttachmentDisplay";
 import { getBadge } from "@/utils/badgeSystem";
 
 interface Blog {
@@ -121,6 +122,9 @@ export function BlogDetailModal({ blog, open, onOpenChange, onToggleLike }: Blog
               <p className="whitespace-pre-wrap">{blog.content}</p>
             </div>
           )}
+
+          {/* Attachments */}
+          <AttachmentDisplay blogId={blog.id} />
 
           <div className="flex items-center gap-4 pt-4 border-t">
             <button

@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { CreateBlogModal } from "@/components/blogs/CreateBlogModal";
+import { AttachmentDisplay } from "@/components/community/AttachmentDisplay";
 import { format } from "date-fns";
 import { getBadge } from "@/utils/badgeSystem";
 
@@ -439,6 +440,7 @@ export function BlogFeed() {
                           <MessageCircle className="h-3.5 w-3.5" />
                           <span>{blog.comment_count} comment{blog.comment_count !== 1 ? 's' : ''}</span>
                         </span>
+                        <AttachmentDisplay blogId={blog.id} compact />
                       </div>
                       <span className="text-[11px] text-slate-400">
                         {format(new Date(blog.created_at), "MMM d, yyyy")}

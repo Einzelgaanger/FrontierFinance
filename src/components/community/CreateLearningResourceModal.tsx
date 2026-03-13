@@ -17,6 +17,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Loader2, BookOpen, Upload, Link as LinkIcon, Image, Video, Mail, X, Users, UserMinus, UserCheck } from "lucide-react";
+import { AttachmentManager, type Attachment } from "./AttachmentManager";
+import { saveAttachments } from "./saveAttachments";
 
 const LEARNING_TOPICS = [
   { value: "investment_thesis", label: "Investment thesis" },
@@ -48,6 +50,7 @@ export function CreateLearningResourceModal({
   const [useUrl, setUseUrl] = useState(true);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -241,8 +244,17 @@ export function CreateLearningResourceModal({
         created_by: user.id,
       };
 
-      const { error } = await supabase.from("learning_resources").insert(payload);
+      const { data: insertedData, error } = await supabase.from("learning_resources").insert(payload).select('id').single();
       if (error) throw error;
+
+      // Save attachments
+      if (attachments.length > 0 && insertedData?.id) {
+        await saveAttachments(attachments, {
+          resourceId: insertedData.id,
+          userId: user.id,
+          bucket: "learning-media",
+        });
+      }
 
       toast.success("Learning resource created");
 
@@ -290,6 +302,7 @@ export function CreateLearningResourceModal({
       });
       setSelectedFile(null);
       setThumbnailFile(null);
+      setAttachments([]);
       setSendNotification(false);
       setSelectedEmails([]);
       setNotifyMode('all_members');
@@ -543,6 +556,15 @@ export function CreateLearningResourceModal({
               onCheckedChange={(c) =>
                 setFormData({ ...formData, is_featured: c })
               }
+            />
+          </div>
+
+          {/* Additional Attachments */}
+          <div className="border-t pt-4">
+            <AttachmentManager
+              attachments={attachments}
+              onChange={setAttachments}
+              bucket="learning-media"
             />
           </div>
 

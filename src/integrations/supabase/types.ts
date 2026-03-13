@@ -732,6 +732,57 @@ export type Database = {
         }
         Relationships: []
       }
+      post_attachments: {
+        Row: {
+          attachment_type: string
+          blog_id: string | null
+          caption: string | null
+          created_at: string | null
+          created_by: string
+          id: string
+          resource_id: string | null
+          sort_order: number | null
+          url: string
+        }
+        Insert: {
+          attachment_type?: string
+          blog_id?: string | null
+          caption?: string | null
+          created_at?: string | null
+          created_by: string
+          id?: string
+          resource_id?: string | null
+          sort_order?: number | null
+          url: string
+        }
+        Update: {
+          attachment_type?: string
+          blog_id?: string | null
+          caption?: string | null
+          created_at?: string | null
+          created_by?: string
+          id?: string
+          resource_id?: string | null
+          sort_order?: number | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_attachments_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_attachments_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "learning_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       survey_responses_2021: {
         Row: {
           additional_comments: string | null

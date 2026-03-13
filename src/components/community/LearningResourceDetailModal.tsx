@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { Heart, ExternalLink, Star, Link as LinkIcon, Video } from "lucide-react";
 import { LearningResourceCommentSection } from "./LearningResourceCommentSection";
+import { AttachmentDisplay } from "./AttachmentDisplay";
 
 const topicConfig: Record<string, string> = {
   investment_thesis: "Investment thesis",
@@ -122,6 +123,9 @@ export function LearningResourceDetailModal({
               <p className="whitespace-pre-wrap text-slate-700">{resource.content}</p>
             </div>
           )}
+
+          {/* Attachments */}
+          <AttachmentDisplay resourceId={resource.id} />
 
           {/* Like + Open resource */}
           <div className="flex items-center justify-between gap-4 pt-4 border-t flex-wrap">
