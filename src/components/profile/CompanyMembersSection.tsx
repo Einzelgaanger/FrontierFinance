@@ -37,6 +37,9 @@ export default function CompanyMembersSection() {
   const [newMember, setNewMember] = useState({ email: '', name: '', password: '' });
   const [editForm, setEditForm] = useState({ name: '', role: '' });
   const [copiedPassword, setCopiedPassword] = useState(false);
+  const [generatingLinkFor, setGeneratingLinkFor] = useState<string | null>(null);
+  const [generatedPasswordLink, setGeneratedPasswordLink] = useState<string | null>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const isPrimaryMember = userRole === 'member' && !isTeamMember;
 
