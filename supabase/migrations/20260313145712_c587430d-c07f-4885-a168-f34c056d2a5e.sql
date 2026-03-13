@@ -1,0 +1,2 @@
+ALTER TABLE public.activity_log DROP CONSTRAINT activity_log_activity_type_check;
+ALTER TABLE public.activity_log ADD CONSTRAINT activity_log_activity_type_check CHECK (activity_type = ANY (ARRAY['ai_usage'::text, 'blog_post'::text, 'daily_login'::text, 'survey_completion'::text, 'network_interaction'::text, 'learning_resource_created'::text, 'blog_post_created'::text]));
