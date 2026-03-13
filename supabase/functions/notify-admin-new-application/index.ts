@@ -121,7 +121,7 @@ Deno.serve(async (req) => {
 
     <!-- Footer -->
     <div style="background:#f8f9fa;padding:28px 40px;border-top:1px solid #e8e8ee;text-align:center;">
-      <img src="https://cffcff.lovable.app/CFF%20LOGO.png" width="100" height="40" alt="Collaborative For Frontier Finance" style="display:block;margin:0 auto 12px;opacity:0.6;" />
+      <img src="https://frontierfinance.org/CFF%20LOGO.png" width="100" height="40" alt="Collaborative For Frontier Finance" style="display:block;margin:0 auto 12px;opacity:0.6;" />
       <p style="color:#0f1d2e;font-size:14px;font-weight:700;margin:0 0 4px;">Collaborative For Frontier Finance</p>
       <p style="color:#5a5a6e;font-size:12px;margin:0 0 12px;">Advancing MSME financing in Africa and the Middle East</p>
       <hr style="border:none;border-top:1px solid #e8e8ee;margin:0 0 12px;" />
