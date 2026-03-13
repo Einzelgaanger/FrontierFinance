@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -27,6 +28,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
   const { isTeamMember, companyUserId } = useCompanyMembership();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [sendingNotification, setSendingNotification] = useState(false);
   const [useUrl, setUseUrl] = useState(true);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
@@ -43,16 +45,14 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     const isImage = file.type.startsWith('image/');
     const isVideo = file.type.startsWith('video/');
-    
+
     if (!isImage && !isVideo) {
       toast.error("Please select an image or video file");
       return;
     }
 
-    // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
       toast.error("File size must be less than 10MB");
       return;
@@ -61,7 +61,7 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
     setSelectedFile(file);
     setFormData({
       ...formData,
-      media_type: isImage ? "image" : "video"
+      media_type: isImage ? "image" : "video",
     });
   };
 
@@ -80,9 +80,9 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('blog-media')
-        .getPublicUrl(fileName);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('blog-media').getPublicUrl(fileName);
 
       return publicUrl;
     } catch (error: any) {
@@ -121,23 +121,69 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
         }
       }
 
-      const { data: inserted, error } = await supabase.from("blogs").insert({
-        user_id: user.id,
-        title: formData.title,
-        content: formData.content,
-        media_type: formData.media_type,
-        media_url: mediaUrl || null,
-        caption: formData.caption || null,
-        thumbnail_url: thumbnailUrl,
-      }).select('id').single();
+      const { data: inserted, error } = await supabase
+        .from("blogs")
+        .insert({
+          user_id: user.id,
+          title: formData.title,
+          content: formData.content,
+          media_type: formData.media_type,
+          media_url: mediaUrl || null,
+          caption: formData.caption || null,
+          thumbnail_url: thumbnailUrl,
+        })
+        .select('id')
+        .single();
 
       if (error) throw error;
 
       if (isTeamMember && companyUserId) {
-        await logMemberActivity(companyUserId, 'blog_post', 'Posted to community', 'blog', inserted?.id ?? undefined, { title: formData.title });
+        await logMemberActivity(
+          companyUserId,
+          'blog_post',
+          'Posted to community',
+          'blog',
+          inserted?.id ?? undefined,
+          { title: formData.title },
+        );
       }
 
-      toast.success("Blog post created! You earned 10 points! 🎉");
+      // Notify all members/admins when an admin publishes a blog
+      setSendingNotification(true);
+      try {
+        const { data: notifData, error: notifError } = await supabase.functions.invoke('notify-resource-posted', {
+          body: {
+            resourceTitle: formData.title,
+            resourceDescription: formData.content || formData.caption || null,
+            resourceUrl: mediaUrl || null,
+            thumbnailUrl: thumbnailUrl || (formData.media_type === 'image' ? mediaUrl || null : null),
+            topic: 'Community Blog',
+            mediaType: formData.media_type,
+            notifyMode: 'all_members',
+            specificEmails: [],
+            contentType: 'blog_post',
+          },
+        });
+
+        const notificationError = notifData?.error || notifError?.message;
+        if (notificationError) {
+          if (!/admin access required|unauthorized/i.test(notificationError)) {
+            toast.warning(`Blog was posted, but email notification failed: ${notificationError}`);
+          }
+          toast.success("Blog post created! You earned 10 points! 🎉");
+        } else {
+          toast.success(`Blog post created! Email sent to ${notifData?.sentCount ?? 0} members.`);
+        }
+      } catch (notificationError: any) {
+        const message = notificationError?.message || '';
+        if (!/admin access required|unauthorized/i.test(message)) {
+          toast.warning(`Blog was posted, but email notification failed.`);
+        }
+        toast.success("Blog post created! You earned 10 points! 🎉");
+      } finally {
+        setSendingNotification(false);
+      }
+
       setFormData({
         title: "",
         content: "",
@@ -162,6 +208,9 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create Blog Post</DialogTitle>
+          <DialogDescription>
+            Publish a post for the community. Admin posts trigger a branded member notification email.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 min-w-0">
           <div className="min-w-0">
@@ -315,13 +364,15 @@ export function CreateBlogModal({ open, onOpenChange, onSuccess }: CreateBlogMod
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={loading}
+              disabled={loading || sendingNotification}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading || uploading}>
-              {(loading || uploading) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {uploading ? "Uploading..." : "Publish Post"}
+            <Button type="submit" disabled={loading || uploading || sendingNotification}>
+              {(loading || uploading || sendingNotification) && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              {sendingNotification ? "Sending emails..." : uploading ? "Uploading..." : "Publish Post"}
             </Button>
           </div>
         </form>
