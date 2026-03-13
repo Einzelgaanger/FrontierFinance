@@ -23,7 +23,7 @@ interface CompanyMember {
 
 export default function CompanyMembersSection() {
   const { user, userRole, resetPassword } = useAuth();
-  const { isTeamMember } = useCompanyMembership();
+  const { isTeamMember, loading: membershipLoading } = useCompanyMembership();
   const { toast } = useToast();
   const [sendingResetTo, setSendingResetTo] = useState<string | null>(null);
   const [members, setMembers] = useState<CompanyMember[]>([]);
@@ -41,7 +41,8 @@ export default function CompanyMembersSection() {
   const [generatedPasswordLink, setGeneratedPasswordLink] = useState<string | null>(null);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  const isPrimaryMember = userRole === 'member' && !isTeamMember;
+  // Primary = not a team member, and has role 'member' or 'admin'
+  const isPrimaryMember = !membershipLoading && !isTeamMember && (userRole === 'member' || userRole === 'admin');
 
   const generatePassword = () => {
     const length = 14;
