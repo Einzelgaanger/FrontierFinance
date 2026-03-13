@@ -75,6 +75,19 @@ export default function MyProfile() {
     fetchProfile();
   }, [user]);
 
+  // Fetch company profile for team members (to show company logo)
+  useEffect(() => {
+    if (!companyUserId || !isTeamMember) return;
+    (async () => {
+      const { data } = await supabase
+        .from('user_profiles')
+        .select('company_name, profile_picture_url')
+        .eq('id', companyUserId)
+        .single();
+      if (data) setCompanyProfile(data);
+    })();
+  }, [companyUserId, isTeamMember]);
+
   useEffect(() => {
     if (!user?.id || isTeamMember) return;
     (async () => {
