@@ -559,6 +559,15 @@ export function CreateLearningResourceModal({
             />
           </div>
 
+          {/* Additional Attachments */}
+          <div className="border-t pt-4">
+            <AttachmentManager
+              attachments={attachments}
+              onChange={setAttachments}
+              bucket="learning-media"
+            />
+          </div>
+
           {/* Email Notification Section */}
           <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-4 space-y-3">
             <div className="flex items-center justify-between">

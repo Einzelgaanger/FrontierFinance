@@ -124,6 +124,9 @@ export function LearningResourceDetailModal({
             </div>
           )}
 
+          {/* Attachments */}
+          <AttachmentDisplay resourceId={resource.id} />
+
           {/* Like + Open resource */}
           <div className="flex items-center justify-between gap-4 pt-4 border-t flex-wrap">
             <button
