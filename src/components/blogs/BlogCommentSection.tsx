@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { Loader2, Send, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { useGamification } from "@/hooks/useGamification";
 
 interface Comment {
   id: string;
