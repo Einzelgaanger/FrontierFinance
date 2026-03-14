@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { Loader2, Send, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { useGamification } from "@/hooks/useGamification";
 
 interface Comment {
   id: string;
@@ -27,6 +28,7 @@ interface BlogCommentSectionProps {
 
 export function BlogCommentSection({ blogId }: BlogCommentSectionProps) {
   const { user } = useAuth();
+  const { trackComment } = useGamification();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -84,6 +86,7 @@ export function BlogCommentSection({ blogId }: BlogCommentSectionProps) {
 
       toast.success("Comment posted!");
       setNewComment("");
+      trackComment(); // Award points for commenting
       fetchComments();
     } catch (error: any) {
       toast.error("Failed to post comment");

@@ -20,6 +20,7 @@ import {
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { AppOnboardingTrigger } from '@/components/onboarding/AppOnboardingTour';
+import { NotificationBell } from '@/components/gamification/NotificationBell';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
@@ -201,6 +202,11 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
           );
         })}
       </nav>
+
+      {/* Notification bell */}
+      <div className="px-3 pb-2 flex justify-center">
+        <NotificationBell />
+      </div>
 
       {/* Bottom user section */}
       <div className="border-t border-navy-800 p-2 shrink-0">

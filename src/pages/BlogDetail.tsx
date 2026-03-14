@@ -5,10 +5,11 @@ import SidebarLayout from "@/components/layout/SidebarLayout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { Heart, ArrowLeft, Loader2, MessageCircle } from "lucide-react";
+import { Heart, ArrowLeft, Loader2, MessageCircle, BookmarkX } from "lucide-react";
 import { BlogCommentSection } from "@/components/blogs/BlogCommentSection";
 import { getBadge } from "@/utils/badgeSystem";
 import { useAuth } from "@/hooks/useAuth";
+import { useGamification } from "@/hooks/useGamification";
 import { toast } from "sonner";
 
 interface Blog {
@@ -37,9 +38,17 @@ export default function BlogDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { trackContentRead, markAsUnread } = useGamification();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Track content read when blog loads
+  useEffect(() => {
+    if (id && user && blog) {
+      trackContentRead('blog', id);
+    }
+  }, [id, user, blog?.id]);
 
   const fetchBlog = useCallback(async () => {
     try {
@@ -316,6 +325,16 @@ export default function BlogDetail() {
               <MessageCircle className="h-4 w-4" />
               {blog.comment_count ?? 0} comments
             </span>
+            <button
+              onClick={() => {
+                markAsUnread('blog', blog.id);
+                toast.success("Marked as unread — it'll appear in your notifications again");
+              }}
+              className="flex items-center gap-1.5 text-slate-500 hover:text-gold-600 transition-colors shrink-0 font-sans text-xs ml-auto"
+            >
+              <BookmarkX className="h-3.5 w-3.5" />
+              Mark as unread
+            </button>
           </div>
 
           <div className="flex items-baseline gap-2 mb-3">

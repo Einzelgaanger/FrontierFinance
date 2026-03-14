@@ -1,5 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
+import { WallOfFame } from '@/components/gamification/WallOfFame';
+import { NotificationWidget } from '@/components/gamification/NotificationWidget';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -1010,6 +1012,8 @@ const AdminDashboardV2 = () => {
                 </div>
               </CardContent>
             </Card>
+          <NotificationWidget />
+          <WallOfFame />
           </div>
         </div>
       </div>
