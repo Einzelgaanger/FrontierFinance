@@ -14,6 +14,8 @@ import { Loader2, Upload, Mail, Globe, Building2, FileText, Lock, Eye, EyeOff, C
 import { cn } from '@/lib/utils';
 import MyApplicationSection from '@/components/profile/MyApplicationSection';
 import CompanyMembersSection from '@/components/profile/CompanyMembersSection';
+import { PointsBreakdown } from '@/components/gamification/PointsBreakdown';
+import { TeamContributions } from '@/components/gamification/TeamContributions';
 
 interface ActivityLogEntry {
   id: string;
