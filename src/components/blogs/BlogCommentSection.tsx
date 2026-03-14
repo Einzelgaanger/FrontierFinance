@@ -86,6 +86,7 @@ export function BlogCommentSection({ blogId }: BlogCommentSectionProps) {
 
       toast.success("Comment posted!");
       setNewComment("");
+      trackComment(); // Award points for commenting
       fetchComments();
     } catch (error: any) {
       toast.error("Failed to post comment");
