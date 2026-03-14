@@ -23,7 +23,8 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Leaderboard } from './Leaderboard';
+import { WallOfFame } from '@/components/gamification/WallOfFame';
+import { NotificationWidget } from '@/components/gamification/NotificationWidget';
 
 const MemberDashboard = () => {
   const { user } = useAuth();
