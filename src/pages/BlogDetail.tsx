@@ -5,7 +5,7 @@ import SidebarLayout from "@/components/layout/SidebarLayout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { Heart, ArrowLeft, Loader2, MessageCircle } from "lucide-react";
+import { Heart, ArrowLeft, Loader2, MessageCircle, BookmarkX } from "lucide-react";
 import { BlogCommentSection } from "@/components/blogs/BlogCommentSection";
 import { getBadge } from "@/utils/badgeSystem";
 import { useAuth } from "@/hooks/useAuth";
