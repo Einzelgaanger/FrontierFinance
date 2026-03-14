@@ -136,7 +136,7 @@ export function Leaderboard() {
 
                 <div className="text-right">
                   <div className="flex items-center gap-1 mb-1">
-                    <span className="text-xl">{badge.icon}</span>
+                    <img src={badge.image} alt={badge.name} className="w-5 h-5" />
                     <Badge variant="secondary" className="text-xs">
                       {badge.name}
                     </Badge>
