@@ -325,6 +325,16 @@ export default function BlogDetail() {
               <MessageCircle className="h-4 w-4" />
               {blog.comment_count ?? 0} comments
             </span>
+            <button
+              onClick={() => {
+                markAsUnread('blog', blog.id);
+                toast.success("Marked as unread — it'll appear in your notifications again");
+              }}
+              className="flex items-center gap-1.5 text-slate-500 hover:text-gold-600 transition-colors shrink-0 font-sans text-xs ml-auto"
+            >
+              <BookmarkX className="h-3.5 w-3.5" />
+              Mark as unread
+            </button>
           </div>
 
           <div className="flex items-baseline gap-2 mb-3">
