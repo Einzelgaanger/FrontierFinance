@@ -333,6 +333,33 @@ export type Database = {
         }
         Relationships: []
       }
+      content_reads: {
+        Row: {
+          content_id: string
+          content_type: string
+          id: string
+          is_marked_unread: boolean
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          id?: string
+          is_marked_unread?: boolean
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          id?: string
+          is_marked_unread?: boolean
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           admin_notes: string | null
@@ -2104,10 +2131,14 @@ export type Database = {
         Row: {
           ai_usage_count: number | null
           blog_posts_count: number | null
+          comments_count: number | null
+          comments_received_count: number | null
+          content_reads_count: number | null
           created_at: string | null
           id: string
           last_login_date: string | null
           login_streak: number | null
+          longest_streak: number | null
           total_points: number | null
           updated_at: string | null
           user_id: string
@@ -2115,10 +2146,14 @@ export type Database = {
         Insert: {
           ai_usage_count?: number | null
           blog_posts_count?: number | null
+          comments_count?: number | null
+          comments_received_count?: number | null
+          content_reads_count?: number | null
           created_at?: string | null
           id?: string
           last_login_date?: string | null
           login_streak?: number | null
+          longest_streak?: number | null
           total_points?: number | null
           updated_at?: string | null
           user_id: string
@@ -2126,12 +2161,49 @@ export type Database = {
         Update: {
           ai_usage_count?: number | null
           blog_posts_count?: number | null
+          comments_count?: number | null
+          comments_received_count?: number | null
+          content_reads_count?: number | null
           created_at?: string | null
           id?: string
           last_login_date?: string | null
           login_streak?: number | null
+          longest_streak?: number | null
           total_points?: number | null
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_notifications: {
+        Row: {
+          content_id: string | null
+          content_type: string
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content_id?: string | null
+          content_type: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          content_id?: string | null
+          content_type?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string | null
+          title?: string
           user_id?: string
         }
         Relationships: []
@@ -2288,10 +2360,21 @@ export type Database = {
         }
         Returns: undefined
       }
+      get_company_leaderboard: {
+        Args: { p_limit?: number }
+        Returns: {
+          company_logo: string
+          company_name: string
+          company_user_id: string
+          member_count: number
+          total_company_points: number
+        }[]
+      }
       get_user_is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       get_user_role: { Args: { _user_id: string }; Returns: string }
       get_user_role_safe: { Args: { user_uuid: string }; Returns: string }
       has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }
+      track_daily_login: { Args: { p_user_id: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never
