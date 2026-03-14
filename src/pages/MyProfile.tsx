@@ -421,6 +421,12 @@ export default function MyProfile() {
                 </div>
                 <input id="avatar-upload" type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={handleUploadAvatar} disabled={uploading} aria-label="Upload profile picture" />
               </div>
+
+              {/* Points Breakdown */}
+              <PointsBreakdown />
+
+              {/* Team Contributions (primary account only) */}
+              {!isTeamMember && <TeamContributions />}
             </div>
 
             <div className="lg:col-span-8 space-y-4">
