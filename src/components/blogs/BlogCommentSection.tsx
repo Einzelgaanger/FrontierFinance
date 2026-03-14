@@ -28,6 +28,7 @@ interface BlogCommentSectionProps {
 
 export function BlogCommentSection({ blogId }: BlogCommentSectionProps) {
   const { user } = useAuth();
+  const { trackComment } = useGamification();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
