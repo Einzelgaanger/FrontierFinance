@@ -9,6 +9,7 @@ import { Heart, ArrowLeft, Loader2, MessageCircle } from "lucide-react";
 import { BlogCommentSection } from "@/components/blogs/BlogCommentSection";
 import { getBadge } from "@/utils/badgeSystem";
 import { useAuth } from "@/hooks/useAuth";
+import { useGamification } from "@/hooks/useGamification";
 import { toast } from "sonner";
 
 interface Blog {
