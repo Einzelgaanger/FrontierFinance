@@ -38,9 +38,17 @@ export default function BlogDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { trackContentRead } = useGamification();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Track content read when blog loads
+  useEffect(() => {
+    if (id && user && blog) {
+      trackContentRead('blog', id);
+    }
+  }, [id, user, blog?.id]);
 
   const fetchBlog = useCallback(async () => {
     try {
