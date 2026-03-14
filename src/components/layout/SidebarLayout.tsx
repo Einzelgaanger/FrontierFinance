@@ -203,6 +203,11 @@ const SidebarLayout = ({ children, headerActions }: SidebarLayoutProps) => {
         })}
       </nav>
 
+      {/* Notification bell */}
+      <div className="px-3 pb-2 flex justify-center">
+        <NotificationBell />
+      </div>
+
       {/* Bottom user section */}
       <div className="border-t border-navy-800 p-2 shrink-0">
         <div className="flex items-center gap-3 px-2 py-2 rounded-xl">
