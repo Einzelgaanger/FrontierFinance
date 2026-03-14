@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => ({
     allowedHosts: [
       "frontierfinance.org",
       "www.frontierfinance.org",
+      "fund-manager-portal.onrender.com",
       "localhost",
     ],
     proxy: {
