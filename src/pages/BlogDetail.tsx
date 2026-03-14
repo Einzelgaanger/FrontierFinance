@@ -38,7 +38,7 @@ export default function BlogDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { trackContentRead } = useGamification();
+  const { trackContentRead, markAsUnread } = useGamification();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
