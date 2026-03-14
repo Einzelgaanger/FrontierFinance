@@ -1012,6 +1012,8 @@ const AdminDashboardV2 = () => {
                 </div>
               </CardContent>
             </Card>
+          <NotificationWidget />
+          <WallOfFame />
           </div>
         </div>
       </div>
