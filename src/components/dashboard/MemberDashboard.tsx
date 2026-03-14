@@ -280,8 +280,9 @@ const MemberDashboard = () => {
               ))}
             </div>
           </div>
-          <div className="lg:col-span-1">
-            <Leaderboard />
+          <div className="lg:col-span-1 space-y-4">
+            <NotificationWidget />
+            <WallOfFame />
           </div>
         </div>
       </div>
