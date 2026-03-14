@@ -8,7 +8,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Home, Users, ClipboardList, Newspaper, UserCircle, Brain, ArrowRight, Sparkles, X } from 'lucide-react';
+import { Home, Users, ClipboardList, Newspaper, UserCircle, Brain, ArrowRight, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const STORAGE_KEY_PREFIX = 'cff_app_onboarding_done';
@@ -46,50 +46,50 @@ interface StepConfig {
 const ALL_STEPS: StepConfig[] = [
   {
     id: 'welcome',
-    title: 'Welcome to the Fund Manager Portal',
-    description: 'A short guided tour will show you where to find key features and how to get the most out of the platform. You can skip at any time.',
+    title: 'Welcome to Frontier Finance',
+    description: "You're in the platform. This short tour will show you where everything lives and what you can do.",
     icon: Sparkles,
     roles: ['viewer', 'member', 'admin'],
   },
   {
     id: 'dashboard',
     title: 'Dashboard',
-    description: 'Your home base for surveys, quick actions, and updates. Start here to access the latest activities and tasks relevant to your role.',
+    description: 'Your home base. Here you’ll see surveys, quick actions, and updates. Use it to jump to the latest surveys or key tasks.',
     icon: Home,
     roles: ['viewer', 'member', 'admin'],
   },
   {
     id: 'network',
     title: 'Network',
-    description: 'Browse fund managers and organizations, view profiles and survey responses, and connect with the community.',
+    description: 'Explore fund managers and organizations in the network. View profiles, survey responses, and connect with the community.',
     icon: Users,
     roles: ['viewer', 'member', 'admin'],
   },
   {
     id: 'application',
-    title: 'Membership application',
-    description: 'As a viewer, you can apply for full membership here. Submit your organization details and supporting documents when ready.',
+    title: 'Application',
+    description: 'As a viewer, you can apply to become a full member here. Submit your organization details and supporting documents when you’re ready.',
     icon: ClipboardList,
     roles: ['viewer'],
   },
   {
     id: 'community',
-    title: 'Community',
-    description: 'Blogs, learning resources, and peer content. Stay informed and develop your practice with the network.',
+    title: 'Community Hub',
+    description: 'Access blogs, learning resources, and community content. Stay updated and learn from peers.',
     icon: Newspaper,
     roles: ['viewer', 'member', 'admin'],
   },
   {
     id: 'portiq',
-    title: 'PortIQ',
-    description: 'Members and admins can use PortIQ for quick answers and support. Find it in the sidebar when you need it.',
+    title: 'Portiq (AI assistant)',
+    description: 'Members and admins can use Portiq for quick answers and help. Find it in the sidebar when you need it.',
     icon: Brain,
     roles: ['member', 'admin'],
   },
   {
     id: 'profile',
     title: 'My Profile',
-    description: 'Keep your profile, company details, and team information up to date. Manage settings and preferences here.',
+    description: 'Update your profile, manage team members, and change settings. Keep your info and company details up to date.',
     icon: UserCircle,
     roles: ['viewer', 'member', 'admin'],
   },
@@ -109,120 +109,82 @@ export function AppOnboardingTour({ userRole, userId, open, onOpenChange }: AppO
   const currentStep = steps[stepIndex];
   const isLast = stepIndex === steps.length - 1;
 
-  /** Mark onboarding complete and close. Ensures user never sees the tour again. */
-  const completeAndClose = () => {
-    setOnboardingDone(userId);
-    onOpenChange(false);
-  };
-
   const handleNext = () => {
     if (isLast) {
-      completeAndClose();
+      setOnboardingDone(userId);
+      onOpenChange(false);
       return;
     }
     setStepIndex((i) => i + 1);
   };
 
   const handleSkip = () => {
-    completeAndClose();
+    setOnboardingDone(userId);
+    onOpenChange(false);
   };
-
-  /** If dialog is closed by any means (e.g. overlay, escape), mark done so it never shows again. */
-  const handleOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen) completeAndClose();
-    onOpenChange(nextOpen);
-  };
-
-  useEffect(() => {
-    if (!open) return;
-    setStepIndex(0);
-  }, [open]);
 
   if (!currentStep) return null;
 
   const Icon = currentStep.icon;
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="sm:max-w-lg rounded-xl border border-slate-200/90 bg-[#faf6f0] shadow-finance p-0 gap-0 overflow-hidden font-sans antialiased selection:bg-gold-500/20 selection:text-navy-900"
+        className="sm:max-w-md rounded-2xl border-navy-700/50 bg-white dark:bg-navy-900 shadow-xl"
         onPointerDownOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={() => handleSkip()}
-        aria-describedby="onboarding-description"
+        onEscapeKeyDown={(e) => {
+          handleSkip();
+        }}
       >
-        {/* Top accent */}
-        <div className="h-1 w-full bg-gold-500 shrink-0" aria-hidden />
-
-        <div className="p-5 sm:p-6">
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-11 h-11 rounded-xl bg-white border border-slate-200/90 shadow-finance flex items-center justify-center shrink-0">
-                <Icon className="w-5 h-5 text-gold-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-600">
-                  Quick tour
-                </p>
-                <DialogTitle className="text-base sm:text-lg font-display font-normal text-navy-900 mt-0.5">
-                  {currentStep.title}
-                </DialogTitle>
-              </div>
+        <DialogHeader>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-12 h-12 rounded-xl bg-gold-500/20 dark:bg-gold-500/30 flex items-center justify-center">
+              <Icon className="w-6 h-6 text-gold-600 dark:text-gold-400" />
             </div>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="shrink-0 h-8 w-8 rounded-lg text-slate-500 hover:text-navy-900 hover:bg-slate-200/60"
-              onClick={handleSkip}
-              aria-label="Close tour"
-            >
-              <X className="w-4 h-4" />
-            </Button>
+            <div>
+              <DialogTitle className="text-xl font-display font-semibold text-slate-900 dark:text-white">
+                {currentStep.title}
+              </DialogTitle>
+              <p className="text-xs text-slate-500 dark:text-navy-400 mt-0.5">
+                Step {stepIndex + 1} of {steps.length}
+              </p>
+            </div>
           </div>
-
-          <DialogDescription
-            id="onboarding-description"
-            className="text-sm text-slate-600 leading-relaxed pt-1 pb-4"
-          >
+          <DialogDescription className="text-left text-sm text-slate-600 dark:text-navy-300 leading-relaxed pt-2">
             {currentStep.description}
           </DialogDescription>
+        </DialogHeader>
 
-          {/* Progress */}
-          <div className="flex items-center gap-1.5 pb-4">
-            <span className="text-[10px] text-slate-500 font-medium mr-2">
-              {stepIndex + 1} of {steps.length}
-            </span>
-            {steps.map((_, i) => (
-              <div
-                key={i}
-                className={cn(
-                  'h-1.5 rounded-full transition-all duration-200',
-                  i <= stepIndex ? 'flex-1 max-w-8 bg-gold-500' : 'w-1.5 bg-slate-200'
-                )}
-                aria-hidden
-              />
-            ))}
-          </div>
-
-          <DialogFooter className="flex-row justify-between gap-2 pt-2 border-t border-slate-200/80 sm:justify-between">
-            <Button
-              type="button"
-              variant="ghost"
-              className="text-slate-500 hover:text-navy-900 hover:bg-slate-200/60 rounded-lg font-sans text-sm"
-              onClick={handleSkip}
-            >
-              Skip tour
-            </Button>
-            <Button
-              type="button"
-              onClick={handleNext}
-              className="bg-navy-900 hover:bg-navy-800 text-white font-sans text-sm font-medium rounded-lg shadow-finance px-4"
-            >
-              {isLast ? 'Get started' : 'Next'}
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </DialogFooter>
+        <div className="flex gap-1.5 justify-center py-2">
+          {steps.map((_, i) => (
+            <div
+              key={i}
+              className={cn(
+                'h-1.5 rounded-full transition-all duration-200',
+                i <= stepIndex ? 'w-6 bg-gold-500' : 'w-1.5 bg-slate-200 dark:bg-navy-600'
+              )}
+            />
+          ))}
         </div>
+
+        <DialogFooter className="flex-row justify-between sm:justify-between gap-2 pt-4">
+          <Button
+            type="button"
+            variant="ghost"
+            className="text-slate-500 hover:text-slate-700 dark:text-navy-400 dark:hover:text-white"
+            onClick={handleSkip}
+          >
+            Skip tour
+          </Button>
+          <Button
+            type="button"
+            onClick={handleNext}
+            className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold rounded-xl"
+          >
+            {isLast ? 'Get started' : 'Next'}
+            <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
@@ -234,7 +196,7 @@ interface AppOnboardingTriggerProps {
   children: React.ReactNode;
 }
 
-/** Show the tour once per user (viewer, member, or admin) if not already completed. */
+/** Detect first-time viewers/members and show the tour automatically (no prompt, no asking). */
 export function AppOnboardingTrigger({ userRole, userId, children }: AppOnboardingTriggerProps) {
   const [showTour, setShowTour] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -242,7 +204,7 @@ export function AppOnboardingTrigger({ userRole, userId, children }: AppOnboardi
   useEffect(() => {
     if (checked || !userRole || !userId) return;
     const alreadyDone = getOnboardingDone(userId);
-    if (!alreadyDone && (userRole === 'viewer' || userRole === 'member' || userRole === 'admin')) {
+    if (!alreadyDone && (userRole === 'viewer' || userRole === 'member')) {
       setShowTour(true);
     }
     setChecked(true);
