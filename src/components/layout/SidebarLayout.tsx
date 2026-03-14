@@ -20,6 +20,7 @@ import {
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { AppOnboardingTrigger } from '@/components/onboarding/AppOnboardingTour';
+import { NotificationBell } from '@/components/gamification/NotificationBell';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
