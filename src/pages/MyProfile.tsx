@@ -378,8 +378,8 @@ export default function MyProfile() {
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-5 min-w-0 overflow-x-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-            {/* Left: compact identity strip */}
-            <div className="lg:col-span-4">
+            {/* Left: compact identity strip + engagement */}
+            <div className="lg:col-span-4 space-y-4">
               <div className="rounded-xl border border-slate-200/90 bg-white shadow-finance p-4">
                 <div className="flex gap-4">
                   <Avatar className="w-16 h-16 rounded-xl border border-gold-500/20 shrink-0">
